@@ -1,0 +1,208 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Hackspace Manchester API",
+        "version": "1"
+    },
+    "paths": {
+        "/acs/activity": {
+            "post": {
+                "tags": [
+                    "activity"
+                ],
+                "summary": "Record the start of a new session",
+                "description": "Record the start of a period of activity, e.g. someone signing into the laser cutter. If an entry device is specified no equipment access record is started but an activity log is created",
+                "parameters": [
+                    {
+                        "name": "activity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Activity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Activity started, the body will contain the new activityId"
+                    },
+                    "404": {
+                        "description": "Key fob not found"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/acs/activity/{activityId}": {
+            "put": {
+                "tags": [
+                    "activity"
+                ],
+                "summary": "Update an ongoing activity",
+                "description": "Record a heartbeat message for a period of activity, used to ensure activity periods are correctly recorded",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Activity Heartbeat recorded"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "activity"
+                ],
+                "summary": "Show the form for creating a new resource.",
+                "description": "End a period of an activity",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Activity ended/deleted"
+                    },
+                    "400": {
+                        "description": "Session invalid"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/acs/node/boot": {
+            "post": {
+                "tags": [
+                    "acs"
+                ],
+                "summary": "Display a listing of the resource.",
+                "description": "Record a bootup/startup of an acs node",
+                "responses": {
+                    "200": {
+                        "description": "Boot recorded"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/acs/node/heartbeat": {
+            "post": {
+                "tags": [
+                    "acs"
+                ],
+                "summary": "Show the form for creating a new resource.",
+                "description": "Record a heartbeat message, used to determin if the device is online",
+                "responses": {
+                    "200": {
+                        "description": "Heartbeat recorded"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/acs/status/{tagId}": {
+            "get": {
+                "tags": [
+                    "acs"
+                ],
+                "summary": "Display the specified resource.",
+                "description": "Get information about a specific tag and its user, this doesn't generate any activity",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "tagId",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tag found"
+                    },
+                    "404": {
+                        "description": "Tag not found"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/acs/test": {
+            "get": {
+                "tags": [
+                    "acs"
+                ],
+                "summary": "Display a listing of the resource.",
+                "description": "Returns an OK message, useful for verifying the api access token works",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Activity": {
+            "properties": {
+                "tagId": {
+                    "description": "The RFID Tag ID, required",
+                    "type": "string"
+                },
+                "device": {
+                    "description": "The Device ID of the device being controlled, required",
+                    "type": "string"
+                },
+                "occurredAt": {
+                    "description": "Date Time of the event, UNIX timestamp, optional",
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Activity"
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+        }
+    }
+}

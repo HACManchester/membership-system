@@ -1,0 +1,13 @@
+/vendor
+/node_modules
+.env
+.env.testing
+composer.phar
+.DS_Store
+Thumbs.db
+tests/codeception/_output/*
+npm-debug.log
+storage/tmp
+database.sqlite
+/public/query2.php
+/public/*

@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="form-group {{ Notification::hasErrorDetail('profile_photo_private', 'has-error has-feedback') }}">
+            {!! Form::checkbox('profile_photo_private', true, null, ['class'=>'']) !!}
+            {!! Form::label('profile_photo_private', 'Make my photo private', ['class'=>'']) !!}
+            {!! Notification::getErrorDetail('profile_photo_private') !!}
+            <span class="help-block">This blocks your photo from displaying outside of Hackspace Manchester (NOTE THIS FEATURE ISN'T USED).</span>
+        </div>
+    </div>
+</div>
