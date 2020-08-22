@@ -55,7 +55,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('room', 'has-error has-feedback') }}">
     {!! Form::label('room', 'Room', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'main-room'=>'Main Room'], null, ['class'=>'form-control']) !!}
+        {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control']) !!}
         {!! Notification::getErrorDetail('room') !!}
     </div>
 </div>
