@@ -7,7 +7,7 @@
 <h1>Welcome to Hackspace Manchester</h1>
 <p>Hi {{ $user['given_name'] }},<br /> Thanks for joining the Hackspace Manchester maker space.</p>
 <h2>Covid-19 Process Changes</h2>
-<p>Since reopening after Lockdown we have implemented a number of changes to the space to make it CovID Secure please make sure you check the covid alert level on the following link below and make sure that you book equipment usage if required.</p>
+<p>Since reopening after Lockdown we have implemented a number of changes to the space to make it CovID Secure please make sure you check the covid alert level on the following link https://www.hacman.org.uk/covid-19-information/ and make sure that you book equipment usage if required.</p>
 <p>Please also note facemasks are mandatory in the space.&nbsp;</p>
 <p>As we are currently not running opening evenings or social events getting access first time is a little bit more trickly than normal. Please&nbsp;use our forum at&nbsp;<a href="https://list.hacman.org.uk/">https://list.hacman.org.uk</a>&nbsp;or telegram group at&nbsp;<a href="https://t.me/hacmanchester">https://t.me/hacmanchester</a>&nbsp;to arrange to meet someone at the space and obtain and register a fob.&nbsp;</p>
 <h2>Confirm your email address</h2>
