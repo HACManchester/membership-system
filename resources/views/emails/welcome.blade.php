@@ -5,16 +5,13 @@
 </head>
 <body>
 <h1>Welcome to Hackspace Manchester</h1>
-
-<p>
-    Hi {{ $user['given_name'] }},<br />
-    Thanks for joining the Hackspace Manchester maker space. 
-</p>
-<b><h2>Confirm your email address</h2></b><br /><br />
-<p>
-    Finally, please click the link below to confirm your email address and ensure we have your accurate details.<br /><br />
-    <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a>
-</p>    
+<p>Hi {{ $user['given_name'] }},<br /> Thanks for joining the Hackspace Manchester maker space.</p>
+<h2>Covid-19 Process Changes</h2>
+<p>Since reopening after Lockdown we have implemented a number of changes to the space to make it CovID Secure please make sure you check the covid alert level on the following link below and make sure that you book equipment usage if required.</p>
+<p>Please also note facemasks are mandatory in the space.&nbsp;</p>
+<p>As we are currently not running opening evenings or social events getting access first time is a little bit more trickly than normal. Please&nbsp;use our forum at&nbsp;<a href="https://list.hacman.org.uk/">https://list.hacman.org.uk</a>&nbsp;or telegram group at&nbsp;<a href="https://t.me/hacmanchester">https://t.me/hacmanchester</a>&nbsp;to arrange to meet someone at the space and obtain and register a fob.&nbsp;</p>
+<h2>Confirm your email address</h2>
+<p>Finally, please click the link below to confirm your email address and ensure we have your accurate details.<br /><br /> <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a></p>
 <h2>Membership Payment</h2>
 <p>You have successfully signed up and have successfully create a direct debit via Gocardless - our payment processor for direct debit. Please note that payments will be to Manchester Makers Ltd which is the legal name of Hackspace Manchester.</p>
 <h2>Manage your Membership</h2>
@@ -38,6 +35,6 @@
 </ol>
 <p>If you have any questions, please do not hesitate to contact us via the helpdesk, email or ask everyone via Telegram or the forum.</p>
 <p>Many Thanks</p>
-<p>Hackspace Manchester Board </p>
+<p>Hackspace Manchester Board</p>
 </body>
 </html>
