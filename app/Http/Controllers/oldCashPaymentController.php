@@ -35,27 +35,17 @@ class CashPaymentController extends Controller
     {
         User::findWithPermission($userId);
 
-        $amount     = \Request::get('amount') /100;
+        $amount     = \Request::get('amount');
         $reason     = \Request::get('reason');
         $sourceId   = \Request::get('source_id');
         $returnPath = \Request::get('return_path');
+
         $sourceId = $sourceId . ':' . time();
         $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
 
-        \Notification::success("Top Up successful");
+        \Notification::success("Payment recorded");
 
-        $returnPath_balance = '/balance';
-        $result = $returnPath . $returnPath_balance;
-
-        if (\Request::wantsJson()) {
-            return \Response::json(['message' => 'Topup Successful']);
-        }
-
-        \Notification::error("Success");
-        
-        return \Redirect::to($result);
-
-   
+        return \Redirect::to($returnPath);
     }
 
     /**
@@ -87,10 +77,7 @@ class CashPaymentController extends Controller
         $this->bbCredit->recalculate();
 
         \Notification::success("Payment recorded");
-        $returnPath_balance = '/balance';
-        $result = $returnPath . $returnPath_balance;
 
-        return \Redirect::to($result);
         return \Redirect::to($returnPath);
     }
 }

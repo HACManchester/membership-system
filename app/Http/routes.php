@@ -46,6 +46,8 @@ Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 
 Route::get('account/{account}/balance', ['uses'=>'BalanceController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
 //Route::post('account/{account}/balance/withdrawal', ['uses'=>'BalanceController@withdrawal', 'as'=>'account.balance.withdrawal', 'middleware'=>'role:member']);
 Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as'=>'account.balance.transfer.create']);
+Route::get('shop', ['uses'=>'CheckoutController@index', 'as'=>'shop.index', 'middleware'=>'role:member']);
+Route::post('shop', ['uses'=>'CheckoutController@store', 'as'=>'shop.store', 'middleware'=>'role:member']);
 
 
 
@@ -87,9 +89,10 @@ Route::post('account/{account}/update-sub-payment', ['as'=>'account.update-sub-p
 Route::post('account/{account}/update-sub-method', ['as'=>'account.update-sub-method', 'uses'=>'SubscriptionController@updatePaymentMethod']);
 
 # Payment provider specific urls
-Route::post('account/{account}/payment/stripe', ['as'=>'account.payment.stripe.store', 'uses' => 'StripePaymentController@store']);
+Route::post('account/{account}/payment/stripe', ['as'=>'account.payment.cash.create', 'uses' => 'StripePaymentController@store']);
 Route::post('account/{account}/payment/gocardless', ['as'=>'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::post('account/{account}/payment/balance', ['as'=>'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
+Route::post('account/{account}/payment/cash2', ['as'=>'account.payment.cash2.create', 'uses' => 'CashPaymentController@store']);
 
 
 //Cash
@@ -213,7 +216,8 @@ Route::post('activity', ['uses' => 'ActivityController@create', 'as'=>'activity.
 
 Route::get('storage_boxes', ['uses'=>'StorageBoxController@index', 'as'=>'storage_boxes.index', 'middleware'=>'role:member']);
 Route::put('storage_boxes/{id}', ['uses'=>'StorageBoxController@update', 'as'=>'storage_boxes.update', 'middleware'=>'role:member']);
-
+Route::get('large_project', ['uses'=>'LargeProjectController@index', 'as'=>'projects_storage.index', 'middleware'=>'role:member']);
+Route::put('large_project/{id}', ['uses'=>'LargeProjectController@update', 'as'=>'projects_storage.update', 'middleware'=>'role:member']);
 
 
 ##########################
@@ -293,6 +297,11 @@ Route::group(array('middleware' => 'role:finance'), function() {
 ##########################
 
 Route::post('settings', 'SettingsController@update')->name('settings.update');
+
+#### 
+## shop
+#####
+
 
 
 ##########################

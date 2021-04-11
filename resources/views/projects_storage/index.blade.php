@@ -1,41 +1,57 @@
 @extends('layouts.main')
 
 @section('page-title')
-    Member Storage 
+    Large Project Storage 
 @stop
 
 @section('content')
 
     <div class="row">
+    <div class="col-md-6">
+            <div class="well">
+                Large Project Storage is limited in the Space. Please check to see if there is space available before leaving projects in the Space. <br> <br>
+                Anyone leaving a large project outwith of Large Project Storage will be deemed to be in breach of the Members Storage Rules and appropirate action will be taken 
+                <br />
+            </div>
+            
+        </div>
         <div class="col-md-6">
             <div class="well">
                 @if ($boxesTaken > 0)
-                    You have the following member storage, (please make sure a DNH label is on boxes/loose material)<br />
+                    You have the following Large Project storage, (please make sure a DNH label is on boxes/loose material)<br />
                     <ul>
                         @foreach($memberBoxes as $box)
                             <li>
-                                {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'js-return-box-form')) !!}
+                                {!! Form::open(array('method'=>'PUT', 'route' => ['projects_storage.update', $box->id], 'class'=>'js-return-box-form')) !!}
                                 {!! Form::hidden('user_id', '') !!}
-                                Location {{ $box->id }} - {{ $box->size }}
-                                {!! Form::submit('Return Box', array('class'=>'btn btn-default btn-link btn-sm')) !!}
+                                Location {{ $box->id }} - Large
+                                {!! Form::submit('Return Space', array('class'=>'btn btn-default btn-link btn-sm')) !!}
                                 {!! Form::close() !!}
                             </li>
                         @endforeach
+                        
                     </ul>
                     <p>
                     @if ($boxesTaken >= 1)
-                        You have claimed your member storage allowance <br />
+                        You have claimed your maximum Large Project storage allowance <br />
                     @endif
-                        If your no longer using a space and want to return it  please remove your box
-                        and return it to the member shelves, you can then use the return link above.
+                                           <strong> Your large project storage will expire {{ $box->expires_at }} .</strong>
                     </p>
                 @endif
+
+                @if ($boxesTaken < 1)
+                    You don't currently have any Large Project Storage registered<br />
+                          
+                    <p>
+                    
+                @endif
+                
                 @if ($canPayMore)
                     <p>
                     If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need to claim a space by clicking claim now
                     </p>
 
-                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Members Storage" data-button-label="Claim Now" data-methods="balance" data-amount="0"></div>
+                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Large Project Storage" data-button-label="Claim Now" data-methods="balance" data-amount="0"></div>
 
                 @endif
                 @if ($moneyAvailable > 0)
@@ -44,29 +60,23 @@
 
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="well">
-                Each member can claim up to 1 storage cube or half a shelf of member storage.
-                <br />
-                Storage is managed by the <a href="{{ route('groups.show', 'storage') }}">member storage</a> team
-            </div>
-            
-        </div>
+       
 
     </div>
 
 @if (Auth::user()->hasRole('storage'))
 <div class="well">
-    When marking a space as returned please make sure shelf is clear.
+    When marking an area as free please make sure space is clear
 </div>
 @endif
 
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Location</th>
+            <th>Location ID</th>
+            <th>Storage</th>
             <th>Member</th>
+            <th>Expires</th>
             <th></th>
             @if (Auth::user()->hasRole('storage'))
             <th>Admin</th>
@@ -77,13 +87,14 @@
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
             <td>{{ $box->id }}</td>
-            <td>{{ $box->location }}</td>
+            <td>Large</td>
             <td>{{ $box->user->name or 'Available' }}</td>
+            <td>{{ $box->expires_at}}</td>
             <td>
                 @if($box->user && !$box->user->active)
                     Member left - box to be reclaimed
                 @elseif (($volumeAvailable >= $box->size) && !$box->user)
-                    {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
+                    {!! Form::open(array('method'=>'PUT', 'route' => ['projects_storage.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
                     {!! Form::hidden('user_id', Auth::user()->id) !!}
                     {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
                     {!! Form::close() !!}
@@ -92,7 +103,7 @@
             @if (Auth::user()->hasRole('storage'))
                 <td>
                     @if($box->user)
-                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['projects_storage.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
                         {!! Form::hidden('user_id', '') !!}
                         {!! Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) !!}
                         {!! Form::close() !!}

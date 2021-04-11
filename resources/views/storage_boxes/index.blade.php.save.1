@@ -30,7 +30,8 @@
                         and return it to the member shelves, you can then use the return link above.
                     </p>
                 @endif
-                @if ($canPayMore)
+               // @if ($
+canPayMore)
                     <p>
                     If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need to claim a space by clicking claim now
                     </p>
@@ -64,8 +65,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Location</th>
+            <th>System ID</th>
+            <th>Location & Box Number </th>
             <th>Member</th>
             <th></th>
             @if (Auth::user()->hasRole('storage'))
@@ -77,7 +78,7 @@
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
             <td>{{ $box->id }}</td>
-            <td>{{ $box->location }}</td>
+            <td>{{ $box->size }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
                 @if($box->user && !$box->user->active)

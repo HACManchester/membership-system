@@ -12,110 +12,77 @@ Hackspace Manchester Balance
 
 <div class="row">
     <div class="col-xs-12">
-        <p>
-            This is your Hackspace Manchester Balance, it can be used to pay for your time on the laser, storage boxes and in the future many other things as well.
-        </p>
+    <div class="panel panel-default">
+    <div class="panel-body">
+
+        <h4>
+            Manage your Hackspace Balance, you can use it for purchasing snackspace items, paying for laser time, paying for materials that you use in the space.
+</h4>
+<br>
+<p>
+           We are looking to make the space cashless and your balance will be what you can use for paying for items. You will be able to top up using cash (in space only), direct debit.
+</p>
     </div>
 </div>
-
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="col-xs-12 col-sm-3 col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Add Credit</h3>
+                <h3 class="panel-title"><strong>Your Balance</strong></h3>
             </div>
             <div class="panel-body">
-                <p>Top up using Direct Debit</p>
+                <p>Your Current Balance is:</p>
 
-                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Add Credit" data-methods="gocardless,stripe"></div>
-<br></br>
+                <div>        <span class="credit-figure {{ $userBalanceSign }}">{{ $userBalance }}</span>
+</div> <br>
                 <p>
                     
                 </p>
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-            <div class="panel panel-default">   
-                <div class="panel-heading">
-                    <h3 class="panel-title">Cash Topup</h3>
-                </div>
-                <div class="panel-body">
-                <p>Use this if you are topping up with cash.</p>
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Add Credit</strong></h3>
+            </div>
+            <div class="panel-body">
+                <p>Top Up Using Cash Topup or Direct Debit via this option</p> <br>
 
-{!! Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-horizontal']) !!}
-
-<div class="form-group">
-    <div class="col-sm-5">
-        <div class="input-group">
-            <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'min'=>'0', 'required'=>'required']) !!}
-        </div>
-    </div>
-    <div class="col-sm-3">
-        {!! Form::submit('Add Credit', array('class'=>'btn btn-primary')) !!}
-        <br></br>
-    </div>
-            {!! Form::hidden('reason', 'balance') !!}
-        {!! Form::hidden('return_path', 'account/'.$user->id)!!}
-        {!! Form::close() !!}
-                </div>
+                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Add Credit" data-methods="gocardless,cash2"></div>
+                <br>
+                <p>
+                    
+                </p>
             </div>
         </div>
-</div>
-<div class="row">
-    <div class="col-sm-12">
-    <div class="panel panel-default text-center">
-    <div class="panel-heading">
-        <h3 class="panel-title">Snackspace Expenditure</h3>
-        </div>
-        <div class="panel-body">
-        <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
-
-        </div>
-<div class="row">
-    <div class="col-sm-12">
-    <div class="panel panel-default text-center">
-    <div class="panel-heading">
-        <h3 class="panel-title">Fob Purchase</h3>
-        </div>
-        <div class="panel-body">
-        <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
-
-        </div>
-<div class="row">
-    <div class="col-sm-12">
-    <div class="panel panel-default text-center">
-    <div class="panel-heading">
-        <h3 class="panel-title">Balance</h3>
-        </div>
-        <div class="panel-body">
-        <span class="credit-figure {{ $userBalanceSign }}">{{ $userBalance }}</span>
-        </div>
     </div>
-    </div>
-</div>
+
+    
+
+
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+    <div class="panel panel-default">
+    <div class="panel-body">
                 <h3 class="panel-title">Balance Payment History</h3>
             </div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Reason</th>
-                    <th>Method</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
+                <th class="not_mapped_style" style="text-align:left">Reason</th>
+                    <th class="not_mapped_style" style="text-align:left">Method</th>
+                    <th class="not_mapped_style" style="text-align:left">Date</th>
+                    <th class="not_mapped_style" style="text-align:left">Amount</th>
+                    <th class="not_mapped_style" style="text-align:left">Status</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($payments as $payment)
                 <tr class="{{ $payment->present()->balanceRowClass }}">
-                    <td>{{ $payment->present()->reason }}</td>
+                    <td >{{ $payment->present()->reason }}</td>
                     <td>{{ $payment->present()->method }}</td>
                     <td>{{ $payment->present()->date }}</td>
                     <td>{{ $payment->present()->balanceAmount }}</td>

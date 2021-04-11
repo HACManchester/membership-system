@@ -1,15 +1,16 @@
 <?php namespace BB\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
- * Class StorageBox
+ * Class LargeProject
  *
  * @property bool $active
  * @property integer $user_id
  * @package BB\Entities
  */
-class StorageBox extends Model
+class LargeProject extends Model
 {
 
     /**
@@ -17,7 +18,7 @@ class StorageBox extends Model
      *
      * @var string
      */
-    protected $table = 'storage_boxes';
+    protected $table = 'large_project';
 
 
     /**
@@ -28,7 +29,6 @@ class StorageBox extends Model
     protected $fillable = [
         'size',
         'active',
-	'location',
         'user_id'
     ];
 

@@ -64,7 +64,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>System ID</th>
             <th>Location</th>
             <th>Member</th>
             <th></th>
@@ -77,7 +77,7 @@
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
             <td>{{ $box->id }}</td>
-            <td>{{ $box->location }}</td>
+            <td>{{ $box->size }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
                 @if($box->user && !$box->user->active)
