@@ -20,7 +20,7 @@
                     For more information on Hackspace Manchester please visit <a href="https://www.hacman.org.uk">www.hacman.org.uk</a>
                 </p>
                 <p>
-                Already part of Hackspace Manchester then <a href="{{ route('login') }}" class="">Log in</a>
+                Already part of Hackspace Manchester then <a href="{{ route('login') }}" class="btn btn-primary">Log in</a>
                 </p>
             </div>
         </div>
