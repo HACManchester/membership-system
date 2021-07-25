@@ -63,7 +63,7 @@ class SessionController extends Controller
          * So to verify the signature, we hash with our shared key
          * and check it matches.
          */
-        $expectedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false)
+        $expectedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false);
 
         if( $expectedHash != $input['sig'] ){
             \Log::error(
