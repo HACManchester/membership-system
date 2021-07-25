@@ -57,6 +57,12 @@ class SessionController extends Controller
 	public function sso()
 	{
         $input = \Input::only('sso', 'sig');
+        \Log::info("Start SSO, Input:");
+        \Log::info($input);
+
+        if(empty($input['sso']) || empty($input['sig'])){
+            \Log::error("SSO - params not set")
+        }
 
         /**
          * The sso input is signed with sig
@@ -73,6 +79,7 @@ class SessionController extends Controller
             );
             return \Response::make(json_encode(['success'=>'false']), 200);
         } else {
+            \Log::info("SSO - match hmac");
             /**
              * The sso input is a string, base64 encoded.
              * e.g. "email=test@test.com&password=password"
@@ -80,20 +87,16 @@ class SessionController extends Controller
              * called $parsedInput.
              */
             parse_str(base64_decode($input['sso']), $parsedInput);
-            
-            /**
-             * Then we validate as if user was logging in
-             */
-            $this->loginForm->validate([
-                $parsedInput['email'], $parsedInput['password']
-            ]);
 
             if (Auth::attempt([$parsedInput['email'], $parsedInput['password']], false)) {
+                \Log::info("SSO - auth attempt okay");
+                
                 /**
                  * Get the user that is returned with those credentials
                  */
                 $user = \Auth::user();
-
+                \Log::info("SSO - got the user");
+                
                 /**
                  * This is what's required back by SSO
                  */
@@ -102,8 +105,10 @@ class SessionController extends Controller
                     'email'     => $user->email,
                     'id'        => $user->id,
                     'username'  => $user->name
-                ]));
-
+                    ]));
+                \Log::info("SSO - user data");
+                \Log::info($userData);
+                    
                 /**
                  * We need to sign what we return so SSO
                  * can validate what it receives.
