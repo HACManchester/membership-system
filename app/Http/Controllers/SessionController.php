@@ -61,7 +61,7 @@ class SessionController extends Controller
         \Log::info($input);
 
         if(empty($input['sso']) || empty($input['sig'])){
-            \Log::error("SSO - params not set")
+            \Log::error("SSO - params not set");
         }
 
         /**
