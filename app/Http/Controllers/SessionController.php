@@ -85,10 +85,10 @@ class SessionController extends Controller
              * So we need to decode it, and put it into a variable,
              * called $parsedInput.
              */
-            parse_str(base64_decode($input['sso']), $parsedInput);
+            parse_str(base64_decode(urldecode($input['sso'])), $parsedInput);
             
             \Log::info("SSO - pre validate");
-            \Log::info(var_dump($parsedInput));
+            \Log::info($input['sso']);
             $this->loginForm->validate($parsedInput);
             \Log::info("SSO - aft validate");
 
