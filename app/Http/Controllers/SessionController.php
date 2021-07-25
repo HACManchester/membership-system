@@ -100,7 +100,7 @@ class SessionController extends Controller
                 $userData = base64_encode(http_build_query([
                     'name'      => $user->given_name . " " . $user->family_name,
                     'email'     => $user->email,
-                    'id'        => $user->id   
+                    'id'        => $user->id,
                     'username'  => $user->name
                 ]));
 
