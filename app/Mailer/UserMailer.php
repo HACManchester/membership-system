@@ -27,8 +27,11 @@ class UserMailer
             $message->to($user->email, $user->name)->subject('Welcome to Hackspace Manchester!');
         });
 
-        \Mail::queue('emails.welcome-admin', ['user'=>$user], function ($message) use ($user) {
-            $message->to('outreach@hacman.org.uk', 'Outreach')->subject('New Sign up - Hackspace Manchester');
+        $addressRepository = \App::make('BB\Repo\AddressRepository');
+        $address = $addressRepository->getActiveUserAddress($this->user->id);
+
+        \Mail::queue('emails.welcome-admin', ['user'=>$user, 'address'=>$address], function ($message) use ($user) {
+            $message->to('outreach@hacman.org.uk')->subject('New Member Alert');
         });
     }
 
