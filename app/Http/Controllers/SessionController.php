@@ -88,9 +88,9 @@ class SessionController extends Controller
             parse_str(base64_decode($input['sso']), $parsedInput);
             
             \Log::info("SSO - pre validate");
-            $this->loginForm->validate($input);
-            \Log::info("SSO - aft validate");
             \Log::info(var_dump($parsedInput));
+            $this->loginForm->validate($parsedInput);
+            \Log::info("SSO - aft validate");
 
             if (Auth::attempt([$parsedInput['email'], $parsedInput['password']], false)) {
                 \Log::info("SSO - auth attempt okay");
