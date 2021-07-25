@@ -26,6 +26,10 @@ class UserMailer
         \Mail::queue('emails.welcome', ['user'=>$user], function ($message) use ($user) {
             $message->to($user->email, $user->name)->subject('Welcome to Hackspace Manchester!');
         });
+
+        \Mail::queue('emails.welcome-admin', ['user'=>$user], function ($message) use ($user) {
+            $message->to('outreach@hacman.org.uk', 'Outreach')->subject('New Sign up - Hackspace Manchester');
+        });
     }
 
 
