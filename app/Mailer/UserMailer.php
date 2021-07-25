@@ -20,7 +20,7 @@ class UserMailer
     /**
      * Send a welcome email
      */
-    public function sendWelcomeMessage()
+       public function sendWelcomeMessage()
     {
         $user = $this->user;
         \Mail::queue('emails.welcome', ['user'=>$user], function ($message) use ($user) {
@@ -30,10 +30,11 @@ class UserMailer
         $addressRepository = \App::make('BB\Repo\AddressRepository');
         $address = $addressRepository->getActiveUserAddress($this->user->id);
 
-        \Mail::queue('emails.welcome-admin', ['user'=>$user, 'address'=>$address], function ($message) use ($user) {
+        \Mail::queue('emails.welcome-admin', ['user'=>$user, 'address'=>$address], function ($message) use ($user,$address) {
             $message->to('outreach@hacman.org.uk')->subject('New Member Alert');
         });
     }
+    
 
 
 
