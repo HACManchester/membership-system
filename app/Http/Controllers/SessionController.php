@@ -56,25 +56,37 @@ class SessionController extends Controller
 	 */
 	public function sso()
 	{
-        $input = \Input::only('email', 'password');
+        $input = \Input::only('email', 'password', 'sso', 'sig');
 
-        $this->loginForm->validate($input);
+        // Check that the SSO object is legit
+        $expectedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false)
 
-        if (Auth::attempt($input, false)) {
-            $user = \Auth::user();
+        if( $expectedHash != $input['sig'] ){
+            \Log::error(
+                'Signature did not match - I calculated: ' . 
+                $expectedHash . ' but I expected: ' .
+                $input['sig'] 
+            );
+            return \Response::make(json_encode(['success'=>'false']), 200);
+        } else {
+            $this->loginForm->validate($input);
 
-            $userData = base64_encode([
-                'name'      => $user->given_name . " " . $user->family_name,
-                'email'     => $user->email,
-                'id'        => $user->id   
-                'username'  => $user->name
-            ]);
+            if (Auth::attempt($input, false)) {
+                $user = \Auth::user();
 
-            return \Response::make(json_encode([
-                'success'   => 'true', 
-                'response'  => $userData,
-                'sig'       => hash_hmac('sha256', $userData, env('SSO_KEY'), false)
-            ]), 200);
+                $userData = base64_encode(http_build_query([
+                    'name'      => $user->given_name . " " . $user->family_name,
+                    'email'     => $user->email,
+                    'id'        => $user->id   
+                    'username'  => $user->name
+                ]));
+
+                return \Response::make(json_encode([
+                    'success'   => 'true', 
+                    'response'  => $userData,
+                    'sig'       => hash_hmac('sha256', $userData, env('SSO_KEY'), false)
+                ]), 200);
+            }
         }
 
         return \Response::make(json_encode(['success'=>'false']), 200);
