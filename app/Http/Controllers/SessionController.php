@@ -56,9 +56,13 @@ class SessionController extends Controller
 	 */
 	public function sso()
 	{
-        $input = \Input::only('email', 'password', 'sso', 'sig');
+        $input = \Input::only('sso', 'sig');
 
-        // Check that the SSO object is legit
+        /**
+         * The sso input is signed with sig
+         * So to verify the signature, we hash with our shared key
+         * and check it matches.
+         */
         $expectedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false)
 
         if( $expectedHash != $input['sig'] ){
@@ -69,11 +73,30 @@ class SessionController extends Controller
             );
             return \Response::make(json_encode(['success'=>'false']), 200);
         } else {
-            $this->loginForm->validate($input);
+            /**
+             * The sso input is a string, base64 encoded.
+             * e.g. "email=test@test.com&password=password"
+             * So we need to decode it, and put it into a variable,
+             * called $parsedInput.
+             */
+            parse_str(base64_decode($input['sso']), $parsedInput);
+            
+            /**
+             * Then we validate as if user was logging in
+             */
+            $this->loginForm->validate([
+                $parsedInput['email'], $parsedInput['password']
+            ]);
 
-            if (Auth::attempt($input, false)) {
+            if (Auth::attempt([$parsedInput['email'], $parsedInput['password']], false)) {
+                /**
+                 * Get the user that is returned with those credentials
+                 */
                 $user = \Auth::user();
 
+                /**
+                 * This is what's required back by SSO
+                 */
                 $userData = base64_encode(http_build_query([
                     'name'      => $user->given_name . " " . $user->family_name,
                     'email'     => $user->email,
@@ -81,6 +104,10 @@ class SessionController extends Controller
                     'username'  => $user->name
                 ]));
 
+                /**
+                 * We need to sign what we return so SSO
+                 * can validate what it receives.
+                 */
                 return \Response::make(json_encode([
                     'success'   => 'true', 
                     'response'  => $userData,
