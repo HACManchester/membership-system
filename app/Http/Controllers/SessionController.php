@@ -49,6 +49,36 @@ class SessionController extends Controller
         return redirect()->back()->withInput();
 	}
 
+    /**
+	 * SSO validate login
+	 *
+	 * @return Response
+	 */
+	public function sso()
+	{
+        $input = \Input::only('email', 'password');
+
+        $this->loginForm->validate($input);
+
+        if (Auth::attempt($input, false)) {
+            $user = \Auth::user();
+
+            $userData = base64_encode([
+                'name'      => $user->given_name . " " . $user->family_name,
+                'email'     => $user->email,
+                'id'        => $user->id   
+                'username'  => $user->name
+            ]);
+
+            return \Response::make(json_encode([
+                'success'   => 'true', 
+                'response'  => $userData,
+                'sig'       => hash_hmac('sha256', $userData, env('SSO_KEY'), false)
+            ]), 200);
+        }
+
+        return \Response::make(json_encode(['success'=>'false']), 200);
+	}
 
 	/**
 	 * Remove the specified resource from storage.
