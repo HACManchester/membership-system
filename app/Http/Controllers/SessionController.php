@@ -57,8 +57,7 @@ class SessionController extends Controller
 	public function sso()
 	{
         $input = \Input::only('sso', 'sig');
-        \Log::info("Start SSO, Input:");
-        \Log::info($input);
+        \Log::info("Start SSO, Input");
 
         if(empty($input['sso']) || empty($input['sig'])){
             \Log::error("SSO - params not set");
@@ -87,6 +86,11 @@ class SessionController extends Controller
              * called $parsedInput.
              */
             parse_str(base64_decode($input['sso']), $parsedInput);
+            
+            \Log::info("SSO - pre validate");
+            $this->loginForm->validate($input);
+            \Log::info("SSO - aft validate");
+            \Log::info(var_dump($parsedInput));
 
             if (Auth::attempt([$parsedInput['email'], $parsedInput['password']], false)) {
                 \Log::info("SSO - auth attempt okay");
