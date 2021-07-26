@@ -57,6 +57,7 @@ class SessionController extends Controller
 	public function sso()
 	{
         $input = \Input::only('sso', 'sig');
+        \Log::info("Start SSO, Input");
 
         if(empty($input['sso']) || empty($input['sig'])){
             \Log::error("SSO - params not set");
@@ -77,6 +78,7 @@ class SessionController extends Controller
             );
             return \Response::make(json_encode(['success'=>'false']), 200);
         } else {
+            \Log::info("SSO - match hmac");
             /**
              * The sso input is a string, base64 encoded.
              * e.g. "email=test@test.com&password=password"
@@ -85,7 +87,10 @@ class SessionController extends Controller
              */
             parse_str(base64_decode(urldecode($input['sso'])), $parsedInput);
             
+            \Log::info("SSO - pre validate");
+            \Log::info($input['sso']);
             $this->loginForm->validate($parsedInput);
+            \Log::info("SSO - aft validate");
 
             if (Auth::attempt([
                 'email'     => $parsedInput['email'], 
@@ -109,7 +114,7 @@ class SessionController extends Controller
                     'username'  => $user->name
                     ]));
                 \Log::info("SSO - user data");
-                \Log::info(var_dump($userData));
+                \Log::info($userData);
                     
                 /**
                  * We need to sign what we return so SSO
