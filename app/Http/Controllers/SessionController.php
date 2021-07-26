@@ -92,7 +92,10 @@ class SessionController extends Controller
             $this->loginForm->validate($parsedInput);
             \Log::info("SSO - aft validate");
 
-            if (Auth::attempt([$parsedInput['email'], $parsedInput['password']], false)) {
+            if (Auth::attempt([
+                'email'     => $parsedInput['email'], 
+                'password'  => $parsedInput['password']
+            ], false)) {
                 \Log::info("SSO - auth attempt okay");
                 
                 /**
