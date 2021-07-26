@@ -57,10 +57,9 @@ class SessionController extends Controller
 	public function sso()
 	{
         $input = \Input::only('sso', 'sig');
-        \Log::info("Start SSO, Input");
 
         if(empty($input['sso']) || empty($input['sig'])){
-            \Log::error("SSO - params not set");
+            \Log::error("SSO - 'sso' or 'sig' params not set");
         }
 
         /**
@@ -68,17 +67,19 @@ class SessionController extends Controller
          * So to verify the signature, we hash with our shared key
          * and check it matches.
          */
-        $expectedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false);
+        $calculatedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false);
 
-        if( $expectedHash != $input['sig'] ){
+        if( $calculatedHash != $input['sig'] ){
             \Log::error(
-                'Signature did not match - I calculated: ' . 
-                $expectedHash . ' but I expected: ' .
+                'SSO - Signature did not match. Calculated: ' . 
+                $calculatedHash . ' but received: ' .
                 $input['sig'] 
             );
-            return \Response::make(json_encode(['success'=>'false']), 200);
+            return \Response::json([
+                'success'=>'false', 
+                'message' => 'Invalid signature'
+            ], 403);
         } else {
-            \Log::info("SSO - match hmac");
             /**
              * The sso input is a string, base64 encoded.
              * e.g. "email=test@test.com&password=password"
@@ -87,22 +88,16 @@ class SessionController extends Controller
              */
             parse_str(base64_decode(urldecode($input['sso'])), $parsedInput);
             
-            \Log::info("SSO - pre validate");
-            \Log::info($input['sso']);
             $this->loginForm->validate($parsedInput);
-            \Log::info("SSO - aft validate");
 
             if (Auth::attempt([
                 'email'     => $parsedInput['email'], 
                 'password'  => $parsedInput['password']
             ], false)) {
-                \Log::info("SSO - auth attempt okay");
-                
                 /**
                  * Get the user that is returned with those credentials
                  */
                 $user = \Auth::user();
-                \Log::info("SSO - got the user");
                 
                 /**
                  * This is what's required back by SSO
@@ -113,22 +108,23 @@ class SessionController extends Controller
                     'id'        => $user->id,
                     'username'  => $user->name
                     ]));
-                \Log::info("SSO - user data");
-                \Log::info($userData);
                     
                 /**
                  * We need to sign what we return so SSO
                  * can validate what it receives.
                  */
-                return \Response::make(json_encode([
+                return \Response::json([
                     'success'   => 'true', 
                     'response'  => $userData,
                     'sig'       => hash_hmac('sha256', $userData, env('SSO_KEY'), false)
-                ]), 200);
+                ], 200);
             }
         }
 
-        return \Response::make(json_encode(['success'=>'false']), 200);
+        return \Response::json([
+            'success'=>'false', 
+            'message' => 'Incorrect login details'
+        ], 401);
 	}
 
 	/**
