@@ -13,8 +13,9 @@ Join Hackspace Manchester
             <div class="page-header">
                 <h1>Join Hackspace Manchester</h1>
                 <p>
-                    Hackspace Manchester is a fantastic space and community of like minded people.
+                    Welcome! Hackspace Manchester is a fantastic space and community of like minded people.
                 </p>
+                <p>If you just want access to our online services such as the forum, please <a href="/online-only">sign up for online only access</a>.
             </div>
         </div>
     </div>
@@ -24,10 +25,8 @@ Join Hackspace Manchester
         <div class="col-xs-12">
             <p>
                 Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
-                We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a><br />
-                Your address will be kept private but your name will be listed publicly as being a member of our community
-
-                <br><br> Note announce name will be used to announce your entry into the Hackspace on our Hackscreen and Telegram Channel. <br> If you wish this to not be the case please sent announce name to an on
+                <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
+                <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
             </p>
         </div>
     </div>
@@ -62,13 +61,16 @@ Join Hackspace Manchester
             {!! Notification::getErrorDetail('display_name') !!}
         </div>
     </div>
-    <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">
+    <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">        
         {!! Form::label('announce_name', 'Announce Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
             {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'announce-name', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('announce_name') !!}
         </div>
     </div>
+    Note: announce name will be used to announce your entry into the Hackspace on our Hackscreen and Telegram Channel. <br>
+    If you wish this to not be the case please set announce name to <i>anon</i>
+    <br>
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">

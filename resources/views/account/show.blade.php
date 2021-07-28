@@ -110,6 +110,22 @@
 
 @else
 
+    @if ($user->status == 'online-only')
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Online Only user</h3>
+                </div>
+                <div class="panel-body">
+                    <p>To become a member, add address details, emergency contact detials, and setup a direct debit for the monthly subscription.</p>
+                    @include('account.partials.setup-payment')
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if ($user->status == 'left')
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
