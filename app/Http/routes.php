@@ -21,6 +21,10 @@ Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);
 Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'ReminderController@postReset']);
 Route::get('sso', ['uses' => 'SessionController@sso']);
 
+Route::get('access-codes', ['as' => 'access-codes.index', 'uses' => 'AccessCodesController@index']);
+Route::post('access-codes/code/{id}', ['as' => 'access-codes.update', 'uses' => 'AccessCodesController@setCode']);
+Route::get('access-codes/code/{id}/counter', ['uses' => 'AccessCodesController@getCounter']);
+
 
 
 ##########################
