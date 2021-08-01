@@ -23,6 +23,8 @@ Join Hackspace Manchester
 
     {!! Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) !!}
 
+    {!! Form::hidden('online_only', 'true') !!}
+
     @if (Notification::hasMessage())
     <div class="alert alert-{{ Notification::getLevel() }} alert-dismissable">
         {!! Notification::getMessage() !!}
@@ -89,46 +91,4 @@ Join Hackspace Manchester
     {!! Form::close() !!}
 
 </div>
-
-<div class="modal fade" id="howMuchShouldIPayModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Subscription Suggestions</h4>
-            </div>
-            <div class="modal-body">
-                <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
-
-                &pound;12.50 - &pound;15 a month:
-                <ul>
-                    <li>You are on a low income and unable to afford a higher amount.</li>
-                </ul>
-
-                &pound;15 - &pound;20 a month:
-                <ul>
-                    <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
-                </ul>
-
-                &pound;25 a month and up:
-                <ul>
-                    <li>You are planning to visit the makerspace regularly and would like to provide a little extra support (thank you!)</li>
-                </ul>
-
-                <p>
-                    If you feel that the makerspace is worth more to you then please do adjust your subscription accordingly.
-                    You can also change your subscription amount at any time!
-                </p>
-
-                <p>
-                    If you would like to pay less than &pound;12.50 a month please select an amount over £12.50 and complete
-                    this form, on the next page you will be asked to setup a subscription payment.
-                    Before you do this please send the board an email letting them know how much you would like to
-                    pay, they will then override the amount so you can continue to setup a subscription.
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
 @stop
