@@ -91,7 +91,7 @@ class AccountController extends Controller
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
-        $this->middleware('role:member', array('except' => ['create', 'store']));
+        $this->middleware('role:member', array('except' => ['create', 'createOnlineOnly', 'store']));
         $this->middleware('role:admin', array('only' => ['index']));
         //$this->middleware('guest', array('only' => ['create', 'store']));
 
