@@ -110,6 +110,29 @@
 
 @else
 
+    @if ($user->status == 'online-only')
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Online Only user</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>You're an online only user, and not a member of the space (yet).</h4>
+                    <p>
+                        To become a member, edit your account and mark yourself as not an online only member.
+                        You'll need to add address details, emergency contact detials, and setup a direct debit for the monthly subscription.
+                    </p>
+                    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}">
+                        <i class="material-icons">mode_edit</i> 
+                        Edit your account to become a member
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if ($user->status == 'left')
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">

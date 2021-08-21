@@ -164,6 +164,25 @@ Edit your details
     </div>
 </div>
 
+@if ($user->online_only)
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            <div class="form-group {{ Notification::hasErrorDetail('online_only', 'has-error has-feedback') }}"
+                style="padding: 1em; background: white; border-left: 5px solid blue;" 
+            >
+            <h4>You're an online only user, and not a member of the space (yet).</h4>
+            <p>You can upgrade your account to a full member account if you want to join the space.
+            You'll need to fill in address fields and emergency contact information. 
+            After that you'll need to set up payment.</p>   
+                {!! Form::checkbox('online_only', true, null, ['class'=>'']) !!}
+                {!! Form::label('online_only', 'Online only user', ['class'=>'']) !!}
+                {!! Notification::getErrorDetail('online_only') !!}
+                <p>Uncheck this in order to become a member of Hackspace Manchester</p>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-xs-12 col-md-8">
         {!! Form::submit('Update', array('class'=>'btn btn-primary')) !!}
