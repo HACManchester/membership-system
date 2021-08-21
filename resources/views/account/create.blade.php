@@ -21,6 +21,9 @@ Join Hackspace Manchester
     </div>
 
     {!! Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) !!}
+
+    {!! Form::hidden('online_only', '0') !!}
+
     <div class="row">
         <div class="col-xs-12">
             <p>
