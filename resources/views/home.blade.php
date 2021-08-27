@@ -18,7 +18,7 @@
                 </p>
                 @if ($guest)
                     <p>
-                        Sign up to Hackspace Manchester, managing your subscription, join teams and book inductions.
+                        Here you can sign up to Hackspace Manchester, manage your subscription, join teams, book inductions, and more!
                     </p>
                     <p>
                         For more information on Hackspace Manchester please visit <a href="https://www.hacman.org.uk">www.hacman.org.uk</a>
