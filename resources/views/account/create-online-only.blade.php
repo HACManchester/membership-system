@@ -24,6 +24,8 @@ Join Hackspace Manchester
     {!! Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) !!}
 
     {!! Form::hidden('online_only', '1') !!}
+    {!! Form::hidden('phone', '00000000000') !!}
+    {!! Form::hidden('emergency_contact', '00000000000') !!}
 
     @if (Notification::hasMessage())
     <div class="alert alert-{{ Notification::getLevel() }} alert-dismissable">
