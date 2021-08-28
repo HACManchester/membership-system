@@ -105,7 +105,7 @@
 @endif
 
 
-@if ($user->status == 'setting-up' && !user->online_only)
+@if ($user->status == 'setting-up' && !$user->online_only)
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             @include('account.partials.setup-panel')
