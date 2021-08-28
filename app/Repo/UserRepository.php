@@ -55,6 +55,10 @@ class UserRepository extends DBRepository
             ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%');
         }
 
+        if(!$params['include_online_only']) {
+            $model = $model->where('online_only', '0');
+        }
+
         if ($params['showLeft']) {
             $model = $model->where('status', 'left');
         } else {
