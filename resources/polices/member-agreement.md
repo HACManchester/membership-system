@@ -1,5 +1,5 @@
-# Member Induction 
-
+# Welcome to Hackspace Manchester!
+## This is a brief primer on how the space works
 Please read and complete this induction. You will not be able to access the space until this is complete   
 
 ## Introduction
@@ -8,23 +8,42 @@ Hackspace Manchester is something we do together. It is a community. The infrast
 
 Every member is a citizen of the Hackspace Community and as such must follow the rules and guidelines in place to ensure that the community can exist safely and cohesively.
 
-Please ensure you have read the Citizen Hackspace Agreement available here 
+## House Rules
+Usually things work well, and this is in part due to our rules. 
+They can be read at any time at [here](https://hacman.org.uk/rules).
+
+## Member Handbook
+To keep things simple and provide an overview of how the space works, we have a member handbook which you can flick through. 
+
+[There is a copy online](https://list.hacman.org.uk/uploads/short-url/sytcpF9wevLdlb8VjpruXOhvrlD.pdf) and there are two copies in the space for reference:
+* One is by the lightswitches as you come in
+* The other is on the member noticeboard.
+
+*** Please take a moment to flick through the member handbook so you're grounded in how the space operates ***
 
 ## RFID Access
+When you fill in your payment information, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
+This flyer will have the ID of the enclosed fob written on it, usually something like:
+`ABCDEF12` or `AB12CD34`. The fob ID will be made up of numbers `0-9`, and letters `A-F`. 
 
-To add an RFID tag to your account to allow you to enter the space 24/7 click Your Membership and then click the Edit button and change the details you wish to change then click update.
+You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
+* Click "Your Membership" in the left hand menu
+* Click "Edit" in the top right
+* Enter your key fob ID in the "Key Fob" section 
+* Click save.
 
-***Note your Fob Will Not Work Until you have completed this induction and ticked the box at the bottom***
-
-![edit](https://lh3.googleusercontent.com/UG3LgcLzCBiLGFmAyeO9N7PfLgn1g_4uUf670dwCkqJCGV5VepegYeE6WCdCTZE0Qt8qnVTlH_g)
-
-To add an RFID fob to your account scroll to the bottom of the edit profile, click on the white box under the text and scan your fob with the reader in the space (or any compatible phone or rfid reader you have lying around) to enter your fob UID then click Add a new fob to save this.
-
-![](https://lh3.googleusercontent.com/rvIoLMlLIIaAnGtTTuT3tvyjWj6c55TWPlG2XzGZrWXmL7m5zuXQODms1xadnd6QA8nfZra6lHQ "fob")
+*** Please note: your Fob Will Not Work Until you have completed this induction and ticked the box at the bottom ***
 
 ## Equipment Inductions
 
-Inductions are required for various machines around the space including the laser cutter, 3D printer and the woodworking area. Our inductions are a mixture of face to face instructions and also online through our learning platform at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) To access this use your member system username and password. 
+Inductions are required for various machines around the space including:
+* the laser cutter
+* 3D printer 
+* lathes (wood, metal)
+* CNC
+* and others... 
+  
+Our inductions are run by members, and are a mixture of face to face instructions and also online through our learning platform at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) To access this use your member system username and password. 
 
 For a tool eg the Laser that requires an induction you should ensure using the tools & equipment page on the members system and simply click on the tool name under the tools & equipment page. Scroll down to the section that reads " To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance"" click the Pay Now button to pay the access fee  **EVEN IF THE ACCESS FEE IS £0 you must click the pay now button for the system to register you as requiring an induction**
 
@@ -52,4 +71,5 @@ If you no longer need your members storage space or you are leaving the hackspac
 If you have any questions regarding getting started as a member please use the forum, [telegram](https://t.me/hacmanchester) chat or directly email the board on board@hacman.org.uk 
 
 
+## We look forward to seeing you soon!
 
