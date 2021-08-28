@@ -3,7 +3,7 @@
 
 @section('content')
 
-	<div class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+	<div class="col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="menuToggleButton" style="float: none; padding: 0">

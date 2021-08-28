@@ -56,43 +56,42 @@
     </header>
 
 
-    <ul class="nav">
-        @if (!Auth::guest())
-        {!! HTML::sideNavLink('Members', 'members.index') !!}
-        {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
-        {!! HTML::sideNavLink('Large Project Storage', 'projects_storage.index') !!}
-        {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
-        {!! HTML::sideNavLink('Stats', 'stats.index') !!}
-        {!! HTML::sideNavLink('Teams', 'groups.index') !!}
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
-        {!! HTML::sideNavLink('Activity', 'activity.index') !!}
-        {!! HTML::sideNavLink('Proposals', 'proposals.index') !!} 
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('comms'))
+    @if (!Auth::guest())
+        <ul class="nav">
+            {!! HTML::sideNavLink('Members', 'members.index') !!}
+            {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
+            {!! HTML::sideNavLink('Large Project Storage', 'projects_storage.index') !!}
+            {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
+            {!! HTML::sideNavLink('Stats', 'stats.index') !!}
+            {!! HTML::sideNavLink('Teams', 'groups.index') !!}
+            @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            {!! HTML::sideNavLink('Activity', 'activity.index') !!}
+            {!! HTML::sideNavLink('Proposals', 'proposals.index') !!} 
+            @endif
+            @if (!Auth::guest() && Auth::user()->hasRole('comms'))
             {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            @endif
+            @if (!Auth::guest() && Auth::user()->hasRole('admin'))
             {!! HTML::sideNavLink('Manage Members', 'account.index') !!}
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('acs'))
+            @endif
+            @if (!Auth::guest() && Auth::user()->hasRole('acs'))
             {!! HTML::sideNavLink('Devices', 'devices.index') !!}
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('finance'))
+            @endif
+            @if (!Auth::guest() && Auth::user()->hasRole('finance'))
             {!! HTML::sideNavLink('Payments', 'payments.index') !!}
             {!! HTML::sideNavLink('Expenses <span class="badge js-expenses-count"></span>', 'expenses.index') !!}
-        @endif
-        @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            @endif
+            @if (!Auth::guest() && Auth::user()->hasRole('admin'))
             {!! HTML::sideNavLink('Log Files', 'logs') !!}
-        @endif
-    </ul>
+            @endif
+        </ul>
+    @endif
 
     <ul class="nav secondaryNav">
         @if (Auth::guest())
             {!! HTML::sideNavLink('Login', 'login') !!}
             {!! HTML::sideNavLink('Become a Member', 'register') !!}
         @else
-
             {!! HTML::sideNavLink('Logout', 'logout') !!}
         @endif
     </ul>
