@@ -27,8 +27,14 @@ Members
 @stop
 
 @section('content')
-
-{!! HTML::userPaginatorLinks($users) !!}
+<div class="well">
+    <h3>Search Tools</h3>
+    <form>
+        <input name="filter"/>
+        <input type="submit">
+    </form>
+    {!! HTML::userPaginatorLinks($users) !!}
+</div>
 <table class="table memberList">
     <thead>
         <tr>

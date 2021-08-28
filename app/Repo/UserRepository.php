@@ -49,7 +49,8 @@ class UserRepository extends DBRepository
         if($params['filter']) {
             $model = $model
             ->where('email', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('name', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
             ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
             ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%');
         }
