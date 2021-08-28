@@ -6,7 +6,7 @@
 	<div class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="menuToggleButton" style="float: none; padding: none; display: inline-block">
+                <div class="menuToggleButton" style="float: none; padding: 0">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>

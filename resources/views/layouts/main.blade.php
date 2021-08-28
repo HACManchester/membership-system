@@ -33,7 +33,7 @@
 </head>
 <body class="{{ $body_class or '' }}">
 
-    @include('partials/main-sidenav')
+@include('partials/main-sidenav')
 
 <div id="bodyWrap">
 
