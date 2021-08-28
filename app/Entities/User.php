@@ -113,8 +113,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'leaving'           => 'Leaving',
             'on-hold'           => 'On Hold',
             'left'              => 'Left',
-            'honorary'          => 'Honorary',
-            'online-only'       => 'Online Only'
+            'honorary'          => 'Honorary'
         ];
     }
 
@@ -293,14 +292,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function isSuspended()
     {
         return ($this->status == 'suspended');
-    }
-
-        /**
-     * @return bool
-     */
-    public function isOnlineOnly()
-    {
-        return ($this->status == 'online-only');
     }
 
     /**

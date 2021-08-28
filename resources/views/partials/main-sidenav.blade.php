@@ -3,9 +3,14 @@
     <header>
         <span class="sidenav-brand">
             <a href="{{ route('home') }}"><img class="" src="/img/logo-new.png" height="100" /></a>
-            @if (!Auth::guest() && (Auth::user()->status != 'active') )
-                {!! HTML::statusLabel(Auth::user()->status) !!}
+            @if($user->online_only)
+                <span class="label label-warning">Online Only</span>
+            @else
+                @if (!Auth::guest() && (Auth::user()->status != 'active') )
+                    {!! HTML::statusLabel(Auth::user()->status) !!}
+                @endif
             @endif
+            
         </span>
         @if (!Auth::guest())
         <ul class="nav memberAccountLinks">

@@ -1,10 +1,15 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8">
         <ul class="nav nav-pills">
-            <li>
-                <p class="navbar-text">{!! HTML::statusLabel($user->status) !!}</p>
-            </li>
 
+            @if($user->online_only)
+                <span class="label label-warning">Online Only</span>
+            @else
+                <li>
+                    <p class="navbar-text">{!! HTML::statusLabel($user->status) !!}</p>
+                </li>
+            @endif
+            
             <li>
                 <p class="navbar-text">{!! HTML::spaceAccessLabel($user->active) !!}</p>
             </li>
@@ -18,7 +23,7 @@
     </div>
     <div class="col-xs-12 col-sm-4">
         <div class="memberSubAmount clearfix">
-            @if (!$user->isOnlineOnly())
+            @if (!$user->online_only)
                 <div class="navbar-text">
                     Balance: {{ $memberBalance }} <br />
                     {{ $user->present()->subscriptionDetailLine }}

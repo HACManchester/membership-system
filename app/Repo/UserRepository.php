@@ -120,10 +120,6 @@ class UserRepository extends DBRepository
             unset($memberData['password']);
         }
 
-        if($memberData['online_only']){
-            $memberData['status'] = 'online-only';
-        }
-
         $memberData['hash'] = str_random(30);
 
         $memberData['rules_agreed'] = $memberData['rules_agreed']? Carbon::now(): null;
