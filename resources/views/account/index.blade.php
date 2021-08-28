@@ -31,6 +31,7 @@ Members
     <h3>Search Tools</h3>
     <form>
         <input name="filter"/>
+        <input type="checkbox" name="include_online_only"/>
         <input type="submit">
     </form>
     {!! HTML::userPaginatorLinks($users) !!}

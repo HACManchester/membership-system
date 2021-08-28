@@ -181,6 +181,8 @@ Edit your details
             </div>
         </div>
     </div>
+@else
+    {!! Form::hidden('online_only', 0) !!}
 @endif
 
 <div class="row">

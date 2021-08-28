@@ -242,7 +242,7 @@
         </div>
     @endif
 
-    @if ($user->status == 'setting-up')
+    @if ($user->status == 'setting-up' || $user->status == 'online-only')
         <div class="col-xs-12 col-sm-6">
             <div class="row">
                 <div class="col-xs-12">
