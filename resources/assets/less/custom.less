@@ -10,10 +10,9 @@ body {
   margin-top: 0;
 }
 
-
 /* Home page */
 body.home {
-  background: url('/img/rule-zero.jpg') no-repeat center center fixed;
+  background: url("/img/rule-zero.jpg") no-repeat center center fixed;
   background-size: cover;
 }
 body.home .panel {
@@ -21,18 +20,17 @@ body.home .panel {
   margin-top: 50px;
 }
 
-
 /* Logo in the navbar - https://bootsnipp.com/snippets/featured/navbar-with-logo */
-.navbar .brand-logo{
+.navbar .brand-logo {
   padding: 0 10px;
 }
-.brand-logo img{
-  margin-top: 5px
+.brand-logo img {
+  margin-top: 5px;
 }
 .brand-name-short {
   display: none;
 }
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .brand-name-short {
     display: block;
   }
@@ -41,10 +39,8 @@ body.home .panel {
   }
 }
 
-
-
 /* Login Form */
-.login-container{
+.login-container {
   position: relative;
   text-align: center;
   background: #fff;
@@ -56,34 +52,34 @@ body.home .panel {
 .login-container .form-group {
   margin-bottom: 0;
 }
-.login-container input.form-control{
+.login-container input.form-control {
   width: 100%;
   padding: 10px;
   text-align: center;
-  height:40px;
+  height: 40px;
   background: #fafafa;
-  transition:0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
 }
-.login-container input:focus{
+.login-container input:focus {
   outline: 0;
   background: #eee;
 }
-.login-container input[name="email"]{
+.login-container input[name="email"] {
   border-radius: 5px 5px 0 0;
 }
-.login-container input[name="password"]{
+.login-container input[name="password"] {
   border-radius: 0 0 5px 5px;
   border-top: 0;
 }
-.login-container input[type="submit"]{
-  margin-top:15px;
+.login-container input[type="submit"] {
+  margin-top: 15px;
   padding: 10px 20px;
 }
 .login-container .bottom-links {
-  margin-top:20px;
+  margin-top: 20px;
 }
 
-.register-container{
+.register-container {
   position: relative;
   background: #fff;
   border: 1px solid #ccc;
@@ -92,58 +88,58 @@ body.home .panel {
   margin-bottom: 20px;
 }
 body.register_login {
-  background: url('/img/rule-zero.jpg') no-repeat center center fixed;
+  background: url("/img/rule-zero.jpg") no-repeat center center fixed;
   background-size: cover;
 }
 body.register_login .top-alerts {
   display: none;
 }
 
-
 /* Alerts */
-.alert-danger, .alert-success {
+.alert-danger,
+.alert-success {
   border: 0;
   border-left: 3px solid;
 }
-
 
 /* Panel Pagination */
 .panel-footer .pagination {
   margin: 0;
 }
 
-
-
-
 /* Stats Page */
 .key-figure {
   font-size: 2em;
   font-weight: bold;
-  color: #D9534F;
+  color: #d9534f;
 }
-
-
 
 /* BB Credit */
 .credit-figure {
   font-size: 3em;
   font-weight: bold;
-  color: #D9534F;
+  color: #d9534f;
 }
-
 
 .skill-list {
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.skill-box {
+  flex: 1 0 auto;
+  margin: 1em;
+}
 
+.label {
+  padding: 0.8em;
+}
 
 /* Equiment Page */
 .equipmentTabs {
   margin-bottom: 10px;
 }
-
-
 
 .siteFooter {
   position: absolute;
@@ -162,7 +158,6 @@ body.register_login .top-alerts {
   padding-left: 5px;
 }
 
-
 /* Feedback Widget */
 .feedbackWidgetButtonWrap {
   position: fixed;
@@ -178,20 +173,18 @@ body.register_login .top-alerts {
   height: 31px;
   width: 120px;
   padding: 4px 7px;
-  background-color: #1E8C99;
+  background-color: #1e8c99;
   color: white;
   font-size: 18px;
   transition: all 0.3s;
   cursor: pointer;
-  box-shadow:         -1px 1px 5px 0px rgba(50, 50, 50, 0.3);
+  box-shadow: -1px 1px 5px 0px rgba(50, 50, 50, 0.3);
 }
 #feedbackWidgetButton .glyphicon {
-
 }
 #feedbackWidgetButton:hover {
-  right:0;
+  right: 0;
 }
-
 
 .btn-secondary {
   .button-variant(@btn-secondary-color; @btn-secondary-bg; @btn-secondary-border);
@@ -201,3 +194,6 @@ body.register_login .top-alerts {
   content: "\1f511";
 }
 
+.label {
+  padding: 1em;
+}

@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#1E8C99">
     <title>@yield('meta-title', 'Member System') | Hackspace Manchester</title>
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,100' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
     <link href="/css/main.css" rel="stylesheet">
 
     <script src="//www.google.com/jsapi"></script>
@@ -33,7 +33,7 @@
 </head>
 <body class="{{ $body_class or '' }}">
 
-    @include('partials/main-sidenav')
+@include('partials/main-sidenav')
 
 <div id="bodyWrap">
 

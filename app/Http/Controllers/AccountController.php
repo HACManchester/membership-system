@@ -114,10 +114,11 @@ class AccountController extends Controller
      */
     public function index()
     {
+        $filter = \Request::get('filter');
         $sortBy = \Request::get('sortBy');
         $direction = \Request::get('direction', 'asc');
         $showLeft = \Request::get('showLeft', 0);
-        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
+        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter'));
         return \View::make('account.index')->withUsers($users);
     }
 

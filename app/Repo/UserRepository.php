@@ -46,6 +46,15 @@ class UserRepository extends DBRepository
     {
         $model = $this->model->with('roles')->with('profile');
 
+        if($params['filter']) {
+            $model = $model
+            ->where('email', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
+            ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%');
+        }
+
         if ($params['showLeft']) {
             $model = $model->where('status', 'left');
         } else {
