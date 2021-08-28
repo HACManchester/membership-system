@@ -1,4 +1,3 @@
-
 #pageTitle {
   //box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   background-color: @brand-primary;
@@ -9,27 +8,26 @@
   position: relative;
   min-height: 170px; //120
 
-
   .titles {
     font-size: 24px;
     line-height: 64px;
-    color: #FFF;
+    color: #fff;
     margin: 00px auto;
     overflow: hidden;
     padding-top: 103px;
 
     .title {
-      margin:10px 20px;
-      float:left;
+      margin: 10px 20px;
+      float: left;
       a {
-        color: #FFF;
+        color: #fff;
       }
     }
     img {
       float: left;
       margin: 10px 20px;
-      margin-right:0;
-      transition: all .1s;
+      margin-right: 0;
+      transition: all 0.1s;
       margin-top: -50px;
     }
     .action-buttons {
@@ -44,13 +42,13 @@
 }
 
 //On the home and register page don't render the title block
-body.home #pageTitle, body.register_login #pageTitle {
+body.home #pageTitle,
+body.register_login #pageTitle {
   display: none;
 }
 
 //Scrolled down the page
 #bodyWrap.fixedHeader {
-
   #pageTitle {
     min-height: 64px;
     height: initial;
@@ -64,14 +62,13 @@ body.home #pageTitle, body.register_login #pageTitle {
       img {
         width: 0px;
         height: 0px;
-        margin:0;
+        margin: 0;
       }
     }
   }
   .menuToggleButton {
     padding-top: 11px;
   }
-
 }
 
 .menuToggleButton {
@@ -108,22 +105,17 @@ body.home #pageTitle, body.register_login #pageTitle {
 }
 
 @media screen and (max-width: @screen-lg) {
-
-    #pageTitle {
-      padding-left: 0 !important;
-    }
+  #pageTitle {
+    padding-left: 0 !important;
+  }
   .siteFooter {
     padding-left: 0 !important;
   }
-
 }
-@media screen and (min-width: @screen-lg) {
-  //Large screen size
+@media screen and (min-width: @screen-md) {
+  //Medium screen size
 
   .menuToggleButton {
     display: none;
   }
-
 }
-
-
