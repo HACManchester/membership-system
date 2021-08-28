@@ -27,14 +27,30 @@
 
             {!! HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
             {!! HTML::sideNavLink('Getting Started', 'account.induction.show', [Auth::id()]) !!}
-            <li><a href="https://list.hacman.org.uk">Forum</a></li>
-            <li><a href="https://moodle.hacman.org.uk">Moodle</a></li>
-            <li><a href="https://www.hacman.org.uk/covid-19-information/">COVID-19 information</a></li>
-            <li><a href="https://help.hacman.org.uk">Helpdesk</a></li>
-	    <li><a href="https://docs.hacman.org.uk">Documentation</a></li>
-
-
-
+            <li class="withAction">
+                <a href="https://list.hacman.org.uk">Forum</a>
+                <a class="toggleSettings" href="https://list.hacman.org.uk">
+                    <i class="material-icons md-18">link</i>
+                </a>
+            </li>
+            <li class="withAction">
+                <a href="https://moodle.hacman.org.uk">Moodle</a>
+                <a class="toggleSettings" href="https://moodle.hacman.org.uk">
+                    <i class="material-icons md-18">link</i>
+                </a>
+            </li>
+            <li class="withAction">
+                <a href="https://www.hacman.org.uk/covid-19-information/">COVID-19 information</a>
+                <a class="toggleSettings" href="https://www.hacman.org.uk/covid-19-information/">
+                    <i class="material-icons md-18">link</i>
+                </a>
+            </li>
+	        <li class="withAction">
+                <a href="https://docs.hacman.org.uk">Documentation</a>
+                <a class="toggleSettings" href="https://docs.hacman.org.uk">
+                    <i class="material-icons md-18">link</i>
+                </a>
+            </li>
         </ul>
         @endif
     </header>
