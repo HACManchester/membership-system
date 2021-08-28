@@ -4,10 +4,15 @@
 {{ $user->name }} - Manage your membership
 @stop
 
+@if($user->online_only)
+    <span class="label label-warning">Online Only</span>
+@endif
+
 @section('page-title')
     {{ $user->name }}<br />
     <small>{{ $user->email }}</small>
 @stop
+
 
 @section('page-key-image')
     {!! HTML::memberPhoto($user->profile, $user->hash, 100, '') !!}
@@ -110,9 +115,9 @@
 
 @else
 
-    @if ($user->status == 'online-only')
+    @if ($user->online_only)
     <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
+        <div class="col-xs-12 col-md-12 pull-left">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Online Only user</h3>

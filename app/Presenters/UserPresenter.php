@@ -54,7 +54,7 @@ class UserPresenter extends Presenter
 
     public function subscriptionDetailLine()
     {
-        if ($this->entity->status == 'setting-up' || $this->entity->status == 'online-only') {
+        if ($this->entity->status == 'setting-up') {
             return '';
         }
         $string = '' . $this->monthlySubscription . ' a month ';

@@ -30,8 +30,17 @@ Members
 <div class="well">
     <h3>Search Tools</h3>
     <form>
-        <input name="filter"/>
-        <input type="checkbox" name="include_online_only"/>
+        <div class="row">
+            <div class="col-md-6">
+                <input name="filter" placeholder="Filter by name, email, username..."/>
+            </div>
+            <div class="col-md-6">
+                <label for="include_online_only">Include online only accounts?</label>
+                <input type="checkbox" name="include_online_only" value="1"/>
+            </div>
+        </div>
+
+        
         <input type="submit">
     </form>
     {!! HTML::userPaginatorLinks($users) !!}

@@ -164,6 +164,7 @@ Edit your details
     </div>
 </div>
 
+{!! Form::hidden('online_only', '0') !!}
 @if ($user->online_only)
     <div class="row">
         <div class="col-xs-12 col-md-8">
@@ -171,18 +172,15 @@ Edit your details
                 style="padding: 1em; background: white; border-left: 5px solid blue;" 
             >
             <h4>You're an online only user, and not a member of the space (yet).</h4>
-            <p>You can upgrade your account to a full member account if you want to join the space.
-            You'll need to fill in address fields and emergency contact information. 
-            After that you'll need to set up payment.</p>   
+            <p>You can upgrade your account to a full member account if you want to join the space.</p>
                 {!! Form::checkbox('online_only', true, null, ['class'=>'']) !!}
                 {!! Form::label('online_only', 'Online only user', ['class'=>'']) !!}
                 {!! Notification::getErrorDetail('online_only') !!}
-                <p>Uncheck this in order to become a member of Hackspace Manchester</p>
+                <p>You'll need to fill in address fields and emergency contact information.</p>   
+                <p>Then uncheck this box in order to become a member of Hackspace Manchester. You'll need to set up payment information before your fob will work on the door.</p>
             </div>
         </div>
     </div>
-@else
-    {!! Form::hidden('online_only', 0) !!}
 @endif
 
 <div class="row">
