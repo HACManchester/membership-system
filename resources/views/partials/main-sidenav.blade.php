@@ -4,7 +4,7 @@
         <span class="sidenav-brand">
             <a href="{{ route('home') }}"><img class="" src="/img/logo-new.png" height="100" /></a>
             @if (!Auth::guest())
-                @if ($user->online_only)
+                @if (Auth::user()->online_only)
                     <span class="label label-warning">Online Only</span>
                 @else
                     @if (Auth::user()->status != 'active')
