@@ -6,6 +6,15 @@ class UserObserver
 {
 
     /**
+     * Welcome online only users when they create their account
+     */
+    public function created($user){
+        if($user->online_only) {
+            $this->newUser($user);
+        }
+    }
+
+    /**
      * Look at the user record each time its saved and fire events
      * @param $user
      */

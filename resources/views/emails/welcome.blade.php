@@ -44,7 +44,7 @@ We have two main channels of communication online, our forum and Telegram.
 <li>ask on telegram (https://hacman.org.uk/telegram)</li>
 <li>still no joy finding it? Contact the procurement team via the helpdesk at <a href="https://help.hacman.org.uk">https://help.hacman.org.uk</a> or if you need it urgently (and it's on the list) go buy some then email the receipt to procurement@hacman.org.uk</li>
 </ol>
-<p>If you have any questions, please do not hesitate to contact us via the helpdesk, email or ask everyone via Telegram or the forum.</p>
+<p>If you have any questions, please do not hesitate to ask the community on Telegram or the forum.</p>
 <p>Many Thanks</p>
 <p>Hackspace Manchester Board</p>
 </body>

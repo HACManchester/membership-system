@@ -154,6 +154,10 @@ class StorageBoxController extends Controller
             throw new \BB\Exceptions\AuthenticationException();
         }
 
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $box = $this->storageBoxRepository->getById($boxId);
 
         //Make sure the box is available
