@@ -14,6 +14,14 @@ class UserObserver
         }
     }
 
+    public function updated($user){
+        // If they changed their email, require reconfirmation
+        if ($original['email'] != $user->email){
+            $user->emailChanged();
+            $this->sendConfirmationEmail($user);
+        }
+    }
+
     /**
      * Look at the user record each time its saved and fire events
      * @param $user
@@ -21,12 +29,6 @@ class UserObserver
     public function saved($user)
     {
         $original = $user->getOriginal();
-
-        // If they changed their email, require reconfirmation
-        if ($original['email'] != $user->email){
-            $user->emailChanged();
-            $this->sendConfirmationEmail($user);
-        }
 
         //Use status changed from setting-up to something else
         if (($original['status'] == 'setting-up') && ($user->status != 'setting-up')) {

@@ -56,7 +56,10 @@ class UserRepository extends DBRepository
         }
 
         if(!$params['include_online_only']) {
-            $model = $model->where('online_only', '!=', '1');
+            $model = $model->where(function($query){
+                $query->where('online_only', '!=', '1')
+                    ->orWhereNull('online_only');
+            });
         }
 
         if ($params['showLeft']) {
