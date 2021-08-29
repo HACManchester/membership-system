@@ -423,10 +423,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $this->save();
     }
 
-    public function emailChanged()
+    public function emailChanging()
     {
         $this->email_verified = false;
-        $this->save();
     }
 
     /**

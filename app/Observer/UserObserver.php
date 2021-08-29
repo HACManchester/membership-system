@@ -14,10 +14,10 @@ class UserObserver
         }
     }
 
-    public function updated($user){
+    public function updating($user){
         // If they changed their email, require reconfirmation
         if ($original['email'] != $user->email){
-            $user->emailChanged();
+            $user->emailChanging();
             $this->sendConfirmationEmail($user);
         }
     }
