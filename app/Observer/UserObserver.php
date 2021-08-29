@@ -15,6 +15,8 @@ class UserObserver
     }
 
     public function updating($user){
+        $original = $user->getOriginal();
+        
         // If they changed their email, require reconfirmation
         if ($original['email'] != $user->email){
             $user->emailChanging();
