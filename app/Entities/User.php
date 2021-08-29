@@ -269,6 +269,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getAlerts()
     {
         $alerts = [];
+        if ( ! $this->email_verified ) {
+            $alerts[] = 'email-not-verified';
+        }
         if ( ! $this->profile->profile_photo && ! $this->profile->new_profile_photo) {
             $alerts[] = 'missing-profile-photo';
         }

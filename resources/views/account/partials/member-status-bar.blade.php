@@ -3,7 +3,9 @@
         <ul class="nav nav-pills">
 
             @if($user->online_only)
-                <span class="label label-warning">Online Only</span>
+                <li>
+                    <span class="label label-warning">Online Only</span>
+                </li>
             @else
                 <li>
                     <p class="navbar-text">{!! HTML::statusLabel($user->status) !!}</p>

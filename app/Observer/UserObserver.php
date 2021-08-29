@@ -22,6 +22,11 @@ class UserObserver
     {
         $original = $user->getOriginal();
 
+        // If they changed their email, require reconfirmation
+        if ($original['email'] != $user->email){
+            // TODO - send reconfirmation email
+        }
+
         //Use status changed from setting-up to something else
         if (($original['status'] == 'setting-up') && ($user->status != 'setting-up')) {
             $this->newUser($user);
