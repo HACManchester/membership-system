@@ -99,6 +99,13 @@ class SessionController extends Controller
                  */
                 $user = \Auth::user();
                 
+                if( ! $user->email_verified) {
+                    return \Response::json([
+                        'success'=>'false', 
+                        'message' => 'Email is not verfied - please click the link in the welcome email.'
+                    ], 401);
+                }
+
                 /**
                  * This is what's required back by SSO
                  */
