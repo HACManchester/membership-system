@@ -4,10 +4,6 @@
 {{ $user->name }} - Manage your membership
 @stop
 
-@if($user->online_only)
-    <span class="label label-warning">Online Only</span>
-@endif
-
 @section('page-title')
     {{ $user->name }}<br />
     <small>{{ $user->email }}</small>

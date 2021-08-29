@@ -193,7 +193,8 @@ Edit your details
 {!! Form::close() !!}
 
         <h4>Key Fob</h4>
-        <p>Scan your fob with the reader to enter your fob ID and click add new fob</p>
+        <p><b>Got your welcome flyer and fob?</b> Just enter the ID on the flyer into the box below and hit "Add a new fob"
+        <p>At the space signup desk? Scan your fob with the reader to enter your fob ID and hit "Add new fob"</p>
         @foreach ($user->keyFobs()->get() as $fob)
         {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
             <div class="form-group">
