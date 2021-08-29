@@ -13,7 +13,7 @@ Tools and Equipment
 @stop
 
 @section('page-action-buttons')
-    @if (!Auth::guest() && !$user->online_only)
+    @if (!Auth::guest() && !Auth::user()->online_only)
         <a class="btn btn-secondary" href="{{ route('equipment.create') }}">Record a new item</a>
     @endif
 @stop
