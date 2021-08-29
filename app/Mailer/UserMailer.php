@@ -20,7 +20,7 @@ class UserMailer
     /**
      * Send a welcome email
      */
-       public function sendWelcomeMessage()
+    public function sendWelcomeMessage()
     {
         $user = $this->user;
 
@@ -42,7 +42,11 @@ class UserMailer
         }
     }
     
-
+    public function sendConfirmationEmail(){
+        \Mail::queue('emails.confirm-email', ['user'=>$user], function ($message) use ($user) {
+            $message->to($user->email, $user->name)->subject('Confirm your email - Hackspace Manchester');
+        });
+    }
 
 
     public function sendPaymentWarningMessage()

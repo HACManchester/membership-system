@@ -24,7 +24,8 @@ class UserObserver
 
         // If they changed their email, require reconfirmation
         if ($original['email'] != $user->email){
-            // TODO - send reconfirmation email
+            $user->emailChanged();
+            $this->sendConfirmationEmail($user);
         }
 
         //Use status changed from setting-up to something else
@@ -58,6 +59,11 @@ class UserObserver
         $userMailer->sendWelcomeMessage();
 
         $this->sendSlackNotification('#general', $user->name . ' has just joined Hackspace Manchester');
+    }
+
+    private function sendConfirmationEmail($user){
+        $userMailer = new UserMailer($user);
+        $userMailer->sendConfirmationEmail();
     }
 
     private function paymentWarning($user)
