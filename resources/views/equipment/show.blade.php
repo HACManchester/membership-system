@@ -9,7 +9,7 @@ Tools and Equipment
 @stop
 
 @section('page-action-buttons')
-    @if (!Auth::guest() && !$user->online_only)
+    @if (!Auth::guest() && !Auth::user()->online_only)
         <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
     @endif
 @stop
@@ -74,7 +74,7 @@ Tools and Equipment
                             <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
                             </p>
 
-                            @if($user->online_only)
+                            @if(Auth::user()->online_only)
                                 <h4>Online Only users may not sign up for tools</h4>
                             @else
                                 <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
