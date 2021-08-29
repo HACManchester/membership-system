@@ -36,25 +36,25 @@
             {!! HTML::sideNavLink('Getting Started', 'account.induction.show', [Auth::id()]) !!}
             <li class="withAction">
                 <a href="https://list.hacman.org.uk">Forum</a>
-                <a href="https://list.hacman.org.uk">
+                <a href="https://list.hacman.org.uk" style="position:absolute;right: 0;top:0">
                     <i class="material-icons md-18">link</i>
                 </a>
             </li>
             <li class="withAction">
                 <a href="https://moodle.hacman.org.uk">Moodle</a>
-                <a href="https://moodle.hacman.org.uk">
+                <a href="https://moodle.hacman.org.uk" style="position:absolute;right: 0;top:0">
                     <i class="material-icons md-18">link</i>
                 </a>
             </li>
             <li class="withAction">
                 <a href="https://www.hacman.org.uk/covid-19-information/">COVID-19 information</a>
-                <a href="https://www.hacman.org.uk/covid-19-information/">
+                <a href="https://www.hacman.org.uk/covid-19-information/" style="position:absolute;right: 0;top:0">
                     <i class="material-icons md-18">link</i>
                 </a>
             </li>
 	        <li class="withAction">
                 <a href="https://docs.hacman.org.uk">Documentation</a>
-                <a href="https://docs.hacman.org.uk">
+                <a href="https://docs.hacman.org.uk" style="position:absolute;right: 0;top:0">
                     <i class="material-icons md-18">link</i>
                 </a>
             </li>

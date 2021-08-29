@@ -32,7 +32,7 @@ Members
     <form>
         <div class="row">
             <div class="col-md-6">
-                <input name="filter" placeholder="Filter by name, email, username..."/>
+                <input name="filter" value="{{ Request::get('filter') }}" placeholder="Filter by name, email, username..."/>
             </div>
             <div class="col-md-6">
                 <label for="include_online_only">Include online only accounts?</label>
@@ -40,8 +40,15 @@ Members
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <b>{!! count($users) !!} results</b>
+            </div>
+            <div class="col-md-6">
+                <input type="submit"/>
+            </div>
+        </div>
         
-        <input type="submit">
     </form>
     {!! HTML::userPaginatorLinks($users) !!}
 </div>
