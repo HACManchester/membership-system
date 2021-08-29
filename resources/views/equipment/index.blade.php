@@ -47,7 +47,7 @@ Tools and Equipment
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
                     <td>
-                        @if (!Auth::guest())
+                        @if (!Auth::guest() && !Auth::user()->online_only)
                             <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
                         @endif
                     </td>

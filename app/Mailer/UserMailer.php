@@ -43,6 +43,8 @@ class UserMailer
     }
     
     public function sendConfirmationEmail(){
+        $user = $this->user;
+        
         \Mail::queue('emails.confirm-email', ['user'=>$user], function ($message) use ($user) {
             $message->to($user->email, $user->name)->subject('Confirm your email - Hackspace Manchester');
         });
