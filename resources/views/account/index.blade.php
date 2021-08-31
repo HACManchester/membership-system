@@ -37,6 +37,9 @@ Members
             <div class="col-md-6">
                 <label for="include_online_only">Include online only accounts?</label>
                 <input type="checkbox" name="include_online_only" value="1"/>
+                <br/>
+                <label for="include_online_only">New Members only (14d)</label>
+                <input type="checkbox" name="new_only" value="1"/>
             </div>
         </div>
 
