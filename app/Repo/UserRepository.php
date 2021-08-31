@@ -62,6 +62,10 @@ class UserRepository extends DBRepository
             });
         }
 
+        if ($params['new_only']) {
+            $model = $model->whereDate('created_at', '>', date('Y-m-d', strtotime("-14 day")));
+        }
+
         if ($params['showLeft']) {
             $model = $model->where('status', 'left');
         } else {
