@@ -20,22 +20,35 @@ class UserMailer
     /**
      * Send a welcome email
      */
-       public function sendWelcomeMessage()
+    public function sendWelcomeMessage()
     {
         $user = $this->user;
-        \Mail::queue('emails.welcome', ['user'=>$user], function ($message) use ($user) {
-            $message->to($user->email, $user->name)->subject('Welcome to Hackspace Manchester!');
-        });
 
-        $addressRepository = \App::make('BB\Repo\AddressRepository');
-        $address = $addressRepository->getActiveUserAddress($this->user->id);
-
-        \Mail::queue('emails.welcome-admin', ['user'=>$user, 'address'=>$address], function ($message) use ($user,$address) {
-            $message->to('outreach@hacman.org.uk')->subject('New Member Alert');
-        });
+        if ($user->online_only){
+            \Mail::queue('emails.welcome-online-only', ['user'=>$user], function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject('Welcome to Hackspace Manchester (Online Only)!');
+            });
+        } else {
+            \Mail::queue('emails.welcome', ['user'=>$user], function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject('Welcome to Hackspace Manchester!');
+            });
+    
+            $addressRepository = \App::make('BB\Repo\AddressRepository');
+            $address = $addressRepository->getActiveUserAddress($this->user->id);
+    
+            \Mail::queue('emails.welcome-admin', ['user'=>$user, 'address'=>$address], function ($message) use ($user,$address) {
+                $message->to('outreach@hacman.org.uk')->subject('New Member Alert');
+            });
+        }
     }
     
-
+    public function sendConfirmationEmail(){
+        $user = $this->user;
+        
+        \Mail::queue('emails.confirm-email', ['user'=>$user], function ($message) use ($user) {
+            $message->to($user->email, $user->name)->subject('Confirm your email - Hackspace Manchester');
+        });
+    }
 
 
     public function sendPaymentWarningMessage()

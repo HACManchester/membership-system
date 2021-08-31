@@ -164,6 +164,25 @@ Edit your details
     </div>
 </div>
 
+{!! Form::hidden('online_only', '0') !!}
+@if ($user->online_only)
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            <div class="form-group {{ Notification::hasErrorDetail('online_only', 'has-error has-feedback') }}"
+                style="padding: 1em; background: white; border-left: 5px solid blue;" 
+            >
+            <h4>You're an online only user, and not a member of the space (yet).</h4>
+            <p>You can upgrade your account to a full member account if you want to join the space.</p>
+                {!! Form::checkbox('online_only', true, null, ['class'=>'']) !!}
+                {!! Form::label('online_only', 'Online only user', ['class'=>'']) !!}
+                {!! Notification::getErrorDetail('online_only') !!}
+                <p>You'll need to fill in address fields and emergency contact information.</p>   
+                <p>Then uncheck this box in order to become a member of Hackspace Manchester. You'll need to set up payment information before your fob will work on the door.</p>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-xs-12 col-md-8">
         {!! Form::submit('Update', array('class'=>'btn btn-primary')) !!}
@@ -174,7 +193,8 @@ Edit your details
 {!! Form::close() !!}
 
         <h4>Key Fob</h4>
-        <p>Scan your fob with the reader to enter your fob ID and click add new fob</p>
+        <p><b>Got your welcome flyer and fob?</b> Just enter the ID on the flyer into the box below and hit "Add a new fob"
+        <p>At the space signup desk? Scan your fob with the reader to enter your fob ID and hit "Add new fob"</p>
         @foreach ($user->keyFobs()->get() as $fob)
         {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
             <div class="form-group">

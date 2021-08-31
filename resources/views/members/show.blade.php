@@ -48,7 +48,7 @@
                     <h3>Skills</h3>
                     <div class="skill-list">
                         @foreach($userSkills as $skill)
-                            <div class="col-sm-6 col-md-3">
+                            <div class="skill-box">
                                 <div class="thumbnail">
                                     <img src="/img/skills/{{  $skill['icon'] }}" width="100" height="100" />
                                     <div class="caption">

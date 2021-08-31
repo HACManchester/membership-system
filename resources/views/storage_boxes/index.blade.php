@@ -83,10 +83,14 @@
                 @if($box->user && !$box->user->active)
                     Member left - box to be reclaimed
                 @elseif (($volumeAvailable >= $box->size) && !$box->user)
-                    {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
-                    {!! Form::hidden('user_id', Auth::user()->id) !!}
-                    {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
-                    {!! Form::close() !!}
+                    @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
+                        ⛔ Unclaimable - Old storage or you don't have permission
+                    @else
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
+                        {!! Form::hidden('user_id', Auth::user()->id) !!}
+                        {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
+                        {!! Form::close() !!}
+                    @endif
                 @endif
             </td>
             @if (Auth::user()->hasRole('storage'))

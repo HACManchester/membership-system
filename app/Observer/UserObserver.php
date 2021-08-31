@@ -6,6 +6,25 @@ class UserObserver
 {
 
     /**
+     * Welcome online only users when they create their account
+     */
+    public function created($user){
+        if($user->online_only) {
+            $this->newUser($user);
+        }
+    }
+
+    public function updating($user){
+        $original = $user->getOriginal();
+        
+        // If they changed their email, require reconfirmation
+        if ($original['email'] != $user->email){
+            $user->emailChanging();
+            $this->sendConfirmationEmail($user);
+        }
+    }
+
+    /**
      * Look at the user record each time its saved and fire events
      * @param $user
      */
@@ -44,6 +63,11 @@ class UserObserver
         $userMailer->sendWelcomeMessage();
 
         $this->sendSlackNotification('#general', $user->name . ' has just joined Hackspace Manchester');
+    }
+
+    private function sendConfirmationEmail($user){
+        $userMailer = new UserMailer($user);
+        $userMailer->sendConfirmationEmail();
     }
 
     private function paymentWarning($user)

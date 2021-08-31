@@ -91,7 +91,7 @@ class AccountController extends Controller
         //This tones down some validation rules for admins
         $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
-        $this->middleware('role:member', array('except' => ['create', 'store']));
+        $this->middleware('role:member', array('except' => ['create', 'createOnlineOnly', 'store']));
         $this->middleware('role:admin', array('only' => ['index']));
         //$this->middleware('guest', array('only' => ['create', 'store']));
 
@@ -114,10 +114,13 @@ class AccountController extends Controller
      */
     public function index()
     {
+        $filter = \Request::get('filter');
+        $include_online_only = \Request::get('include_online_only');
+        $new_only = \Request::get('new_only');
         $sortBy = \Request::get('sortBy');
         $direction = \Request::get('direction', 'asc');
         $showLeft = \Request::get('showLeft', 0);
-        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft'));
+        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter', 'include_online_only', 'new_only'));
         return \View::make('account.index')->withUsers($users);
     }
 
@@ -133,6 +136,16 @@ class AccountController extends Controller
         return \View::make('account.create');
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function createOnlineOnly()
+    {
+        \View::share('body_class', 'register_login');
+        return \View::make('account.create-online-only');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -148,6 +161,7 @@ class AccountController extends Controller
             'secondary_email',
             'display_name',
             'announce_name',
+            'online_only',
             'password',
             'phone',
             'address.line_1',
@@ -258,7 +272,7 @@ class AccountController extends Controller
     public function update($id)
     {
         $user = User::findWithPermission($id);
-        $input = \Input::only('given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'emergency_contact', 'profile_private');
+        $input = \Input::only('given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'emergency_contact', 'profile_private');
 
         $this->userForm->validate($input, $user->id);
 

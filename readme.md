@@ -65,3 +65,17 @@ The system is built for a MySQL DB but a similar system will work<br />
 GoCardless for Direct Debit payments<br />
 MailGun for sending email - completely optional<br />
 The encryption key is essential and cannot be changed or lost once set<br />
+
+## Online Only / SSO
+There are two forms where you can sign up
+* One is for normal membership
+* The other is online only - this is where online services use this system as a SSO provider
+
+The flow for signing up is slightly different:
+#### Normal
+Sign up -> setup payment -> get welcome email
+
+#### Online Only
+Sign up -> get online only welcome email -> confirm email
+
+Online only is stored in the DB as such. Dummy data is inserted so as not to break db constraints, but this is caught when updating your details. This means users can go from online only to a full member. They can't go back to online only at the moment - their membership will just go to being expired, but will still work for SSO.

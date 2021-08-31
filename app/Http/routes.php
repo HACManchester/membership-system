@@ -40,6 +40,7 @@ Route::put('account/{account}/profile', ['uses'=>'ProfileController@update', 'as
 
 //Short register url
 Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
+Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@createOnlineOnly']);
 
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware'=>'role:admin']);

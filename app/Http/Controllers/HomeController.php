@@ -6,8 +6,11 @@ class HomeController extends Controller
 
     public function index()
     {
+        $guest = \Auth::guest();
+        $user = \Auth::user();
+
         \View::share('body_class', 'home');
-        return view('home');
+        return \View::make('home')->with('guest', $guest)->with('user', $user);
     }
 
 

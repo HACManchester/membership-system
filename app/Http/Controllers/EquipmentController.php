@@ -87,6 +87,8 @@ class EquipmentController extends Controller
 
     public function show($equipmentId)
     {
+        $user = \Auth::user();
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
@@ -113,7 +115,8 @@ class EquipmentController extends Controller
             ->with('userInduction', $userInduction)
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
-            ->with('usageTimes', $usageTimes);
+            ->with('usageTimes', $usageTimes)
+            ->with('user', $user);
     }
 
     /**
@@ -123,6 +126,10 @@ class EquipmentController extends Controller
      */
     public function create()
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
@@ -139,6 +146,10 @@ class EquipmentController extends Controller
      */
     public function store()
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
@@ -160,6 +171,10 @@ class EquipmentController extends Controller
      */
     public function edit($equipmentId)
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
@@ -178,6 +193,10 @@ class EquipmentController extends Controller
      */
     public function update($equipmentId)
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $data = \Request::only([
@@ -206,6 +225,10 @@ class EquipmentController extends Controller
 
     public function addPhoto($equipmentId)
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
         $data = \Request::only(['photo']);
@@ -237,6 +260,10 @@ class EquipmentController extends Controller
 
     public function destroyPhoto($equipmentId, $photoId)
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $photo = $equipment->photos[$photoId];
         $equipment->removePhoto($photoId);

@@ -27,8 +27,34 @@ Members
 @stop
 
 @section('content')
+<div class="well">
+    <h3>Search Tools</h3>
+    <form>
+        <div class="row">
+            <div class="col-md-6">
+                <input name="filter" value="{{ Request::get('filter') }}" placeholder="Filter by name, email, username..."/>
+            </div>
+            <div class="col-md-6">
+                <label for="include_online_only">Include online only accounts?</label>
+                <input type="checkbox" name="include_online_only" value="1"/>
+                <br/>
+                <label for="include_online_only">New Members only (14d)</label>
+                <input type="checkbox" name="new_only" value="1"/>
+            </div>
+        </div>
 
-{!! HTML::userPaginatorLinks($users) !!}
+        <div class="row">
+            <div class="col-md-6">
+                <b>{!! count($users) !!} results</b>
+            </div>
+            <div class="col-md-6">
+                <input type="submit"/>
+            </div>
+        </div>
+        
+    </form>
+    {!! HTML::userPaginatorLinks($users) !!}
+</div>
 <table class="table memberList">
     <thead>
         <tr>

@@ -9,6 +9,7 @@
     <small>{{ $user->email }}</small>
 @stop
 
+
 @section('page-key-image')
     {!! HTML::memberPhoto($user->profile, $user->hash, 100, '') !!}
 @stop
@@ -29,6 +30,9 @@
 <div class="alert alert-warning" role="alert">
     <ul>
         @foreach ($user->getAlerts() as $alert)
+            @if ($alert == 'email-not-verified')
+                <li><strong>Your email isn't verified</strong>, please check your inbox for the welcome email and click the link. You won't be able to sign into online services with this login until you do this.</li>
+            @endif
             @if ($alert == 'missing-profile-photo')
                 <li><strong>Missing profile photo</strong>, Please upload a profile picture - <a href="{{ route('account.profile.edit', [$user->id]) }}" class="alert-link">upload a photo</a></li>
             @endif
@@ -100,15 +104,36 @@
 @endif
 
 
-@if ($user->status == 'setting-up')
-
+@if ($user->status == 'setting-up' && !$user->online_only)
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             @include('account.partials.setup-panel')
         </div>
     </div>
-
 @else
+
+    @if ($user->online_only)
+    <div class="row">
+        <div class="col-xs-12 col-md-12 pull-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Online Only user</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>You're an online only user, and not a member of the space (yet).</h4>
+                    <p>
+                        To become a member, edit your account and mark yourself as not an online only member.
+                        You'll need to add address details, emergency contact detials, and setup a direct debit for the monthly subscription.
+                    </p>
+                    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}">
+                        <i class="material-icons">mode_edit</i> 
+                        Edit your account to become a member
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     @if ($user->status == 'left')
     <div class="row">

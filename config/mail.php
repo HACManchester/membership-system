@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'host' => env('MAIL_HOST', 'smtp.socketlabs.com'),
+	'host' => env('MAIL_HOST', 'email-smtp.us-east-2.amazonaws.com'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'zerocool@hacman.org.uk', 'name' => 'Hackspace Manchester'],
+	'from' => ['address' => 'alerts@hacman.org.uk', 'name' => 'Hackspace Manchester'],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -119,6 +119,6 @@ return [
 	|
 	*/
 
-	'pretend' => true,
+	'pretend' => false,
 
 ];

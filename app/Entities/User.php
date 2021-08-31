@@ -22,6 +22,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property string $name
  * @property string $given_name
  * @property string $announce_name
+ * @property string $online_only
  * @property string $family_name
  * @property string $hash
  * @property bool $active
@@ -76,7 +77,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'password', 'emergency_contact', 'phone',
+        'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
         'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
         'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
     ];
@@ -268,6 +269,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getAlerts()
     {
         $alerts = [];
+        if ( ! $this->email_verified ) {
+            $alerts[] = 'email-not-verified';
+        }
         if ( ! $this->profile->profile_photo && ! $this->profile->new_profile_photo) {
             $alerts[] = 'missing-profile-photo';
         }
@@ -417,6 +421,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $this->email_verified = true;
         $this->save();
+    }
+
+    public function emailChanging()
+    {
+        $this->email_verified = false;
     }
 
     /**

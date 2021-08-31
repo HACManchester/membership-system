@@ -12,6 +12,9 @@
     </td>
     <td>
         {!! HTML::statusLabel($user->status) !!}
+        @if ($user->online_only)
+            <div class="label label-warning">Online Only</div>
+        @endif
         @if ($user->profile->new_profile_photo)
             <br /><span class="label label-info">Photo to approve</span>
         @endif
@@ -29,7 +32,8 @@
     </td>
     <td class="hidden-xs">
         {{ $user->present()->paymentMethod }}<br />
-        Expires: {{ $user->present()->subscriptionExpiryDate }}
+        <span style="color:red;">Expires: {{ $user->present()->subscriptionExpiryDate }}</span><br />
+        <span style="color:green">Created: {{ $user->created_at }}</span>
     </td>
     <!--
     <td>
