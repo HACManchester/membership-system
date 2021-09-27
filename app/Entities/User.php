@@ -45,6 +45,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property string      mandate_id
  * @property int         monthly_subscription
  * @property string      gocardless_setup_id
+ * @property bool   postFob (false=collect, true=post)
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
@@ -79,7 +80,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
         'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
-        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status'
+        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob'
     ];
 
 

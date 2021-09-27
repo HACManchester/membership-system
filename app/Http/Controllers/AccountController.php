@@ -174,7 +174,8 @@ class AccountController extends Controller
             'new_profile_photo',
             'profile_photo_private',
             'rules_agreed',
-            'visited_space'
+            'visited_space',
+            'postFob'
         );
 
         $this->userForm->validate($input);
