@@ -12,8 +12,13 @@
 <p>Please click the link below to confirm your email address and ensure we have your accurate details.<br /><br /> <a href="{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}">{!! URL::route('account.confirm-email', [$user['id'], $user['hash']]) !!}</a></p>
 
 <h2>Get your fob for 24/7 access</h2>
-<p>Now you've set up a payment, we will post you a fob to the address you registered with. You'll also receive a welcome leaflet with some guidance on how to set up your fob. When you've set your fob up, and your first payment has cleared, you'll have 24/7 access.
-
+<p>Now you've set up a payment, it's time for you to get your fob so you can enjoy 24/7 access. When you've set your fob up, and your first payment has cleared, you'll have 24/7 access.<br/>
+<b>If you selected to collect your fob:</b>
+Visit the space - either show up to an open evening (no need to book!) or arrange to be let in by an existing member. You will need to do this via our telegram group (https://t.me/hacmanchester) or forum (https://list.hacman.org.uk/c/space/5). Once you're at the space, you'll find the registration desk by the entrance, with fobs and a getting started guide that explains what you need to do.
+<br/><br/>
+<b>If you selected to have your fob posted:</b>
+We will shortly post you a fob to the address you registered with. You'll receive a welcome leaflet with some guidance on how to set up your fob. 
+<br/>
 <hr/>
 
 <h2>🦠 Covid-19 Process Changes</h2>
