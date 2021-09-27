@@ -40,7 +40,7 @@ Join Hackspace Manchester
     </div>
     @endif
 
-
+    <h4>Basic Informaton</h4>
     <div class="form-group {{ Notification::hasErrorDetail('given_name', 'has-error has-feedback') }}">
         {!! Form::label('given_name', 'First Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
@@ -103,6 +103,7 @@ Join Hackspace Manchester
         </div>
     </div>
 
+    <h4>Contact Details</h4>
     <div class="form-group {{ Notification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
         {!! Form::label('address[line_1]', 'Address Line 1', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
@@ -162,27 +163,35 @@ Join Hackspace Manchester
 
 
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
-        <div class="well col-sm-9 col-lg-7 col-sm-offset-3">
+        <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,255,0,0.2)">
+            <h4>Getting your keyfob</h4>
             <b>How would you like to get your fob for 24/7 access?</b>
-            <p>Your fob can be posted to you, or you can collect it from the space. Collecting from the space will require you attending an open evening, or arranging with an existing member for them to let you in so you can set up your fob.</p>
+            <p>Your fob can be posted to you, or you can collect it from the space.<br/></p>
             <div class="radio">
                 <label data-toggle="tooltip" title="Collect my fob from the space">
                     {!! Form::radio('postFob', false, true) !!}
                     Collect my fob from the space
                 </label>
+                <p style="color: darkblue;padding-left: 1.5em;">
+                    You'll need to attend an open evening, or arrange with an existing member (on <a href="https://t.me/hacmanchester" target="_blank" >Telegram</a> or our <a href="https://list.hacman.org.uk" target="_blank">Forum</a>) to let you in so you can set up your fob.
+                </p>
             </div>
             <div class="radio">
                 <label data-toggle="tooltip" title="Have my fob posted to me">
                     {!! Form::radio('postFob', true, false) !!}
-                    Have my fob posted to me (takes a few working days)
+                    Have my fob posted to me
                 </label>
+                <p style="color: darkblue;padding-left: 1.5em;">
+                    Your fob will be posted to the address above, after payment has been completed. It may take a few working days to arrive.
+                </p>
             </div>
         </div>
     </div>
 
 
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
-        <div class="col-sm-9 col-lg-7 col-sm-offset-3">
+        <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,0,0,0.05)">
+            <h4>Rules</h4>
             <span class="help-block">Please read the <a href="https://members.hacman.org.uk/resources/policy/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
             {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
             {!! Form::label('rules_agreed', 'I agree to the Hackspace Manchester rules', ['class'=>'']) !!}
