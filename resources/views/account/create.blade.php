@@ -162,6 +162,26 @@ Join Hackspace Manchester
 
 
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
+        <div class="well col-sm-9 col-lg-7 col-sm-offset-3">
+            <b>How would you like to get your fob for 24/7 access?</b>
+            <p>Your fob can be posted to you, or you can collect it from the space. Collecting from the space will require you attending an open evening, or arranging with an existing member for them to let you in so you can set up your fob.</p>
+            <div class="radio">
+                <label data-toggle="tooltip" title="Collect my fob from the space">
+                    {!! Form::radio('postFob', false, true) !!}
+                    Collect my fob from the space
+                </label>
+            </div>
+            <div class="radio">
+                <label data-toggle="tooltip" title="Have my fob posted to me">
+                    {!! Form::radio('postFob', true, false) !!}
+                    Have my fob posted to me (takes a few working days)
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-sm-9 col-lg-7 col-sm-offset-3">
             <span class="help-block">Please read the <a href="https://members.hacman.org.uk/resources/policy/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
             {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
@@ -172,7 +192,7 @@ Join Hackspace Manchester
 
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-            {!! Form::submit('Join Us', array('class'=>'btn btn-primary')) !!}
+            {!! Form::submit('Join Hackspace Manchester', array('class'=>'btn btn-primary')) !!}
         </div>
     </div>
 
