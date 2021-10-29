@@ -400,6 +400,18 @@ class AccountController extends Controller
         return \Redirect::route('home');
     }
 
+    
+    public function sendConfirmationEmail()
+    {
+        $user = User::find($id);
+      
+        if(!$user->email_verified){
+            $userMailer = new UserMailer($user);
+            $userMailer->sendConfirmationEmail();
+            \Notification::success('An email has been sent to your email address. Please click the link to confirm it.');
+        }
+        return \Redirect::route('home');
+    }
 
 
     public function destroy($id)

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xs-12 col-sm-8">
+    <div class="col-xs-12 col-sm-8" style="background: rgba(255,255,255,0.3);border-color:white;border-width: 1px 0px;border-radius:3px;">
         <ul class="nav nav-pills">
 
             @if($user->online_only)

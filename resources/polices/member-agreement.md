@@ -44,20 +44,19 @@ You'll need to enter this ID into the membership system in order to link the fob
 Inductions are mandatory for the more dangerous and expensive machines around the space.
 
 These include but are not limited to:
-* the laser cutter
-* 3D printer 
-* lathes (wood, metal)
-* CNC
-* and others... 
+ * the laser cutter
+ * 3D printer 
+ * lathes (wood, metal)
+ * CNC machines
   
 Our inductions are run by members, and are a mixture of face to face instructions and online. You can find out what tools need inductions and how to book them through the tools & equipment page here on the membership system. 
 
-To book an induction click on the tool name under the tools & equipment page. You may need to pay an induction fee as some inductions require a small expense for test materials. **If the induction cost is £0 it's free - but you must click the button for the system to register you as requiring an induction**
+➡️ To book an induction click on the tool name under the tools & equipment page. You may need to pay an induction fee as some inductions require a small expense for test materials. **Please Note** If the induction cost is £0 it's free - but you must click the button for the system to register you as requiring an induction
 
 Inductions are conducted in different ways, as stated on the tool page:
-* Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
-* Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
-* Some tools such as the Laser Cutter require an in-person induction
+ * Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
+ * Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
+ * Some tools such as the Laser Cutter require an in-person induction
 
 Once you have done the above you will be enrolled onto the appropriate moodle course for the induction and you should also make contact with a trainer to arrange any required in person training this can be done via moodle or through telegram
 

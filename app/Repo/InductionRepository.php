@@ -40,7 +40,7 @@ class InductionRepository extends DBRepository
     {
         $trainers = $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
         return $trainers->filter(function ($trainer) {
-            return $trainer->user->active;
+            return $trainer->user && $trainer->user->active;
         });
     }
 
@@ -103,7 +103,7 @@ class InductionRepository extends DBRepository
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->whereNotNull('trained')->where('key', $device)->get();
         return $users->filter(function ($trainer) {
-            return $trainer->user->active;
+            return $trainer->user && $trainer->user->active;
         });
     }
 
@@ -115,7 +115,7 @@ class InductionRepository extends DBRepository
     {
         $users = $this->model->with('user', 'user.profile')->where('paid', true)->where('key', $device)->whereNull('trained')->get();
         return $users->filter(function ($trainer) {
-            return $trainer->user->active;
+            return $trainer->user && $trainer->user->active;
         });
     }
 
