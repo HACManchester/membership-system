@@ -72,6 +72,7 @@
             <div class="form-group">
                 <div class="col-sm-5">
                     {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                    <small class="label label-primary">Characters A-F, and 0-9 only.</small>
                 </div>
                 <div class="col-sm-3">
                     {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
