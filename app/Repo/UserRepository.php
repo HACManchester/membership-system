@@ -1,8 +1,8 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\User;
-use BB\Repo\Builder;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository extends DBRepository
 {
