@@ -52,11 +52,10 @@ class UserRepository extends DBRepository
             ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
             ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
             ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%');
-            
-            if($params['filter'].count() == 8) {
-                $model->orWhere('keyfobs', 'contains', $params['filter']);
-            }
+            ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
+            ->orWhereHas('keyfobs', function(Builder $q) use ($params){
+                $q->where('key_id', 'like', $params['filter']);
+            });
         }
 
         if(!$params['include_online_only']) {
