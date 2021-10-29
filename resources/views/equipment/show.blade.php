@@ -60,8 +60,8 @@ Tools and Equipment
 
 
     @if ($equipment->requiresInduction())
-    <div class="col-sm-12 col-lg-6">
-            <h2>Induction</h2>
+    <div class="col-sm-12 col-lg-6 well">
+            <h3>Induction</h3>
             @if (!$userInduction)
                 <p>
                 To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
@@ -96,8 +96,8 @@ Tools and Equipment
     @endif
 
     @if ($equipment->hasPhoto())
-        <div class="col-sm-12 col-md-6">
-            <h2>Photo gallery</h2>
+        <div class="col-sm-12 col-md-6 well">
+            <h3>Photo gallery</h3>
             @for($i=0; $i < $equipment->getNumPhotos(); $i++)
                 <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
 
@@ -114,10 +114,11 @@ Tools and Equipment
         </div>
     @endif
 
-    @if ($equipment->requiresInduction())
-        <div class="col-sm-12 col-lg-6">
+    @if ($equipment->requiresInduction() && $trainers)
+        <div class="col-sm-12 col-lg-6 well">
             <div class="row">
-            <h2>Trainers/Maintainers</h2>
+            <h3>Trainers/Maintainers</h3>
+            <p>These people are trained to maintain the tool.
             <div class="list-group">
                 @foreach($trainers as $trainer)
                     <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
@@ -185,8 +186,9 @@ Tools and Equipment
 
     @if ($equipment->requiresInduction())
         <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <h4>Trained Users</h4>
+            <div class="col-sm-12 col-md-6 well">
+                <h3>Trained Users</h3>
+                <p>These people are trained to use this tool</p>
                 <ul>
                     @foreach($trainedUsers as $trainedUser)
                         <li>
