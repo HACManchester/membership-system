@@ -30,7 +30,7 @@
                 💁‍♂️ Fob being collected
             @endif
         @else
-            🔑 {{ $user->keyFobs()->count() }} keyfobs
+            🔑 ({{ $user->keyFobs()->count() }})
         @endif
     </td>
     <td class="hidden-xs">

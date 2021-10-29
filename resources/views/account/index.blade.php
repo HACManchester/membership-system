@@ -32,26 +32,20 @@ Members
     <form>
         <div class="row">
             <div class="col-md-6">
-                <input name="filter" value="{{ Request::get('filter') }}" placeholder="Filter by name, email, username..."/>
-            </div>
-            <div class="col-md-6">
+                <input name="filter" class="form-control" value="{{ Request::get('filter') }}" placeholder="Filter by name, email, username..., or exact keyfob"/>
                 <label for="include_online_only">Include online only accounts?</label>
                 <input type="checkbox" name="include_online_only" value="1"/>
                 <br/>
                 <label for="include_online_only">New Members only (14d)</label>
                 <input type="checkbox" name="new_only" value="1"/>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <b>{!! count($users) !!} results</b>
+                <br/>
+                <input type="submit" class="btn btn-info form-control"/><br/>
             </div>
             <div class="col-md-6">
-                <input type="submit"/>
+                <b>Number of records returned: {!! count($users) !!}</b>
+                <i>If using a mobile device, use horizontally or use desktop mode for more information.</i>
             </div>
         </div>
-        
     </form>
     {!! HTML::userPaginatorLinks($users) !!}
 </div>
