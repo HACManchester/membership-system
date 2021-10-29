@@ -1,6 +1,7 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\User;
+use BB\Repo\Builder;
 use Carbon\Carbon;
 
 class UserRepository extends DBRepository
