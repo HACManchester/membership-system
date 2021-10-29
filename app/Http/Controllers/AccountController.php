@@ -122,6 +122,7 @@ class AccountController extends Controller
         $direction = \Request::get('direction', 'asc');
         $showLeft = \Request::get('showLeft', 0);
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter', 'include_online_only', 'new_only'));
+        
         return \View::make('account.index')->withUsers($users);
     }
 

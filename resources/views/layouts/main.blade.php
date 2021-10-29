@@ -35,7 +35,7 @@
 <style>
     body {
         background-color: white;
-        background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(234,249,249,0.67) 0.1%, rgba(239,249,251,0.63) 90.1% );
+        background-image: linear-gradient(180deg, #f5f7fa 30%, #c3cfe2 100%);
         background-attachment: fixed;
     }
 </style>
