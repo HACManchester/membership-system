@@ -7,6 +7,7 @@ use BB\Entities\Settings;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 use BB\Exceptions\ValidationException;
+use BB\Mailer\UserMailer;
 use BB\Validators\InductionValidator;
 
 class AccountController extends Controller
@@ -417,6 +418,10 @@ class AccountController extends Controller
         $user->setLeaving();
 
         \Notification::success('Updated status to leaving');
+
+        $userMailer = new UserMailer($user);
+        $userMailer->sendLeftMessage();
+
         return \Redirect::route('account.show', [$user->id]);
     }
 

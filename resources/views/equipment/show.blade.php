@@ -22,126 +22,113 @@ Tools and Equipment
 @section('content')
 
 <div class="row">
-
-    <div class="col-md-12 col-lg-12">
-        <div class="row">
-            <div class="col-md-12 col-lg-6">
-                <div class="well">
-
-                    <div class="row">
-                        <div class="col-md-12 col-lg-6">
-
-                            @if ($equipment->present()->manufacturerModel) Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
-                            <!-- @if ($equipment->colour) Colour: {{ $equipment->colour }}<br />@endif -->
-                            @if ($equipment->present()->livesIn) Lives in: {{ $equipment->present()->livesIn }}<br />@endif
-                            @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
-                            @if ($equipment->requiresInduction()) Induction required<br /> @endif
-                            @if ($equipment->hasUsageCharge())
-                            Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
-                            @endif
-                            @if ($equipment->isManagedByGroup())
-                                Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
-                            @endif
-
-                            @if (!$equipment->isWorking())<span class="label label-danger">Out of action</span>@endif
-                            @if ($equipment->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
-
-                        </div>
-                        <div class="col-md-12 col-lg-6">
-
-                        </div>
-                    </div>
-
-                    <br />
-
-                    {!! $equipment->present()->description !!}
-                    <br />
-
-                    @if ($equipment->help_text)
-                        <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">Help</a>
-                        <br /><br />
+    <div class="col-sm-12 col-lg-6">
+        <div class="well">
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    <h2>{{ $equipment->name }}</h2>
+                    @if ($equipment->requiresInduction())<b style="color:red">⚠️ Induction required</b><br /> @endif
+                    @if ($equipment->present()->livesIn) 🏠 Lives in: {{ $equipment->present()->livesIn }}<br />@endif
+                    @if ($equipment->present()->manufacturerModel) 🔧 Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
+                    @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
+                    @if ($equipment->hasUsageCharge())
+                        💵 Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
                     @endif
-
-                    {!! $equipment->present()->ppe !!}
-
-
-                    @if ($equipment->requiresInduction())
-
-                        @if (!$userInduction)
-
-                            <p>
-                            To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
-                            <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
-                            </p>
-
-                            @if(Auth::user()->online_only)
-                                <h4>Online Only users may not sign up for tools</h4>
-                            @else
-                                <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="Pay Now" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
-                            @endif
-
-                        @elseif ($userInduction->is_trained)
-
-                            @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
-                            <p>
-                                While the access control systems are unavailable you can make a payment for your usage of the equipment below.
-                            </p>
-
-                            <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
-                            @endif
-
-                            <span class="label label-success">You have been inducted and can use this equipment</span>
-
-                        @elseif ($userInduction)
-
-                            <span class="label label-info">Access fee paid, induction to be completed</span>
-
-                        @endif
-
+                    @if ($equipment->isManagedByGroup())
+                        🤗 Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
                     @endif
+                    @if ($equipment->isPermaloan())<h4><span class="label label-warning">Permaloan</span></h4>@endif
+                    @if (!$equipment->isWorking())<h4><span class="label label-danger">Out of action</span></h4>@endif
 
                 </div>
             </div>
 
+            <br />
 
-            <div class="col-sm-12 col-lg-6">
+            {!! $equipment->present()->description !!}
+            <br />
 
-                @if ($equipment->hasPhoto())
-                    @for($i=0; $i < $equipment->getNumPhotos(); $i++)
-                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
+            @if ($equipment->help_text)
+                <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">Help</a>
+                <br /><br />
+            @endif
 
-                        <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endfor
-                @endif
+            {!! $equipment->present()->ppe !!}
 
-            </div>
-
-            <div class="col-sm-12 col-lg-6">
-
-                @if ($equipment->requiresInduction())
-                    <div class="row">
-                    <h4>Trainers/Maintainers</h4>
-                    <div class="list-group">
-                        @foreach($trainers as $trainer)
-                            <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
-                                {{ $trainer->user->name }}
-                            </a>
-                        @endforeach
-                    </div>
-                    </div>
-                @endif
-            </div>
         </div>
     </div>
+
+
+    @if ($equipment->requiresInduction())
+    <div class="col-sm-12 col-lg-6">
+            <h2>Induction</h2>
+            @if (!$userInduction)
+                <p>
+                To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
+                <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
+                </p>
+
+                @if(Auth::user()->online_only)
+                    <h4>Online Only users may not sign up for tools</h4>
+                @else
+                    <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Book Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                @endif
+
+            @elseif ($userInduction->is_trained)
+                @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
+                    <h2>Pay for usage</h2>
+                    <p>
+                        While the access control systems are unavailable you can make a payment for your usage of the equipment below.
+                    </p>
+
+                    <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
+                @endif
+
+                <h4>
+                    <span class="label label-success">You have been inducted and can use this equipment</span>
+                </h4>
+            @elseif ($userInduction)
+                <h4>
+                    <span class="label label-info">Access fee paid, induction to be completed</span>
+                </h4>
+            @endif
+        </div>
+    @endif
+
+    @if ($equipment->hasPhoto())
+        <div class="col-sm-12 col-md-6">
+            <h2>Photo gallery</h2>
+            @for($i=0; $i < $equipment->getNumPhotos(); $i++)
+                <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
+
+                <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
+        </div>
+    @endif
+
+    @if ($equipment->requiresInduction())
+        <div class="col-sm-12 col-lg-6">
+            <div class="row">
+            <h2>Trainers/Maintainers</h2>
+            <div class="list-group">
+                @foreach($trainers as $trainer)
+                    <a href="{{ route('members.show', $trainer->user->id) }}" class="list-group-item">
+                        {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
+                        {{ $trainer->user->name }}
+                    </a>
+                @endforeach
+            </div>
+            </div>
+        </div>
+    @endif
 
 
     @if ($equipment->hasActivity())
