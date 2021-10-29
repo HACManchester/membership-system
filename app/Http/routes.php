@@ -43,7 +43,7 @@ Route::put('account/{account}/alter-subscription', ['as'=>'account.alter-subscri
 Route::put('account/{account}/admin-update', ['as'=>'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware'=>'role:admin']);
 Route::put('account/{account}/rejoin', ['as'=>'account.rejoin', 'uses' => 'AccountController@rejoin', 'middleware'=>'role:member']);
 Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 'uses'=>'AccountController@confirmEmail']);
-Route::get('account/send-confirmation-email', ['as'=>'account.send-confirmation-email', 'uses'=>'AccountController@SendConfirmationEmail']);
+Route::get('account/send-confirmation-email', ['as'=>'account.send-confirmation-email', 'uses'=>'AccountController@sendConfirmationEmail']);
 
 //Balance
 Route::get('account/{account}/balance', ['uses'=>'BalanceController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
