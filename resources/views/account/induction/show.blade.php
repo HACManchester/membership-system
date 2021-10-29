@@ -19,7 +19,7 @@
         {!! $document !!}
     </div>
 
-    {!! Form::open(array('route' => ['account.induction.update', $user->id], 'class'=>'form-horizontal well', 'method'=>'PUT')) !!}
+    {!! Form::open(array('route' => ['account.induction.update', $user->id], 'class'=>'form-horizontal', 'method'=>'PUT')) !!}
 
     <div class="form-group {{ Notification::hasErrorDetail('induction_completed', 'has-error has-feedback') }}">
         <div class="col-sm-12 col-lg-8 col-sm-offset-2">

@@ -34,8 +34,8 @@
 <body class="{{ $body_class or '' }}">
 <style>
     body {
-        background-color: #0093E9;
-        background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+        background-color: white;
+        background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(234,249,249,0.67) 0.1%, rgba(239,249,251,0.63) 90.1% );
         background-attachment: fixed;
     }
 </style>

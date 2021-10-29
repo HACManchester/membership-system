@@ -18,17 +18,19 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-9 col-lg-9">
-
+            <div class="well">
             <p>
-                The various teams within Hackspace Manchester are a way to give people the authority to take charge, make decisions and get things done.<br />
+                The various teams within Hackspace Manchester are a way to give members the authority to take charge, make decisions and get things done.<br />
                 Trying to obtain a consensus from a wide user base can be difficult so by bringing the members who are
                 interested in a particular area together they can make decisions amongst themselves and get things done.
             </p>
+            <p>Large space-wide decisions do still need wider consensus, and may also require board approval such as setting up new areas and tools.</p>
+            <h3>Getting involved...</h3>
             <p>
                 The way the teams will run is still very open and fluid but as always if you have any suggestions please get in contact.<br />
-                Anyone can join the main Hackspace Manchester teams, all you need to do is let one of the boards know.<br />
+                Anyone can join the main Hackspace Manchester teams, just shout out on Telegram or by emailing the board.<br />
             </p>
-
+            </div>
             <div class="list-group">
                 @foreach($roles as $role)
                     <a href="{{ route('groups.show', $role->name) }}" class="list-group-item">
