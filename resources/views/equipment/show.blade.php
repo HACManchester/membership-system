@@ -53,11 +53,32 @@ Tools and Equipment
                 <br /><br />
             @endif
 
+            <h3>Personal Protective Equipment</h3>
+            <p>The following PPE is required</p>
             {!! $equipment->present()->ppe !!}
 
         </div>
     </div>
 
+    @if ($equipment->hasPhoto())
+        <div class="col-sm-12 col-md-6 well">
+            <h3>Photo gallery</h3>
+            <p>Select a photo to enlarge it</p>
+            @for($i=0; $i < $equipment->getNumPhotos(); $i++)
+                <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
+
+                <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
+        </div>
+    @endif
 
     @if ($equipment->requiresInduction())
     <div class="col-sm-12 col-lg-6 well">
@@ -75,8 +96,11 @@ Tools and Equipment
                 @endif
 
             @elseif ($userInduction->is_trained)
+                <h4>
+                    <span class="label label-success">You have been inducted and can use this equipment</span>
+                </h4>
                 @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
-                    <h2>Pay for usage</h2>
+                    <h4>Pay for usage</h4>
                     <p>
                         While the access control systems are unavailable you can make a payment for your usage of the equipment below.
                     </p>
@@ -84,9 +108,6 @@ Tools and Equipment
                     <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
                 @endif
 
-                <h4>
-                    <span class="label label-success">You have been inducted and can use this equipment</span>
-                </h4>
             @elseif ($userInduction)
                 <h4>
                     <span class="label label-info">Access fee paid, induction to be completed</span>
@@ -95,24 +116,7 @@ Tools and Equipment
         </div>
     @endif
 
-    @if ($equipment->hasPhoto())
-        <div class="col-sm-12 col-md-6 well">
-            <h3>Photo gallery</h3>
-            @for($i=0; $i < $equipment->getNumPhotos(); $i++)
-                <img src="{{ $equipment->getPhotoUrl($i) }}" width="170" data-toggle="modal" data-target="#image{{ $i }}" style="margin:3px 1px; padding:0;" />
 
-                <div class="modal fade" id="image{{ $i }}" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <img src="{{ $equipment->getPhotoUrl($i) }}" width="100%" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endfor
-        </div>
-    @endif
 
     @if ($equipment->requiresInduction() && $trainers)
         <div class="col-sm-12 col-lg-6 well">
@@ -130,6 +134,38 @@ Tools and Equipment
             </div>
         </div>
     @endif
+
+</div>
+
+@if ($equipment->requiresInduction())
+    <div class="row">
+        <div class="col-sm-12 col-md-6 well">
+            <h3>✅ Trained Users</h3>
+            <p>These people are trained to use this tool</p>
+            <ul>
+                @foreach($trainedUsers as $trainedUser)
+                    <li>
+                        <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                            {{ $trainedUser->user->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        <div class="col-sm-12 col-md-6 well">
+            <h3>🛂 Members awaiting Inductions</h3>
+            <ul>
+                @foreach($usersPendingInduction as $trainedUser)
+                    <li>
+                        <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                            {{ $trainedUser->user->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
 
 
     @if ($equipment->hasActivity())
@@ -182,38 +218,6 @@ Tools and Equipment
         <?php echo $equipmentLog->render(); ?>
     </div>
     @endif
-
-
-    @if ($equipment->requiresInduction())
-        <div class="row">
-            <div class="col-sm-12 col-md-6 well">
-                <h3>Trained Users</h3>
-                <p>These people are trained to use this tool</p>
-                <ul>
-                    @foreach($trainedUsers as $trainedUser)
-                        <li>
-                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {{ $trainedUser->user->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="col-sm-12 col-md-6">
-                <h4>Members waiting for an Induction</h4>
-                <ul>
-                    @foreach($usersPendingInduction as $trainedUser)
-                        <li>
-                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {{ $trainedUser->user->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
-
 
     <div class="modal fade" id="helpModal">
         <div class="modal-dialog">
