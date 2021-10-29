@@ -9,6 +9,8 @@ class UserObserver
      * Welcome online only users when they create their account
      */
     public function created($user){
+        $this->sendConfirmationEmail($user);
+        
         if($user->online_only) {
             $this->newUser($user);
         }
