@@ -62,6 +62,20 @@ class UserMailer
     }
 
 
+    public function sendLeavingMessage()
+    {
+        $user = $this->user;
+
+        $storageBoxRepository = \App::make('BB\Repo\StorageBoxRepository');
+
+        $memberBox = $storageBoxRepository->getMemberBox($this->user->id);
+
+        \Mail::queue('emails.user-leaving', ['user'=>$user, 'memberBox'=>$memberBox], function ($message) use ($user) {
+            $message->to($user->email, $user->email)->subject('You are leaving Hackspace Manchester');
+        });
+    }
+
+
     public function sendLeftMessage()
     {
         $user = $this->user;
@@ -71,7 +85,7 @@ class UserMailer
         $memberBox = $storageBoxRepository->getMemberBox($this->user->id);
 
         \Mail::queue('emails.user-left', ['user'=>$user, 'memberBox'=>$memberBox], function ($message) use ($user) {
-            $message->to($user->email, $user->email)->subject('Sorry to see you go');
+            $message->to($user->email, $user->email)->subject('You have left Hackspace Manchester');
         });
     }
 

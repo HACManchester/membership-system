@@ -6,6 +6,7 @@
 <body>
 <p>
     Hi {{ $user['given_name'] }},<br />
+    <b>😢 You've left Hackspace Manchester</b><br />
     Your last membership payment for Hackspace Manchester has now expired and you have been marked as having left.<br />
     We are sorry to see you go and hope you had a great time while you were here.<br />
     <br />
@@ -19,7 +20,7 @@
 @endif
 <p>
     If you have changed your mind and wish to remain part of Hackspace Manchester you can do this by logging in anytime within the next 12 months and set up a subscription payment, after this time you will need to sign up again.<br />
-    Alternatively if you believe this has been sent in error please reply with the details of your subscription payment and we will investigate.<br />
+    Alternatively if you believe this has been sent in error please email <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a> with the details of your subscription payment and we will investigate.<br />
     <a href="{{ URL::route('home') }}">Hackspace Manchester Member System</a><br/>
 </p>
 <p>
