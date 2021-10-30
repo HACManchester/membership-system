@@ -65,6 +65,9 @@
 
     @if (!Auth::guest())
         <ul class="nav">
+            @if (!Auth::guest() && Auth::user()->hasRole('admin'))
+            {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
+            @endif
             {!! HTML::sideNavLink('Members', 'members.index') !!}
             {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
             {!! HTML::sideNavLink('Large Project Storage', 'projects_storage.index') !!}
@@ -77,9 +80,6 @@
             @endif
             @if (!Auth::guest() && Auth::user()->hasRole('comms'))
             {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}
-            @endif
-            @if (!Auth::guest() && Auth::user()->hasRole('admin'))
-            {!! HTML::sideNavLink('Manage Members', 'account.index') !!}
             @endif
             @if (!Auth::guest() && Auth::user()->hasRole('acs'))
             {!! HTML::sideNavLink('Devices', 'devices.index') !!}
