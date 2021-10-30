@@ -160,6 +160,14 @@ Tools and Equipment
                         <a href="{{ route('members.show', $trainedUser->user->id) }}">
                             {{ $trainedUser->user->name }}
                         </a>
+                        @if (Auth::user()->isAdmin())
+                            {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $trainedUser->user->id, $item->userInduction->id])) !!}
+                            {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
+                            {!! Form::hidden('mark_trained', '1') !!}
+                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                            {!! Form::close() !!}
+                        @endif
+
                     </li>
                 @endforeach
             </ul>

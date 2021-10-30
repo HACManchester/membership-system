@@ -48,20 +48,21 @@
 
         @if (count($userSkills) > 0)
         <style>
-            .skill-box:nth-child(4n) .thumbnail {
-                background-color: #4158D0;
-                background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            .skill-box:nth-child(5n + 1) .thumbnail {
+                background-image: linear-gradient( 179.4deg,  rgba(33,150,243,1) 1.8%, rgba(22,255,245,0.60) 97.1% );
             }
-            .skill-box:nth-child(4n + 1) .thumbnail {
-                background-image: linear-gradient( 89.9deg,  rgba(255,243,110,1) 16.9%, rgba(30,204,214,1) 55.1%, rgba(5,54,154,1) 90.7% );
+            .skill-box:nth-child(5n + 2) .thumbnail {
+                background-image: radial-gradient( circle farthest-corner at 5.3% 17.2%,  rgba(255,208,253,1) 0%, rgba(255,237,216,1) 90% );
             }
-            .skill-box:nth-child(4n + 2) .thumbnail {
-                background-image: linear-gradient( 109.6deg,  rgba(247,253,166,1) 11.2%, rgba(128,255,221,1) 57.8%, rgba(255,128,249,1) 85.9% );
+            .skill-box:nth-child(5n + 3) .thumbnail {
+                background-image: linear-gradient( 109.6deg,  rgba(255,207,84,1) 11.2%, rgba(255,158,27,1) 91.1% );
             }
-            .skill-box:nth-child(4n + 4) .thumbnail {
-                background-image: linear-gradient( 68.2deg,  rgba(255,202,88,1) 0%, rgba(139,73,255,1) 100.2% );
+            .skill-box:nth-child(5n + 4) .thumbnail {
+                background-image: linear-gradient( 109.6deg,  rgba(255,219,47,1) 11.2%, rgba(244,253,0,1) 100.2% );
             }
-
+            .skill-box:nth-child(5n + 5) .thumbnail {
+                background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+            }
            
 
         </style>
