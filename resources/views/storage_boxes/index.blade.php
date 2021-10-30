@@ -10,38 +10,34 @@
         <div class="col-md-6">
             <div class="well">
                 @if ($boxesTaken > 0)
-                    You have the following member storage, (please make sure a DNH label is on boxes/loose material)<br />
+                    <h3>You have the following member storage location</h3>
+                    <p>Please make sure an obvious "Do Not Hack" label is on your box (preferably front and back) or each piece of loose material</p>
                     <ul>
                         @foreach($memberBoxes as $box)
-                            <li>
+                            <h3 class="">
                                 {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'js-return-box-form')) !!}
                                 {!! Form::hidden('user_id', '') !!}
-                                Location {{ $box->id }} - {{ $box->size }}
-                                {!! Form::submit('Return Box', array('class'=>'btn btn-default btn-link btn-sm')) !!}
+                                📦 Location {{ $box->location }}<small>(#{{ $box->id }})</small>
+                                {!! Form::submit('Return Storage Location', array('class'=>'btn btn-default btn-link btn-sm')) !!}
                                 {!! Form::close() !!}
-                            </li>
+                            </h3>
                         @endforeach
                     </ul>
-                    <p>
+                    
                     @if ($boxesTaken >= 1)
-                        You have claimed your member storage allowance <br />
+                        <p>
+                            ℹ️ You have claimed your member storage allowance.
+                        </p>
                     @endif
-                        If your no longer using a space and want to return it  please remove your box
-                        and return it to the member shelves, you can then use the return link above.
-                    </p>
-                @endif
-                @if ($canPayMore)
+
                     <p>
-                    If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need to claim a space by clicking claim now
+                        If your no longer using a space and want to return it, please remove your items,
+                        return the box if it was found in the space, and then use the return link above.
                     </p>
-
-                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Members Storage" data-button-label="Claim Now" data-methods="balance" data-amount="0"></div>
-
+                @else
+                    <h3>You have not claimed a storage location</h3>
+                    <p>To do so, find a storage location in the space that is vacant, note the location ID, and then claim it in the list below.</p>
                 @endif
-                @if ($moneyAvailable > 0)
-                    To claim a box click claim next to the storage space you want below, you should probably make sure it is empty before you do this.
-                @endif
-
             </div>
         </div>
         <div class="col-md-6">
@@ -86,7 +82,7 @@
                     @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
                         ⛔ Unclaimable - Old storage or you don't have permission
                     @else
-                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                         {!! Form::hidden('user_id', Auth::user()->id) !!}
                         {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
                         {!! Form::close() !!}
@@ -96,7 +92,7 @@
             @if (Auth::user()->hasRole('storage'))
                 <td>
                     @if($box->user)
-                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-form navbar-left')) !!}
+                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                         {!! Form::hidden('user_id', '') !!}
                         {!! Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) !!}
                         {!! Form::close() !!}

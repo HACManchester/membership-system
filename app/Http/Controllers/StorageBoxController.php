@@ -31,7 +31,12 @@ class StorageBoxController extends Controller
      */
     public function index()
     {
-        $storageBoxes = $this->storageBoxRepository->getAll();
+        $storageBoxes = $this->storageBoxRepository->getAll()->sortBy(
+            function($post){
+                if($post->id < 104) {return 1000 + $post->id;}
+                return $post->id;
+            }
+        );
 
         $availableBoxes = $this->storageBoxRepository->numAvailableBoxes();
 
@@ -47,15 +52,6 @@ class StorageBoxController extends Controller
 
         $paymentTotal = $this->memberStorage->getPaymentTotal();
         $boxesTaken = $this->memberStorage->getNumBoxesTaken();
-        $moneyAvailable = $this->memberStorage->getMoneyAvailable();
-
-
-        //Can we accept more money from them
-        $canPayMore = false;
-        if (($volumeAvailable >= 4) && ($moneyAvailable <= 0)) {
-            $canPayMore = true;
-        }
-
 
         return \View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
@@ -64,9 +60,7 @@ class StorageBoxController extends Controller
             ->with('memberBoxes', $memberBoxes)
             ->with('volumeAvailable', $volumeAvailable)
             ->with('paymentTotal', $paymentTotal)
-            ->with('boxesTaken', $boxesTaken)
-            ->with('canPayMore', $canPayMore)
-            ->with('moneyAvailable', $moneyAvailable);
+            ->with('boxesTaken', $boxesTaken);
     }
 
 
