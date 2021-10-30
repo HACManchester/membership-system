@@ -142,35 +142,37 @@ Tools and Equipment
         <div class="col-sm-12 col-md-6 well">
             <h3>✅ Trained Users</h3>
             <p>These people are trained to use this tool</p>
-            <ul>
+
+            <div class="list-group">
                 @foreach($trainedUsers as $trainedUser)
-                    <li>
+                    <div class="list-group-item">
                         <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                            {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
-                    </li>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         </div>
         <div class="col-sm-12 col-md-6 well">
             <h3>🛂 Members awaiting Inductions</h3>
-            <ul>
+            <div class="list-group">
                 @foreach($usersPendingInduction as $trainedUser)
-                    <li>
+                    <div class="list-group-item">
                         <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                            {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
                         @if (Auth::user()->isAdmin())
-                            {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $trainedUser->user->id, $item->userInduction->id])) !!}
+                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('mark_trained', '1') !!}
                             {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
                         @endif
-
-                    </li>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         </div>
     </div>
 @endif
