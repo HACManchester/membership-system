@@ -25,7 +25,7 @@ Tools and Equipment
     <div class="col-sm-12 col-lg-6">
         <div class="well">
             <div class="row">
-                <div class="col-md-12 col-lg-6">
+                <div class="col-xs-12">
                     <h2>{{ $equipment->name }}</h2>
                     @if ($equipment->requiresInduction())<b style="color:red">⚠️ Induction required</b><br /> @endif
                     @if ($equipment->present()->livesIn) 🏠 Lives in: {{ $equipment->present()->livesIn }}<br />@endif
@@ -43,7 +43,7 @@ Tools and Equipment
                 </div>
             </div>
 
-            <br />
+            <hr/>
 
             {!! $equipment->present()->description !!}
             <br />
@@ -54,8 +54,17 @@ Tools and Equipment
             @endif
 
             <h3>Personal Protective Equipment</h3>
-            <p>The following PPE is required</p>
-            {!! $equipment->present()->ppe !!}
+            @if(strlen($equipment->present()->ppe) > 20)
+                <p>The following PPE is required</p>
+                {!! $equipment->present()->ppe !!}
+            @else
+                <p>No specific PPE is required. You must still be aware of risks and use relevent PPE to mitigate those risks.</p>
+            @endif
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">Incorrect information?</div>
+                <div class="panel-body">If something is wrong or missing on this page, please raise the issue on the Forum or Telegram.</div>
+            </div>
 
         </div>
     </div>
@@ -150,6 +159,12 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
+                        @if (Auth::user()->isAdmin())
+                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                            {!! Form::hidden('is_trainer', '1') !!}
+                            {!! Form::submit('🎓 Make Trainer', array('class'=>'btn btn-default btn-xs')) !!}
+                            {!! Form::close() !!}
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -167,7 +182,7 @@ Tools and Equipment
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('mark_trained', '1') !!}
-                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                            {!! Form::submit('✔️ Mark Trained', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
                         @endif
                     </div>

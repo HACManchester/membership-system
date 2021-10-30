@@ -21,7 +21,13 @@ Tools and Equipment
 
 @section('content')
 
-    <div class="panel panel-default">
+    <div class="well">
+        <h3>View tools, manuals, and book inductions</h3>
+        For changes to the information on the equipment pages please contact someone on
+        the <a href="https://members.hacman.org.uk/groups/equipment">equipment</a> team
+    </div>
+
+    <div class="panel panel-info">
         <div class="panel-heading">
             <h3 class="panel-title">Equipment requiring an induction</h3>
         </div>
@@ -57,7 +63,7 @@ Tools and Equipment
     </div>
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">Equipment ready to use</h3>
         </div>
@@ -89,8 +95,5 @@ Tools and Equipment
         @endforeach
         </table>
     </div>
-
-    For changes to the information on the equipment pages please contact someone on
-    the <a href="{{ route('groups.show', 'equipment') }}">equipment</a> team
 
 @stop
