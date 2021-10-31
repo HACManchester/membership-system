@@ -140,7 +140,7 @@ Tools and Equipment
                     </a>
 
                     @if (Auth::user()->isAdmin() || Auth::user()->trusted)
-                        {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                        {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
                         {!! Form::hidden('not_trainer', '1') !!}
                         {!! Form::submit('🙅 Remove', array('class'=>'btn btn-default btn-xs')) !!}
                         {!! Form::close() !!}
