@@ -18,7 +18,7 @@
         <ul class="nav memberAccountLinks">
             <li class="withAction">
                 <a href="{{ route('account.show', [Auth::id()]) }}">
-                    Your Membership
+                    🙂 Your Membership
                     @if (count(Auth::user()->getAlerts()) > 0)
                     <span class="badge">{{ count(Auth::user()->getAlerts()) }}</span>
                     @endif
@@ -32,32 +32,9 @@
                 {!! HTML::sideNavLink('Edit Your Profile', 'account.profile.edit', [Auth::id()]) !!}
             </ul>
 
-            {!! HTML::sideNavLink('Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
-            {!! HTML::sideNavLink('Getting Started', 'account.induction.show', [Auth::id()]) !!}
-            <li class="withAction">
-                <a href="https://list.hacman.org.uk">Forum</a>
-                <a href="https://list.hacman.org.uk" style="position:absolute;right: 0;top:0">
-                    <i class="material-icons md-18">link</i>
-                </a>
-            </li>
-            <li class="withAction">
-                <a href="https://moodle.hacman.org.uk">Moodle</a>
-                <a href="https://moodle.hacman.org.uk" style="position:absolute;right: 0;top:0">
-                    <i class="material-icons md-18">link</i>
-                </a>
-            </li>
-            <li class="withAction">
-                <a href="https://www.hacman.org.uk/covid-19-information/">COVID-19 information</a>
-                <a href="https://www.hacman.org.uk/covid-19-information/" style="position:absolute;right: 0;top:0">
-                    <i class="material-icons md-18">link</i>
-                </a>
-            </li>
-	        <li class="withAction">
-                <a href="https://docs.hacman.org.uk">Documentation</a>
-                <a href="https://docs.hacman.org.uk" style="position:absolute;right: 0;top:0">
-                    <i class="material-icons md-18">link</i>
-                </a>
-            </li>
+            {!! HTML::sideNavLink('💳 Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
+            {!! HTML::sideNavLink('ℹ️ Getting Started', 'account.induction.show', [Auth::id()]) !!}
+           
         </ul>
         @endif
     </header>
@@ -104,6 +81,30 @@
         @else
             {!! HTML::sideNavLink('🔑 Logout', 'logout') !!}
         @endif
+        <li class="withAction">
+            <a href="https://list.hacman.org.uk">Forum</a>
+            <a href="https://list.hacman.org.uk" style="position:absolute;right: 0;top:0">
+                <i class="material-icons md-18">link</i>
+            </a>
+        </li>
+        <li class="withAction">
+            <a href="https://moodle.hacman.org.uk">Moodle</a>
+            <a href="https://moodle.hacman.org.uk" style="position:absolute;right: 0;top:0">
+                <i class="material-icons md-18">link</i>
+            </a>
+        </li>
+        <li class="withAction">
+            <a href="https://www.hacman.org.uk/covid-19-information/">COVID-19 information</a>
+            <a href="https://www.hacman.org.uk/covid-19-information/" style="position:absolute;right: 0;top:0">
+                <i class="material-icons md-18">link</i>
+            </a>
+        </li>
+        <li class="withAction">
+            <a href="https://docs.hacman.org.uk">Documentation</a>
+            <a href="https://docs.hacman.org.uk" style="position:absolute;right: 0;top:0">
+                <i class="material-icons md-18">link</i>
+            </a>
+        </li>
     </ul>
 </nav>
 
