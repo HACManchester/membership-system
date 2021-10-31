@@ -138,6 +138,13 @@ Tools and Equipment
                         {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
                         {{ $trainer->user->name }}
                     </a>
+
+                    @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                        {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                        {!! Form::hidden('not_trainer', '1') !!}
+                        {!! Form::submit('🙅 Remove', array('class'=>'btn btn-default btn-xs')) !!}
+                        {!! Form::close() !!}
+                    @endif
                 @endforeach
             </div>
             </div>
@@ -159,12 +166,19 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
-                        @if (Auth::user()->isAdmin())
-                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                        @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('is_trainer', '1') !!}
                             {!! Form::submit('🎓 Make Trainer', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
+
+                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                            {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
+                            {!! Form::hidden('mark_untrained', '0') !!}
+                            {!! Form::submit('🚫 Remove', array('class'=>'btn btn-danger btn-xs')) !!}
+                            {!! Form::close() !!}
                         @endif
+
                     </div>
                 @endforeach
             </div>
@@ -178,11 +192,11 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
-                        @if (Auth::user()->isAdmin())
-                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                        @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                            {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('mark_trained', '1') !!}
-                            {!! Form::submit('✔️ Mark Trained', array('class'=>'btn btn-default btn-xs')) !!}
+                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
                         @endif
                     </div>

@@ -41,6 +41,10 @@ class InductionController extends Controller
      */
     public function update($userId, $id)
     {
+        if (!Auth::user()->isAdmin() && !Auth::user()->trusted){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $induction = Induction::findOrFail($id);
 
         if (\Input::get('mark_trained', false)) {
@@ -49,6 +53,13 @@ class InductionController extends Controller
             $induction->save();
         } elseif (\Input::get('is_trainer', false)) {
             $induction->is_trainer = true;
+            $induction->save();
+        } elseif (\Input::get('not_trainer', false)) {
+            $induction->is_trainer = false;
+            $induction->save();
+        } elseif (\Input::get('mark_untrained', false)) {
+            $induction->trained = false;
+            $induction->trainer_user_id = false;
             $induction->save();
         } elseif (\Input::get('cancel_payment', false)) {
             if ($induction->trained) {
