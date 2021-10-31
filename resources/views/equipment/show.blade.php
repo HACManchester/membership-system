@@ -124,14 +124,14 @@ Tools and Equipment
             @endif
         </div>
     @endif
+</div>
 
-
-
-    @if ($equipment->requiresInduction() && $trainers)
-        <div class="col-sm-12 col-lg-6 well">
+@if ($equipment->requiresInduction())
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
             <div class="row">
-            <h3>Trainers/Maintainers</h3>
-            <p>These people are trained to maintain the tool.
+            <h3>🎓 Trainers/Maintainers</h3>
+            <p>These people can train others and maintain the tool.</p>
             <div class="list-group">
                 @foreach($trainers as $trainer)
                     <div class="list-group-item">
@@ -152,13 +152,8 @@ Tools and Equipment
             </div>
             </div>
         </div>
-    @endif
-
-</div>
-
-@if ($equipment->requiresInduction())
-    <div class="row">
-        <div class="col-sm-12 col-md-6 well">
+    
+        <div class="col-sm-12 col-md-4">
             <h3>✅ Trained Users</h3>
             <p>These people are trained to use this tool</p>
 
@@ -188,8 +183,9 @@ Tools and Equipment
                 @endforeach
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 well">
-            <h3>🛂 Members awaiting Inductions</h3>
+        <div class="col-sm-12 col-md-4">
+            <h3>🛂 Awaiting Inductions</h3>
+            <p>People who have requested an induction</p>
             <div class="list-group">
                 @foreach($usersPendingInduction as $trainedUser)
                     <div class="list-group-item">
