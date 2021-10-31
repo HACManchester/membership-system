@@ -45,6 +45,7 @@ class InductionController extends Controller
             throw new \BB\Exceptions\AuthenticationException();
         }
 
+        $slug = \Input::get('slug', false);
         $induction = Induction::findOrFail($id);
 
         if (\Input::get('mark_trained', false)) {
@@ -58,8 +59,8 @@ class InductionController extends Controller
             $induction->is_trainer = false;
             $induction->save();
         } elseif (\Input::get('mark_untrained', false)) {
-            $induction->trained = false;
-            $induction->trainer_user_id = false;
+            $induction->trained = null;
+            $induction->trainer_user_id = 0;
             $induction->save();
         } elseif (\Input::get('cancel_payment', false)) {
             if ($induction->trained) {
@@ -72,6 +73,9 @@ class InductionController extends Controller
             throw new \BB\Exceptions\NotImplementedException();
         }
         \Notification::success("Updated");
+        if($slug){
+            return \Redirect::route('equipment.show', $slug);
+        }
         return \Redirect::route('account.show', $userId);
     }
 

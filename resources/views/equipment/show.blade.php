@@ -142,6 +142,7 @@ Tools and Equipment
                         @if (Auth::user()->isAdmin() || Auth::user()->trusted)
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
                             {!! Form::hidden('not_trainer', '1') !!}
+                            {!! Form::hidden('slug', $equipment->slug) !!}
                             {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
                         @endif
@@ -170,13 +171,14 @@ Tools and Equipment
                         </a>
                         @if (Auth::user()->isAdmin() || Auth::user()->trusted)
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                            {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('mark_untrained', '1') !!}
+                            {!! Form::hidden('slug', $equipment->slug) !!}
                             {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
 
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('is_trainer', '1') !!}
+                            {!! Form::hidden('slug', $equipment->slug) !!}
                             {!! Form::submit('🎓', array('class'=> $trainedUser->is_trainer ? 'btn btn-xs disabled' : 'btn btn-xs btn-default')) !!}
                             {!! Form::close() !!}
                         
@@ -199,6 +201,7 @@ Tools and Equipment
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('mark_trained', '1') !!}
+                            {!! Form::hidden('slug', $equipment->slug) !!}
                             {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
                         @endif
