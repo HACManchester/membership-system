@@ -171,7 +171,7 @@ Tools and Equipment
                         @if (Auth::user()->isAdmin() || Auth::user()->trusted)
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
-                            {!! Form::hidden('mark_untrained', '0') !!}
+                            {!! Form::hidden('mark_untrained', '1') !!}
                             {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
                             {!! Form::close() !!}
 
