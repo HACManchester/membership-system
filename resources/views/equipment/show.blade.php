@@ -61,11 +61,6 @@ Tools and Equipment
                 <p>No specific PPE is required. You must still be aware of risks and use relevent PPE to mitigate those risks.</p>
             @endif
 
-            <div class="panel panel-warning">
-                <div class="panel-heading">Incorrect information?</div>
-                <div class="panel-body">If something is wrong or missing on this page, please raise the issue on the Forum or Telegram.</div>
-            </div>
-
         </div>
     </div>
 
@@ -124,6 +119,13 @@ Tools and Equipment
             @endif
         </div>
     @endif
+
+    <div class="col col-sm-12 col-md-6">
+        <div class="panel panel-warning">
+            <div class="panel-heading">Incorrect information?</div>
+            <div class="panel-body">If something is wrong or missing on this page, please raise the issue on the Forum or Telegram.</div>
+        </div>
+    </div>
 </div>
 
 @if ($equipment->requiresInduction())
@@ -154,7 +156,7 @@ Tools and Equipment
         </div>
     
         <div class="col-sm-12 col-md-4">
-            <h3>✅ Trained Users</h3>
+            <h3>✔️ Trained Users</h3>
             <p>These people are trained to use this tool</p>
 
             <div class="list-group">
