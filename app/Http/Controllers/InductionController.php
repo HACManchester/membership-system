@@ -41,10 +41,6 @@ class InductionController extends Controller
      */
     public function update($userId, $id)
     {
-        if (!\Auth::user()->isAdmin() && !\Auth::user()->trusted){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
         $slug = \Input::get('slug', false);
         $induction = Induction::findOrFail($id);
 

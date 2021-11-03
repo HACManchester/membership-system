@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
         'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'      => 'BB\Http\Middleware\RedirectIfAuthenticated',
         'role'       => 'BB\Http\Middleware\HasRole',
+        'trusted'       => 'BB\Http\Middleware\isTrusted',
         'acs'        => ACSAuthentication::class,
     ];
 

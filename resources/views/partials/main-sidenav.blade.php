@@ -75,12 +75,6 @@
     @endif
 
     <ul class="nav secondaryNav">
-        @if (Auth::guest())
-            {!! HTML::sideNavLink('🔑 Login', 'login') !!}
-            {!! HTML::sideNavLink('✔️ Become a Member', 'register') !!}
-        @else
-            {!! HTML::sideNavLink('🔑 Logout', 'logout') !!}
-        @endif
         <li class="withAction">
             <a href="https://list.hacman.org.uk">Forum</a>
             <a href="https://list.hacman.org.uk" style="position:absolute;right: 0;top:0">
@@ -105,6 +99,12 @@
                 <i class="material-icons md-18">link</i>
             </a>
         </li>
+        @if (Auth::guest())
+            {!! HTML::sideNavLink('🔑 Login', 'login') !!}
+            {!! HTML::sideNavLink('✔️ Become a Member', 'register') !!}
+        @else
+            {!! HTML::sideNavLink('🔑 Logout', 'logout') !!}
+        @endif
     </ul>
 </nav>
 
