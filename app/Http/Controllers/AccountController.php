@@ -404,7 +404,7 @@ class AccountController extends Controller
     
     public function sendConfirmationEmail()
     {
-        $user = User::find($id);
+        $user = \Auth::user();
       
         if(!$user->email_verified){
             $userMailer = new UserMailer($user);

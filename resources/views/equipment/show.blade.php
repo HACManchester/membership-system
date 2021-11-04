@@ -119,13 +119,6 @@ Tools and Equipment
             @endif
         </div>
     @endif
-
-    <div class="col col-sm-12 col-md-6">
-        <div class="panel panel-warning">
-            <div class="panel-heading">Incorrect information?</div>
-            <div class="panel-body">If something is wrong or missing on this page, please raise the issue on the Forum or Telegram.</div>
-        </div>
-    </div>
 </div>
 
 @if ($equipment->requiresInduction())
@@ -209,7 +202,15 @@ Tools and Equipment
         </div>
     </div>
 @endif
-
+<br/>
+<div class="row">
+    <div class="col col-sm-12">
+        <div class="panel panel-warning">
+            <div class="panel-heading">Incorrect information?</div>
+            <div class="panel-body">If something is wrong or missing on this page, please raise the issue on the Forum or Telegram.</div>
+        </div>
+    </div>
+</div>
 
     @if ($equipment->hasActivity())
     <h3>Activity Log</h3>
