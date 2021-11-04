@@ -29,7 +29,7 @@ Members
                         <strong>{{ $user->display_name }}</strong>
                     </div>
                     <span class="memberFlags">
-                    @if ($user->hasRole('board'))
+                    @if ($user->trusted)
                         <i class="material-icons" data-toggle="tooltip" data-placement="top" title="board">star</i>
                     @endif
                     </span>
