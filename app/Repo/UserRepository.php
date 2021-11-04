@@ -94,11 +94,17 @@ class UserRepository extends DBRepository
             return \DB::table('users')
                 ->join('profile_data', 'users.id', '=', 'profile_data.user_id')
                 ->where('status', '=', 'active')
-                ->where('profile_private', 0)
                 ->orderBy('profile_photo', 'desc')
+                ->orderBy('display_name')
                 ->get();
         } else {
-            return $this->model->with('profile', 'roles')->active()->where('status', '!=', 'leaving')->where('profile_private', 0)->orderBy('given_name')->get();
+            return \DB::table('users')
+                ->join('profile_data', 'users.id', '=', 'profile_data.user_id')
+                ->where('status', '=', 'active')
+                ->where('profile_private', 0)
+                ->orderBy('profile_photo', 'desc')
+                ->orderBy('display_name')
+                ->get();
         }
     }
 
