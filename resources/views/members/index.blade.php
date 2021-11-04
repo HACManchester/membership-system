@@ -16,10 +16,17 @@ Members
         @foreach ($users as $user)
         <div class="col-sm-6 col-md-4 col-lg-2">
             <div class="memberBlock">
-                <a href="{{ route('members.show', $user->id) }}">
-                    {!! HTML::memberPhoto($user->profile, $user->hash, 200) !!}
+                <a href="{{ route('members.show', $user->user_id) }}">
+                    {!! HTML::memberPhoto(
+                        (object)[
+                            "profile_photo"=>$user->profile_photo,
+                            "profile_photo_private"=>$user->profile_photo_private
+                        ], 
+                        $user->hash, 
+                        200) 
+                    !!}
                     <div class="memberDetails">
-                        <strong>{{ $user->name }}</strong>
+                        <strong>{{ $user->display_name }}</strong>
                     </div>
                     <span class="memberFlags">
                     @if ($user->hasRole('board'))

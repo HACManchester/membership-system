@@ -91,7 +91,12 @@ class UserRepository extends DBRepository
     public function getActivePublicList($showPrivateMembers = false)
     {
         if ($showPrivateMembers) {
-            return $this->model->with('profile', 'roles')->active()->where('status', '!=', 'leaving')->orderBy('given_name')->get();
+            return \DB::table('users')
+                ->join('profile_data', 'users.id', '=', 'profile_data.user_id')
+                ->where('status', '=', 'active')
+                ->where('profile_private', 0)
+                ->orderBy('profile_photo', 'desc')
+                ->get();
         } else {
             return $this->model->with('profile', 'roles')->active()->where('status', '!=', 'leaving')->where('profile_private', 0)->orderBy('given_name')->get();
         }
