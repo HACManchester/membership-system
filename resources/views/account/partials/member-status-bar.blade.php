@@ -17,12 +17,12 @@
             </li>
 
             <li>
-                <p class="navbar-text"><label class="label label-primary">🔑 ({{ $user->keyFobs()->count() || "No keyfob added" }})</label></p>
+                <p class="navbar-text"><label class="label label-primary">🔑 {{ $user->keyFobs()->count() || "No keyfob added" }}</label></p>
             </li>
 
             @if ($user->keyFob())
             <li>
-                <p class="navbar-text"><label class="label label-info">Access Code (coming soon): hexdec({{ $user->keyFob()->key_id }})</label></p>
+                <p class="navbar-text"><label class="label label-info">Access Code (coming soon): {{ hexdec($user->keyFob()->key_id) }}</label></p>
             </li>
             @endif
         </ul>
