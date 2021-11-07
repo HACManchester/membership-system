@@ -217,7 +217,7 @@ Edit your details
                 <div class="badge">
                     Fob ID: {{ $fob->key_id }}
                 </div> 
-                <div>
+                <div class="badge">
                     Access Code: {{ hexdec($fob->key_id) }}
                 </div>
                 <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
