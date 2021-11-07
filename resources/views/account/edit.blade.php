@@ -192,37 +192,49 @@ Edit your details
 
 {!! Form::close() !!}
 
-        <h4>Key Fob</h4>
-        <p><b>Got your welcome flyer and fob?</b> Just enter the ID on the flyer into the box below and hit "Add a new fob"
-        <p>At the space signup desk? Scan your fob with the reader to enter your fob ID and hit "Add new fob"</p>
-        @foreach ($user->keyFobs()->get() as $fob)
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-5">
-                    <p class="form-control-static">{{ $fob->key_id }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small></p>
-                </div>
-                <div class="col-sm-3">
-                    {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
-                </div>
-            </div>
-        {!! Form::hidden('user_id', $user->id) !!}
-        {!! Form::close() !!}
-        @endforeach
+<h4>Key Fobs and Access Codes</h4>
+<p><b>Got your welcome flyer and fob?</b> Just enter the ID on the flyer into the box below and hit "Add a new fob"
+<p>At the space signup desk? Scan your fob with the reader to enter your fob ID and hit "Add new fob"</p>
+<br/>
 
-        @if ($user->keyFobs()->count() < 2)
-            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-5">
-                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                </div>
-                <div class="col-sm-3">
-                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
-                </div>
-            </div>
-            {!! Form::hidden('user_id', $user->id) !!}
-            {!! Form::close() !!}
-        @endif
-
+<div class="panel panel-warning">
+    <div class="panel-header">Your access codes</div>
+    <div class="panel-body">
+        Once you add a fob, it will auto generate an access code for you. Do not share this access code - it is linked to your fob and therefore account, and you are responsible for keeping it secure.
     </div>
+</div>
+
+<ol>
+@foreach ($user->keyFobs()->get() as $fob)
+    {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
+        <li>
+            <p>
+                <b>{{ $fob->key_id }}</b> Access Code: {{ hexdec($fob->key_id) }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+            </p>
+            <div class="col-sm-3">
+                {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
+            </div>
+        </li>
+    {!! Form::hidden('user_id', $user->id) !!}
+    {!! Form::close() !!}
+@endforeach
+</ol>
+
+@if ($user->keyFobs()->count() < 2)
+    {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+    <div class="form-group">
+        <div class="col-sm-5">
+            {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+            Characters A-F and numbers 0-9 only.
+        </div>
+        <div class="col-sm-3">
+            {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
+        </div>
+    </div>
+    {!! Form::hidden('user_id', $user->id) !!}
+    {!! Form::close() !!}
+@endif
+
+</div>
 
 @stop
