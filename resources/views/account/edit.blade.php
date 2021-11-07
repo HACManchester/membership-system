@@ -193,12 +193,17 @@ Edit your details
 {!! Form::close() !!}
 
 <h4>Key Fobs and Access Codes</h4>
-<p><b>Got your welcome flyer and fob?</b> Just enter the ID on the flyer into the box below and hit "Add a new fob"
-<p>At the space signup desk? Scan your fob with the reader to enter your fob ID and hit "Add new fob"</p>
-<br/>
+
+<div class="panel panel-info">
+    <div class="panel-heading">Adding a keyfob</div>
+    <div class="panel-body">
+        <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
+        <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+    </div>
+</div>
 
 <div class="panel panel-warning">
-    <div class="panel-header">Your access codes</div>
+    <div class="panel-heading">Your access codes</div>
     <div class="panel-body">
         Once you add a fob, it will auto generate an access code for you. Do not share this access code - it is linked to your fob and therefore account, and you are responsible for keeping it secure.
     </div>
@@ -209,9 +214,15 @@ Edit your details
     {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
         <li>
             <p>
-                <b>{{ $fob->key_id }}</b> Access Code: {{ hexdec($fob->key_id) }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                <div class="badge">
+                    Fob ID: {{ $fob->key_id }}
+                </div> 
+                <div>
+                    Access Code: {{ hexdec($fob->key_id) }}
+                </div>
+                <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
             </p>
-            <div class="col-sm-3">
+            <div class="">
                 {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
             </div>
         </li>
