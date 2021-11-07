@@ -194,18 +194,20 @@ Edit your details
 
 <h4>Key Fobs and Access Codes</h4>
 
-<div class="panel panel-info">
-    <div class="panel-heading">Adding a keyfob</div>
-    <div class="panel-body">
-        <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
-        <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+@if (!$user->keyfob())
+    <div class="panel panel-info">
+        <div class="panel-heading">Adding a keyfob</div>
+        <div class="panel-body">
+            <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
+            <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+        </div>
     </div>
-</div>
+@endif
 
 <div class="panel panel-warning">
     <div class="panel-heading">Your access codes</div>
     <div class="panel-body">
-        Once you add a fob, it will auto generate an access code for you. Do not share this access code - it is linked to your fob and therefore account, and you are responsible for keeping it secure.
+        Once you add a fob, it will auto generate an access code for you. Do not share this access code - it is linked to your account, and you are responsible for keeping it secure. Use is logged to prevent abuse of this secondary access system.
     </div>
 </div>
 
