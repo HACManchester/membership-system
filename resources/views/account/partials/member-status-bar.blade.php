@@ -17,7 +17,7 @@
             </li>
 
             <li>
-                <p class="navbar-text"><label class="label label-primary">🔑 {{ $user->keyFobs()->count() || "No keyfob added" }}</label></p>
+                <p class="navbar-text"><label class="label label-primary">🔑 {{ count($user->keyFobs()) || "No keyfob added" }}</label></p>
             </li>
 
             @if ($user->keyFob())
