@@ -14,7 +14,7 @@ Members
 <div class="memberGrid">
     <div class="row">
         @foreach ($users as $user)
-        <div class="col-sm-6 col-md-4 col-lg-2">
+        <div class="col-xs-4 col-md-3 col-lg-2">
             <div class="memberBlock">
                 <a href="{{ route('members.show', $user->user_id) }}">
                     {!! HTML::memberPhoto(
