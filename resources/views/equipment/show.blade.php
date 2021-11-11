@@ -39,7 +39,18 @@ Tools and Equipment
                     @endif
                     @if ($equipment->isPermaloan())<h4><span class="label label-warning">Permaloan</span></h4>@endif
                     @if (!$equipment->isWorking())<h4><span class="label label-danger">Out of action</span></h4>@endif
-
+                    
+                    @if (!$equipment->isDangerous())
+                        <div style="padding: 1em;
+                            color: white;
+                            font-weight: bold;
+                            background: repeating-linear-gradient( 45deg, #f00, #f00 10px, #e00 10px, #e00 20px );
+                            margin: 1em 0;
+                            border: 3px solid #e00;
+                            ">
+                            This Tool Is Bloody Dangerous
+                        </div>
+                    @endif
                 </div>
             </div>
 

@@ -25,6 +25,7 @@ class EquipmentValidator extends FormValidator
         'induction_category' => 'required_if:requires_induction,1|alpha_dash',
         'working'            => 'boolean',
         'permaloan'          => 'boolean',
+        'dangerous'          => 'boolean',
         'permaloan_user_id'  => 'exists:users,id|required_if:permaloan,1',
         'access_fee'         => 'integer',
         'usage_cost'         => 'numeric',

@@ -35,7 +35,7 @@ class Equipment extends Model
         'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'slug',
         'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'induction_category', 'working',
         'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
-        'usage_cost', 'usage_cost_per', 'ppe'
+        'usage_cost', 'usage_cost_per', 'ppe', 'dangerous', 'induction_instructions', 'trainer_instructions', 'trained_instructions'
     ];
 
     public function getDates()
@@ -95,6 +95,11 @@ class Equipment extends Model
     public function isPermaloan()
     {
         return (bool)$this->permaloan;
+    }
+
+    public function isDangerous()
+    {
+        return (bool)$this->dangerous;
     }
 
     public function isManagedByGroup()
