@@ -114,13 +114,32 @@ Tools and Equipment
                 <h4>
                     <span class="label label-success">You have been inducted and can use this equipment</span>
                 </h4>
-                @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
-                    <h4>Pay for usage</h4>
-                    <p>
-                        While the access control systems are unavailable you can make a payment for your usage of the equipment below.
-                    </p>
+                @if ($equipment->trainer_instructions)
+                <div style="border-left: 3px solid tomato; padding-left: 1em;">
+                    <h4>Trainer Instructions</h4>
+                    <p>{{ $equipment->trainer_instructions }}</p>
+                    <br/>
+                </div>
+                @endif
 
-                    <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
+                @if ($equipment->trained_instructions)
+                <div style="border-left: 3px solid green; padding-left: 1em;">
+                    <h4>Inducted user Instructions</h4>
+                    <p>{{ $equipment->trained_instructions }}</p>
+                    <br/>
+                </div>
+                @endif
+
+                @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
+                    
+                    <div style="border-left: 3px solid green; padding-left: 1em;">
+                        <h4>Pay for usage</h4>
+                        <p>
+                            While the access control systems are unavailable you can make a payment for your usage of the equipment below.
+                        </p>
+
+                        <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
+                    </div>
                 @endif
 
             @elseif ($userInduction)
