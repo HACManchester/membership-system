@@ -5,7 +5,7 @@
     <div class="panel-body">
         <p>
             Some equipment requires an induction prior to you being able to use it.<br />
-            <a href="{{ route('equipment.index') }}">➡️ Visit the equipment page to book inductions</em>
+            <a href="{{ route('equipment.index') }}">➡️ Visit the equipment page to book inductions</a>
         </p>
     </div>
     <table class="table">
