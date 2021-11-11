@@ -40,7 +40,7 @@ Tools and Equipment
                     @if ($equipment->isPermaloan())<h4><span class="label label-warning">Permaloan</span></h4>@endif
                     @if (!$equipment->isWorking())<h4><span class="label label-danger">Out of action</span></h4>@endif
                     
-                    @if (!$equipment->isDangerous())
+                    @if ($equipment->isDangerous())
                         <div style="padding: 1em;
                             color: white;
                             font-weight: bold;
