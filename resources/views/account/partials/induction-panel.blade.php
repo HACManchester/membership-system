@@ -4,9 +4,8 @@
     </div>
     <div class="panel-body">
         <p>
-            Some of the equipment within the space require a specific induction prior to you being able to use it.<br />
-            The equipment that requires induction can be found on the equipment and tool section of the members area. Some inductions have a fee attached to them, this is kept low and is used to cover the costs of material used during the induction <br />
-            <em>More details can be found on the equipment page </em>
+            Some equipment requires an induction prior to you being able to use it.<br />
+            <a href="{{ route('equipment.index') }}">➡️ Visit the equipment page to book inductions</em>
         </p>
     </div>
     <table class="table">
@@ -14,7 +13,7 @@
         <tr>
             <th>Name</th>
             <th>Cost</th>
-            <th></th>
+            <th>Induction</th>
             <th>
                 @if (Auth::user()->isAdmin())
                 Inducted Status
@@ -36,11 +35,11 @@
             <td>&pound;{{ $item->access_fee }}</td>
             <td>
                 @if ($item->userInduction && ($item->userInduction->is_trained))
-                {{ $item->userInduction->trained->toFormattedDateString() }}
+                ✔️ {{ $item->userInduction->trained->toFormattedDateString() }}
                 @elseif ($item->userInduction && $item->userInduction->paid)
-                Pending
+                🕑 Pending
                 @else
-                To pay the fee or to sort an induction visit the equipment page
+                <a href="{{ route('equipment.index') }}/{{ $item->slug }}">Book induction on tool page</a>
                 @endif
             </td>
             <td>
