@@ -119,6 +119,7 @@ Route::post('account/payment/migrate-direct-debit', ['as'=>'account.payment.goca
 ##########################
 
 Route::group(array('middleware' => 'trusted'), function() {
+    Route::post('equipment_training/create', ['uses'=>'InductionController@create', 'as'=>'equipment_training.create']);
     Route::post('equipment_training/update', ['uses'=>'InductionController@update', 'as'=>'equipment_training.update']);
     Route::resource('account.induction', 'InductionController', ['only' => ['update', 'destroy']]);
 });

@@ -30,6 +30,16 @@ class InductionController extends Controller
         $this->paymentRepository = $paymentRepository;
     }
 
+    public function create($userId){
+        $slug = \Input::get('slug', false);
+        
+        Induction::create([
+            'user_id' => $userId,
+            'key' => $slug,
+            'paid' => true,
+            'payment_id' => 0
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.

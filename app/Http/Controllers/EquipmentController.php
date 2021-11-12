@@ -107,6 +107,8 @@ class EquipmentController extends Controller
 
         $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipment->induction_category);
 
+        $memberList = $this->userRepository->getAllAsDropdown();
+
         return \View::make('equipment.show')
             ->with('equipmentId', $equipmentId)
             ->with('equipment', $equipment)
@@ -116,7 +118,8 @@ class EquipmentController extends Controller
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
-            ->with('user', $user);
+            ->with('user', $user)
+            ->with('memberlist', $memberList);
     }
 
     /**
