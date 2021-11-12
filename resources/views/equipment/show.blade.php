@@ -114,7 +114,7 @@ Tools and Equipment
                 <h4>
                     <span class="label label-success">You have been inducted and can use this equipment</span>
                 </h4>
-                @if ($equipment->trainer_instructions)
+                @if ($userInduction->is_trainer && $equipment->trainer_instructions)
                 <div style="border-left: 3px solid tomato; padding-left: 1em;">
                     <h4>Trainer Instructions</h4>
                     <p>{{ $equipment->trainer_instructions }}</p>
