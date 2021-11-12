@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<div class="form-group {{ Notification::hasErrorDetail('dangerous', 'has-error has-feedback') }}">
+<div class="form-group alert-danger {{ Notification::hasErrorDetail('dangerous', 'has-error has-feedback') }}">
     {!! Form::label('dangerous', 'Is Bloody Dangerous?', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
@@ -148,8 +148,8 @@
     </div>
 </div>
 
-<hr/>
 <h4>Training and Inductions</h4>
+<hr/>
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
