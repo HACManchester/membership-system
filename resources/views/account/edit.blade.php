@@ -209,8 +209,10 @@ Edit your details
     <div class="panel-body">
         <p>
         Active, paid up, non-banned members have two ways to access the space:
-        <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
-        <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
+        <ul>
+            <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
+            <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
+        </ul>
         Use is logged to prevent abuse of this secondary access system.
         </p>
     </div>
@@ -220,18 +222,33 @@ Edit your details
 @foreach ($user->keyFobs()->get() as $fob)
     {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
         <li>
-            <p>
-                <div class="badge">
-                    Fob ID: {{ $fob->key_id }}
-                </div> 
-                <div class="badge">
-                    Access Code:
+            @if (str_starts_with($fob->key_id, 'ff'))
+                <p>
+                    <div class="badge" style="background:forestgreen">
+                        Fob
+                    </div>
+                    <div class="badge">
+                        Fob ID: {{ $fob->key_id }}
+                    </div> 
+                    <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                </p>
+                <div class="">
+                    {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
                 </div>
-                <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-            </p>
-            <div class="">
-                {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
-            </div>
+            @else
+                <p>
+                    <div class="badge" style="color:lightseagreen">
+                        Access Code
+                    </div>
+                    <div class="badge">
+                        Code: {{ $fob->key_id }}
+                    </div> 
+                    <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                </p>
+                <div class="">
+                    {!! Form::submit('Mark Lost/Revealed', array('class'=>'btn btn-default')) !!}
+                </div>
+            @endif
         </li>
     {!! Form::hidden('user_id', $user->id) !!}
     {!! Form::close() !!}
