@@ -132,7 +132,7 @@ Tools and Equipment
 
                 @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
                     
-                    <div style="border-left: 3px solid green; padding-left: 1em;">
+                    <div style="border-left: 3px solid burlywood; padding-left: 1em;">
                         <h4>Pay for usage</h4>
                         <p>
                             While the access control systems are unavailable you can make a payment for your usage of the equipment below.
@@ -146,6 +146,14 @@ Tools and Equipment
                 <h4>
                     <span class="label label-info">Access fee paid, induction to be completed</span>
                 </h4>
+
+                @if ($equipment->trained_instructions)
+                <div style="border-left: 3px solid red; padding-left: 1em;">
+                    <h4>Induction Next Steps</h4>
+                    <p>{{ $equipment->induction_instructions }}</p>
+                    <br/>
+                </div>
+                @endif
             @endif
         </div>
     @endif
