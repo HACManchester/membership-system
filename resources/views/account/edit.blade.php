@@ -222,10 +222,10 @@ Edit your details
 @foreach ($user->keyFobs()->get() as $fob)
     {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
         <li>
-            @if (substr( $fob->key_id, 0, 2 ) === "ff")
+            @if (!substr( $fob->key_id, 0, 2 ) === "ff")
                 <p>
                     <div class="badge" style="background:forestgreen">
-                        Fob
+                    🔑 Fob
                     </div>
                     <div class="badge">
                         Fob ID: {{ $fob->key_id }}
@@ -233,12 +233,12 @@ Edit your details
                     <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
                 </p>
                 <div class="">
-                    {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
+                    {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
                 </div>
             @else
                 <p>
-                    <div class="badge" style="color:lightseagreen">
-                        Access Code
+                    <div class="badge" style="background:tomato">
+                    🔢 Access Code
                     </div>
                     <div class="badge">
                         Code: {{ $fob->key_id }}
@@ -246,7 +246,7 @@ Edit your details
                     <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
                 </p>
                 <div class="">
-                    {!! Form::submit('Mark Lost/Revealed', array('class'=>'btn btn-default')) !!}
+                    {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
                 </div>
             @endif
         </li>
