@@ -236,14 +236,16 @@ Tools and Equipment
                         @endif
                     </div>
                 @endforeach
-                <div class="list-group-item">
-                    <p>Add a member</p>
-                    {!! Form::open(array('method'=>'POST', 'route' => ['account.induction.create', $trainedUser->user->id])) !!}
-                    {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                    {!! Form::hidden('slug', $equipment->slug) !!}
-                    {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
-                    {!! Form::close() !!}
-                </div>
+                @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                    <div class="list-group-item">
+                        <p>Add a member</p>
+                        {!! Form::open(array('method'=>'POST', 'route' => ['account.induction.create', $trainedUser->user->id])) !!}
+                        {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+                        {!! Form::hidden('slug', $equipment->slug) !!}
+                        {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                        {!! Form::close() !!}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

@@ -119,7 +119,7 @@ class EquipmentController extends Controller
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
             ->with('user', $user)
-            ->with('memberlist', $memberList);
+            ->with('memberList', $memberList);
     }
 
     /**
