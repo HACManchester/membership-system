@@ -43,7 +43,7 @@ class KeyFobController extends Controller
         //Bin off any extra characters
 
         if(substr( $input['key_id'], 0, 2 ) === "ff"){
-            $input['key_id']=99887766;
+            $input['key_id']="ff99887766";
         }
         KeyFob::create($input);
 
