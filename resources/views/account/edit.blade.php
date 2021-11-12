@@ -222,7 +222,7 @@ Edit your details
 @foreach ($user->keyFobs()->get() as $fob)
     {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
         <li>
-            @if (str_starts_with($fob->key_id, 'ff'))
+            @if (substr( $fob->key_id, 0, 2 ) === "ff")
                 <p>
                     <div class="badge" style="background:forestgreen">
                         Fob
