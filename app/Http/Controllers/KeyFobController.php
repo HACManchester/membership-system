@@ -39,9 +39,15 @@ class KeyFobController extends Controller
 
         $this->keyFobForm->validate($input);
 
+        //If the fob befins with ff it's a request for an access cod
+        //Bin off any extra characters
+
+        if(substr( $input->key_id, 0, 2 ) !== "ff"){
+            $input->key_id=99887766;
+        }
         KeyFob::create($input);
 
-        \Notification::success("Key Fob Activated");
+        \Notification::success("Key fob/Access code has been activated");
         return \Redirect::route('account.show', $input['user_id']);
     }
 

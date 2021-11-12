@@ -241,7 +241,7 @@ Edit your details
                     🔢 Access Code
                     </div>
                     <div class="badge">
-                        Code: {{ $fob->key_id }}
+                        Code: {{ str_replace('f', '', $fob->key_id) }}
                     </div> 
                     <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
                 </p>
@@ -256,18 +256,34 @@ Edit your details
 </ol>
 
 @if ($user->keyFobs()->count() < 2)
-    {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-    <div class="form-group">
-        <div class="col-sm-5">
-            {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-            Characters A-F and numbers 0-9 only.
+<div class="row">
+    <div class="col-md-6">
+        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal well')) !!}
+        <div class="form-group">
+            <div class="col-sm-5">
+                {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                Characters A-F and numbers 0-9 only.
+            </div>
+            <div class="col-sm-3">
+                {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
+            </div>
         </div>
-        <div class="col-sm-3">
-            {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
-        </div>
+        {!! Form::hidden('user_id', $user->id) !!}
+        {!! Form::close() !!}
     </div>
-    {!! Form::hidden('user_id', $user->id) !!}
-    {!! Form::close() !!}
+    <div class="col-md-6">
+        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+        <div class="form-group">
+            <div class="col-sm-3">
+                {!! Form::hidden('key_id', 'ff00000000') !!}
+                {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+            </div>
+        </div>
+        {!! Form::hidden('user_id', $user->id) !!}
+        {!! Form::close() !!}
+    </div>
+</div>
+
 @endif
 
 </div>
