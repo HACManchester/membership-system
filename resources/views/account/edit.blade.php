@@ -205,12 +205,14 @@ Edit your details
 @endif
 
 <div class="panel panel-warning">
-    <div class="panel-heading">Fob codes, and access codes <b>(Access Codes COMING SOON!)</b></div>
+    <div class="panel-heading">Getting into the space</b></div>
     <div class="panel-body">
-        There are two ways to access the space:
-        <li>Using a fob - this is the primary method. Enter the ID of the fob below to add a fob.</li>
-        <li>Using an access code - this is auto-generated and cannot be edited.<b>Coming Soon!</b></li>
+        <p>
+        Active, paid up, non-banned members have two ways to access the space:
+        <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
+        <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
         Use is logged to prevent abuse of this secondary access system.
+        </p>
     </div>
 </div>
 
