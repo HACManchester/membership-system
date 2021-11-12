@@ -256,9 +256,10 @@ Edit your details
 </ol>
 
 @if ($user->keyFobs()->count() < 2)
-<div class="row">
+<div class="row well">
     <div class="col-md-6">
-        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal well')) !!}
+        <h4>Add a Keyfob</h4>
+        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
         <div class="form-group">
             <div class="col-sm-5">
                 {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
@@ -272,6 +273,7 @@ Edit your details
         {!! Form::close() !!}
     </div>
     <div class="col-md-6">
+        <h4>Request access code</h4>
         {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
         <div class="form-group">
             <div class="col-sm-3">
