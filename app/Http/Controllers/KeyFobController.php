@@ -41,9 +41,9 @@ class KeyFobController extends Controller
         //Bin off any extra characters
 
         if(substr( $input['key_id'], 0, 2 ) === "ff"){
-            $input['key_id']="ff99887766";
+            $input['key_id']="ff".rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
         }
-        
+
         $this->keyFobForm->validate($input);
 
         KeyFob::create($input);
