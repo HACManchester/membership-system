@@ -35,6 +35,9 @@ class EquipmentValidator extends FormValidator
         'asset_tag_id'       => 'unique:equipment,asset_tag_id',
         'obtained_at'        => 'date_format:Y-m-d|before:tomorrow',
         'removed_at'         => 'date_format:Y-m-d|before:tomorrow',
+        'induction_instructions'          => '',
+        'trainer_instructions'          => '',
+        'trained_instructions'          => '',
     ];
 
     //During an update these rules will override the ones above
