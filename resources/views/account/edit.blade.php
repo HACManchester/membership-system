@@ -205,9 +205,12 @@ Edit your details
 @endif
 
 <div class="panel panel-warning">
-    <div class="panel-heading">Your access codes <b>(COMING SOON!)</b></div>
+    <div class="panel-heading">Fob codes, and access codes <b>(Access Codes COMING SOON!)</b></div>
     <div class="panel-body">
-        Once you add a fob, it will auto generate an access code for you. Do not share this access code - it is linked to your account, and you are responsible for keeping it secure. Use is logged to prevent abuse of this secondary access system.
+        There are two ways to access the space:
+        <li>Using a fob - this is the primary method. Enter the ID of the fob below to add a fob.</li>
+        <li>Using an access code - this is auto-generated and cannot be edited.<b>Coming Soon!</b></li>
+        Use is logged to prevent abuse of this secondary access system.
     </div>
 </div>
 
