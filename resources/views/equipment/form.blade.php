@@ -1,5 +1,5 @@
 @section('trustLevel')
-    ❓ Sensitive information such as access codes may be contained and can only be edited by trusted members or admins.<br/>
+    ❓ Sensitive information may be contained and can only be edited by trusted members or admins.<br/>
     ✏️ Coming soon - people marked as trainers for this tool will be able to edit.
 @stop
 <div class="form-group {{ Notification::hasErrorDetail('name', 'has-error has-feedback') }}">
@@ -153,18 +153,18 @@
 
 <h4>Training and Inductions</h4>
 <p>Please note only admins and trusted members can edit this section. This is becuase access codes are only available for trained users.</p>
-<p>Read/Write permissions: {{ \Auth::user()->trusted || \Auth::user()->isAdmin() && "✔️ You can read/write these fields" }}</p>
+<p>Read/Write permissions: {{ $trusted : "✔️ You can read/write these fields" : ""}}</p>
 <hr/>
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', !$trusted && "disabled"]) !!}
+        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $trusted ? "" : "disabled"]) !!}
         {!! Notification::getErrorDetail('requires_induction') !!}
     </div>
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
-    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label', !$trusted && "disabled"]) !!}
+    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label', $trusted ? "" : "disabled"]) !!}
     <div class="col-sm-9 col-lg-7">
         {!! Form::text('induction_category', null, ['class'=>'form-control']) !!}
         <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
@@ -173,7 +173,7 @@
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('access_fee', 'has-error has-feedback') }}">
-    {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label', !$trusted && "disabled"]) !!}
+    {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label',  $trusted ? "" : "disabled"]) !!}
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
@@ -185,7 +185,7 @@
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('usage_cost', 'has-error has-feedback') }}">
-    {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label', !$trusted && "disabled"]) !!}
+    {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label',  $trusted ? "" : "disabled"]) !!}
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
