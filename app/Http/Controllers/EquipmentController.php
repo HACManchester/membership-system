@@ -184,7 +184,12 @@ class EquipmentController extends Controller
         //$roleList->prepend(null);
         //dd($roleList);
 
-        return \View::make('equipment.edit')->with('equipment', $equipment)->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
+        return \View::make('equipment.edit')
+            ->with('equipment', $equipment)
+            ->with('memberList', $memberList)
+            ->with('roleList', $roleList->toArray())
+            ->with('ppeList', $this->ppeList)
+            ->with('trusted', \Auth::user()->trusted || \Auth::user()->isAdmin());
     }
 
 
