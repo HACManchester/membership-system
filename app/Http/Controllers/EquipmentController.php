@@ -157,19 +157,13 @@ class EquipmentController extends Controller
             throw new \BB\Exceptions\AuthenticationException();
         }
 
-        $normalFields = \Request::only([
+        $data = \Request::only([
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe'
+            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe',
+            'dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
+             'induction_instructions', 'trainer_instructions', 'trained_instructions'
         ]);
-
-        $trustedFields = \Auth::user()->trusted || \Auth::user()->isAdmin() ? 
-            ['dangerous', 'induction_instructions', 'trainer_instructions', 'trained_instructions', 
-             'access_fee', 'usage_cost', 'requires_induction', 'induction_category'
-            ]:
-            [];
-
-        $data = array_merge($trustedFields, $normalFields);
         
         $this->equipmentValidator->validate($data);
 
@@ -194,8 +188,6 @@ class EquipmentController extends Controller
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
-        //$roleList->prepend(null);
-        //dd($roleList);
 
         return \View::make('equipment.edit')
             ->with('equipment', $equipment)
@@ -220,11 +212,19 @@ class EquipmentController extends Controller
 
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
 
-        $data = \Request::only([
-            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail',
-            'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'working', 'usage_cost', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'access_fee', 'obtained_at', 'removed_at', 'induction_category', 'asset_tag_id', 'ppe', 'dangerous', 'induction_instructions', 'trainer_instructions', 'trained_instructions'
+        $normalFields = \Request::only([
+            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
+            'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
+            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe'
         ]);
+
+        $trustedFields = \Auth::user()->trusted || \Auth::user()->isAdmin() ? 
+            ['dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
+             'induction_instructions', 'trainer_instructions', 'trained_instructions'
+            ]:
+            [];
+
+        $data = array_merge($trustedFields, $normalFields);
         $this->equipmentValidator->validate($data, $equipment->id);
 
         $this->equipmentRepository->update($equipment->id, $data);
