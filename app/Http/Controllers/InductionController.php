@@ -32,7 +32,7 @@ class InductionController extends Controller
 
     public function create(){
         $slug = \Input::get('slug', false);
-        $user_id = \Input::get('user_id');
+        $userId = \Input::get('user_id');
         
         Induction::create([
             'user_id' => $userId,
