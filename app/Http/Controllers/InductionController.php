@@ -30,8 +30,9 @@ class InductionController extends Controller
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function create($userId){
+    public function create(){
         $slug = \Input::get('slug', false);
+        $user_id = \Input::get('user_id');
         
         Induction::create([
             'user_id' => $userId,
@@ -39,6 +40,8 @@ class InductionController extends Controller
             'paid' => true,
             'payment_id' => 0
         ]);
+        
+        return \Redirect::route('equipment.show', $slug);
     }
 
     /**
