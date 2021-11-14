@@ -9,7 +9,7 @@ class KeyFob extends FormValidator
      * @var array
      */
     protected $rules = [
-        'key_id' => ['required', 'unique:key_fobs','min:8','max:12','regex:/^(ff[0-9]{8}|[a-f][a-eA-F0-9]+)$/i'],
+        'key_id' => ['required', 'unique:key_fobs','min:8','max:12','regex:/^([a-fA-F0-9]+)$/i'],
     ];
 
 } 
