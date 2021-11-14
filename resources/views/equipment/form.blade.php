@@ -153,7 +153,7 @@
 
 <h4>Training and Inductions</h4>
 <p>Please note only admins and trusted members can edit this section. This is becuase access codes are only available for trained users.</p>
-<p>Read/Write permissions: {{ $trusted : "✔️ You can read/write these fields" : ""}}</p>
+<p>Read/Write permissions: {{ $trusted ? "✔️ You can read/write these fields" : ""}}</p>
 <hr/>
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
