@@ -136,7 +136,11 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
-        return \View::make('equipment.create')->with('memberList', $memberList)->with('roleList', $roleList->toArray())->with('ppeList', $this->ppeList);
+        return \View::make('equipment.create')
+            ->with('memberList', $memberList)
+            ->with('roleList', $roleList->toArray())
+            ->with('ppeList', $this->ppeList)
+            ->with('trusted', true);
     }
 
 
