@@ -1,5 +1,6 @@
 @section('trustLevel')
-    ❓ Sensitive information may be contained and can only be viewed by trusted members or admins
+    ❓ Sensitive information such as access codes may be contained and can only be edited by trusted members or admins.<br/>
+    ✏️ Coming soon - people marked as trainers for this tool will be able to edit.
 @stop
 <div class="form-group {{ Notification::hasErrorDetail('name', 'has-error has-feedback') }}">
     {!! Form::label('name', 'Name', ['class'=>'col-sm-3 control-label']) !!}
@@ -201,7 +202,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
     {!! Form::label('induction_instructions', 'Induction Instructions', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $trusted ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : @yield('trustLevel') !!}
+        {!! $trusted ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
         <p class="help-block">Instructions on what to do once an induction is requested. e.g. visit a telegram group.</p>
         {!! Notification::getErrorDetail('induction_instructions') !!}
     </div>
@@ -210,7 +211,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
     {!! Form::label('trained_instructions', 'Trained Instructions', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $trusted && Form::textarea('trained_instructions', null, ['class'=>'form-control']) !!}
+        {!! $trusted ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
         <p class="help-block">Instructions for trained users - such as reminders</p>
         {!! Notification::getErrorDetail('trained_instructions') !!}
     </div>
@@ -219,7 +220,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
     {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $trusted && Form::textarea('trainer_instructions', null, ['class'=>'form-control']) !!}
+        {!! $trusted ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
         <p class="help-block">Only trainers see this - e.g. documents to risk assessments</p>
         {!! Notification::getErrorDetail('trainer_instructions') !!}
     </div>
