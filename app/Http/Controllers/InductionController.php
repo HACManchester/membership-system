@@ -95,9 +95,13 @@ class InductionController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($uid, $id)
     {
-        //
+        $slug = \Input::get('slug', false);
+        $induction = Induction::findOrFail($id);
+        $induction->delete();
+        
+        return \Redirect::route('equipment.show', $slug);
     }
 
 
