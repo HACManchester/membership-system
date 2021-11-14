@@ -1,6 +1,7 @@
 @section('trustLevel')
-    ❓ Sensitive information may be contained and can only be edited by trusted members or admins.<br/>
-    ✏️ Coming soon - people marked as trainers for this tool will be able to edit.
+    <div class="alert alert-warning">
+        🔒 Sensitive information may be contained and can only be edited by trusted members or admins.<br/>
+    </div>
 @stop
 <div class="form-group {{ Notification::hasErrorDetail('name', 'has-error has-feedback') }}">
     {!! Form::label('name', 'Name', ['class'=>'col-sm-3 control-label']) !!}
@@ -146,14 +147,14 @@
 <h4>Health, Safety, Training and Inductions</h4>
 <div class="alert alert-info">
     To maintain the integrity of H&S and the training system, only admins and trusted members can edit this section.<br/>
-    <b>{{ $trusted ? "✔️ You can read/write these fields" : "🔒 These fields are not available at the moment"}}</b>
+    <b>{{ $trusted ? "✔️ You can read/write the fields in this area" : "🔒 The fields in this area can not be edited at the moment"}}</b>
 </div>
 <hr/>
 
 <div class="form-group alert-danger {{ Notification::hasErrorDetail('dangerous', 'has-error has-feedback') }}">
     {!! Form::label('dangerous', 'Is Bloody Dangerous?', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
+        {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $trusted ? "" : "disabled"]) !!}
         {!! Notification::getErrorDetail('dangerous') !!}
     </div>
 </div>
@@ -167,20 +168,20 @@
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
-    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label', $trusted ? "" : "disabled"]) !!}
+    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('induction_category', null, ['class'=>'form-control']) !!}
+        {!! Form::text('induction_category', null, ['class'=>'form-control', $trusted ? "" : "disabled"]) !!}
         <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
         {!! Notification::getErrorDetail('induction_category') !!}
     </div>
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('access_fee', 'has-error has-feedback') }}">
-    {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label',  $trusted ? "" : "disabled"]) !!}
+    {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) !!}
+            {!! Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1', $trusted ? "" : "disabled"]) !!}
         </div>
         <p class="help-block">Is an access fee being charged?</p>
         {!! Notification::getErrorDetail('access_fee') !!}
@@ -188,13 +189,13 @@
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('usage_cost', 'has-error has-feedback') }}">
-    {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label',  $trusted ? "" : "disabled"]) !!}
+    {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01']) !!}
+            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $trusted ? "" : "disabled"]) !!}
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'']) !!}
+            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page', $trusted ? "" : "disabled"], null, ['class'=>'']) !!}
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>
@@ -215,7 +216,7 @@
     {!! Form::label('trained_instructions', 'Trained Instructions', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         {!! $trusted ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
-        <p class="help-block">Instructions for trained users - such as reminders</p>
+        <p class="help-block">Instructions for trained users - such as reminders or access codes</p>
         {!! Notification::getErrorDetail('trained_instructions') !!}
     </div>
 </div>
