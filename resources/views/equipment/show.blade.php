@@ -324,10 +324,13 @@ Tools and Equipment
                     <h4 class="modal-title">Documentation and Help</h4>
                 </div>
                 <div class="modal-body">
-                    <h1>{{ $equipment->name }} Help</h1>
-                    <div class="well">
-                        {!! $equipment->present()->help_text !!}
-                    </div>
+                    @if ($equipment->present()->help_text)
+                        <h1>{{ $equipment->name }} Help</h1>
+                        <div class="well">
+                            {!! $equipment->present()->help_text !!}
+                        </div>
+                    @endif
+                    
                     @if ($equipment->docs)
                         <h1>{{ $equipment->name }} Documentation</h1>
                         <a target="_blank" class="btn btn-info" href="{{ $equipment->docs }}">➡️ View in full on the documentation system</a>
