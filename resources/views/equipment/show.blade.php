@@ -330,7 +330,8 @@ Tools and Equipment
                     </div>
                     @if ($equipment->docs)
                         <h1>{{ $equipment->name }} Documentation</h1>
-                        <a href="{{ $equipment->docs }}">➡️ View in full on the documentation system</a>
+                        <a target="_blank" class="btn btn-info" href="{{ $equipment->docs }}">➡️ View in full on the documentation system</a>
+                        <br/><br/>
                         <div class="well alert-info" style="background:#eee">
                             {!! $docs !!}
                         </div>
