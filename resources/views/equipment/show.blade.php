@@ -317,16 +317,21 @@ Tools and Equipment
     @endif
 
     <div class="modal fade" id="helpModal">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Documentation and Help</h4>
                 </div>
                 <div class="modal-body">
-                    {!! $equipment->present()->help_text !!}
-                    <hr/>
-                    {!! $docs !!}
+                    <h1>$equipment->name Help</h1>
+                    <div class="well">
+                        {!! $equipment->present()->help_text !!}
+                    </div>
+                    <h1>$equipment->name Documentation</h1>
+                    <div class="well alert-info" style="background:#eee">
+                        {!! $docs !!}
+                    </div>
                 </div>
             </div>
         </div>
