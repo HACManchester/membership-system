@@ -111,6 +111,7 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
 
         // Get info from the docs system
+        $docs ='';
         if($equipment->docs){
             $url =  $equipment->docs;
             $contents = file_get_contents($url);
