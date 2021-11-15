@@ -59,7 +59,7 @@ Tools and Equipment
             {!! $equipment->present()->description !!}
             <br />
 
-            @if ($equipment->help_text)
+            @if ($equipment->help_text || $equipment->docs)
                 <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">View Documentation and Help</a>
                 <br /><br />
             @endif
