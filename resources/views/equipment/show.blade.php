@@ -324,11 +324,11 @@ Tools and Equipment
                     <h4 class="modal-title">Documentation and Help</h4>
                 </div>
                 <div class="modal-body">
-                    <h1>{{!! $equipment->name !!}} Help</h1>
+                    <h1>{{ $equipment->name }} Help</h1>
                     <div class="well">
                         {!! $equipment->present()->help_text !!}
                     </div>
-                    <h1>{{!! $equipment->name !!}} Documentation</h1>
+                    <h1>{{ $equipment->name }} Documentation</h1>
                     <div class="well alert-info" style="background:#eee">
                         {!! $docs !!}
                     </div>
