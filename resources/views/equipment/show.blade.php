@@ -60,7 +60,7 @@ Tools and Equipment
             <br />
 
             @if ($equipment->help_text)
-                <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">Help</a>
+                <a data-toggle="modal" data-target="#helpModal" href="#" class="btn btn-info">View Documentation and Help</a>
                 <br /><br />
             @endif
 
@@ -321,10 +321,12 @@ Tools and Equipment
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Help</h4>
+                    <h4 class="modal-title">Documentation and Help</h4>
                 </div>
                 <div class="modal-body">
                     {!! $equipment->present()->help_text !!}
+                    <hr/>
+                    {!! $docs !!}
                 </div>
             </div>
         </div>

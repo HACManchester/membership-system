@@ -7,6 +7,7 @@ use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
 use Illuminate\Support\Facades\Storage;
+use Michelf\Markdown;
 
 class EquipmentController extends Controller
 {
@@ -109,6 +110,14 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
+        // Get info from the docs system
+        if($equipment->docs){
+            $url =  $equipment->docs;
+            $contents = file_get_contents($url);
+            $contents = utf8_encode($contents);
+            $docs = Markdown::defaultTransform($contents);
+        }
+
         return \View::make('equipment.show')
             ->with('equipmentId', $equipmentId)
             ->with('equipment', $equipment)
@@ -119,7 +128,8 @@ class EquipmentController extends Controller
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
             ->with('user', $user)
-            ->with('memberList', $memberList);
+            ->with('memberList', $memberList)
+            ->with('docs', $docs);
     }
 
     /**
