@@ -95,16 +95,7 @@
     <div class="col-sm-9 col-lg-7">
         {!! Form::text('docs', null, ['class'=>'form-control']) !!}
         <p class="help-block">
-            Link to the raw markdown file in GitHub that the documentation system uses. <br/>
-            To produce this URL, find the tool page in the documentation systm, then swap the red part for the green part below
-            <ul>
-                <li>
-                    Get the URL, and delete the red part.  <span style="color: red; background:#eee">https://docs.hacman.org.uk/</span>Workshop_Areas/Visual_Arts/Equipment/Laser_Cutter.md
-                </li>
-                <li>
-                    Add the base URL in green <span style="color: forestgreen; background:#eee">https://raw.githubusercontent.com/HACManchester/documentation/master/docs/</span>Workshop_Areas/Visual_Arts/Equipment/Laser_Cutter/
-                </li>
-            </ul>
+            Enter a link to the documentation system for this tool.
         </p>
         {!! Notification::getErrorDetail('docs') !!}
     </div>

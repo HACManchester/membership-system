@@ -114,8 +114,8 @@ class EquipmentController extends Controller
         $docs ='';
         if($equipment->docs){
             preg_match('/(https?:\/\/)?docs.hacman.org.uk\/(.+)/', $equipment->docs, $matches, PREG_OFFSET_CAPTURE);
-            $url =  'https://raw.githubusercontent.com/HACManchester/documentation/master/docs/' . $matches[1] .'.md';
-            $contents = file_get_contents($url);
+            $url =  'https://raw.githubusercontent.com/HACManchester/documentation/master/docs/' . rtrim($matches[2][0], "/") .'.md';
+            $contents = @file_get_contents($url);
             $contents = utf8_encode($contents);
             $docs = Markdown::defaultTransform($contents);
         }
