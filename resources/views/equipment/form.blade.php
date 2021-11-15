@@ -91,7 +91,7 @@
 </div>
 
 <div class="form-group {{ Notification::hasErrorDetail('docs', 'has-error has-feedback') }}">
-    {!! Form::label('docs', 'Link to documentation markdown', ['class'=>'col-sm-3 control-label']) !!}
+    {!! Form::label('docs', 'Link to documentation system', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         {!! Form::text('docs', null, ['class'=>'form-control']) !!}
         <p class="help-block">
