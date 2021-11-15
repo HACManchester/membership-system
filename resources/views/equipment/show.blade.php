@@ -328,10 +328,13 @@ Tools and Equipment
                     <div class="well">
                         {!! $equipment->present()->help_text !!}
                     </div>
-                    <h1>{{ $equipment->name }} Documentation</h1>
-                    <div class="well alert-info" style="background:#eee">
-                        {!! $docs !!}
-                    </div>
+                    @if ($equipment->docs)
+                        <h1>{{ $equipment->name }} Documentation</h1>
+                        <a href="{{ $equipment->docs }}">➡️ View in full on the documentation system</a>
+                        <div class="well alert-info" style="background:#eee">
+                            {!! $docs !!}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
