@@ -173,7 +173,7 @@ class EquipmentController extends Controller
             'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
             'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe',
             'dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
-             'induction_instructions', 'trainer_instructions', 'trained_instructions'
+             'induction_instructions', 'trainer_instructions', 'trained_instructions', 'docs'
         ]);
         
         $this->equipmentValidator->validate($data);
@@ -226,7 +226,7 @@ class EquipmentController extends Controller
         $normalFields = [
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe'
+            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe', 'docs'
         ];
 
         $trustedFields = \Auth::user()->trusted || \Auth::user()->isAdmin() ? 
