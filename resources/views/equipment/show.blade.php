@@ -22,10 +22,10 @@ Tools and Equipment
 @section('content')
 
 <div class="row">
-    <div class="col-sm-12 col-lg-6">
+    <div class="col-sm-12">
         <div class="well">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-sm-6">
                     <h2>{{ $equipment->name }}</h2>
                     @if ($equipment->requiresInduction())<b style="color:red">⚠️ Induction required</b><br /> @endif
                     @if ($equipment->present()->livesIn) 🏠 Lives in: {{ $equipment->present()->livesIn }}<br />@endif
@@ -50,6 +50,47 @@ Tools and Equipment
                             ">
                             This Tool Is Bloody Dangerous
                         </div>
+                    @endif
+                </div>
+                <div class="col-sm-6">
+                    @if ($userInduction)
+                    @if ($userInduction->is_trained)
+                        @if ($userInduction->is_trainer && $equipment->trainer_instructions)
+                            <div style="border-left: 3px solid tomato; padding-left: 1em;">
+                                <h4>Trainer Instructions</h4>
+                                <p>{{ $equipment->trainer_instructions }}</p>
+                                <br/>
+                            </div>
+                        @endif
+
+                        @if ($equipment->trained_instructions)
+                            <div style="border-left: 3px solid green; padding-left: 1em;">
+                                <h4>Instructions for Use</h4>
+                                <p>{{ $equipment->trained_instructions }}</p>
+                                <br/>
+                            </div>
+                        @endif
+
+                        @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
+                            <div style="border-left: 3px solid burlywood; padding-left: 1em;">
+                                <h4>Pay for usage</h4>
+                                <p>
+                                    Make a payment for your usage of this equipment below.
+                                </p>
+
+                                <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
+                            </div>
+                        @endif
+
+                    @elseif ($userInduction)
+                        @if ($equipment->trained_instructions)
+                        <div style="border-left: 3px solid red; padding-left: 1em;">
+                            <h4>🔴 Induction Next Steps</h4>
+                            <p>{{ $equipment->induction_instructions }}</p>
+                            <br/>
+                        </div>
+                        @endif
+                    @endif
                     @endif
                 </div>
             </div>
@@ -114,33 +155,6 @@ Tools and Equipment
                 <h4>
                     <span class="label label-success">You have been inducted and can use this equipment</span>
                 </h4>
-                @if ($userInduction->is_trainer && $equipment->trainer_instructions)
-                <div style="border-left: 3px solid tomato; padding-left: 1em;">
-                    <h4>Trainer Instructions</h4>
-                    <p>{{ $equipment->trainer_instructions }}</p>
-                    <br/>
-                </div>
-                @endif
-
-                @if ($equipment->trained_instructions)
-                <div style="border-left: 3px solid green; padding-left: 1em;">
-                    <h4>Inducted user Instructions</h4>
-                    <p>{{ $equipment->trained_instructions }}</p>
-                    <br/>
-                </div>
-                @endif
-
-                @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
-                    
-                    <div style="border-left: 3px solid burlywood; padding-left: 1em;">
-                        <h4>Pay for usage</h4>
-                        <p>
-                            While the access control systems are unavailable you can make a payment for your usage of the equipment below.
-                        </p>
-
-                        <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
-                    </div>
-                @endif
 
             @elseif ($userInduction)
                 <h4>
