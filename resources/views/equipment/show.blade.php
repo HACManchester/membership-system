@@ -52,41 +52,33 @@ Tools and Equipment
                         </div>
                     @endif
 
-                @if ($equipment->requiresInduction())
-                        <h3>Induction</h3>
-                        @if (!$userInduction)
-                            <p>
-                            To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
-                            <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
-                            </p>
-
-                            @if(Auth::user()->online_only)
-                                <h4>Online Only users may not sign up for tools</h4>
-                            @else
-                                <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Book Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
-                            @endif
-
-                        @elseif ($userInduction->is_trained)
-                            <h4>
-                                <span class="label label-success">You have been inducted and can use this equipment</span>
-                            </h4>
-
-                        @elseif ($userInduction)
-                            <h4>
-                                <span class="label label-info">Access fee paid, induction to be completed</span>
-                            </h4>
-
-                            @if ($equipment->trained_instructions)
-                            <div style="border-left: 3px solid red; padding-left: 1em;">
-                                <h4>Induction Next Steps</h4>
-                                <p>{{ $equipment->induction_instructions }}</p>
-                                <br/>
-                            </div>
-                            @endif
-                        @endif
-                @endif
                 </div>
                 <div class="col-sm-6">
+                    @if ($equipment->requiresInduction())
+                            <h3>Induction</h3>
+                            @if (!$userInduction)
+                                <p>
+                                To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
+                                <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
+                                </p>
+    
+                                @if(Auth::user()->online_only)
+                                    <h4>Online Only users may not sign up for tools</h4>
+                                @else
+                                    <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Book Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                @endif
+    
+                            @elseif ($userInduction->is_trained)
+                                <h4>
+                                    <span class="label label-success">You have been inducted and can use this equipment</span>
+                                </h4>
+    
+                            @elseif ($userInduction)
+                                <h4>
+                                    <span class="label label-info">Access fee paid, induction to be completed</span>
+                                </h4>
+                            @endif
+                    @endif
                     @if ($userInduction)
                     @if ($userInduction->is_trained)
                         @if ($userInduction->is_trainer && $equipment->trainer_instructions)
