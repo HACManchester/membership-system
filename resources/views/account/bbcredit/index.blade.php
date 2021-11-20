@@ -11,22 +11,7 @@ Hackspace Manchester Balance
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12">
-    <div class="panel panel-default">
-    <div class="panel-body">
-
-        <h4>
-            Manage your Hackspace Balance, you can use it for purchasing snackspace items, paying for laser time, paying for materials that you use in the space.
-        </h4>
-        <br>
-        <p>
-            You can top up either by direct debit, or by putting cash in the pot in the space.
-        </p>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-sm-3 col-md-3">
+    <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><strong>Your Balance</strong></h3>
@@ -39,9 +24,24 @@ Hackspace Manchester Balance
             </div>
         </div>
     </div>
+
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h4>
+                    Manage your Hackspace Balance, you can use it for purchasing snackspace items, paying for laser time, paying for materials that you use in the space.
+                </h4>
+                <br>
+                <p>
+                    You can top up either by direct debit, or by putting cash in the pot in the space.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h3>Add Credit</h3>
+<h3>💰 Add Credit</h3>
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-8">
         <div class="panel panel-default">
@@ -61,7 +61,7 @@ Hackspace Manchester Balance
     </div>
 </div>
 
-<h3>Log Expenditure</h3>
+<h3>💸 Log Expenditure</h3>
 <div class="row">
     <div class="col-sm-6">
         <div class="panel panel-default">
