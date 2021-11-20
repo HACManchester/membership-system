@@ -34,7 +34,7 @@ Hackspace Manchester Balance
                 <p>Your Current Balance is:</p>
 
                 <div>        
-                    <span style="{{ $userBalance >= 0 ? 'color:#219724' : 'color:#D9534F' }}">{{ $userBalance }}</span>
+                    <span class="credit-figure" style="{{ $userBalance >= 0 ? 'color:#219724' : 'color:#D9534F' }}">{{ $userBalance }}</span>
                 </div> 
                 <br>
                 <p>
