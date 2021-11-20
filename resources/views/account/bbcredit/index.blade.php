@@ -62,67 +62,31 @@ Hackspace Manchester Balance
     </div>
 
     
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <div class="panel panel-default">   
-            <div class="panel-heading">
-                <h3 class="panel-title">Cash Topup</h3>
-            </div>
-            <div class="panel-body">
-                <p>Use this if you are topping up with cash.</p>
-
-        {!! Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-horizontal']) !!}
-
-        <div class="form-group">
-        <div class="col-sm-5">
-            <div class="input-group">
-                <div class="input-group-addon">&pound;</div>
-                {!! Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'min'=>'0', 'required'=>'required']) !!}
-            </div>
-        </div>
-        <div class="col-sm-3">
-            {!! Form::submit('Add Credit', array('class'=>'btn btn-primary')) !!}
-            <br></br>
-        </div>
-                {!! Form::hidden('reason', 'balance') !!}
-            {!! Form::hidden('return_path', 'account/'.$user->id)!!}
-            {!! Form::close() !!}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Snackspace Expenditure</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6">
+                <div class="panel panel-default text-center">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Fob Purchase</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
-        <div class="row">
-        <div class="col-sm-12">
-        <div class="panel panel-default text-center">
-        <div class="panel-heading">
-            <h3 class="panel-title">Snackspace Expenditure</h3>
-            </div>
-            <div class="panel-body">
-            <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
 
-            </div>
-        <div class="row">
-        <div class="col-sm-12">
-        <div class="panel panel-default text-center">
-        <div class="panel-heading">
-            <h3 class="panel-title">Fob Purchase</h3>
-            </div>
-            <div class="panel-body">
-            <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
-
-            </div>
-        <div class="row">
-        <div class="col-sm-12">
-        <div class="panel panel-default text-center">
-        <div class="panel-heading">
-            <h3 class="panel-title">Balance</h3>
-            </div>
-            <div class="panel-body">
-            <span class="credit-figure {{ $userBalanceSign }}">{{ $userBalance }}</span>
-            </div>
-        </div>
-    </div>
-    </div>
-
+       
 
 <div class="row">
     <div class="col-xs-12">
