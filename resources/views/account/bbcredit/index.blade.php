@@ -69,6 +69,7 @@ Hackspace Manchester Balance
                 <h3 class="panel-title">Snackspace Expenditure</h3>
             </div>
             <div class="panel-body">
+                <p>Spent money in snackspace? Log it here</p>
                 <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
             </div>
         </div>
@@ -79,6 +80,8 @@ Hackspace Manchester Balance
                 <h3 class="panel-title">Fob Purchase</h3>
             </div>
             <div class="panel-body">
+                <p>Only do this if you need another fob - the first one is on the house</p>
+                <p>Suggested donation is £2</p>
                 <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
             </div>
         </div>
@@ -89,7 +92,15 @@ Hackspace Manchester Balance
                 <h3 class="panel-title">Materials</h3>
             </div>
             <div class="panel-body">
-                <div class="paymentModule" data-reason="Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="materials"></div>
+                <p>Log purchases of materials such as laser materials, 3D printing filament, etc. </p>
+                <p>Laser materials</p>
+                <div class="paymentModule" data-reason="Laser Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="laser-materials"></div>
+                <p>3D printer filament</p>
+                <div class="paymentModule" data-reason="3D Printer Filament" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="3d-printer-filament"></div>
+                <p>Heat Press Items</p>
+                <div class="paymentModule" data-reason="Heat Press Items" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="heat-press-items"></div>
+                <p>Other material purchases</p>
+                <div class="paymentModule" data-reason="Misc Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="misc-materials"></div>
             </div>
         </div>
     </div>
