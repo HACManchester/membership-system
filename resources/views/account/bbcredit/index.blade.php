@@ -93,13 +93,13 @@ Hackspace Manchester Balance
             </div>
             <div class="panel-body">
                 <p>Log purchases of materials such as laser materials, 3D printing filament, etc. </p>
-                <p>Laser materials</p>
+                <hr/><p>Laser materials</p>
                 <div class="paymentModule" data-reason="Laser Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="laser-materials"></div>
-                <p>3D printer filament</p>
+                <hr/><p>3D printer filament</p>
                 <div class="paymentModule" data-reason="3D Printer Filament" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="3d-printer-filament"></div>
-                <p>Heat Press Items</p>
+                <hr/><p>Heat Press Items</p>
                 <div class="paymentModule" data-reason="Heat Press Items" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="heat-press-items"></div>
-                <p>Other material purchases</p>
+                <hr/><p>Other material purchases</p>
                 <div class="paymentModule" data-reason="Misc Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="misc-materials"></div>
             </div>
         </div>
