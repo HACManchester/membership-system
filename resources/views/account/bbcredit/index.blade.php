@@ -43,7 +43,7 @@ Hackspace Manchester Balance
 
 <h3>💰 Add Credit</h3>
 <div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-8">
+    <div class="col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Top up with card or cash</h3>
@@ -83,8 +83,19 @@ Hackspace Manchester Balance
             </div>
         </div>
     </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Materials</h3>
+            </div>
+            <div class="panel-body">
+                <div class="paymentModule" data-reason="Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="materials"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<h3>📒 Balance History</h3>
 <div class="row">
     <div class="col-xs-12">
     <div class="panel panel-default">
