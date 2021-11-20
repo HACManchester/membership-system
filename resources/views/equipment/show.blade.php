@@ -55,10 +55,10 @@ Tools and Equipment
                 </div>
                 <div class="col-sm-6">
                     @if ($equipment->requiresInduction())
-                            <h3>Induction</h3>
+                            <h3>Induction @if (!$userInduction)required @endif</h3>
                             @if (!$userInduction)
                                 <p>
-                                To use this piece of equipment an access fee and an induction is required. The access fee goes towards equipment maintenance.<br />
+                                ⚠️ An induction is required before you may use this tool. The access fee goes towards equipment maintenance.<br />
                                 <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
                                 </p>
     
