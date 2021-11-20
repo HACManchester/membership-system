@@ -34,7 +34,7 @@ Hackspace Manchester Balance
                 <p>Your Current Balance is:</p>
 
                 <div>        
-                    <span class="credit-figure {{ $userBalanceSign }}">{{ $userBalance }}</span>
+                    <span style="{{ $userBalance >= 0 ? 'color:#219724' : 'color:#D9534F' }}">{{ $userBalance }}</span>
                 </div> 
                 <br>
                 <p>
@@ -60,31 +60,28 @@ Hackspace Manchester Balance
             </div>
         </div>
     </div>
-
-    
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Snackspace Expenditure</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
-                    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Snackspace Expenditure</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default text-center">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Fob Purchase</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
-                    </div>
-                </div>
-            </div>
-            
         </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Fob Purchase</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
        
 
