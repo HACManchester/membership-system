@@ -10,8 +10,7 @@
     </div>
 @endif
 
-<div class="row">
-    <div class="col-xs-12 col-sm-8" style="background: rgba(255,255,255,0.3);border-color:white;border-width: 1px 0px;border-style:solid;border-radius:3px;">
+<div class="alert alert-success">
     <div class="btn-group" role="group" aria-label="Basic example">
         @if($user->online_only)
             <a href="#" type="button" class="btn btn-warning">Online Only</a>
@@ -79,5 +78,4 @@
                 @endif
             @endif
         </div>
-    </div>
 </div>
