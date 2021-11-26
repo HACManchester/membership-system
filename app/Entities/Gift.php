@@ -11,7 +11,7 @@ class Gift extends Model
      *
      * @var string
      */
-    protected $table = 'gift';
+    protected $table = 'gifts';
 
 
     /**
