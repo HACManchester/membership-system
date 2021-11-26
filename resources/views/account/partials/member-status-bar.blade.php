@@ -29,12 +29,12 @@
         </a>
 
         @if (!$user->online_only)
-            <a href="/account/0/edit#access" type="button" class="btn">
+            <a href="/account/0/balance" type="button" class="btn">
             💰 {{ $memberBalance }}
             </a>
-            
-            <a href="/account/0/edit#access" type="button" class="btn">
-                {{ $user->present()->subscriptionDetailLine }}
+
+            <a href="#" type="button" class="btn">
+                💳 {{ $user->present()->subscriptionDetailLine }}
                 @if ($user->canMemberChangeSubAmount())
                     <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
                 @endif
