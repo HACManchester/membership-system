@@ -30,15 +30,15 @@ Join Hackspace Manchester
                             Hey {!! $gift_details['from'] !!}, your gift from {!! $gift_details['to'] !!} has been applied!
                             Just register below and you'll enjoy 
                             @if($gift_details['months']) 
-                            X months of membership for free 
+                                {!! $gift_details['months'] !!} months of membership for free 
                             @endif
 
                             @if($gift_details['months'] && $gift_details['credit'])
-                            and
+                                and
                             @endif
 
                             @if($gift_details['credit']) 
-                            £{! $gift_details['credit'] !} credit!
+                                £{!! $gift_details['credit'] !!} credit!
                             @endif
                         </p>
                     @else
