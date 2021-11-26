@@ -149,7 +149,7 @@ class AccountController extends Controller
         return \View::make('account.create')
             ->with('gift', $gift)
             ->with('gift_valid', $gift_valid)
-            ->with('confetti', '1');
+            ->with('confetti', $gift ? $gift_valid : true );
     }
 
     /**
