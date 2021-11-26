@@ -21,12 +21,14 @@
             💰 Balance: {{ $memberBalance }}
             </a>
 
+            @if($user->payment_method)
             <a href="#" type="button" class="btn">
                 💳 Subscription: {{ $user->present()->subscriptionDetailLine }}
                 @if ($user->canMemberChangeSubAmount())
                     <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
                 @endif
             </a>
+            @endif
 
                 @if ($user->canMemberChangeSubAmount())
                     <div class="hidden js-alter-subscription-amount-form clearfix">
@@ -72,7 +74,7 @@
 @if($user->gift)
     <div class="alert alert-success">
         <p>🎁 Free gift period. 
-            Expires {!! $user->subscription_expires->toFormattedDateString() !!} - set up payment to keep acess from this date.
+            Expires {!! $user->subscription_expires->toFormattedDateString() !!} - set up payment to keep access from this date.
         </p>
     </div>
 @endif
