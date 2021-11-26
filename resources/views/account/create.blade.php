@@ -27,8 +27,19 @@ Join Hackspace Manchester
                     @if($gift_valid)
                         <h3>Gift Code Added!</h3>
                         <p>
-                            Hey {{!! $gift_details['from'] !!}}, your gift from $NAME has been applied! Just register below and you'll
-                            enjoy X months of membership for free and £Y of credit! 
+                            Hey {!! $gift_details['from'] !!}, your gift from {!! $gift_details['to'] !!} has been applied!
+                            Just register below and you'll enjoy 
+                            @if($gift_details['months']) 
+                            X months of membership for free 
+                            @endif
+
+                            @if($gift_details['months'] && $gift_details['credit'])
+                            and
+                            @endif
+
+                            @if($gift_details['credit']) 
+                            £{! $gift_details['credit'] !} credit!
+                            @endif
                         </p>
                     @else
                         <h3>We couldn't find that gift code...</h3>
