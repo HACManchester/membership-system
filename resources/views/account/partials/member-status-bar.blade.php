@@ -4,7 +4,7 @@
             <p>🎁 Free gift period active!
                 <a href="/account/0/edit#access">Get an instant access code</a> /
                 <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> /
-                Set up payment before {!! date("d/m/Y", $user->subscription_expires) !!}
+                Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
             </p>
         </div>
     </div>

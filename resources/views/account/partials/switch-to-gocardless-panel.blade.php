@@ -14,7 +14,7 @@
                 </p>
                 <div>
                     @if($user->gift)
-                        Once your free gift period ends ({!! date("d/m/Y", $user->subscription_expires) !!}) you won't have access to the space unless you set up a regular payment.
+                        Once your free gift period ends ({!! $user->subscription_expires->toFormattedDateString() !!}) you won't have access to the space unless you set up a regular payment.
                         <br/>
                         The good news is it's super easy and secure to do so - your first payment will go out at the end of your free membership period.
                     @else
