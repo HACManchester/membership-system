@@ -203,12 +203,12 @@ class AccountController extends Controller
             'profile_photo_private',
             'rules_agreed',
             'visited_space',
-            'postFob'
+            'postFob',
+            'gift_code'
         );
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
-
 
         $user = $this->userRepository->registerMember($input, ! \Auth::guest() && \Auth::user()->hasRole('admin'));
 

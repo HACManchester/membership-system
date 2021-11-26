@@ -153,7 +153,7 @@ Join Hackspace Manchester
         @if($gift_valid)
         <ul>
             <li>
-                At any time, you can set up payment details which will mean your membership will roll on after the free duration, at the amount you choose below. 
+                At any time, you can set up payment details which will mean your membership will roll on after the free duration, at the amount you choose here. 
             </li>
             <li>
                 You can change this amount at any time - so if you're not sure you can leave it.
@@ -260,7 +260,7 @@ Join Hackspace Manchester
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,0,0,0.05)">
             <h4>Rules</h4>
-            <span class="help-block">Please read the <a href="https://members.hacman.org.uk/resources/policy/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
+            <span class="help-block">Please read the <a href="https://hacman.org.uk/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
             {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
             {!! Form::label('rules_agreed', 'I agree to the Hackspace Manchester rules', ['class'=>'']) !!}
             {!! Notification::getErrorDetail('rules_agreed') !!}

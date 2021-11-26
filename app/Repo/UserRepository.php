@@ -1,5 +1,6 @@
 <?php namespace BB\Repo;
 
+use BB\Entities\Gift;
 use BB\Entities\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -134,6 +135,16 @@ class UserRepository extends DBRepository
      */
     public function registerMember(array $memberData, $isAdminCreating)
     {
+        if($memberData['gift_code']){
+            $gift_record = Gift::where('code', $memberData['gift_code'])->first();
+
+            if($gift_record){
+                $memberData['subscription_expires'] = $gift_record->months;
+                $memberData['cash_balance'] = $gift_record->credit * 10;
+                $memberData['status'] = 'active';
+            }
+        }
+        
         if (empty($memberData['profile_photo_private'])) {
             $memberData['profile_photo_private'] = false;
         }
