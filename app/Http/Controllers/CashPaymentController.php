@@ -44,7 +44,7 @@ class CashPaymentController extends Controller
 
         \Notification::success("Top Up successful");
 
-        $returnPath_balance = '/balance';
+        $returnPath_balance = '/balance?confetti=1';
         $result = $returnPath . $returnPath_balance;
 
         if (\Request::wantsJson()) {

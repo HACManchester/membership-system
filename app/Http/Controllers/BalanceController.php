@@ -49,6 +49,7 @@ class BalanceController extends Controller
 
         return \View::make('account.bbcredit.index')
             ->with('user', $user)
+            ->with('confetti', \Request::get('confetti'))
             ->with('payments', $payments)
             ->with('userBalance', $userBalance)
             ->with('userBalanceSign', $userBalanceSign)
