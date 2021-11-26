@@ -13,6 +13,7 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 
 Route::get('login', ['as' => 'login', 'uses' => 'SessionController@create']);
 Route::get('logout', ['as' => 'logout', 'uses' => 'SessionController@destroy']);
+Route::get('gift', ['as' => 'gift', 'uses' => 'GiftController@index']);
 Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
 Route::post('session/pusher', ['uses' => 'SessionController@pusherAuth', 'middleware' => 'role:member', 'as' => 'session.pusher']);
 Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
