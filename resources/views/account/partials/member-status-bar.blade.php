@@ -1,14 +1,4 @@
-@if($user->gift)
-    <div class="alert alert-success">
-        <p>🎁 Free gift period.
-            <a href="/account/0/edit#access">Get an instant access code</a> - 
-            <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> - 
-            Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
-        </p>
-    </div>
-@endif
-
-<div class="alert"  style="background: rgba(255,255,255,0.5); border-radius:5em;">
+<div class="alert"  style="background: rgba(255,255,255,0.5);">
     <div class="btn-group" role="group" aria-label="Basic example">
         @if($user->online_only)
             <a href="#" type="button" class="btn btn-warning">Online Only</a>
@@ -78,3 +68,13 @@
             @endif
     </div>
 </div>
+
+@if($user->gift)
+    <div class="alert alert-success">
+        <p>🎁 Free gift period.
+            <a href="/account/0/edit#access">Get an instant access code</a> - 
+            <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> - 
+            Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
+        </p>
+    </div>
+@endif
