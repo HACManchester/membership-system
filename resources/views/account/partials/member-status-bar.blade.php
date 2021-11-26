@@ -1,12 +1,10 @@
 @if($user->gift)
-    <div class="row">
-        <div class="alert alert-success">
-            <p>🎁 Free gift period.
-                <a href="/account/0/edit#access">Get an instant access code</a> /
-                <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> /
-                Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
-            </p>
-        </div>
+    <div class="alert alert-success" style="background: #fff; border-left-color: orange; color: brown;">
+        <p>🎁 Free gift period.
+            <a href="/account/0/edit#access">Get an instant access code</a> - 
+            <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> - 
+            Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
+        </p>
     </div>
 @endif
 
@@ -24,17 +22,17 @@
             {!! HTML::spaceAccessLabel($user->active) !!}
         </a>
             
-        <a href="/account/0/edit#access" type="button" class="btn">
-            🔑 {{ $user->keyFob() ? "✔️" : "❌" }}
+        <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
+            🔑 Access method:{{ $user->keyFob() ? "✔️" : "❌" }}
         </a>
 
         @if (!$user->online_only)
             <a href="/account/0/balance" type="button" class="btn">
-            💰 {{ $memberBalance }}
+            💰 Balance: {{ $memberBalance }}
             </a>
 
             <a href="#" type="button" class="btn">
-                💳 {{ $user->present()->subscriptionDetailLine }}
+                💳 Subscription: {{ $user->present()->subscriptionDetailLine }}
                 @if ($user->canMemberChangeSubAmount())
                     <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
                 @endif
