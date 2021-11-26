@@ -25,12 +25,12 @@ Join Hackspace Manchester
             <div class="col-xs-12">
                 <div class="alert {!! $gift_valid ? 'alert-success' : 'alert-danger'!!}">
                     @if($gift_valid)
-                        <h3>Gift Code Added!</h3>
+                        <h3>🎁 Gift Code Added!</h3>
                         <p>
                             Hey {!! $gift_details['to'] !!}, your gift from {!! $gift_details['from'] !!} has been applied!
                             Just register below and you'll enjoy 
                             @if($gift_details['months']) 
-                                {!! $gift_details['months'] !!} months of membership for free 
+                                <b>{!! $gift_details['months'] !!} months</b> of membership for free 
                             @endif
 
                             @if($gift_details['months'] && $gift_details['credit'])
@@ -38,11 +38,11 @@ Join Hackspace Manchester
                             @endif
 
                             @if($gift_details['credit']) 
-                                £{!! $gift_details['credit'] !!} credit!
+                                <b>£{!! $gift_details['credit'] !!} credit</b>!
                             @endif
                         </p>
                     @else
-                        <h3>We couldn't find that gift code...</h3>
+                        <h3>😔 We couldn't find that gift code...</h3>
                         <p>
                             Hmmm, that code wasn't valid.<br/>
                             You can <a href="/gift">try again</a> or register below without the gift.
@@ -65,8 +65,10 @@ Join Hackspace Manchester
         <div class="col-xs-12">
             <p>
                 Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
-                <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
-                <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
+                <ul>
+                    <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
+                    <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
+                </ul>
             </p>
         </div>
     </div>
@@ -128,16 +130,45 @@ Join Hackspace Manchester
         </div>
     </div>
 
-    <div class="form-group {{ Notification::hasErrorDetail('monthly_subscription', 'has-error has-feedback') }}">
-        {!! Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-9 col-lg-7">
-            <div class="input-group">
-                <div class="input-group-addon">&pound;</div>
-                {!! Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'12', 'step'=>'1']) !!}
-            </div>
-            {!! Notification::getErrorDetail('monthly_subscription') !!}
-            <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
+    @if($gift_valid)
+    <div>
+        <div class="alert alert-success">
+            As you have a gift certificate applied, <b>you won't pay for the duration of your free membership</b>. 
         </div>
+    </div>
+    @endif
+
+    <div class="alert {!! $gift_valid ? 'alert-info' : 'alert-success' !!}">
+        <div class="form-group {{ Notification::hasErrorDetail('monthly_subscription', 'has-error has-feedback') }}">
+            {!! Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'col-sm-3 control-label']) !!}
+            <div class="col-sm-9 col-lg-7">
+                <div class="input-group">
+                    <div class="input-group-addon">&pound;</div>
+                    {!! Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'12', 'step'=>'1']) !!}
+                </div>
+                {!! Notification::getErrorDetail('monthly_subscription') !!}
+                <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
+            </div>
+        </div>
+        @if($gift_valid)
+        <ul>
+            <li>
+                At any time, you can set up payment details which will mean your membership will roll on after the free duration, at the amount you choose below. 
+            </li>
+            <li>
+                You can change this amount at any time - so if you're not sure you can leave it.
+            </li>
+            <li>
+                If you don't add payment details, your membership will automatically end.
+            </li>
+        </ul>
+        @else
+        <ul>
+            <li>£20 a month, like a cheap gym membership, is the recommended amount for new starters.</li>
+            <li>You can pay less, perhaps if you're on lower income.</li>
+            <li>You can pay more (£25-£50) if you'd like to support the space.</li>
+        </ul>
+        @endif
     </div>
 
     <h4>Contact Details</h4>
