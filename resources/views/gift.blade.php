@@ -11,8 +11,8 @@
                         <h3>A gift for you awaits!</h3>
                         <p>Enter your gift code below, and you'll be able to register your account</p>
                         {!! Form::open(array('route' => 'register', 'method'=>'GET' ,'class'=>'form-horizontal')) !!}
-                        {!! Form::hidden('online_only', '1') !!}
-                        {!! Form::text('gift_code', null, ['class'=>'form-control', 'autocomplete'=>'display-name', 'required' => 'required']) !!}
+                        {!! Form::hidden('gift_certificate', '1') !!}
+                        {!! Form::text('gift_code', null, ['class'=>'form-control', 'required' => 'required', 'placeholder' => 'XXX-YYY-ZZZ']) !!}
                         {!! Form::submit('Claim your gift!', array('class'=>'btn btn-primary')) !!}
                         {!! Form::close() !!}
                     </p>

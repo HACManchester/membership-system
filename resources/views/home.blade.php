@@ -35,7 +35,8 @@
                         <div class="col-sm-6">
                             <div class="well">
                                 <h4>Ready to join?</h4>
-                                <a href="https://members.hacman.org.uk/register" class="btn btn-primary">✨ Become a member</a>
+                                <a href="https://members.hacman.org.uk/register" class="btn btn-primary">✨ Become a member</a><br/>
+                                <a href="/gift">🎁 Got a gift code?</a>
                             </div>
                         </div>
                         <div class="col-sm-6">
