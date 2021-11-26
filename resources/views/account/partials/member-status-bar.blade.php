@@ -21,11 +21,11 @@
             </a>
         @endif
         
-        <a href="#" type="button" class="btn btn-warning">
+        <a href="#" type="button" class="btn">
             {!! HTML::spaceAccessLabel($user->active) !!}
         </a>
             
-        <a href="/account/0/edit#access" type="button" class="btn btn-warning">
+        <a href="/account/0/edit#access" type="button" class="btn">
             🔑 {{ $user->keyFob() ? "Access method set up" : "No access method" }}
         </a>
     </div>
