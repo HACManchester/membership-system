@@ -143,7 +143,7 @@ class AccountController extends Controller
         $gift_details = array(
             'from' => 'Ronnie Pickering',
             'to' => 'Bob Ross',
-            'months' => 2,
+            'months' => 0,
             'credit' => 2.5
         );
 
