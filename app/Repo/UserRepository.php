@@ -134,24 +134,7 @@ class UserRepository extends DBRepository
      * @return User
      */
     public function registerMember(array $memberData, $isAdminCreating)
-    {
-        if($memberData['gift_code']){
-            $gift_record = Gift::where('code', $memberData['gift_code'])->first();
-
-            if($gift_record){
-                $memberData['subscription_expires'] = date(
-                    'Y-m-d', 
-                    strtotime(
-                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
-                    )
-                );
-                $memberData['cash_balance'] = $gift_record->credit * 100;
-                $memberData['status'] = 'active';
-                $memberData['active'] = '1';
-                $memberData['gift'] = $memberData['gift_code'];
-            }
-        }
-        
+    {   
         if (empty($memberData['profile_photo_private'])) {
             $memberData['profile_photo_private'] = false;
         }
@@ -166,8 +149,25 @@ class UserRepository extends DBRepository
 
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);
-
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
+
+        if($memberData['gift_code']){
+            $gift_record = Gift::where('code', $memberData['gift_code'])->first();
+
+            if($gift_record){
+                $user->subscription_expires = date(
+                    'Y-m-d', 
+                    strtotime(
+                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
+                    )
+                );
+                $user->cash_balance = $gift_record->credit * 100;
+                $user->status = 'active';
+                $user->active = '1';
+                $user->gift = $memberData['gift_code'];
+                $user->save();
+            }
+        }
 
         return $user;
     }
