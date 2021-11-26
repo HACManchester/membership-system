@@ -1,7 +1,7 @@
 @if($user->gift)
     <div class="row">
         <div class="alert alert-success">
-            <p>🎁 Free gift period active!
+            <p>🎁 Free gift period.
                 <a href="/account/0/edit#access">Get an instant access code</a> /
                 <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> /
                 Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
@@ -12,32 +12,23 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-8" style="background: rgba(255,255,255,0.3);border-color:white;border-width: 1px 0px;border-style:solid;border-radius:3px;">
-        <ul class="nav nav-pills">
-
-            @if($user->online_only)
-                <li>
-                    <span class="label label-warning">Online Only</span>
-                </li>
-            @else
-                <li>
-                    <p class="navbar-text">{!! HTML::statusLabel($user->status) !!}</p>
-                </li>
-            @endif
+    <div class="btn-group" role="group" aria-label="Basic example">
+        @if($user->online_only)
+            <a href="#" type="button" class="btn btn-warning">Online Only</a>
+        @else
+            <a href="#" type="button" class="btn">
+                {!! HTML::statusLabel($user->status) !!}
+            </a>
+        @endif
+        
+        <a href="#" type="button" class="btn btn-warning">
+            {!! HTML::spaceAccessLabel($user->active) !!}
+        </a>
             
-            <li>
-                <p class="navbar-text">{!! HTML::spaceAccessLabel($user->active) !!}</p>
-            </li>
-
-            <li>
-                <p class="navbar-text"><label class="label label-primary">🔑 {{ $user->keyFob() ? "Keyfob added" : "No keyfob added" }}</label></p>
-            </li>
-
-            @if ($user->keyFob())
-            <li>
-                <p class="navbar-text"><label class="label label-info">Access Code (coming soon): </label></p>
-            </li>
-            @endif
-        </ul>
+        <a href="/account/0/edit#access" type="button" class="btn btn-warning">
+            🔑 {{ $user->keyFob() ? "Access method set up" : "No access method" }}
+        </a>
+    </div>
     </div>
     <div class="col-xs-12 col-sm-4">
         <div class="memberSubAmount clearfix">
