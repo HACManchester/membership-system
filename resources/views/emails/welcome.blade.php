@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Welcome to Hackspace Manchester 🎉</h1>
-<p>Hi {{ $user['given_name'] }},<br /> Thanks for joining the Hackspace Manchester!</p>
+<p>Hi {{ $user['given_name'] }},<br /> Thanks for joining Hackspace Manchester!</p>
 <hr/>
 <h2>Next steps...</h2>
 <h2>Confirm your email address</h2>

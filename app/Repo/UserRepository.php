@@ -166,6 +166,8 @@ class UserRepository extends DBRepository
                 $user->active = '1';
                 $user->gift = $memberData['gift_code'];
                 $user->save();
+
+                $gift_record->delete();
             }
         }
 
