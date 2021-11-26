@@ -27,18 +27,22 @@
         <a href="/account/0/edit#access" type="button" class="btn">
             🔑 {{ $user->keyFob() ? "Access method set up" : "No access method" }}
         </a>
-    </div>
-    </div>
-    <div class="col-xs-12 col-sm-4">
-        <div class="memberSubAmount clearfix">
-            @if (!$user->online_only)
-                <div class="navbar-text">
-                    Balance: {{ $memberBalance }} <br />
-                    {{ $user->present()->subscriptionDetailLine }}
-                    @if ($user->canMemberChangeSubAmount())
-                        <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
-                    @endif
-                </div>
+
+        <a href="/account/0/edit#access" type="button" class="btn">
+            Balance: 
+        </a>
+
+        @if (!$user->online_only)
+            <a href="/account/0/edit#access" type="button" class="btn">
+                Balance: {{ $memberBalance }}
+            </a>
+            <a href="/account/0/edit#access" type="button" class="btn">
+                {{ $user->present()->subscriptionDetailLine }}
+                @if ($user->canMemberChangeSubAmount())
+                    <small><a href="#" class="js-show-alter-subscription-amount" title="Change Amount">Change</a></small>
+                @endif
+            </a>
+            
                 @if ($user->canMemberChangeSubAmount())
                     <div class="hidden js-alter-subscription-amount-form clearfix">
                         {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-payment', $user->id])) !!}
@@ -77,5 +81,5 @@
                     </div>
                 @endif
             @endif
-        </div>
+    </div>
 </div>
