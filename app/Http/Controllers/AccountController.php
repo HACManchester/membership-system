@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 
+use BB\Entities\Gift;
 use BB\Entities\Notification;
 use BB\Entities\User;
 use BB\Entities\Settings;
@@ -137,15 +138,22 @@ class AccountController extends Controller
         //Is there a gift code?
         $gift = \Request::get('gift_certificate');
         $gift_code = \Request::get('gift_code');
+        $gift_valid = false;
+        $gift_details = array();
 
         // Check it is valid
-        $gift_valid = $gift_code== "123456789";
-        $gift_details = array(
-            'from' => 'Ronnie Pickering',
-            'to' => 'Bob Ross',
-            'months' => 2,
-            'credit' => 0
-        );
+        $gift_record = Gift::where('code', $gift_code)->first();
+
+        if($gift_record){
+            $gift_valid = true;
+            $gift_details = array(
+                'from' => $gift_record->gifter_name,
+                'to' => 'Bob Ross',
+                'months' => 2,
+                'credit' => 0
+            );
+        }
+
 
         \View::share('body_class', 'register_login');
         return \View::make('account.create')
