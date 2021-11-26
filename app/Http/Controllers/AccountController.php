@@ -140,15 +140,19 @@ class AccountController extends Controller
 
         // Check it is valid
         $gift_valid = $gift_code== "123456789";
-
-        // give to view
-
-        // confetti
+        $gift_details = array(
+            'from' => 'Ronnie Pickering',
+            'to' => 'Bob Ross',
+            'months' => 2,
+            'credit' => 2.5
+        );
 
         \View::share('body_class', 'register_login');
         return \View::make('account.create')
             ->with('gift', $gift)
+            ->with('gift_code', $gift_code)
             ->with('gift_valid', $gift_valid)
+            ->with('gift_details', $gift_details)
             ->with('confetti', $gift ? $gift_valid : true );
     }
 
