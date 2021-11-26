@@ -27,7 +27,7 @@ Join Hackspace Manchester
                     @if($gift_valid)
                         <h3>Gift Code Added!</h3>
                         <p>
-                            Hey {!! $gift_details['from'] !!}, your gift from {!! $gift_details['to'] !!} has been applied!
+                            Hey {!! $gift_details['to'] !!}, your gift from {!! $gift_details['from'] !!} has been applied!
                             Just register below and you'll enjoy 
                             @if($gift_details['months']) 
                                 {!! $gift_details['months'] !!} months of membership for free 
