@@ -159,7 +159,7 @@ Join Hackspace Manchester
                 You can change this amount at any time - so if you're not sure you can leave it.
             </li>
             <li>
-                If you don't add payment details, your membership will automatically end.
+                If you don't add payment details, your membership will automatically expire after your free gift period.
             </li>
         </ul>
         @else
