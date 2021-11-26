@@ -1,5 +1,5 @@
 @if($user->gift)
-    <div class="alert alert-success" style="background: #fff; border-left-color: orange; color: brown;">
+    <div class="alert alert-success">
         <p>🎁 Free gift period.
             <a href="/account/0/edit#access">Get an instant access code</a> - 
             <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> - 
@@ -8,7 +8,7 @@
     </div>
 @endif
 
-<div class="alert alert-success">
+<div class="alert"  style="background: rgba(255,255,255,0.5); border-radius:5em;">
     <div class="btn-group" role="group" aria-label="Basic example">
         @if($user->online_only)
             <a href="#" type="button" class="btn btn-warning">Online Only</a>
@@ -23,11 +23,11 @@
         </a>
             
         <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
-            🔑 Access method:{{ $user->keyFob() ? "✔️" : "❌" }}
+            🔑 Access method set up: {{ $user->keyFob() ? "✔️" : "❌" }}
         </a>
 
         @if (!$user->online_only)
-            <a href="/account/0/balance" type="button" class="btn">
+            <a href="/account/{{ $user->id }}/balance" type="button" class="btn">
             💰 Balance: {{ $memberBalance }}
             </a>
 
