@@ -148,9 +148,9 @@ class AccountController extends Controller
             $gift_valid = true;
             $gift_details = array(
                 'from' => $gift_record->gifter_name,
-                'to' => 'Bob Ross',
-                'months' => 2,
-                'credit' => 0
+                'to' => $gift_record->giftee_name,
+                'months' => $gift_record->months,
+                'credit' => $gift_record->credit
             );
         }
 
