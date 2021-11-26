@@ -135,15 +135,21 @@ class AccountController extends Controller
     public function create()
     {
         //Is there a gift code?
+        $gift = \Request::get('gift_certificate');
+        $gift_code = \Request::get('gift_code');
 
         // Check it is valid
+        $gift_valid = false;
 
         // give to view
 
         // confetti
 
         \View::share('body_class', 'register_login');
-        return \View::make('account.create')->with('confetti', '1');
+        return \View::make('account.create')
+            ->with('gift', $gift)
+            ->with('gift_valid', $gift_valid)
+            ->with('confetti', '1');
     }
 
     /**

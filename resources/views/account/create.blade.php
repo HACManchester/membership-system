@@ -20,6 +20,20 @@ Join Hackspace Manchester
         </div>
     </div>
 
+    @if($gift)
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <h3>Gift Code Added!</h3>
+                    <p>
+                        Hey $YOU, your gift from $NAME has been applied! Just register below and you'll
+                        enjoy X months of membership for free and £Y of credit! 
+                    </p>
+            </div>
+            </div>
+        </div>  
+    @endif
+
     {!! Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) !!}
 
     {!! Form::hidden('online_only', '0') !!}
