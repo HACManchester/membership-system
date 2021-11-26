@@ -134,8 +134,16 @@ class AccountController extends Controller
      */
     public function create()
     {
+        //Is there a gift code?
+
+        // Check it is valid
+
+        // give to view
+
+        // confetti
+
         \View::share('body_class', 'register_login');
-        return \View::make('account.create');
+        return \View::make('account.create')->with('confetti', true);
     }
 
     /**
