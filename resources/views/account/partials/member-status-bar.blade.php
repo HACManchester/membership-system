@@ -71,10 +71,8 @@
 
 @if($user->gift)
     <div class="alert alert-success">
-        <p>🎁 Free gift period.
-            <a href="/account/0/edit#access">Get an instant access code</a> - 
-            <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> - 
-            Set up payment before {!! $user->subscription_expires->toFormattedDateString() !!}
+        <p>🎁 Free gift period. 
+            Expires {!! $user->subscription_expires->toFormattedDateString() !!} - set up payment to keep acess from this date.
         </p>
     </div>
 @endif

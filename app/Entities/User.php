@@ -80,7 +80,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
         'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
-        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob'
+        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob', 'gift'
     ];
 
 
@@ -250,16 +250,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function promoteVariableGoCardless()
     {
         return (($this->status == 'active') && ($this->payment_method == 'gocardless'));
-    }
-
-    /**
-     * Is the user eligible for a key?
-     *
-     * @return bool
-     */
-    public function promoteGetAKey()
-    {
-        return ($this->trusted && ! $this->key_holder && ($this->status == 'active'));
     }
 
     /**

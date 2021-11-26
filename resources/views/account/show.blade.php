@@ -44,49 +44,6 @@
 </div>
 @endif
 
-@if ($user->promoteGetAKey())
-<div class="row">
-    <div class="col-xs-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Key Fob </h3>
-            </div>
-            
-        <p>Update or Register an RFID Tag to access the space.</p>
-        @foreach ($user->keyFobs()->get() as $fob)
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-5">
-                    <p class="form-control-static">{{ $fob->key_id }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small></p>
-                </div>
-                <div class="col-sm-3">
-                    {!! Form::submit('Mark Lost', array('class'=>'btn btn-default')) !!}
-                </div>
-            </div>
-        {!! Form::hidden('user_id', $user->id) !!}
-        {!! Form::close() !!}
-        @endforeach
-
-        @if ($user->keyFobs()->count() < 2)
-            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-5">
-                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                    <small class="label label-primary">Characters A-F, and 0-9 only.</small>
-                </div>
-                <div class="col-sm-3">
-                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
-                </div>
-            </div>
-            {!! Form::hidden('user_id', $user->id) !!}
-            {!! Form::close() !!}
-
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
 
 
