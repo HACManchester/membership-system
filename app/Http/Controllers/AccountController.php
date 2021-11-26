@@ -143,8 +143,8 @@ class AccountController extends Controller
         $gift_details = array(
             'from' => 'Ronnie Pickering',
             'to' => 'Bob Ross',
-            'months' => 0,
-            'credit' => 2.5
+            'months' => 2,
+            'credit' => 0
         );
 
         \View::share('body_class', 'register_login');
