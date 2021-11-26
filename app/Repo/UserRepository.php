@@ -142,6 +142,8 @@ class UserRepository extends DBRepository
                 $memberData['subscription_expires'] = $gift_record->months;
                 $memberData['cash_balance'] = $gift_record->credit * 10;
                 $memberData['status'] = 'active';
+                $memberData['active'] = '1';
+                $memberData['gift'] = $memberData['gift_code'];
             }
         }
         
