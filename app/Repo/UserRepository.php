@@ -139,8 +139,13 @@ class UserRepository extends DBRepository
             $gift_record = Gift::where('code', $memberData['gift_code'])->first();
 
             if($gift_record){
-                $memberData['subscription_expires'] = $gift_record->months;
-                $memberData['cash_balance'] = $gift_record->credit * 10;
+                $memberData['subscription_expires'] = date(
+                    'Y-m-d', 
+                    strtotime(
+                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
+                    )
+                );
+                $memberData['cash_balance'] = $gift_record->credit * 100;
                 $memberData['status'] = 'active';
                 $memberData['active'] = '1';
                 $memberData['gift'] = $memberData['gift_code'];

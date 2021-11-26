@@ -1,3 +1,15 @@
+@if($user->gift)
+    <div class="row">
+        <div class="alert alert-success">
+            <p>🎁 Free gift period active!
+                <a href="/account/0/edit#access">Get an instant access code</a> /
+                <a href="https://t.me/hacmanchester" target="_blank">Join the group chat</a> /
+                Set up payment before {!! date("d/m/Y", $user->subscription_expires) !!}
+            </p>
+        </div>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-xs-12 col-sm-8" style="background: rgba(255,255,255,0.3);border-color:white;border-width: 1px 0px;border-style:solid;border-radius:3px;">
         <ul class="nav nav-pills">

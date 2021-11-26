@@ -192,7 +192,7 @@ Edit your details
 
 {!! Form::close() !!}
 
-<h4>Key Fobs and Access Codes</h4>
+<h4 id="access">Key Fobs and Access Codes</h4>
 
 @if (!$user->keyfob())
     <div class="panel panel-info">

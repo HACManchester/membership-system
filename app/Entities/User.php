@@ -470,6 +470,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         if ($paymentMethod) {
             $this->payment_method = $paymentMethod;
         }
+        $this->gift='';
         $this->subscription_expires = $expiry;
         $this->save();
     }
