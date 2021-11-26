@@ -23,12 +23,20 @@ Join Hackspace Manchester
     @if($gift)
         <div class="row">
             <div class="col-xs-12">
-                <div class="alert alert-success">
-                    <h3>Gift Code Added!</h3>
-                    <p>
-                        Hey $YOU, your gift from $NAME has been applied! Just register below and you'll
-                        enjoy X months of membership for free and £Y of credit! 
-                    </p>
+                <div class="alert {!! $gift_valid ? 'alert-success' : 'alert-danger'!!}">
+                    @if($gift_valid)
+                        <h3>Gift Code Added!</h3>
+                        <p>
+                            Hey $YOU, your gift from $NAME has been applied! Just register below and you'll
+                            enjoy X months of membership for free and £Y of credit! 
+                        </p>
+                    @else
+                        <h3>We couldn't find that gift code...</h3>
+                        <p>
+                            Hmmm, that code wasn't valid.<br/>
+                            You can <a href="/gift">try again</a> or register below without the gift.
+                        </p>
+                    @endif
             </div>
             </div>
         </div>  

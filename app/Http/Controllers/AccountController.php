@@ -139,7 +139,7 @@ class AccountController extends Controller
         $gift_code = \Request::get('gift_code');
 
         // Check it is valid
-        $gift_valid = false;
+        $gift_valid = $gift_code== "123456789";
 
         // give to view
 
