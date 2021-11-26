@@ -142,7 +142,7 @@ class AccountController extends Controller
 
         // confetti
 
-        \View::share('body_class', 'register_login')->with('confetti', true);
+        \View::share('body_class', 'register_login');
         return \View::make('account.create')->with('confetti', true);
     }
 
