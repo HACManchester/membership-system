@@ -173,7 +173,7 @@ class UserRepository extends DBRepository
                 $user->save();
 
                 // log cash payment
-                $this->paymentRepository->recordPayment("gift", $user->id, 'balance', null, 5.00, 'paid', 0, $memberData['gift_code'] );
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, 5.00, 'paid', 0, $memberData['gift_code'] );
 
                 $gift_record->delete();
             }
