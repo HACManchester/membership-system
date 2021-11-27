@@ -26,7 +26,7 @@ We will shortly post you a fob to the address you registered with. You'll receiv
 <p>Please also note face masks are mandatory in the space.&nbsp;</p>
 <p>If open evenings aren't happening, you may want to connect with the community online. More on that below!</p>
 <h2>💳 Membership Payment</h2>
-<p>You have successfully signed up and have successfully create a direct debit via Gocardless - our payment processor for direct debit. Please note that payments will be to Manchester Makers Ltd which is the legal name of Hackspace Manchester.</p>
+<p>You have successfully signed up and, unless you've used a gift certificate, have successfully create a direct debit via Gocardless - our payment processor for direct debit. Please note that payments will be to Manchester Makers Ltd which is the legal name of Hackspace Manchester.</p>
 <h2>🤸 Manage your Membership</h2>
 <p>You can manage your membership on our Management System where you signed up - which you can access using your email address and password you set when you joined. This can be accessed at <a href="https://members.hacman.org.uk">https://members.hacman.org.uk</a> and allows you to amend your direct debit, top up your Hacman Balance for paying for things including the laser, snackspace, printing and any fees related to equipment induction or usage. You can also use this system to claim your members storage shelf/cube.</p>
 <h2>👋 Chat with us</h2>
@@ -43,13 +43,14 @@ We have two main channels of communication online, our forum and Telegram.
 <p>Certain equipment requires an induction so you don't hurt yourself or damage the machines for example: the Laser Cutter, 3D printers, sewing machines, lathes, and any equipment in the workshop with a "This is Bloody Dangerous" tag. Our volunteer inductors organise these to fit around their schedules, some are ad-hoc and some are at set times and dates. If you'd like to use one of these machines, ask on telegram or the forum and someone will point you in the right direction.</p>
 <p>You can signup for an induction for most of the items via the Members Portal at <a href="https://members.hacman.org.uk">https://members.hacman.org.uk</a> once you have done this you just need to contact the relevant team either via the helpdesk, telegram or email to arrange a suitable date/time. <strong>Please Note that inductions are done by volunteers in their free time so please be patient</strong>.</p>
 <h2>Consumables</h2>
-<p>We keep a small supply of regularly used things in the space (the full list is here: http://wiki.hacman.org.uk/Consumables), if you cant find something do the following:</p>
+<p>We keep a small supply of regularly used things in the space (the full list is here: <a href="https://docs.hacman.org.uk/Operations/Consumables/">https://docs.hacman.org.uk/Operations/Consumables/</a>), if you cant find something do the following:</p>
 <ol>
-<li>ask someone in the space if they know where it is - if the answer is "we've run out" GOTO 3</li>
-<li>ask on telegram (https://hacman.org.uk/telegram)</li>
-<li>still no joy finding it? Contact the procurement team via the helpdesk at <a href="https://help.hacman.org.uk">https://help.hacman.org.uk</a> or if you need it urgently (and it's on the list) go buy some then email the receipt to procurement@hacman.org.uk</li>
+<li>Ask someone in the space if they know where it is - if the answer is "we've run out" GOTO 3</li>
+<li>Ask on telegram (https://hacman.org.uk/telegram) - someone may have seen it</li>
+<li>Still no joy finding it? Either by some and expense the space, or shout out on Telegram.</li>
 </ol>
 <p>If you have any questions, please do not hesitate to ask the community on Telegram or the forum.</p>
+<p>We look forward to seeing you soon!</p>
 <p>Many Thanks</p>
 <p>Hackspace Manchester Board</p>
 </body>

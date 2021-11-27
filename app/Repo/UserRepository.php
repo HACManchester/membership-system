@@ -24,6 +24,10 @@ class UserRepository extends DBRepository
      * @var SubscriptionChargeRepository
      */
     private $subscriptionChargeRepository;
+    /**
+     * @var \BB\Repo\PaymentRepository
+     */
+    private $paymentRepository;
 
     public function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
@@ -32,6 +36,7 @@ class UserRepository extends DBRepository
         $this->addressRepository = $addressRepository;
         $this->profileDataRepository = $profileDataRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->paymentRepository = \App::make('\BB\Repo\PaymentRepository');
     }
 
     public function getActive()
@@ -166,6 +171,9 @@ class UserRepository extends DBRepository
                 $user->active = '1';
                 $user->gift = $memberData['gift_code'];
                 $user->save();
+
+                // log cash payment
+                $this->paymentRepository->recordPayment("gift", $user->id, 'balance', null, 5.00, 'paid', 0, $memberData['gift_code'] );
 
                 $gift_record->delete();
             }
