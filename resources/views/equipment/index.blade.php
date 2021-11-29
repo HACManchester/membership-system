@@ -73,6 +73,7 @@ Tools and Equipment
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Bloody Dangerous</th>
                 <th>Usage Cost</th>
                 <th></th>
                 <th></th>
@@ -83,6 +84,7 @@ Tools and Equipment
                 <td>
                     <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                 </td>
+                <td>{!! $tool->isDangerous() ? '⚠️ Bloody Dangerous' : '' !!}</td>
                 <td>{!! $tool->present()->usageCost() !!}</td>
                 <td>
                     @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
