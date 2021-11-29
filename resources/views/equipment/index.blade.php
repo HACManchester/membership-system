@@ -43,7 +43,7 @@ Tools and Equipment
             </tr>
             </thead>
             @foreach($requiresInduction as $tool)
-                <tr class="{{ $tool->isWorking() ? '': 'alert-warning'}}">
+                <tr>
                     <td>
                         <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                     </td>
@@ -51,7 +51,7 @@ Tools and Equipment
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
-                    <td>{!! $tool->isDangerous() ? '⚠️ Bloody Dangerous' : '' !!}</td>
+                    <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
                     <td>{!! $tool->present()->accessFee() !!}</td>
                     <td>{!! $tool->present()->usageCost() !!}</td>
                     <td>
@@ -84,7 +84,7 @@ Tools and Equipment
                 <td>
                     <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                 </td>
-                <td>{!! $tool->isDangerous() ? '⚠️ Bloody Dangerous' : '' !!}</td>
+                <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
                 <td>{!! $tool->present()->usageCost() !!}</td>
                 <td>
                     @if (!$tool->working)<span class="label label-danger">Out of action</span>@endif
