@@ -17,7 +17,7 @@ Resources
                 <p>
                     Our two main communication channels are our forum/mailing list and our telegram group. 
                 </p>
-                <ul class="list-unstyled">
+                <ul>
                     <li><a href="https://list.hacman.org.uk" target="_blank">Forum/List</a></li>
                     <li><a href="https://t.me/HACManchester" target="_blank">Telegram Group</a></li>
                     <li><a href="https://docs.hacman.org.uk/" target="_blank">Documentation system</a></li>
@@ -39,16 +39,16 @@ Resources
         <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Announcements & Members Meetings</h3></div>
             <div class="panel-body">
-                <p class="lead">Announcements</p>
+                <strong>Announcements</strong>
                 <p>
                     You can find the main <a href="https://list.hacman.org.uk/c/announcements/23" target="_blank">announcements</a> on the forum Announcements category.
                 </p>
-                <p class="lead">Member Meetings</p>
+                <strong>Member Meetings</strong>
                 <p>
                     Our Members Meetings take place every 1-2 months, around the first Monday of the month.<br/>
                     They're called on the <a href="https://list.hacman.org.uk/c/announcements/member-meetings/35" target="_blank">forum</a>
                 </p>
-                <p class="lead">Board Meetings</p>
+                <strong>Board Meetings</strong>
                 Board announcements and meetings can also be found on the <a href="https://list.hacman.org.uk/c/announcements/board/34" target="_blank">forum</a>. 
                 Members can ask public questions here with regards to space management, but any private or sensitive questions should be emailed to board@hacman.org.uk
             </div>
