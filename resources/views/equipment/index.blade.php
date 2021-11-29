@@ -36,6 +36,7 @@ Tools and Equipment
             <tr>
                 <th>Name</th>
                 <th>Status</th>
+                <th>Bloody Dangerous</th>
                 <th>Access Fee</th>
                 <th>Usage Cost</th>
                 <th></th>
@@ -50,7 +51,7 @@ Tools and Equipment
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
-                    <td>{!! $tool->requiresInduction() ? 'R' : 'O' !!}</td>
+                    <td>{!! $tool->isDangerous() ? '⚠️ Bloody Dangerous' : '' !!}</td>
                     <td>{!! $tool->present()->accessFee() !!}</td>
                     <td>{!! $tool->present()->usageCost() !!}</td>
                     <td>
