@@ -50,6 +50,7 @@ Tools and Equipment
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
+                    <td>{!! $tool->present()->requiresInduction() ? 'R' : 'O' !!}</td>
                     <td>{!! $tool->present()->accessFee() !!}</td>
                     <td>{!! $tool->present()->usageCost() !!}</td>
                     <td>
