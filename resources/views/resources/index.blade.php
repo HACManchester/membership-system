@@ -12,26 +12,25 @@ Resources
 
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">Forum & Telegram Groups</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">Communication</h3></div>
             <div class="panel-body">
                 <p>
-                    Our two main communication channels are our forum/list and our telegram group. 
+                    Our two main communication channels are our forum/mailing list and our telegram group. 
                 </p>
                 <ul class="list-unstyled">
-                    <li><a href="https://list.hacman.org.uk">Forum/List</a></li>
-                    <li><a href="https://t.me/HACManchester">Telegram Group</a></li>
+                    <li><a href="https://list.hacman.org.uk" target="_blank">Forum/List</a></li>
+                    <li><a href="https://t.me/HACManchester" target="_blank">Telegram Group</a></li>
+                    <li><a href="https://docs.hacman.org.uk/" target="_blank">Documentation system</a></li>
                 </ul>
-                <p>
-                    Hackspace Manchester also has a <a href="https://docs.hacman.org.uk/">documentation system</a>
-                </p>
+           
             </div>
             <div class="panel-heading"><h3 class="panel-title">Area & Team groups</h3></div>
             <div class="panel-body">
                 <ul>
-                    <li><a href="https://t.me/joinchat/AYtZgkk7n1MqvkN9N2fmsA">Woodwork</a></li>
-                    <li><a href="https://t.me/joinchat/B8-OC1MTETWTM8vBexJOag">Metalwork</a></li>
-                    <li><a href="https://t.me/joinchat/DZNJNRJimIP7XoyvDArnUg">3d Printing</a></li>
-                    <li><a href="https://t.me/joinchat/AYtZgkh3BSRgpoA9LvQ3Hg">CNC</a></li>
+                    <li><a href="https://t.me/joinchat/AYtZgkk7n1MqvkN9N2fmsA" target="_blank">Woodwork</a></li>
+                    <li><a href="https://t.me/joinchat/B8-OC1MTETWTM8vBexJOag" target="_blank">Metalwork</a></li>
+                    <li><a href="https://t.me/joinchat/DZNJNRJimIP7XoyvDArnUg" target="_blank">3d Printing</a></li>
+                    <li><a href="https://t.me/joinchat/AYtZgkh3BSRgpoA9LvQ3Hg" target="_blank">CNC</a></li>
                 </ul>
             </div>
         </div>
@@ -42,15 +41,15 @@ Resources
             <div class="panel-body">
                 <p class="lead">Announcements</p>
                 <p>
-                    You can find the main <a href="https://list.hacman.org.uk/c/announcements/23">announcements</a> on the forum Announcements category.
+                    You can find the main <a href="https://list.hacman.org.uk/c/announcements/23" target="_blank">announcements</a> on the forum Announcements category.
                 </p>
                 <p class="lead">Member Meetings</p>
                 <p>
                     Our Members Meetings take place every 1-2 months, around the first Monday of the month.<br/>
-                    They're called on the <a href="https://list.hacman.org.uk/c/announcements/member-meetings/35">forum</a>
+                    They're called on the <a href="https://list.hacman.org.uk/c/announcements/member-meetings/35" target="_blank">forum</a>
                 </p>
                 <p class="lead">Board Meetings</p>
-                Board announcements and meetings can also be found on the <a href="https://list.hacman.org.uk/c/announcements/board/34">forum</a>. 
+                Board announcements and meetings can also be found on the <a href="https://list.hacman.org.uk/c/announcements/board/34" target="_blank">forum</a>. 
                 Members can ask public questions here with regards to space management, but any private or sensitive questions should be emailed to board@hacman.org.uk
             </div>
             
@@ -64,19 +63,19 @@ Resources
 
                 <strong>Member Handbook</strong>
                 <p>
-                    The <a href="https://list.hacman.org.uk/t/member-handbook/2890/1">handbook</a> is an overview of the space, policies, and functioning of the space. Do take a read!
+                    The <a href="https://list.hacman.org.uk/t/member-handbook/2890/1" target="_blank">handbook</a> is an overview of the space, policies, and functioning of the space. Do take a read!
                 </p>
                 <strong>Core Rules</strong>
                 <ul>
-                    <li><a href="https://hacman.org.uk/rules">Rules</a></li>
-                    <li><a href="{{ route('resources.policy.view', 'code-of-conduct') }}">Code of Conduct</a></li>
+                    <li><a href="https://hacman.org.uk/rules" target="_blank">Rules</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'code-of-conduct') }}" target="_blank">Code of Conduct</a></li>
                 </ul>
 
                 <strong>Policies</strong>
                 <ul>
-                    <li><a href="{{ route('resources.policy.view', '3-week-bins') }}">3 Week Bins</a></li>
-                    <li><a href="{{ route('resources.policy.view', 'member-storage') }}">Member Storage</a></li>
-                    <li><a href="{{ route('resources.policy.view', 'trusted-member') }}">How To Get In</a></li>
+                    <li><a href="{{ route('resources.policy.view', '3-week-bins') }}" target="_blank">3 Week Bins</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'member-storage') }}" target="_blank">Member Storage</a></li>
+                    <li><a href="{{ route('resources.policy.view', 'trusted-member') }}" target="_blank">How To Get In</a></li>
 
                 </ul>
                 <strong>Bank Details</strong>
