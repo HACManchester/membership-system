@@ -10,8 +10,6 @@ Resources
 
 @section('content')
 
-
-
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">Forum & Telegram Groups</h3></div>
@@ -24,43 +22,36 @@ Resources
                     <li><a href="https://t.me/HACManchester">Telegram Group</a></li>
                 </ul>
                 <p>
-                    Hackspace Manchester also has a <a href="https://wiki.hacman.org.uk/">Wiki</a> with a large amount of information regarding the space contained within this.  - </a>
+                    Hackspace Manchester also has a <a href="https://docs.hacman.org.uk/">documentation system</a>
                 </p>
             </div>
-            <div class="panel-heading"><h3 class="panel-title">Special interest & Team groups</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">Area & Team groups</h3></div>
             <div class="panel-body">
                 <ul>
-                    <p> A number of our Teams alongside Members special interests have telegram groups including: </a>
-                    <li><a href="https://t.me/joinchat/Ef01rU1SrP9xJNmwXjHtWA">Hackscreen</a></li>
-                    <li><a href="https://t.me/joinchat/Agaj2UBrygQwTBBHDW8jyA">Documentation</a></li>
-                    <li><a href="https://t.me/joinchat/E4DcrUDWGvEzlsmJHNNkuQ">Events</a></li>
-                    <li><a href="https://t.me/joinchat/D5l4WUPaGRQovcFCLd1X7g">Procurement</a></li>
                     <li><a href="https://t.me/joinchat/AYtZgkk7n1MqvkN9N2fmsA">Woodwork</a></li>
                     <li><a href="https://t.me/joinchat/B8-OC1MTETWTM8vBexJOag">Metalwork</a></li>
-                    <li><a href="https://t.me/joinchat/B3NEGUNG_uwIUSveltLMxQ">Laser Training</a></li>
                     <li><a href="https://t.me/joinchat/DZNJNRJimIP7XoyvDArnUg">3d Printing</a></li>
-                    <li><a href="https://t.me/joinchat/D5l4WVMQOkytQcFk-tRjuQ">Diversity</a></li>
                     <li><a href="https://t.me/joinchat/AYtZgkh3BSRgpoA9LvQ3Hg">CNC</a></li>
-                    <li><a href="https://t.me/joinchat/AoAv41LtXqjULCvqsbGwrA">Space Bikes</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Members Meetings</h3></div>
+        <div class="panel-heading"><h3 class="panel-title">Announcements & Members Meetings</h3></div>
             <div class="panel-body">
-                <p>Our Members Meetings take place every 2 months on the 1st of each month (unless that occurs on a Wednesday then the meeting will take place on the 2nd)</p>
-
-                <strong>2019 Dates</strong>
-                <ul>
-                    <li>Friday 1st February 7.30pm</li>
-                    <li>Monday  1st April 7.30pm</li>
-                    <li>Saturday 1st June 7.30pm</li>
-                    <li>Thursday 1st August 7.30pm</li>
-                    <li>Tuesday 1st October 7.30pm</li>
-                    <li>Sunday 1st December 7.30pm</li>
-                </ul>
+                <p class="lead">Announcements</p>
+                <p>
+                    You can find the main <a href="https://list.hacman.org.uk/c/announcements/23">announcements</a> on the forum Announcements category.
+                </p>
+                <p class="lead">Member Meetings</p>
+                <p>
+                    Our Members Meetings take place every 1-2 months, around the first Monday of the month.<br/>
+                    They're called on the <a href="https://list.hacman.org.uk/c/announcements/member-meetings/35">forum</a>
+                </p>
+                <p class="lead">Board Meetings</p>
+                Board announcements and meetings can also be found on the <a href="https://list.hacman.org.uk/c/announcements/board/34">forum</a>. 
+                Members can ask public questions here with regards to space management, but any private or sensitive questions should be emailed to board@hacman.org.uk
             </div>
             
         </div>
@@ -69,11 +60,15 @@ Resources
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">Rules and Policies</h3></div>
             <div class="panel-body">
-                <p>We have started to improve some of the various polices that govern Hackspace Manchester, as they are clarified and confirmed they will appear here.</p>
+                <p>The space has core rules, as well as various policies to keep the space working for the community.</p>
 
+                <strong>Member Handbook</strong>
+                <p>
+                    The <a href="https://list.hacman.org.uk/t/member-handbook/2890/1">handbook</a> is an overview of the space, policies, and functioning of the space. Do take a read!
+                </p>
                 <strong>Core Rules</strong>
                 <ul>
-                    <li><a href="{{ route('resources.policy.view', 'rules') }}">Rules</a></li>
+                    <li><a href="https://hacman.org.uk/rules">Rules</a></li>
                     <li><a href="{{ route('resources.policy.view', 'code-of-conduct') }}">Code of Conduct</a></li>
                 </ul>
 
