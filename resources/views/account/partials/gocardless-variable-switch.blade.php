@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xs-12 col-md-10">
+    <div class="col-xs-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-body">
                 <h4>🚀 Want to power up your direct debit or change your subscription amount?</h4>

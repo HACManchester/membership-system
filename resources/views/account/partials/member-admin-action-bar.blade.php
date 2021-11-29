@@ -1,6 +1,6 @@
 @if (Auth::user()->isAdmin())
 
-<div class="row well">
+<div class="row well" style="background: repeating-linear-gradient( 45deg, #fee, #fee 10px, #fffafa 10px, #fffafa 20px ); border-radius: 5px;">
 
     <div class="col-xs-12 col-sm-6">
         <div class="row">
