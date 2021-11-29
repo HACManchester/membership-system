@@ -42,7 +42,7 @@ Tools and Equipment
             </tr>
             </thead>
             @foreach($requiresInduction as $tool)
-                <tr>
+                <tr class="{{ $tool->isWorking() ? '': 'alert-danger'}}">
                     <td>
                         <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                     </td>

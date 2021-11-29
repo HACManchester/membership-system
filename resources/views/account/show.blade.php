@@ -24,12 +24,6 @@
 
 @include('account.partials.member-status-bar')
 
-@if($user->status == 'active' && !$user->online_only)
-    @include('account.partials.get-started')
-@endif  
-
-@include('account.partials.member-admin-action-bar')
-
 @if (count($user->getAlerts()) > 0)
 <div class="alert alert-warning" role="alert">
     <ul>
@@ -48,8 +42,11 @@
 </div>
 @endif
 
+@include('account.partials.member-admin-action-bar')
 
-
+@if($user->status == 'active' && !$user->online_only)
+    @include('account.partials.get-started')
+@endif  
 
 @if ($user->promoteGoCardless())
 
