@@ -35,23 +35,23 @@ Tools and Equipment
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Status</th>
                 <th>Access Fee</th>
                 <th>Usage Cost</th>
-                <th></th>
                 <th></th>
             </tr>
             </thead>
             @foreach($requiresInduction as $tool)
-                <tr class="{{ $tool->isWorking() ? '': 'alert-danger'}}">
+                <tr class="{{ $tool->isWorking() ? '': 'alert-warning'}}">
                     <td>
                         <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
                     </td>
-                    <td>{!! $tool->present()->accessFee() !!}</td>
-                    <td>{!! $tool->present()->usageCost() !!}</td>
                     <td>
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
+                    <td>{!! $tool->present()->accessFee() !!}</td>
+                    <td>{!! $tool->present()->usageCost() !!}</td>
                     <td>
                         @if (!Auth::guest() && !Auth::user()->online_only)
                             <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
