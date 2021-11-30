@@ -13,7 +13,7 @@
         <div class="col-sm-12">
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    {{ $role->title }} group
+                    About {{ $role->title }} group
                 </div>
                 <div class="panel-body">
                     <p class="lead">
