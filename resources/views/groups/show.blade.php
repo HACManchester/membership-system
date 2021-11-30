@@ -11,15 +11,22 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <p class="lead">
-                {{ $role->description }}
-            </p>
-            <p class="lead">
-                {{ $role->slack_channel }}
-            </p>
-            @if ($role->email_public)
-            Email: <a href="{{ $role->email_public }}">{{ $role->email_public }}</a>
-            @endif
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    {{ $role->title }} group
+                </div>
+                <div class="panel-body">
+                    <p class="lead">
+                        {{ $role->description }}
+                    </p>
+                    <p class="lead">
+                        <a href="{{ $role->slack_channel }}">Telegram channel</a>
+                    </p>
+                    @if ($role->email_public)
+                    Email: <a href="{{ $role->email_public }}">{{ $role->email_public }}</a>
+                    @endif
+                </div>
+            </div>
 
             <h4>Group members</h4>
             <div class="list-group">
