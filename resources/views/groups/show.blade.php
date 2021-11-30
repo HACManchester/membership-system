@@ -19,9 +19,11 @@
                     <p class="lead">
                         {{ $role->description }}
                     </p>
+                    @if( $role->slack_channel)
                     <p class="lead">
                         <a href="{{ $role->slack_channel }}">Telegram channel</a>
                     </p>
+                    @endif
                     @if ($role->email_public)
                     Email: <a href="{{ $role->email_public }}">{{ $role->email_public }}</a>
                     @endif
