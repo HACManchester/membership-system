@@ -90,6 +90,11 @@
         border: 1px solid;
     }
 
+    .register-container, .login-container {
+        margin-top: 50px;
+        border-radius: 1em;
+        border-left: 3px solid lightgrey;
+    }
 </style>
 <!-- TOP NAV TO OTHER SITES-->
 <nav role="navigation" class="topNav" style="border-bottom: 1px solid black; background: white; height: 50px">
