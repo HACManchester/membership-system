@@ -82,6 +82,12 @@
         border: 1px solid;
         border-left: 3px solid;
         border-radius: 5px;
+        margin-right: 1em;
+    }
+
+    .input-group-addon {
+        border-radius: 5px;
+        border: 1px solid;
     }
 
 </style>
