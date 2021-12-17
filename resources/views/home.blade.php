@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 @else
-                    <div style="border-left: 3px solid green">
+                    <div style="border-left: 3px solid green; padding-left: 1em;">
                         <p>
                             <h3>👋 Welcome back, <a href="{{ route('account.show', [$user->id]) }}">{{$user->name}}</a></h3>
                             <p>
@@ -56,9 +56,9 @@
                         </p>
                         
                         <h4>Quick Links</h4>
-                        <a href="/equipment" class="btn btn-pimary">Tools &amp; Equipment</a>
-                        <a href="/account/0/edit" class="btn btn-pimary">Keyfobs &amp; Access</a>
-                        <a href="/account/0/balance" class="btn btn-pimary">Balance</a>
+                        <a href="/equipment" class="btn btn-primary">Tools &amp; Equipment</a>
+                        <a href="/account/0/edit" class="btn btn-primary">Keyfobs &amp; Access</a>
+                        <a href="/account/0/balance" class="btn btn-primary">Balance</a>
                     
                        
                     </div>
