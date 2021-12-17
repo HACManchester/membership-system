@@ -78,7 +78,7 @@
         background: linear-gradient(90deg, rgba(255,240,0,1) 0%, rgba(255,250,170,1) 100%);
     }
 
-    .formControl {
+    .form-control {
         border: 1px solid;
         border-left: 3px solid;
         border-radius: 5px;
