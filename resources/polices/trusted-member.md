@@ -1,10 +1,10 @@
 
 **How To Get In**
 
-The new space now has direct access at Street Level of Pollard Street East, look for the spray painted door with a city scape and multiple colour 
+The space has direct access at Street Level of Pollard Street East, look for the door which is spray painted like a sunset.
 
 **Space access**
-Once you have a working RFID card (either come to an open evening from 6pm on Wednesdays, or arrange with a member to let you in at another time), present it to the fob reader on the door and it will open
+Once you have a working RFID fob you just need to present it to the fob reader on the door and it will open
 
 **Toilets**
-The space currently has 1 toilet, it is not classed as an accessible toilet. We are currently working on the creation of a larger toilet which will be accessible. 
+The space currently has 1 toilet, which can be ound on the left as you come in. It's designed to be accessible, and features storage for clothes.

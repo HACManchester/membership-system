@@ -38,6 +38,10 @@
         background-image: linear-gradient(180deg, #f5f7fa 30%, #c3cfe2 100%);
         background-attachment: fixed;
     }
+
+    .bodyWrap {
+        padding-left: 0 !important;
+    }
 </style>
 @include('partials/main-sidenav')
 

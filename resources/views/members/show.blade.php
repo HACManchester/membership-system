@@ -29,7 +29,7 @@
                 
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
-                <h3>{{ $profileData->present()->tagline }}</h3>
+                <h3 style="border-bottom: 1px solid black; padding-bottom: 5px;">{{ $profileData->present()->tagline }}</h3>
                 <p class="lead">
                     {{ $profileData->present()->description }}
                 </p>

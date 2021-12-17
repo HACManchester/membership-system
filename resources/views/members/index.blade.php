@@ -10,12 +10,16 @@ Members
 
 
 @section('content')
-
+<style>
+    .memberBlock img{
+        border-radius: 1em;
+    }
+</style>
 <div class="memberGrid">
     <div class="row">
         @foreach ($users as $user)
         <div class="col-xs-6 col-md-3 col-lg-2">
-            <div class="memberBlock" style="border: 5px solid #fff000">
+            <div class="memberBlock" style="border: 5px solid #000; border-radius: 1em; background: black;">
                 <a href="{{ route('members.show', $user->user_id) }}">
                     {!! HTML::memberPhoto(
                         (object)[
@@ -25,7 +29,7 @@ Members
                         $user->hash, 
                         200) 
                     !!}
-                    <div class="memberDetails">
+                    <div class="memberDetails" style="color:white;">
                         <strong>{{ $user->display_name }}</strong>
                     </div>
                 </a>
