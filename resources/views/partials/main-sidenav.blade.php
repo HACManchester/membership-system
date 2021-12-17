@@ -78,6 +78,12 @@
         background: linear-gradient(90deg, rgba(255,240,0,1) 0%, rgba(255,250,170,1) 100%);
     }
 
+    .formControl {
+        border: 1px solid;
+        border-left: 3px solid;
+        border-radius: 5px;
+    }
+
 </style>
 <!-- TOP NAV TO OTHER SITES-->
 <nav role="navigation" class="topNav" style="border-bottom: 1px solid black; background: white; height: 50px">
