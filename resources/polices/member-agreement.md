@@ -19,6 +19,7 @@ Every member must follow the rules in place to ensure that everyone can continue
 We have a member handbook which provides a brief overview of the key aspects of our space. Please take a moment to flick through the member handbook so you're grounded in how the space operates.
 
 ✅ You can read [a copy online](https://list.hacman.org.uk/t/member-handbook/2890/1)
+
 ✅ There are two physical copies in the space:
 * One is by the lightswitches as you come in
 * The other is on the member noticeboard.
@@ -29,12 +30,14 @@ We have a member handbook which provides a brief overview of the key aspects of 
 When you signed up you'll have selected to either have your fob posted to you, or to collect it.
 
 **If your fob is being posted to you**
-> You need to fill in your payment information. Once done, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
+
+You need to fill in your payment information. Once done, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
 This flyer will have the ID of the enclosed fob written on it, usually something like:
 `ABCDEF12` or `AB12CD34`. The fob ID will be made up of numbers `0-9`, and letters `A-F`. 
 
 **If you selected to collect your fob**
-> On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
+
+On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
 
 You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
 * Click "Your Membership" in the left hand menu
