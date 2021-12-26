@@ -104,10 +104,13 @@ We have extremely limited space for the storage of large projects. This is detai
 * [Facebook](facebook.com/hacmanchester)
 * [Twitter](twitter.com/hacmanchester)
   
-## For business issues, problems with other members, or other "big" stuff - contact the board
+### The board are here for you
+The board are elected members who voluntarily do things like pay the bills and keep the hackspace open and lights on.
+
+For business issues, problems with other members, or other "big" stuff - contact the board
 You can directly email the board at board@hacman.org.uk 
 
+![](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_2038031.jpg)
 
-# We look forward to seeing you soon!
-Now you have completed the induction, please confirm you have understood its contents:
+# To complete the induction, check the below!
 
