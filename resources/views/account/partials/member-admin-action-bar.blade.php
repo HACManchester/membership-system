@@ -32,7 +32,8 @@
                         <div class="col-md-6" style="border-left: 3px solid green;">
                             <h4>Physical Override Key</h4>
                             <p>
-                               Does this user have a physical override key? 
+                               Does this user have a physical override key? <br/>
+                               <br/>
                             </p>
                             {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal js-quick-update')) !!}
                             <div class="form-group">
