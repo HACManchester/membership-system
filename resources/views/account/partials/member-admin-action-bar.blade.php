@@ -10,7 +10,7 @@
                     <div class="row"> <!-- Start Row -->
 
                         <!-- Panel -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="border-left: 3px solid green;">
                             <h4>Trusted Member</h4>
                             <p>The member will be automatically emailed about being made trusted but not if they are loosing trusted status.</p>
                             {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
@@ -29,7 +29,7 @@
                         </div>
 
                         <!-- Panel -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="border-left: 3px solid green;">
                             <h4>Physical Override Key</h4>
                             <p>
                                Does this user have a physical override key? 
@@ -45,7 +45,7 @@
 
                         <!-- Panel -->
                         @if ($user->profile->new_profile_photo)
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="border-left: 3px solid green;">
                                 <h4>New photo to approve</h4>
                                 <p>If rejected they will be emailed explaining the photo wasn't suitable.</p>
                                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
@@ -69,7 +69,7 @@
                         @endif
 
                         <!-- Panel -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="border-left: 3px solid orange;">
                             <h4>Key Fob</h4>
                             <p>This is the ID number associated with their RFID tag. They don't need to be a key holder to get an RFID tag.</p>
                             @foreach ($user->keyFobs()->get() as $fob)
@@ -103,7 +103,7 @@
                         </div>
                     
                         <!-- Panel -->
-                        <div class="col-md-6">
+                        <div class="col-md-6"  style="border-left: 3px solid blue;">
                             <h4>Balance - Top up</h4>
                             <p>Use this if the member has given you some cash to top up their balance.</p>
 
@@ -128,7 +128,7 @@
                         </div>
 
                         <!-- Panel -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="border-left: 3px solid red;">
                             <h4>Balance - Withdraw</h4>
                             <p>This will remove money from their balance, its used if your giving them cash.</p>
 
@@ -156,7 +156,7 @@
                 
                         <!-- Panel -->
                         @if ($newAddress)
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="border-left: 3px solid green;">
                                 <h4>Address Change</h4>
                                 <p>Does this look like a real address?</p>
                                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.admin-update', $user->id], 'class'=>'form-horizontal')) !!}
@@ -180,7 +180,7 @@
 
                         <!-- Panel -->
                         @if ($user->payment_method == 'cash')
-                            <div class="col-md-6">
+                            <div class="col-md-6"  style="border-left: 3px solid green;">
                                 <h4>Cash Membership</h4>
                                 {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['account.payment.store', $user->id])) !!}
 
@@ -200,7 +200,7 @@
 
                         <!-- Panel -->
                         @if (in_array($user->status, ['setting-up', 'left', 'leaving']))
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="border-left: 3px solid red;">
                                 <h4>Setup</h4>
                                 <p>Activate this members subscription but have them pay using their balance</p>
                                 {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['account.update-sub-method', $user->id])) !!}
@@ -220,7 +220,7 @@
 
                         <!-- Panel -->
                         @if ($user->status == 'setting-up' || $user->online_only)
-                            <div class="col-md-6 alert-danger">
+                            <div class="col-md-6 alert-danger" style="border-left: 3px solid red;">
                                 <h4>Delete</h4>
                                 <p>Is this an old record? No sign of {{ $user->name }}?</p>
                                 {!! Form::open(array('method'=>'DELETE', 'class'=>'form-horizontal', 'route' => ['account.destroy', $user->id])) !!}
@@ -235,7 +235,7 @@
 
                         
                         <!-- Panel -->
-                        <div class="col-xs-12">
+                        <div class="col-xs-12" style="border-left: 3px solid black;">
                             <h4>Member subscription and DD info</h4>
                             <p>
                                 <strong>Method</strong>:
