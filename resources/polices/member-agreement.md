@@ -21,9 +21,12 @@ We have a member handbook which provides a brief overview of the key aspects of 
 ✅ You can read [a copy online](https://list.hacman.org.uk/t/member-handbook/2890/1)
 
 ✅ There are two physical copies in the space:
-* One is by the lightswitches as you come in
-* The other is on the member noticeboard.
 
+- One is by the lightswitches as you come in
+- The other is on the member noticeboard.
+
+-----
+!['outside'](https://www.hacman.org.uk/wp-content/uploads/2021/10/photo_2021-09-29_13-57-07.jpg)
 
 
 ## Getting in the space for the first time
@@ -40,17 +43,18 @@ This flyer will have the ID of the enclosed fob written on it, usually something
 On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
 
 You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
-* Click "Your Membership" in the left hand menu
-* Click "Edit" in the top right
-* Enter your key fob ID in the "Key Fob" section 
-* Click save.
+- Click "Your Membership" in the left hand menu
+- Click "Edit" in the top right
+- Enter your key fob ID in the "Key Fob" section 
+- Click save.
 
 **⚠️ Your fob will not work until you have completed this induction, and your first payment has gone through.**
 
------
 
 !['laser cutter'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_203613.jpg)
 ## Some equipment needs an induction
+
+-----
 
 ⚠️ Inductions are mandatory for the more dangerous and expensive machines around the space.
 
@@ -71,18 +75,21 @@ Inductions are conducted in different ways, as stated on the tool page:
 
 Once you have done the above you will be enrolled onto the appropriate moodle course for the induction and you should also make contact with a trainer to arrange any required in person training this can be done via moodle or through telegram
 
------
 
 !['welding shark'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_234643.jpg)
+
+-----
+
 ## Members Storage
 Active members are permitted to store some things within a 600x400mm space. You need to claim your space on the membership system, which correlates to a physical storage area in the hackspace. 
 
-To Claim a storage space, find a place that works for you in the hackspace, note the ID, then go to the membership system, and in the "Member Storage" page, and simply find the corresponding number and click claim.  
+✅ To Claim a storage space, find a place that works for you in the hackspace, note the ID, then go to the membership system, and in the "Member Storage" page, and simply find the corresponding number and click claim.  
 
 If you no longer need your members storage space or you are leaving the hackspace please ensure you return the space. If not it will remain occupied until someone does a manual clearout - anything that is left after you leave may be destroyed, disposed of, moved or hacked.
 
 ## Large Project Storage
 We have extremely limited space for the storage of large projects. This is detailed in the Member Handbook - but all projects stored there must be labelled appropriately with contact details, and be actively worked on.
+
 
 ## Let's be social
 ### For our group chat, join our Telegram chat
