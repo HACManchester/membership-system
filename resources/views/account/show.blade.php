@@ -24,7 +24,7 @@
 
 @include('account.partials.member-status-bar')
 
-@if (count($user->getAlerts()) > 0)
+@if ($user->status != 'setting-up' && count($user->getAlerts()) > 0)
 <div class="alert alert-warning" role="alert">
     <ul>
         @foreach ($user->getAlerts() as $alert)
