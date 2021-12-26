@@ -12,14 +12,14 @@
                         <b>Get an access method</b> - You can <a href="/account/0/edit#access">set up a fob or access code</a> on your account page. 
                     </li>
                     <li>
+                        @if ($user->induction_completed)✅@else🟠@endif 
+                        <b>Do the general membership induction</b> - all members need to have read the general <a href="/account/0/induction">member induction</a>
+                    </li>
+                    <li>
                         💬
                         <b>Join in the chat</b> - we have a <a href="https://list.hacman.org.uk" target="_blank">forum</a> and <a href="https://t.me/hacmanchester" target="_blank">Telegram group chat</a>
                     </li>
                     <li>➡️<b>Find our common resources</b> - we have a page of <a href="/resources">resources</a> outlining the basics</li>
-                    <li>
-                        @if ($user->induction_completed)✅@else🟠@endif 
-                        <b>Get your membership induction</b> - all members need to have read the general <a href="/account/0/induction">member induction</a>
-                    </li>
                     <li>➡️<b>Get trained on equipment</b> - Some equipment requires training, check out the <a href="/equipment">equipment</a> page and request inductions.</li>
                     <li>➡️<b>Get a storage location</b> - every member can <a href="/storage_boxes">claim a storage location</a> subject to the rules.</li>
                 </ul>
