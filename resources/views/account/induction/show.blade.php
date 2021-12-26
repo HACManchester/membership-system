@@ -15,7 +15,7 @@
 
 @section('content')
     <style>
-        img {
+        .well img {
             max-height: 200px;
             width: 100%;
             object-fit: cover;

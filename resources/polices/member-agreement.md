@@ -1,36 +1,40 @@
-# Welcome to Hackspace Manchester!
-## Here are some essentials...
-Please read and complete this induction. You will not be able to access the space until this is complete   
+# General Member Induction
+**You will not be able to access the space until this is complete.** 
 
 !['the hackspace'](https://www.hacman.org.uk/wp-content/uploads/2016/08/IMG_20200720_225443.jpg)
 <hr/>   
 
-## We have house rules
-Every member must follow the rules and guidelines in place to ensure that we continue to have an inclusive and welcoming community which can exist safely and cohesively.
+## You must follow the rules
+Every member must follow the rules in place to ensure that everyone can continue to use the space. We have an inclusive and welcoming community, and these rules ensure it remains as such.
 
-Usually things work well, but when they don't we have rules in place.
+* You must behave in accordance with the rules
+* You must use tools safely
+* You must not use tools that require an induction without an induction
+* Members can be asked to leave the space if they are breaking these rules.
+* If you break the rules you may lose your membership
 
-➡️ The rules can be read at any time [here](https://hacman.org.uk/rules).
+✅ The rules can be read at any time [here](https://hacman.org.uk/rules).
 
-## We have a member handbook
-We have a member handbook which provides a brief overview of the key aspects of a functioning hackerspace.
+## The Member Handbook explains the basics
+We have a member handbook which provides a brief overview of the key aspects of our space. Please take a moment to flick through the member handbook so you're grounded in how the space operates.
 
-➡️ [There is a copy online](https://list.hacman.org.uk/t/member-handbook/2890/1) and there are two copies in the space for reference:
+✅ You can read [a copy online](https://list.hacman.org.uk/t/member-handbook/2890/1)
+✅ There are two physical copies in the space:
 * One is by the lightswitches as you come in
 * The other is on the member noticeboard.
 
-**Please take a moment to flick through the member handbook so you're grounded in how the space operates**
 
-## RFID Access
+
+## Getting in the space for the first time
 When you signed up you'll have selected to either have your fob posted to you, or to collect it.
 
-### Postal fob
-When you fill in your payment information, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
+**If your fob is being posted to you**
+> You need to fill in your payment information. Once done, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
 This flyer will have the ID of the enclosed fob written on it, usually something like:
 `ABCDEF12` or `AB12CD34`. The fob ID will be made up of numbers `0-9`, and letters `A-F`. 
 
-### Collection
-On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
+**If you selected to collect your fob**
+> On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
 
 You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
 * Click "Your Membership" in the left hand menu
@@ -40,6 +44,9 @@ You'll need to enter this ID into the membership system in order to link the fob
 
 **Please note: your fob will not work until you have completed this induction, and your first payment has gone through.**
 
+-----
+
+!['laser cutter'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_203613.jpg)
 ## Some equipment needs an induction
 
 Inductions are mandatory for the more dangerous and expensive machines around the space.
