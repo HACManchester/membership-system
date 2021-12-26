@@ -6,7 +6,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Admin Actions (not visible to non-admins)</h3>
             </div>
-            <div class="panel-body" style="background: repeating-linear-gradient( 45deg, #fee, #fee 20px, #fffafa 20px, #fffafa 60px )">
+            <div class="panel-body" style="background: repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
                 <div class="row"> <!-- Start Row -->
 
                     <!-- Panel -->
