@@ -2,6 +2,7 @@
 ## Here are some essentials...
 Please read and complete this induction. You will not be able to access the space until this is complete   
 
+!['the hackspace'](https://www.hacman.org.uk/wp-content/uploads/2016/08/IMG_20200720_225443.jpg)
 <hr/>   
 
 ## We have house rules

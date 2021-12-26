@@ -14,7 +14,13 @@
 
 
 @section('content')
-
+    <style>
+        img {
+            max-height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+    </style>
     <div class="col-sm-12 col-lg-8 col-sm-offset-2 well">
         {!! $document !!}
     </div>
