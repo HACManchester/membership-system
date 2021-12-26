@@ -51,10 +51,12 @@ You'll need to enter this ID into the membership system in order to link the fob
 **⚠️ Your fob will not work until you have completed this induction, and your first payment has gone through.**
 
 
+-----
+
 !['laser cutter'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_203613.jpg)
+
 ## Some equipment needs an induction
 
------
 
 ⚠️ Inductions are mandatory for the more dangerous and expensive machines around the space.
 
@@ -76,10 +78,6 @@ Inductions are conducted in different ways, as stated on the tool page:
 Once you have done the above you will be enrolled onto the appropriate moodle course for the induction and you should also make contact with a trainer to arrange any required in person training this can be done via moodle or through telegram
 
 
-!['welding shark'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_234643.jpg)
-
------
-
 ## Members Storage
 Active members are permitted to store some things within a 600x400mm space. You need to claim your space on the membership system, which correlates to a physical storage area in the hackspace. 
 
@@ -90,6 +88,9 @@ If you no longer need your members storage space or you are leaving the hackspac
 ## Large Project Storage
 We have extremely limited space for the storage of large projects. This is detailed in the Member Handbook - but all projects stored there must be labelled appropriately with contact details, and be actively worked on.
 
+-----
+
+!['welding shark'](https://www.hacman.org.uk/wp-content/uploads/2020/10/IMG_20200131_234643.jpg)
 
 ## Let's be social
 ### For our group chat, join our Telegram chat
