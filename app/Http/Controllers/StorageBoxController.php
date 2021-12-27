@@ -158,9 +158,9 @@ class StorageBoxController extends Controller
 
     private function selfClaimBox($boxId, $userId)
     {
-        $isAuth = \Auth::user()->isAdmin() || Auth::user()->hasRole('storage');
+        $permittedUser = \Auth::user()->isAdmin() || Auth::user()->hasRole('storage');
 
-        if ($userId != \Auth::user()->id && !isAuth) {
+        if ($userId != \Auth::user()->id && !$permittedUser) {
             throw new \BB\Exceptions\AuthenticationException();
         }
 
@@ -171,7 +171,7 @@ class StorageBoxController extends Controller
         $box = $this->storageBoxRepository->getById($boxId);
 
         //Make sure the box is available
-        if ( !$box->available && !isAuth) {
+        if ( !$box->available && !$permittedUser) {
             throw new \BB\Exceptions\ValidationException();
         }
 
