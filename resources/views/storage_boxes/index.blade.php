@@ -83,7 +83,7 @@
                     @endif
                 @endif
             </td>
-            @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('storage'))
+            @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
                 <td style="background:repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
                     <div class="row">
                         <div class="col-md-3">
