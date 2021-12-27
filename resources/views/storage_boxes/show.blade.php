@@ -14,10 +14,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h2>📦 Storage Location {{ $box->location }}</h2>
-                            <small>(#{{ $box->id }})</small>
-
-
+                            <h1>📦 Storage Location {{ $box->location }}</h2>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
@@ -26,21 +23,10 @@
                                         ⚠️ Member left
                                     @endif
                                 @else
-                                    🟢 Available
-                                @endif
-
-                                @if($box->user && !$box->user->active)
-                                ⚠️ Member left
-                                @elseif($box->user && $box->user->active)
-                                
-                                @elseif (($volumeAvailable >= $box->size) && !$box->user)
-                                    @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
+                                    @if ($box->location == "Old Members Storage")
                                         ⛔ Not available to be claimed
                                     @else
-                                        {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
-                                        {!! Form::hidden('user_id', Auth::user()->id) !!}
-                                        {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
-                                        {!! Form::close() !!}
+                                        🟢 Available
                                     @endif
                                 @endif
 
