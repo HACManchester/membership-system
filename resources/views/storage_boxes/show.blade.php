@@ -31,12 +31,12 @@
                                 @endif
 
                             </h2>
-                            <h4>
-                                This space has been claimed by
                             @if($box->user && $box->user->active)
-                                `{{$box->user->name}}`
+                                <h4>
+                                    This space has been claimed by
+                                    `{{$box->user->name}}`
+                                </h4>
                             @endif
-                            </h4>
                         </div>
                         <div class="col-md-6">
                             <h4>QR code for storage location {{ $box->id }}</h4>
