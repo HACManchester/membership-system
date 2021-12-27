@@ -92,7 +92,7 @@
                         {!! Form::close() !!}                        
                     @endif
                 
-                    {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes.update', $box->id])) !!}
+                    {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id])) !!}
                     {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
                     {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
                     {!! Form::close() !!}
