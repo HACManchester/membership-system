@@ -1,5 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Repo\UserRepository;
+
 class StorageBoxController extends Controller
 {
 
@@ -12,14 +14,23 @@ class StorageBoxController extends Controller
      */
     private $paymentRepository;
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+    /**
      * @var \BB\Services\MemberStorage
      */
     private $memberStorage;
 
-    public function __construct(\BB\Repo\StorageBoxRepository $storageBoxRepository, \BB\Repo\PaymentRepository $paymentRepository, \BB\Services\MemberStorage $memberStorage)
-    {
+    public function __construct(
+        \BB\Repo\StorageBoxRepository $storageBoxRepository, 
+        \BB\Repo\PaymentRepository $paymentRepository, 
+        \BB\Repo\UserRepository $userRepository,
+        \BB\Services\MemberStorage $memberStorage
+    ){
         $this->storageBoxRepository = $storageBoxRepository;
         $this->paymentRepository = $paymentRepository;
+        $this->userRepository = $userRepository;
         $this->memberStorage = $memberStorage;
     }
 
@@ -53,6 +64,8 @@ class StorageBoxController extends Controller
         $paymentTotal = $this->memberStorage->getPaymentTotal();
         $boxesTaken = $this->memberStorage->getNumBoxesTaken();
 
+        $memberList = $this->userRepository->getAllAsDropdown();
+
         return \View::make('storage_boxes.index')
             ->with('storageBoxes', $storageBoxes)
             ->with('boxPayments', $boxPayments)
@@ -60,6 +73,7 @@ class StorageBoxController extends Controller
             ->with('memberBoxes', $memberBoxes)
             ->with('volumeAvailable', $volumeAvailable)
             ->with('paymentTotal', $paymentTotal)
+            ->with('memberList', $memberList)
             ->with('boxesTaken', $boxesTaken);
     }
 
