@@ -110,6 +110,8 @@ class StorageBoxController extends Controller
     {
         $user = \Auth::user();
         $box = $this->storageBoxRepository->getById($boxId);
+        //Setup the member storage object
+        $this->memberStorage->setMember(\Auth::user()->id);
         $volumeAvailable = $this->memberStorage->volumeAvailable();
 
         return \View::make('storage_boxes.show')
