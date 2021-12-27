@@ -108,7 +108,15 @@ class StorageBoxController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = \Auth::user();
+        $box = $this->storageBoxRepository->getById($boxId);
+        $volumeAvailable = $this->memberStorage->volumeAvailable();
+
+        return \View::make('storage_boxes.show')
+        ->with('user', $user)
+        ->with('volumeAvailable', $volumeAvailable)
+        ->with('box', $box)
+        ->with('memberList', $memberList);
     }
 
 
