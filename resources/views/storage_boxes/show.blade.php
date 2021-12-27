@@ -18,7 +18,7 @@
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
-                                        🟡 Claimed {{$box->user->name}}
+                                        🟡 Claimed 
                                     @else
                                         ⚠️ Member left
                                     @endif
@@ -31,6 +31,12 @@
                                 @endif
 
                             </h2>
+                            <h4>
+                                This space has been claimed by
+                            @if($box->user && $box->user->active)
+                                `{{$box->user->name}}`
+                            @endif
+                            </h4>
                         </div>
                         <div class="col-md-6">
                             <h4>QR code for storage location {{ $box->id }}</h4>
