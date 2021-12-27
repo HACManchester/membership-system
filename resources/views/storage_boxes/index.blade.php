@@ -51,19 +51,13 @@
 
     </div>
 
-@if (Auth::user()->hasRole('storage'))
-<div class="well">
-    When marking a space as returned please make sure shelf is clear.
-</div>
-@endif
-
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
             <th>Location</th>
             <th>Member</th>
-            <th></th>
+            <th>Message</th>
             @if (Auth::user()->hasRole('storage'))
             <th>Admin</th>
             @endif
@@ -77,10 +71,10 @@
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
                 @if($box->user && !$box->user->active)
-                    Member left - box to be reclaimed
+                    ⚠️ Member left
                 @elseif (($volumeAvailable >= $box->size) && !$box->user)
                     @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
-                        ⛔ Unclaimable - Old storage or you don't have permission
+                        ⛔ Not available to be claimed
                     @else
                         {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                         {!! Form::hidden('user_id', Auth::user()->id) !!}
@@ -96,6 +90,12 @@
                         {!! Form::hidden('user_id', '') !!}
                         {!! Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) !!}
                         {!! Form::close() !!}
+
+                        {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes.update', $box->id])) !!}
+                        {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+                        {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                        {!! Form::close() !!}
+
                     @endif
                 </td>
             @endif
