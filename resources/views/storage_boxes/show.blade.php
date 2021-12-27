@@ -8,30 +8,38 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
-                <div class="panel-header">
+                <div class="panel-heading">
                     View Box Information
                 </div>
                 <div class="panel-body">
-                    <h2>📦 Storage Location {{ $box->location }}</h2>
-                    <small>(#{{ $box->id }})</small>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>📦 Storage Location {{ $box->location }}</h2>
+                            <small>(#{{ $box->id }})</small>
 
-                    @if($box->user && !$box->user->active)
-                    ⚠️ Member left
-                    @elseif($box->user && $box->user->active)
-                    <h4>Claimed by {{ $box->userId }}</h4>
-                    @elseif (($volumeAvailable >= $box->size) && !$box->user)
-                        @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
-                            ⛔ Not available to be claimed
-                        @else
-                            {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
-                            {!! Form::hidden('user_id', Auth::user()->id) !!}
-                            {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
-                            {!! Form::close() !!}
-                        @endif
-                    @endif
+                            @if($box->user && !$box->user->active)
+                            ⚠️ Member left
+                            @elseif($box->user && $box->user->active)
+                            <h4>Claimed by {{ $box->userId }}</h4>
+                            @elseif (($volumeAvailable >= $box->size) && !$box->user)
+                                @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
+                                    ⛔ Not available to be claimed
+                                @else
+                                    {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
+                                    {!! Form::hidden('user_id', Auth::user()->id) !!}
+                                    {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
+                                    {!! Form::close() !!}
+                                @endif
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <h4>QR code</h4>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
-        </div>
+            </div>
     </div>
     <div class="row">
         @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
