@@ -83,8 +83,8 @@
                     @endif
                 @endif
             </td>
-            @if (Auth::user()->hasRole('storage'))
-                <td>
+            @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('storage'))
+                <td style="background:repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
                     @if($box->user)
                         {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                         {!! Form::hidden('user_id', '') !!}
