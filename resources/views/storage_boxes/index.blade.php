@@ -89,14 +89,13 @@
                         {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                         {!! Form::hidden('user_id', '') !!}
                         {!! Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) !!}
-                        {!! Form::close() !!}
-
-                        {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes.update', $box->id])) !!}
-                        {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                        {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
-                        {!! Form::close() !!}
-
+                        {!! Form::close() !!}                        
                     @endif
+                
+                    {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes.update', $box->id])) !!}
+                    {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+                    {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                    {!! Form::close() !!}
                 </td>
             @endif
         </tr>
