@@ -66,7 +66,7 @@
 @foreach ($storageBoxes as $box)
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
-            <td><a href="/{{$box->id}}">{{ $box->id }}</a></td>
+            <td><a href="{{$box->id}}">{{ $box->id }}</a></td>
             <td>{{ $box->location }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
@@ -84,24 +84,7 @@
                 @endif
             </td>
             @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
-                <td style="background:repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
-                    <div class="row">
-                        <div class="col-md-3">
-                            @if($box->user)
-                                {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
-                                {!! Form::hidden('user_id', '') !!}
-                                {!! Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) !!}
-                                {!! Form::close() !!}                        
-                            @endif
-                        </div>
-                        <div class="col-md-9">
-                            {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id])) !!}
-                            {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
-                            {!! Form::close() !!}
-                        </div>
-                    </div>
-                </td>
+                <a href="{{ $box->id }}">Admin</a>
             @endif
         </tr>
     </tbody>
