@@ -66,7 +66,7 @@
 @foreach ($storageBoxes as $box)
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
-            <td><a href="{{$box->id}}">{{ $box->id }}</a></td>
+            <td><a href="/storage_boxes/{{$box->id}}">{{ $box->id }}</a></td>
             <td>{{ $box->location }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
@@ -84,7 +84,7 @@
                 @endif
             </td>
             @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
-                <a href="{{ $box->id }}">Admin</a>
+                <td><a href="storage_boxes/{{ $box->id }}">Admin</a></td>
             @endif
         </tr>
     </tbody>
