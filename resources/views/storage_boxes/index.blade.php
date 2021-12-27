@@ -66,7 +66,7 @@
 @foreach ($storageBoxes as $box)
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
-            <td>{{ $box->id }}</td>
+            <td><a href="/{{$box->id}}">{{ $box->id }}</a></td>
             <td>{{ $box->location }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
             <td>
