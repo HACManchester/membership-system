@@ -9,9 +9,10 @@
     <div class="row">
     <div class="col-md-6">
             <div class="well">
-                Large Project Storage is limited in the Space. Please check to see if there is space available before leaving projects in the Space. <br> <br>
-                Anyone leaving a large project outwith of Large Project Storage will be deemed to be in breach of the Members Storage Rules and appropirate action will be taken 
-                <br />
+                <h3>⚠️ Coming Soon - self serve large project storage</h3>
+                Large Project Storage is limited in the space and can be found in the front right corner of the space.<br/>
+                Only projects which are being worked on can be stored here, and large projects left in the space is a breach of rules.<br/>
+                Soon, and all members will be notified when, it'll be neccessary to log what is stored on here. For the moment, print a Do Not Hack (DNH) label and fix it to your item. These can be printed on the registration computer.
             </div>
             
         </div>
@@ -32,30 +33,15 @@
                         
                     </ul>
                     <p>
-                    @if ($boxesTaken >= 1)
-                        You have claimed your maximum Large Project storage allowance <br />
-                    @endif
-                                           <strong> Your large project storage will expire {{ $box->expires_at }} .</strong>
+                        @if ($boxesTaken >= 1)
+                            You have claimed your maximum Large Project storage allowance <br />
+                        @endif
+                        <strong> ⚠️Your large project storage will expire {{ $box->expires_at }} ⚠️</strong>
                     </p>
                 @endif
 
                 @if ($boxesTaken < 1)
                     You don't currently have any Large Project Storage registered<br />
-                          
-                    <p>
-                    
-                @endif
-                
-                @if ($canPayMore)
-                    <p>
-                    If you wish to claim @if ($boxesTaken > 0) another @else a @endif box you will need to claim a space by clicking claim now
-                    </p>
-
-                    <div class="paymentModule" data-reason="storage-box" data-display-reason="Large Project Storage" data-button-label="Claim Now" data-methods="balance" data-amount="0"></div>
-
-                @endif
-                @if ($moneyAvailable > 0)
-                    To claim a box click claim next to the storage space you want below, you should probably make sure it is empty before you do this.
                 @endif
 
             </div>
@@ -64,17 +50,11 @@
 
     </div>
 
-@if (Auth::user()->hasRole('storage'))
-<div class="well">
-    When marking an area as free please make sure space is clear
-</div>
-@endif
 
 <table class="table">
     <thead>
         <tr>
-            <th>Location ID</th>
-            <th>Storage</th>
+            <th>Item</th>
             <th>Member</th>
             <th>Expires</th>
             <th></th>
@@ -86,9 +66,14 @@
 @foreach ($storageBoxes as $box)
     <tbody>
         <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
-            <td>{{ $box->id }}</td>
-            <td>Large</td>
-            <td>{{ $box->user->name or 'Available' }}</td>
+            <td>Item description</td>
+            <td>
+                @if($box->user)
+                    <a href="/members/{{ $box->user->profile()->id }}">{{ $box->user->name }}</a>
+                @else
+
+                @endif
+            </td>
             <td>{{ $box->expires_at}}</td>
             <td>
                 @if($box->user && !$box->user->active)
