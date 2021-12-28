@@ -21,7 +21,7 @@
         padding: 0;
     }
 
-    .panel-body {
+    .print-border {
         border: 5px solid black;
         border-radius: 10px;
     }
@@ -36,13 +36,13 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 print-border">
                             <h1>📦 Location {{ $box->location }}</h2>
                             <h2>#️⃣ ID {{ $box->id }}</h2>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
-                                        <span class="no-print">🟡</span> Claimed 
+                                        <span class="no-print">🟡</span> Claimed by `{{$box->user->name}}`
                                     @else
                                         <span class="no-print">⚠️</span> Member left
                                     @endif
@@ -57,8 +57,8 @@
                             </h2>
                             @if($box->user && $box->user->active)
                                 <h4>
-                                    This space has been claimed by
-                                    `{{$box->user->name}}`
+                                    `{{$box->user->name}}` can be found in the membership system under
+                                    this username or ID {{ $box->user->id }}
                                 </h4>
                             @endif
                         </div>
