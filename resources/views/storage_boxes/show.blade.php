@@ -35,14 +35,14 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
-                <div class="panel-heading">
+                <div class="panel-heading no-print">
                     Storage Box Information
                 </div>
                 <div class="panel-body print-border">
                     <div class="row">
                         <div class="col-xs-6 print-border">
-                            <h1>📦 Location {{ $box->location }}</h2>
-                            <h2>#️⃣ ID {{ $box->id }}</h2>
+                            <h1>📦 Location {{ $box->location }} (#{{ $box->id }})</h2>
+                            <h2>🙂 {{$box->user->name}} (#{{ $box->user->id }}) </h2>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
@@ -59,12 +59,6 @@
                                 @endif
 
                             </h2>
-                            @if($box->user && $box->user->active)
-                                <h4>
-                                    `{{$box->user->name}}` can be found in the membership system under
-                                    this username or ID {{ $box->user->id }}
-                                </h4>
-                            @endif
                         </div>
                         <div class="col-xs-6">
                             <span class="no-print">
