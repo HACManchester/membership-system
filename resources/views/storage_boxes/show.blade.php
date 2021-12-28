@@ -5,6 +5,24 @@
 @stop
 
 @section('content')
+<style>
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+
+    .mainSidenav, nav, header {
+        display: none !important;
+    }
+
+    #bodyWrap {
+        padding: 0;
+    }
+}
+</style>
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
@@ -14,19 +32,20 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h1>📦 Storage Location {{ $box->location }}</h2>
+                            <h1>📦 Location {{ $box->location }}</h2>
+                            <h4>#️⃣ ID {{ $box->location }}</h4>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
-                                        🟡 Claimed 
+                                        <span class="no-print">🟡</span> Claimed 
                                     @else
-                                        ⚠️ Member left
+                                        <span class="no-print">⚠️</span> Member left
                                     @endif
                                 @else
                                     @if ($box->location == "Old Members Storage")
-                                        ⛔ Not available to be claimed
+                                        <span class="no-print">⛔</span> Not available to be claimed
                                     @else
-                                        🟢 Available
+                                        <span class="no-print">🟢</span> Available
                                     @endif
                                 @endif
 
@@ -39,16 +58,20 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <h4>QR code for storage location {{ $box->id }}</h4>
+                            <span class="no-print">
+                                <h4>Print this page to generate a label for this storage location</h4>
+                            </span>
+                            <h4>Scan this label to varify the latest information on this storage location</h4>
                             <img src="{{ $QRcodeURL }}">
                         </div>
                     </div>
                     
                 </div>
             </div>
-            </div>
+        </div>
     </div>
     @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
+    <span class="no-print">
     <h3>Admin</h3>
     <div class="row">
             <div class="col-md-12 well" style="background:repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
@@ -70,5 +93,6 @@
                 </div>
             </div>    
         </div>
+    </span>
     @endif
 @stop
