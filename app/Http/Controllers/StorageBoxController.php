@@ -115,7 +115,7 @@ class StorageBoxController extends Controller
         $volumeAvailable = $this->memberStorage->volumeAvailable();
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        $thisURL = urlencode(url()->current());
+        $thisURL = urlencode(url('storage_boxes/show'));
         $QRcodeURL = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={$thisURL}&color=005";
 
         return \View::make('storage_boxes.show')
