@@ -69,7 +69,7 @@
             <td>Item description</td>
             <td>
                 @if($box->user)
-                    <a href="/members/{{ $box->user->profile()->id }}">{{ $box->user->name }}</a>
+                    <a href="{{ route('members.show', [$box->user->id]) }}">{{ $box->user->name }}</a>
                 @else
 
                 @endif
