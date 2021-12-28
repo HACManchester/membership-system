@@ -40,6 +40,7 @@
                         </div>
                         <div class="col-md-6">
                             <h4>QR code for storage location {{ $box->id }}</h4>
+                            <img src="{{ $QRcodeURL }}">
                         </div>
                     </div>
                     
