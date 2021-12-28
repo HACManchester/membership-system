@@ -37,6 +37,10 @@
     img {
         width: 50%;
     }
+
+    .col-sm-6 {
+        width: initial;
+    }
 }
 </style>
 
