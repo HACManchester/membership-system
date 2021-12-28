@@ -41,12 +41,12 @@
                 <div class="panel-body print-border">
                     <div class="row">
                         <div class="col-xs-6 print-border">
-                            <h1>📦 Location {{ $box->location }} (#{{ $box->id }})</h2>
-                            <h2>🙂 {{$box->user->name}} (#{{ $box->user->id }}) </h2>
+                            <h1>📦 {{ $box->location }} <small>(#{{ $box->id }})</small></h1>
+                            <h1>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h1>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
-                                        <span class="no-print">🟡</span> Claimed by `{{$box->user->name}}`
+                                        <span class="no-print">🟡</span> Claimed
                                     @else
                                         <span class="no-print">⚠️</span> Member left
                                     @endif
