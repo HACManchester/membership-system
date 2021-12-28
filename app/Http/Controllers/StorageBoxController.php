@@ -110,12 +110,14 @@ class StorageBoxController extends Controller
     {
         $user = \Auth::user();
         $box = $this->storageBoxRepository->getById($boxId);
+
+        if(!box) die();
         //Setup the member storage object
         $this->memberStorage->setMember(\Auth::user()->id);
         $volumeAvailable = $this->memberStorage->volumeAvailable();
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        $thisURL = urlencode(url('storage_boxes.show', 123));
+        $thisURL = urlencode(url('storage_boxes', $boxId));
         $QRcodeURL = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={$thisURL}&color=005";
 
         return \View::make('storage_boxes.show')
