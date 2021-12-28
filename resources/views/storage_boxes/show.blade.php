@@ -70,7 +70,9 @@
                                     @endif
                                     
                             </h2>
-                            <h2>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h2>
+                            @if($box->user && $box->user->active)
+                                <h2>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h2>
+                            @endif
                         </div>
                         <div class="col-sm-6">
                             <span class="no-print">
