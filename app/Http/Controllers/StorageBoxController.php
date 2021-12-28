@@ -174,9 +174,9 @@ class StorageBoxController extends Controller
 
     private function selfClaimBox($boxId, $userId)
     {
-        $permittedUser = \Auth::user()->isAdmin() || Auth::user()->hasRole('storage');
+        $adminUser = \Auth::user()->isAdmin() || Auth::user()->hasRole('storage');
 
-        if ($userId != \Auth::user()->id && !$permittedUser) {
+        if ($userId != \Auth::user()->id && !$adminUser) {
             throw new \BB\Exceptions\AuthenticationException();
         }
 
@@ -187,7 +187,7 @@ class StorageBoxController extends Controller
         $box = $this->storageBoxRepository->getById($boxId);
 
         //Make sure the box is available
-        if ( !$box->available && !$permittedUser) {
+        if ( !$box->available && !$adminUser) {
             throw new \BB\Exceptions\ValidationException();
         }
 
@@ -204,7 +204,7 @@ class StorageBoxController extends Controller
        //     throw new \BB\Exceptions\ValidationException("You need to pay the deposit first");
        // }
 
-        $this->storageBoxRepository->update($boxId, ['user_id'=>\Auth::user()->id]);
+        $this->storageBoxRepository->update($boxId, ['user_id'=>$userId]);
     }
 
 

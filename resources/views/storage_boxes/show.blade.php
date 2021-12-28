@@ -94,6 +94,7 @@
             <div class="col-md-12 well" style="background:repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
                 <div class="row">
                     <div class="col-md-6">
+                        <h4>Reclaim this space</h4>
                         @if($box->user)
                             {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) !!}
                             {!! Form::hidden('user_id', '') !!}
@@ -102,6 +103,7 @@
                         @endif
                     </div>
                     <div class="col-md-6">
+                        <h4>Allocate this space to a user</h4>
                         {!! Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id])) !!}
                         {!! Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
                         {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
