@@ -25,13 +25,17 @@ class CheckLeavingUsers
         //Fetch and check over active users which have a status of leaving
         $users = User::leaving()->notSpecialCase()->get();
         foreach ($users as $user) {
-            if ($user->subscription_expires->lt($today)) {
-                //User has passed their expiry date
-
-                //set the status to left and active to false
-                $this->userRepository->memberLeft($user->id);
-
-                //an email will be sent by the user observer
+            if($user->subscription_expires){
+                if ($user->subscription_expires->lt($today)) {
+                    //User has passed their expiry date
+                    
+                    //set the status to left and active to false
+                    $this->userRepository->memberLeft($user->id);
+                    
+                    //an email will be sent by the user observer
+                }else{
+                    \Log::error("User marked as active without an expiry date!");
+                }
             }
 
         }
