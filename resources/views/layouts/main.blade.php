@@ -33,7 +33,7 @@
 </head>
 <body class="{{ $body_class or '' }}">
 <style>
-    body {
+    html {
         background-color: white;
         background-image: linear-gradient(180deg, #f5f7fa 30%, #c3cfe2 100%);
         background-attachment: fixed;
