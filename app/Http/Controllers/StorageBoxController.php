@@ -111,7 +111,6 @@ class StorageBoxController extends Controller
         $user = \Auth::user();
         $box = $this->storageBoxRepository->getById($boxId);
 
-        if(!box) die();
         //Setup the member storage object
         $this->memberStorage->setMember(\Auth::user()->id);
         $volumeAvailable = $this->memberStorage->volumeAvailable();
