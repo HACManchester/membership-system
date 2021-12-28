@@ -29,6 +29,14 @@
     .panel, .panel-heading{
         border: none;
     }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    img {
+        width: 50%;
+    }
 }
 </style>
 
@@ -64,7 +72,7 @@
                             <span class="no-print">
                                 <h4>Print this page to generate a label for this storage location</h4>
                             </span>
-                            <h4>Scan this label to varify the latest information on this storage location</h4>
+                            <h4>Scan to verify</h4>
                             <img src="{{ $QRcodeURL }}">
                         </div>
                     </div>
