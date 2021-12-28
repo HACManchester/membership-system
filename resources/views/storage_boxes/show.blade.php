@@ -25,6 +25,10 @@
         border: 5px solid black;
         border-radius: 10px;
     }
+
+    .panel, .panel-heading{
+        border: none;
+    }
 }
 </style>
 
@@ -34,9 +38,9 @@
                 <div class="panel-heading">
                     Storage Box Information
                 </div>
-                <div class="panel-body">
+                <div class="panel-body print-border">
                     <div class="row">
-                        <div class="col-md-6 print-border">
+                        <div class="col-xs-6 print-border">
                             <h1>📦 Location {{ $box->location }}</h2>
                             <h2>#️⃣ ID {{ $box->id }}</h2>
                             <h2>
@@ -62,7 +66,7 @@
                                 </h4>
                             @endif
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xs-6">
                             <span class="no-print">
                                 <h4>Print this page to generate a label for this storage location</h4>
                             </span>
