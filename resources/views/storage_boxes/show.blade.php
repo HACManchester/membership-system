@@ -41,24 +41,24 @@
                 <div class="panel-body print-border">
                     <div class="row">
                         <div class="col-xs-6 print-border">
-                            <h1>📦 {{ $box->location }} <small>(#{{ $box->id }})</small></h1>
-                            <h1>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h1>
+                            <h2>📦 {{ $box->location }} <small>(#{{ $box->id }})</small></h2>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
                                         <span class="no-print">🟡</span> Claimed
                                     @else
                                         <span class="no-print">⚠️</span> Member left
-                                    @endif
+                                        @endif
                                 @else
-                                    @if ($box->location == "Old Members Storage")
+                                @if ($box->location == "Old Members Storage")
                                         <span class="no-print">⛔</span> Not available to be claimed
                                     @else
-                                        <span class="no-print">🟢</span> Available
+                                    <span class="no-print">🟢</span> Available
                                     @endif
-                                @endif
-
+                                    @endif
+                                    
                             </h2>
+                            <h2>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h2>
                         </div>
                         <div class="col-xs-6">
                             <span class="no-print">
