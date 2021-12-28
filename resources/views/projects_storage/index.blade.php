@@ -7,16 +7,16 @@
 @section('content')
 
     <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
             <div class="well">
                 <h3>⚠️ Coming Soon - self serve large project storage</h3>
-                Large Project Storage is limited in the space and can be found in the front right corner of the space.<br/>
-                Only projects which are being worked on can be stored here, and large projects left in the space is a breach of rules.<br/>
-                Soon, and all members will be notified when, it'll be neccessary to log what is stored on here. For the moment, print a Do Not Hack (DNH) label and fix it to your item. These can be printed on the registration computer.
+                <li>Large Project Storage is limited in the space and can be found in the front right corner of the space.</li>
+                <li>Only projects which are being worked on can be stored here, and large projects left in the space is a breach of rules.</li>
+                <li>Soon, and all members will be notified when, it'll be neccessary to log what is stored on here. For the moment, print a Do Not Hack (DNH) label and fix it to your item. These can be printed on the registration computer.</li>
             </div>
             
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="well">
                 @if ($boxesTaken > 0)
                     You have the following Large Project storage, (please make sure a DNH label is on boxes/loose material)<br />
