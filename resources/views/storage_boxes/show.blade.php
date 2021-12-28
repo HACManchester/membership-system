@@ -20,6 +20,11 @@
     #bodyWrap {
         padding: 0;
     }
+
+    .panel-body {
+        border: 5px solid black;
+        border-radius: 10px;
+    }
 }
 </style>
 
@@ -33,7 +38,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h1>📦 Location {{ $box->location }}</h2>
-                            <h4>#️⃣ ID {{ $box->location }}</h4>
+                            <h2>#️⃣ ID {{ $box->id }}</h2>
                             <h2>
                                 @if($box->user)
                                     @if($box->user->active)
