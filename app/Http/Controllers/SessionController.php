@@ -66,7 +66,7 @@ class SessionController extends Controller
             return redirect()->to('sso/confirm');
         }
         return \View::make('session.create')
-            ->with('sso', $sso)
+            ->with('sso', $sso || false)
             ->with('sig', $sig);
 	}
 

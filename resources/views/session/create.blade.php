@@ -12,8 +12,7 @@ Login
         {!! Form::open(array('route' => 'session.store', 'class'=>'')) !!}
 
         @if($sso)
-            {!! Form::hidden('sso', '1') !!}
-            {!! Form::hidden('payload', $payload) !!}
+            {!! Form::hidden('sso', $sso) !!}
             {!! Form::hidden('sig', $sig) !!}
         @endif
 
