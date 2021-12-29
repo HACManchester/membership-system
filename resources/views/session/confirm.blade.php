@@ -13,7 +13,7 @@ Login To Another Service
 
         <div class="row">
             <div class="col-xs-12">
-                <h1>You're about to login to the Forum</h1>
+                <h3>Confirm you're happy to log into another service</h3>
             </div>
         </div>
 
