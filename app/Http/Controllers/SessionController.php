@@ -27,7 +27,7 @@ class SessionController extends Controller
             return redirect()->to('account/' . \Auth::id());
         }
         return \View::make('session.create')
-            ->wit('sso', false);
+            ->with('sso', false);
 	}
 
 
