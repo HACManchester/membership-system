@@ -8,7 +8,7 @@ Login
 
 
     <div class="login-container col-xs-12 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4"
-    style="@if(sso) background: #ffc; @endif">
+    style="@if($sso) background: #ffc; @endif">
         {!! Form::open(array('route' => 'session.store', 'class'=>'')) !!}
 
         @if($sso)
