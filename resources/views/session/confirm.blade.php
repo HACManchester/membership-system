@@ -18,8 +18,10 @@ Login To Another Service
         </div>
 
         <div class="alert alert-success alert-dismissable">
-            🔒 The Forum is part of Hackspace Manchester<br/>
-            ✉️ You'll be logged in under {{ $user->email }}.<br/>
+            🔒 <br/>
+            Logging into the forum <br/>
+            ✉️<br/>
+            You'll be logged in under {{ $user->email }}.<br/>
             <small>
                 Not the same email as on the forum? This can be harmonised by reaching out to an admin or board member on Telegram.
             </small>
@@ -29,7 +31,7 @@ Login To Another Service
             Continuing will redirect you back to `list.hacman.org.uk`.
         </p>
         <div class="row">
-            {{!! Form::submit('Continue') !!}}
+            {!! Form::submit('Continue', array('class'=>'btn btn-primary')) !!}
         </div>
 
         {!! Form::close() !!}
