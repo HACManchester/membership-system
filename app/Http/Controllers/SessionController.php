@@ -87,9 +87,19 @@ class SessionController extends Controller
 
             $user = Auth::user();
 
+            /**
+             * This is what's required back by Discourse
+             */
+            $userData = base64_encode(http_build_query([
+                'name'          => $user->given_name . " " . $user->family_name,
+                'email'         => $user->email,
+                'external_id'   => $user->id,
+                'username'      => $user->name
+            ]));
+
             return \View::make('session.confirm')
-                ->with('sso', $input['sso'])
-                ->with('sig', $input['sig'])
+                ->with('sso', $userData)
+                ->with('sig', hash_hmac('sha256', $userData, env('DISCOURSE_SSO_SECRET'), false))
                 ->with('user', $user);
         }
 
