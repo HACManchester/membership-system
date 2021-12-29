@@ -49,6 +49,27 @@ class SessionController extends Controller
         return redirect()->back()->withInput();
 	}
 
+    public function sso_confirm()
+	{
+        if ( ! Auth::guest()) {
+            return redirect()->to('account/' . \Auth::id());
+        }
+        return \View::make('session.sso.confirm');
+	}
+
+    public function sso_login()
+	{
+        $sso = \Request::get('sso');
+        $sig = \Request::get('sig');
+
+        if ( ! Auth::guest()) {
+            return redirect()->to('sso/confirm');
+        }
+        return \View::make('session.create')
+            ->with('sso', $sso)
+            ->with('sig', $sig);
+	}
+
     /**
 	 * SSO validate login
 	 *

@@ -20,7 +20,10 @@ Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 
 Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store']);
 Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);
 Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'ReminderController@postReset']);
-Route::get('sso', ['uses' => 'SessionController@sso']);
+
+Route::get('sso/auth', ['uses' => 'SessionController@sso']);
+Route::get('sso/login', ['uses' => 'SessionController@sso_login']);
+Route::post('sso/confirm', ['uses' => 'SessionController@sso_confirm']);
 
 
 
