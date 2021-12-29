@@ -84,9 +84,13 @@ class SessionController extends Controller
 
 
         if ( ! Auth::guest()) {
+
+            $user = Auth::user();
+
             return \View::make('session.confirm')
                 ->with('sso', $input['sso'])
-                ->with('sig', $input['sig']);
+                ->with('sig', $input['sig'])
+                ->with('user', $user);
         }
 
         return \View::make('session.create')
