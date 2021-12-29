@@ -10,7 +10,7 @@ Login To Another Service
     <div class="login-container col-xs-12 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4"
         style="border-color: yellow">
         {!! Form::open(array(
-            'route' => 'https://list.hacman.org.uk/sso_login/', 
+            'url' => 'https://list.hacman.org.uk/sso_login/', 
             'method' => 'GET'
         )) !!}
 
