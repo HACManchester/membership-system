@@ -52,10 +52,10 @@ class SessionController extends Controller
 
     public function sso_confirm()
 	{
-        if ( ! Auth::guest()) {
-            return redirect()->to('account/' . \Auth::id());
+        if ( Auth::guest()) {
+            return \View::make('session.error');
         }
-        return \View::make('session.sso.confirm');
+        return \View::make('session.confirm');
 	}
 
     public function sso_login()
@@ -63,11 +63,16 @@ class SessionController extends Controller
         $sso = \Request::get('sso');
         $sig = \Request::get('sig');
 
+        if(!$sso || !$sig){
+            return \View::make('session.error');
+        }
+
         if ( ! Auth::guest()) {
             return redirect()->to('sso/confirm');
         }
+        
         return \View::make('session.create')
-            ->with('sso', $sso || false)
+            ->with('sso', $sso)
             ->with('sig', $sig);
 	}
 
