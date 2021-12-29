@@ -11,8 +11,12 @@ Login To Another Service
         style="border-color:red">
         <div class="row">
             <div class="col-xs-12">
-                <h1>⛔ There's been an error</h1>
+                <h1>⛔</h1>
+                <h3>There has been an error.</h3>
                 <h3>Process aborted.</h3>
+                @if(isset($code))
+                    <b>Error code {{ $code }}</b>
+                @endif
             </div>
         </div>
     </div>

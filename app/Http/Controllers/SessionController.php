@@ -60,17 +60,33 @@ class SessionController extends Controller
 
     public function sso_login()
 	{
-        $sso = \Request::get('sso');
-        $sig = \Request::get('sig');
+        $input = \Input::only('sso', 'sig');
 
-        if(!$sso || !$sig){
-            return \View::make('session.error');
+        if(empty($input['sso']) || empty($input['sig'])){
+            return \View::make('session.error')
+                ->with('code', '0');
         }
+
+
+         /**
+         * The sso input is signed with sig
+         * So to verify the signature, we hash with our shared key
+         * and check it matches.
+         */
+        $calculatedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false);
+
+        if( $calculatedHash != $input['sig'] ){
+            return \View::make('session.error')
+                ->with('code', '1');
+        } 
+
 
         if ( ! Auth::guest()) {
-            return redirect()->to('sso/confirm');
+            return \View::make('session.confirm')
+                ->with('sso', $sso)
+                ->with('sig', $sig);
         }
-        
+
         return \View::make('session.create')
             ->with('sso', $sso)
             ->with('sig', $sig);

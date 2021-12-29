@@ -23,7 +23,7 @@ Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'Remin
 
 Route::get('sso/auth', ['uses' => 'SessionController@sso']);
 Route::get('sso/login', ['uses' => 'SessionController@sso_login']);
-Route::post('sso/confirm', ['uses' => 'SessionController@sso_confirm']);
+Route::get('sso/confirm', ['uses' => 'SessionController@sso_confirm']);
 
 
 
