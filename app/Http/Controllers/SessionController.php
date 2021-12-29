@@ -85,13 +85,13 @@ class SessionController extends Controller
 
         if ( ! Auth::guest()) {
             return \View::make('session.confirm')
-                ->with('sso', $sso)
-                ->with('sig', $sig);
+                ->with('sso', $input['sso'])
+                ->with('sig', $input['sig']);
         }
 
         return \View::make('session.create')
-            ->with('sso', $sso)
-            ->with('sig', $sig);
+            ->with('sso', $input['sso'])
+            ->with('sig', $input['sig']);
 	}
 
     /**
