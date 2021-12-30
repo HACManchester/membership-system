@@ -15,7 +15,13 @@ Login To Another Service
                 <h3>There has been an error.</h3>
                 <h3>Process aborted.</h3>
                 @if(isset($code))
-                    <b>Error code {{ $code }}</b>
+                    <p>Error code {{ $code }}</p>
+
+                    @if($code == '2')
+                        <b>Your email address is not verified. Verify it first before logging into other services.</b>
+                        <p>To verify it, click "Your Membership" in the left-hand menu, then in the notification, click the link to re-send the verification email</p>
+                        <p>Problems? Email the board or shout out on Telegram</p>
+                    @endif
                 @endif
             </div>
         </div>

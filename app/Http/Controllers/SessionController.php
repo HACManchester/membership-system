@@ -92,6 +92,11 @@ class SessionController extends Controller
 
             $user = Auth::user();
 
+            if(!$user->email_verified){  
+                return \View::make('session.error')
+                    ->with('code', '2');
+            }
+                
             $userData = base64_encode(http_build_query([
                 'nonce'         => $nonce,
                 'name'          => $user->given_name . " " . $user->family_name,
