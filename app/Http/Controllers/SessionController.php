@@ -133,9 +133,6 @@ class SessionController extends Controller
             'username' => $forumUsername,
         );
 
-
-        die(var_dump($sso_params));
-
         // Convert the SSO parameters into the SSO payload and generate the SSO signature.
         $sso_payload = base64_encode( http_build_query( $sso_params ) );
         $sig = hash_hmac( 'sha256', $sso_payload, env('DISCOURSE_SSO_SECRET') );
