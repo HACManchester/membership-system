@@ -143,14 +143,15 @@ class SessionController extends Controller
             'sig' => $sig,
         );
 
-        $client = new HttpClient;
-        $res = $client->request('POST', $url, [
+        $client = new HttpClient();
+        return $client->request('POST', $url, [
             'query' => $post_fields,
             'headers' => [
                 'Api-Key' => env('DISCOURSE_API_KEY'),
                 'Api-Username' => env('DISCOURSE_API_USERNAME'),
             ]
         ]);
+
     }
 
 	/**
