@@ -38,7 +38,7 @@ class SessionController extends Controller
 	 */
 	public function store()
 	{
-        $input = \Input::only('email', 'password', 'sso', 'sig');
+        $input = \Input::only('email', 'password');
 
         $this->loginForm->validate($input);
 
