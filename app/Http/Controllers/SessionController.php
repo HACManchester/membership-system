@@ -144,13 +144,15 @@ class SessionController extends Controller
         );
 
         $client = new HttpClient;
-        return $client->request('POST', $url, [
+        $client->request('POST', $url, [
             'query' => $post_fields,
             'headers' => [
                 'Api-Key' => env('DISCOURSE_API_KEY'),
                 'Api-Username' => env('DISCOURSE_API_USERNAME'),
             ]
-        ]);
+        ])->then(function($res){
+            return JSON.stringify($res);
+        });
 
     }
 
