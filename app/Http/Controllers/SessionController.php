@@ -143,7 +143,7 @@ class SessionController extends Controller
             'sig' => $sig,
         );
 
-        $client = new HttpClient();
+        $client = new HttpClient;
         return $client->request('POST', $url, [
             'query' => $post_fields,
             'headers' => [
