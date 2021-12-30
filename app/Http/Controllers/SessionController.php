@@ -3,6 +3,7 @@
 use BB\Exceptions\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client as HttpClient;
 
 class SessionController extends Controller
 {
@@ -118,89 +119,42 @@ class SessionController extends Controller
 	}
 
     /**
-	 * SSO validate login
-	 *
-	 * @return Response
-	 */
-	// public function sso()
-	// {
-    //     $input = \Input::only('sso', 'sig');
+     * Say a user has a different email on the forum
+     * Sync will tell forum that user `forumUsername` belong to `membershipSysUsername`
+     * It does this by adding external_id to the forum user's account
+     * This external ID is the ID in the membership system
+     * That way, they can log in with different emails in the future.
+     */
+    public function sync($memberID, $forumUsername){
 
-    //     if(empty($input['sso']) || empty($input['sig'])){
-    //         \Log::error("SSO - 'sso' or 'sig' params not set");
-    //     }
+        // Create an array of SSO parameters.
+        $sso_params = array(
+            'external_id' => $memberID,
+            'username' => $forumUsername,
+        );
 
-    //     /**
-    //      * The sso input is signed with sig
-    //      * So to verify the signature, we hash with our shared key
-    //      * and check it matches.
-    //      */
-    //     $calculatedHash = hash_hmac('sha256', $input['sso'], env('SSO_KEY'), false);
 
-    //     if( $calculatedHash != $input['sig'] ){
-    //         \Log::error(
-    //             'SSO - Signature did not match. Calculated: ' . 
-    //             $calculatedHash . ' but received: ' .
-    //             $input['sig'] 
-    //         );
-    //         return \Response::json([
-    //             'success'=>'false', 
-    //             'message' => 'Invalid signature'
-    //         ], 403);
-    //     } else {
-    //         /**
-    //          * The sso input is a string, base64 encoded.
-    //          * e.g. "email=test@test.com&password=password"
-    //          * So we need to decode it, and put it into a variable,
-    //          * called $parsedInput.
-    //          */
-    //         parse_str(base64_decode(urldecode($input['sso'])), $parsedInput);
-            
-    //         $this->loginForm->validate($parsedInput);
+        die(var_dump($sso_params));
+        
+        // Convert the SSO parameters into the SSO payload and generate the SSO signature.
+        $sso_payload = base64_encode( http_build_query( $sso_params ) );
+        $sig = hash_hmac( 'sha256', $sso_payload, env('DISCOURSE_SSO_SECRET') );
 
-    //         if (Auth::attempt([
-    //             'email'     => $parsedInput['email'], 
-    //             'password'  => $parsedInput['password']
-    //         ], false)) {
-    //             /**
-    //              * Get the user that is returned with those credentials
-    //              */
-    //             $user = \Auth::user();
-                
-    //             if( ! $user->email_verified) {
-    //                 return \Response::json([
-    //                     'success'=>'false', 
-    //                     'message' => 'Email is not verfied - please click the link in the welcome email.'
-    //                 ], 401);
-    //             }
+        $url = 'https://list.hacman.org.uk/admin/users/sync_sso';
+        $post_fields = array(
+            'sso' => $sso_payload,
+            'sig' => $sig,
+        );
 
-    //             /**
-    //              * This is what's required back by SSO
-    //              */
-    //             $userData = base64_encode(http_build_query([
-    //                 'name'      => $user->given_name . " " . $user->family_name,
-    //                 'email'     => $user->email,
-    //                 'id'        => $user->id,
-    //                 'username'  => $user->name
-    //                 ]));
-                    
-    //             /**
-    //              * We need to sign what we return so SSO
-    //              * can validate what it receives.
-    //              */
-    //             return \Response::json([
-    //                 'success'   => 'true', 
-    //                 'response'  => $userData,
-    //                 'sig'       => hash_hmac('sha256', $userData, env('SSO_KEY'), false)
-    //             ], 200);
-    //         }
-    //     }
-
-    //     return \Response::json([
-    //         'success'=>'false', 
-    //         'message' => 'Incorrect login details'
-    //     ], 401);
-	// }
+        $client = new HttpClient;
+        $res = $client->request('POST', $url, [
+            'query' => $post_fields,
+            'headers' => [
+                'Api-Key' => env('DISCOURSE_API_KEY'),
+                'Api-Username' => env('DISCOURSE_API_USERNAME'),
+            ]
+        ]);
+    }
 
 	/**
 	 * Remove the specified resource from storage.

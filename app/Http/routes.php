@@ -22,6 +22,7 @@ Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);
 Route::post('password/reset', ['as'=>'password.reset.complete', 'uses' => 'ReminderController@postReset']);
 
 Route::get('sso/login', ['uses' => 'SessionController@sso_login']);
+Route::get('sso/sync/{accountID}/{forumUsername}', ['uses' => 'SessionController@sso_sync', 'middleware'=>'role:admin']);
 
 
 
