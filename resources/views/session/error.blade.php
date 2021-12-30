@@ -20,7 +20,7 @@ Login To Another Service
                         <b>You cannot continue as your email address is not verified.</b>
                         <hr/>
                         <b>Verify it first before logging into other services.</b>
-                        <p>To verify it, click "Your Membership" in the left-hand menu, then in the notification, click the link to re-send the verification email</p>
+                        <p>To verify it, <a href="/account/confirm-email/send">click here to re-send it</a>, then try logging in again.</p>
                         <small>Problems? Email the board or shout out on Telegram</small>
                     @endif
                 @endif
