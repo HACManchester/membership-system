@@ -38,24 +38,20 @@ class SessionController extends Controller
 	 */
 	public function store()
 	{
-        $input = \Input::only('email', 'password');
+        $input = \Input::only('email', 'password', 'sso', 'sig');
 
         $this->loginForm->validate($input);
 
         if (Auth::attempt($input, true)) {
-            return redirect()->intended('account/' . \Auth::id());
+            if($input['sso'] && $input['sig']){
+                return redirect()->intended('sso_login');
+            }else{
+                return redirect()->intended('account/' . \Auth::id());
+            }
         }
 
         \Notification::error("Invalid login details");
         return redirect()->back()->withInput();
-	}
-
-    public function sso_confirm()
-	{
-        if ( Auth::guest()) {
-            return \View::make('session.error');
-        }
-        return \View::make('session.confirm');
 	}
 
     public function sso_login()
