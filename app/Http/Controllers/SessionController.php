@@ -45,7 +45,11 @@ class SessionController extends Controller
         if (Auth::attempt($input, true)) {
 
             if(\Input::get('sso')){
-                return redirect()->intended('sso/login')->withInput();
+                return redirect(
+                    "sso/login" . 
+                    "?sso=" . \Input::get('sso') . 
+                    "&sig=" . \Input::get('sig')
+                );
             }else{
                 return redirect()->intended('account/' . \Auth::id());
             }
