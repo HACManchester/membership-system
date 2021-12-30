@@ -137,7 +137,7 @@ class SessionController extends Controller
         $sso_payload = base64_encode( http_build_query( $sso_params ) );
         $sig = hash_hmac( 'sha256', $sso_payload, env('DISCOURSE_SSO_SECRET') );
 
-        $url = 'https://list.hacman.org.uk/admin/users/sync_sso';
+        $url = 'http://list.hacman.org.uk/admin/users/sync_sso';
         $post_fields = array(
             'sso' => $sso_payload,
             'sig' => $sig,
