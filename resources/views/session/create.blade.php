@@ -21,6 +21,10 @@ Login
                 @if($sso)
                     <h1>SSO Login</h1>
                     <h4>🔒 Single Sign On for Hackspace Manchester</h4>
+                    <div class="alert alert-info">
+                        Had an account on the forum but don't have an account on the membership system?<br/>
+                        Create an <a href="/online-only">online only</a> account - no need to set up payment.
+                    </div>
                 @else
                     <h1>Login</h1>
                 @endif
