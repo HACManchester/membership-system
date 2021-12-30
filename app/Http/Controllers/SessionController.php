@@ -125,7 +125,7 @@ class SessionController extends Controller
      * This external ID is the ID in the membership system
      * That way, they can log in with different emails in the future.
      */
-    public function sync($memberID, $forumUsername){
+    public function sso_sync($memberID, $forumUsername){
 
         // Create an array of SSO parameters.
         $sso_params = array(
@@ -135,7 +135,7 @@ class SessionController extends Controller
 
 
         die(var_dump($sso_params));
-        
+
         // Convert the SSO parameters into the SSO payload and generate the SSO signature.
         $sso_payload = base64_encode( http_build_query( $sso_params ) );
         $sig = hash_hmac( 'sha256', $sso_payload, env('DISCOURSE_SSO_SECRET') );
