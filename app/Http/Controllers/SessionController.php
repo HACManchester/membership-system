@@ -43,11 +43,7 @@ class SessionController extends Controller
         $this->loginForm->validate($input);
 
         if (Auth::attempt($input, true)) {
-            if($input['sso'] && $input['sig']){
-                return redirect()->intended('sso_login');
-            }else{
-                return redirect()->intended('account/' . \Auth::id());
-            }
+            return redirect()->intended('account/' . \Auth::id());
         }
 
         \Notification::error("Invalid login details");
