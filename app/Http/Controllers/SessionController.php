@@ -71,7 +71,7 @@ class SessionController extends Controller
         // Decode SSO object from discourse and convert URL string to variables
         parse_str(base64_decode($input['sso']), $decoded);
         $nonce = $decoded['nonce'];
-        $return_url = $decoded['return_sso_url'];
+        $return_sso_url = $decoded['return_sso_url'];
 
          /**
          * The sso input is signed with sig
@@ -104,7 +104,7 @@ class SessionController extends Controller
                 ->with('sso', $userData)
                 ->with('sig', hash_hmac('sha256', $userData, env('DISCOURSE_SSO_SECRET'), false))
                 ->with('user', $user)
-                ->with('return_url', $return_url);
+                ->with('return_sso_url', $return_sso_url);
         }
 
         return \View::make('session.create')
