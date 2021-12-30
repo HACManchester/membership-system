@@ -152,7 +152,7 @@ class SessionController extends Controller
             ]
         ]);
         
-        die(var_dump($res))
+        die(var_dump($res));
         
 
     }
