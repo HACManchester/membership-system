@@ -25,12 +25,12 @@ Login To Another Service
 
         <div class="alert alert-success text-left">
             🔒 Part of Hackspace Manchester<br/>
-            💻 {{ parse_url($return_sso_url, PHP_URL_HOST) }}<br/>
+            ↪️ {{ parse_url($return_sso_url, PHP_URL_HOST) }}<br/>
             ✉️ {{ $user->email }}.<br/>
         </div>
 
         <small>
-            Not the same email? You may continue and this can later be harmonised by reaching out to an admin or board member on Telegram.
+             ℹ️ Not the same email? You may continue and this can later be harmonised by reaching out to an admin or board member on Telegram.
         </small>
 
         <br/>
