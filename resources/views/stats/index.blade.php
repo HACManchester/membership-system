@@ -10,10 +10,35 @@ Stats
 
 @section('content')
 
+<div class="row well">
+
+    <div class="col-sm-12">
+        <h3>Monthly Finance Overview</h3>
+        <p>🕖 Last updated 01/01/2022 - items marked as Ⓜ️ (Manual) are manually hardcoded as the bank does not allow automated access.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <h3 class="text-center">Incomings</h3>
+        <ul>
+            <li><b>Membership dues:</b> £{{ $expectedIncome }}</li>
+            <li><b>Other:</b> Ⓜ️£0</li>
+        </ul>    
+    </div>
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <h3 class="text-center">Outgoings</h3>
+            <ul>
+                <li><b>Rent:</b> Ⓜ️£1940</li>
+                <li><b>Elec:</b> Ⓜ️£280</li>
+                <li></li>
+            </ul>
+    </div>
+
+</div>
+
 <div class="row">
     <div class="col-sm-12 col-md-6 col-xl-4">
         <div class="well">
             <h3 class="text-center">Payment Methods</h3>
+            <p>Of the {{ $numMembers }} members, A pay by direct debit (preferred) and B pay by standing order.
             <div id="paymentMethods" style="height:400px"></div>
         </div>
     </div>

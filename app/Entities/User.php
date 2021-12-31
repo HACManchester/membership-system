@@ -310,7 +310,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function scopeActive($query)
     {
-        return $query->whereActive(true);
+        return $query
+            ->whereActive(true)
+            ->where('payment_method', '!=', '')
+            ->where('subscription_expires', '>=', date('Y-m-d'))
+            ->where('monthly_subscription', '>', 0);
     }
 
     public function scopeNotSpecialCase($query)

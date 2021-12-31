@@ -31,6 +31,8 @@ class StatsController extends Controller
     public function index()
     {
         $users = $this->userRepository->getActive();
+        $expectedIncome = 0;
+
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,
@@ -38,6 +40,8 @@ class StatsController extends Controller
             'standing-order'        => 0
         ];
         foreach ($users as $user) {
+            $expectedIncome = $expectedIncome + $user->monthly_subscription;
+            
             if (isset($paymentMethodsNumbers[$user->payment_method])) {
                 $paymentMethodsNumbers[$user->payment_method]++;
             }
@@ -114,6 +118,7 @@ class StatsController extends Controller
         return \View::make('stats.index')
             ->with('averageMonthlyAmount', round($averageMonthlyAmount))
             ->with('numMembers', $numMembers)
+            ->with('expectedIncome', $expectedIncome)
             ->with('numActiveUsers', $numActiveUsers)
             ->with('numActiveUsersQuarter', $numActiveUsersQuarter)
             ->with('paymentMethods', $paymentMethods)
