@@ -8,7 +8,22 @@
             </div>
             <div class="panel-body" style="background: repeating-linear-gradient( 45deg, #fafafa, #fafafa 40px, #fff 40px, #fff 80px )">
                 <div class="row"> <!-- Start Row -->
-
+                    <div class="col-md-12">
+                        <li>
+                            <b>Name:</b> {{ $user->given_name }} {{ $user->family_name }}
+                        </li>
+                        <li>
+                            <b>Email:</b> {{ $user->email }} 
+                            <small>(
+                                @if($user->email_verified)
+                                    Email verified
+                                @else
+                                    Email NOT verified
+                                @endif
+                            )
+                            </small>
+                        </li>
+                    </div>
                     <!-- Panel -->
                     <div class="col-md-6" style="border-left: 3px solid green;">
                         <h4>Trusted Member</h4>

@@ -24,7 +24,7 @@
 
 @include('account.partials.member-status-bar')
 
-@if ($user->status != 'setting-up' && count($user->getAlerts()) > 0)
+@if (($user->status != 'setting-up' || $user->online_only) && count($user->getAlerts()) > 0)
 <div class="alert alert-warning" role="alert">
     <ul>
         @foreach ($user->getAlerts() as $alert)
@@ -141,7 +141,7 @@
         </div>
     @endif
 
-    @if (!$user->isSuspended())
+    @if (!$user->isSuspended() && !$user->online_only)
     <div class="row">
         <div class="col-xs-12 col-lg-12">
             @include('account.partials.induction-panel')
@@ -150,7 +150,7 @@
     @endif
 
 
-    @if ($user->status != 'honorary')
+    @if ($user->status != 'honorary' && !$user->online_only)
 
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
