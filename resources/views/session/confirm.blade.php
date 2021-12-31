@@ -24,16 +24,17 @@ Login To Another Service
         </div>
 
         <div class="alert alert-success text-left">
-            🔒 A Hackspace Manchester site.<br/>
-            ✉️ You'll be logged in under {{ $user->email }}.<br/>
-            <small>
-                Not the same email as on the forum? This can be harmonised by reaching out to an admin or board member on Telegram.
-            </small>
+            🔒 Part of Hackspace Manchester<br/>
+            💻 {{ $return_sso_url }}
+            ✉️ {{ $user->email }}.<br/>
         </div>
 
-        <p>
-            Continuing will redirect you back to `list.hacman.org.uk`.
-        </p>
+        <small>
+            Not the same email? You may continue and this can later be harmonised by reaching out to an admin or board member on Telegram.
+        </small>
+
+        <hr/>
+
         <div class="row">
             {!! Form::submit('Continue', array('class'=>'btn btn-primary')) !!}
         </div>
