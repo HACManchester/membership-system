@@ -35,6 +35,10 @@ class KeyFobController extends Controller
      */
     public function store()
     {
+        if(\Auth::user()->online_only){
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $input = \Input::only('user_id', 'key_id');
 
         //If the fob befins with ff it's a request for an access cod
