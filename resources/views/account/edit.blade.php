@@ -193,101 +193,105 @@ Edit your details
 {!! Form::close() !!}
 
 <h4 id="access">Key Fobs and Access Codes</h4>
+@if (!$user->online_only)
+    @if (!$user->keyfob())
+        <div class="panel panel-info">
+            <div class="panel-heading">Adding a keyfob</div>
+            <div class="panel-body">
+                <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
+                <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+            </div>
+        </div>
+    @endif
 
-@if (!$user->keyfob())
-    <div class="panel panel-info">
-        <div class="panel-heading">Adding a keyfob</div>
+    <div class="panel panel-warning">
+        <div class="panel-heading">Getting into the space</b></div>
         <div class="panel-body">
-            <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
-            <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+            <p>
+            Active, paid up, non-banned members have two ways to access the space:
+            <ul>
+                <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
+                <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
+            </ul>
+            Use is logged to prevent abuse of this secondary access system.
+            </p>
         </div>
     </div>
-@endif
 
-<div class="panel panel-warning">
-    <div class="panel-heading">Getting into the space</b></div>
-    <div class="panel-body">
-        <p>
-        Active, paid up, non-banned members have two ways to access the space:
-        <ul>
-            <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
-            <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
-        </ul>
-        Use is logged to prevent abuse of this secondary access system.
-        </p>
-    </div>
-</div>
-
-<ol>
-@foreach ($user->keyFobs()->get() as $fob)
-    {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
-        <li>
-            @if (substr( $fob->key_id, 0, 2 ) !== "ff")
-                <p>
-                    <div class="badge" style="background:forestgreen">
-                    🔑 Fob
+    <ol>
+    @foreach ($user->keyFobs()->get() as $fob)
+        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
+            <li>
+                @if (substr( $fob->key_id, 0, 2 ) !== "ff")
+                    <p>
+                        <div class="badge" style="background:forestgreen">
+                        🔑 Fob
+                        </div>
+                        <div class="badge">
+                            Fob ID: {{ $fob->key_id }}
+                        </div> 
+                        <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                    </p>
+                    <div class="">
+                        {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
                     </div>
-                    <div class="badge">
-                        Fob ID: {{ $fob->key_id }}
-                    </div> 
-                    <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                </p>
-                <div class="">
-                    {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
-                </div>
-            @else
-                <p>
-                    <div class="badge" style="background:tomato">
-                    🔢 Access Code
+                @else
+                    <p>
+                        <div class="badge" style="background:tomato">
+                        🔢 Access Code
+                        </div>
+                        <div class="badge">
+                            Code: {{ str_replace('f', '', $fob->key_id) }}
+                        </div> 
+                        <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                    </p>
+                    <div class="">
+                        {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
                     </div>
-                    <div class="badge">
-                        Code: {{ str_replace('f', '', $fob->key_id) }}
-                    </div> 
-                    <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                </p>
-                <div class="">
-                    {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
-                </div>
-            @endif
-        </li>
-    {!! Form::hidden('user_id', $user->id) !!}
-    {!! Form::close() !!}
-@endforeach
-</ol>
-
-@if ($user->keyFobs()->count() < 2)
-<div class="row well">
-    <div class="col-md-6">
-        <h4>Add a Keyfob</h4>
-        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-        <div class="form-group">
-            <div class="col-sm-5">
-                {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                Characters A-F and numbers 0-9 only.
-            </div>
-            <div class="col-sm-3">
-                {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
-            </div>
-        </div>
+                @endif
+            </li>
         {!! Form::hidden('user_id', $user->id) !!}
         {!! Form::close() !!}
-    </div>
-    <div class="col-md-6">
-        <h4>Request access code</h4>
-        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-        <div class="form-group">
-            <div class="col-sm-3">
-                {!! Form::hidden('key_id', 'ff00000000') !!}
-                {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+    @endforeach
+    </ol>
+
+    @if ($user->keyFobs()->count() < 2)
+    <div class="row well">
+        <div class="col-md-6">
+            <h4>Add a Keyfob</h4>
+            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+            <div class="form-group">
+                <div class="col-sm-5">
+                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                    Characters A-F and numbers 0-9 only.
+                </div>
+                <div class="col-sm-3">
+                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
+                </div>
             </div>
+            {!! Form::hidden('user_id', $user->id) !!}
+            {!! Form::close() !!}
         </div>
-        {!! Form::hidden('user_id', $user->id) !!}
-        {!! Form::close() !!}
+        <div class="col-md-6">
+            <h4>Request access code</h4>
+            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+            <div class="form-group">
+                <div class="col-sm-3">
+                    {!! Form::hidden('key_id', 'ff00000000') !!}
+                    {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+                </div>
+            </div>
+            {!! Form::hidden('user_id', $user->id) !!}
+            {!! Form::close() !!}
+        </div>
     </div>
+
+    @endif
+@else
+<div class="alert alert-danger">
+    <b>Online User Only</b> You can't add access methods as you're an online only user. 
 </div>
-
 @endif
-
 </div>
 
 @stop
