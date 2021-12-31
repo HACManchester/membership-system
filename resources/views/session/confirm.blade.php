@@ -25,7 +25,7 @@ Login To Another Service
 
         <div class="alert alert-success text-left">
             🔒 Part of Hackspace Manchester<br/>
-            💻 {{ $return_sso_url }}
+            💻 {{ parse_url($return_sso_url, PHP_URL_HOST) }}
             ✉️ {{ $user->email }}.<br/>
         </div>
 
