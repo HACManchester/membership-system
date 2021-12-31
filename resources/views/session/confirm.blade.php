@@ -25,7 +25,7 @@ Login To Another Service
 
         <div class="alert alert-success text-left">
             🔒 Part of Hackspace Manchester<br/>
-            💻 {{ parse_url($return_sso_url, PHP_URL_HOST) }}
+            💻 {{ parse_url($return_sso_url, PHP_URL_HOST) }}<br/>
             ✉️ {{ $user->email }}.<br/>
         </div>
 
@@ -33,7 +33,7 @@ Login To Another Service
             Not the same email? You may continue and this can later be harmonised by reaching out to an admin or board member on Telegram.
         </small>
 
-        <hr/>
+        <br/>
 
         <div class="row">
             {!! Form::submit('Continue', array('class'=>'btn btn-primary')) !!}
