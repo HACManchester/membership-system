@@ -2,10 +2,10 @@
     <div class="col-xs-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Getting started guide...</h3>
+                <h3 class="panel-title">Welcome...</h3>
             </div>
             <div class="panel-body">
-                <h4>🚀 Welcome to Hackspace Manchester. Let's get started...</h4>
+                <h4>🚀 Member quickstart</h4>
                 <ul style="list-style-type: none; padding-left: 20px">
                     <li>
                         @if ($user->keyFobs()->count() > 0)✅@else🟠@endif 
