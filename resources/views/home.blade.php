@@ -12,11 +12,11 @@
                     <span class="icon-bar"></span>
                     <span class="menu-label">Menu</span>
                 </div>
-                <h1>Hackspace Manchester</h1>
-                <p class="lead">
-                    Welcome to Hackspace Manchester Membership System
-                </p>
                 @if ($guest)
+                    <h1>Hackspace Manchester</h1>
+                    <p class="lead">
+                        Welcome to Hackspace Manchester Membership System
+                    </p>
                     <p>
                         Here you can:
                         <ul>
@@ -47,6 +47,10 @@
                         </div>
                     </div>
                 @else
+                    <p class="lead">
+                        Hackspace Manchester Membership System
+                    </p>
+
                     <div style="border-left: 3px solid green; padding-left: 1em;">
                         <p>
                             <h3>👋 Welcome back, <a href="{{ route('account.show', [$user->id]) }}">{{$user->name}}</a></h3>
@@ -56,6 +60,11 @@
                         </p>                       
                     </div>
 
+                    <style>
+                        .panel-body .panel {
+                            margin-top:0;
+                        }
+                    </style>
                     @if($user->status == 'active' && !$user->online_only)
                         @include('account.partials.get-started')
                     @endif  
