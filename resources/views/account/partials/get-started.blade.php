@@ -2,10 +2,10 @@
     <div class="col-xs-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Welcome...</h3>
+                <h3 class="panel-title">Helpful hints to get going</h3>
             </div>
             <div class="panel-body">
-                <h4>🚀 Member quickstart</h4>
+                <h4>🚀 Membership checklist and quickstart</h4>
                 <ul style="list-style-type: none; padding-left: 20px">
                     <li>
                         @if ($user->keyFobs()->count() > 0)✅@else🟠@endif 
