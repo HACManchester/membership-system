@@ -62,7 +62,7 @@
 
                     <style>
                         .panel-body .panel {
-                            margin-top:0;
+                            margin-top: 1em !important;
                         }
                     </style>
                     @if($user->status == 'active' && !$user->online_only)
