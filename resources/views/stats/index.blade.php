@@ -74,7 +74,7 @@ Stats
                         </tr>
                         <tr>
                             <td></td>
-                            <td>Other outgoings</td>
+                            <td>Other outgoings (snackspace runs, consumables etc)</td>
                             <td>£{{ $otherOutgoings }} Ⓜ️</td>
                         </tr>
                         <tr>
