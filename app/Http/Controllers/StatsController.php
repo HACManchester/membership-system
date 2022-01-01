@@ -37,7 +37,7 @@ class StatsController extends Controller
         $otherIncome = 0;
         $electric = 280;
         $rent = 1940;
-        $otherOutgoings = 300;
+        $otherOutgoings = 200;
         $recommendedPayment = 25;
         // END OF HARDCODED VALUES
 
