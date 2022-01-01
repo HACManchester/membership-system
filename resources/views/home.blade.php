@@ -4,7 +4,7 @@
 @section('content')
 
 	<div class="col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
-        <div class="panel panel-default" style="opacity:0.95;box-shadow:0 0 40px white;">
+        <div class="panel panel-default" style="opacity:1;box-shadow:0 0 40px white;">
             <div class="panel-body">
                 <div class="menuToggleButton" style="float: none; padding: 0">
                     <span class="icon-bar"></span>
@@ -53,14 +53,7 @@
                             <p>
                                 You're logged in.
                             </p>
-                        </p>
-                        
-                        <h4>Quick Links</h4>
-                        <a href="/equipment" class="btn btn-primary">Tools &amp; Equipment</a>
-                        <a href="/account/0/edit" class="btn btn-primary">Keyfobs &amp; Access</a>
-                        <a href="/account/0/balance" class="btn btn-primary">Balance</a>
-                    
-                       
+                        </p>                       
                     </div>
 
                     @if($user->status == 'active' && !$user->online_only)
