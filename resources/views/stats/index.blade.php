@@ -41,7 +41,7 @@ Stats
                         <tr>
                             <td></td>
                             <td>Expected income from membership fees</td>
-                            <td> £{{ $expectedIncome }}</td>
+                            <td>£{{ $expectedIncome }}</td>
                         </tr>
                         <tr>
                             <td></td>
@@ -51,7 +51,7 @@ Stats
                         <tr>
                             <td></td>
                             <th scope="row">Total incomings</th>
-                            <th scope="row"> £{{ $totalIncome }}</td>
+                            <th scope="row">£{{ $totalIncome }}</td>
                         </tr>
                     </tbody>
                     <thead>
@@ -70,7 +70,7 @@ Stats
                         <tr>
                             <td></td>
                             <td>Electricity</td>
-                            <td>£ {{ $electric }} Ⓜ️</td>
+                            <td>£{{ $electric }} Ⓜ️</td>
                         </tr>
                         <tr>
                             <td></td>
