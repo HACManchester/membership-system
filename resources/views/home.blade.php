@@ -63,6 +63,10 @@
                        
                     </div>
 
+                    @if($user->status == 'active' && !$user->online_only)
+                        @include('account.partials.get-started')
+                    @endif  
+
                 @endif
             </div>
         </div>
