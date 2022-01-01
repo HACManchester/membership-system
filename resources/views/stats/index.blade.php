@@ -10,72 +10,145 @@ Stats
 
 @section('content')
 
-<div class="row well">
-
-    <div class="col-sm-12">
-        <h3>Monthly Finance Overview</h3>
-        <p>🕖 Last updated 01/01/2022 - items marked as Ⓜ️ (Manual) are manually hardcoded as the bank does not allow automated access.</p>
+<div class="well">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Monthly Finance Overview</h3>
+            <p>
+                This overview is of a sample month, and of the relevant season to account for heater usage. Therefore, the numbers will not be 100% accurate.
+                Caveats:
+                <ul>
+                    <li>Some income may not materialise (e.g. chargebacks)</li>
+                    <li>There may be extra income (e.g. snackspace or materials income)</li>
+                    <li>There may be larger costs (e.g. quarterly payments and snackspace buys)</li>
+                </ul>
+                True understanding of the financial position will require the treasurer to process bank statements, and should ideally be done at AGMs.
+            </p>
+            <p>Ⓜ️ indicates manual hardcoded value. Dependent figures will also therefore be implied to be manual.</p>
+            <p>🕖 Last updated 01/01/2022</p> 
+        </div>
+        @if($user->active)
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr class="bg-success">
+                            <th scope="col">Incomings</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>Expected income from membership fees</td>
+                            <td> £{{ $expectedIncome }}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>Other income</td>
+                            <td>£{{ $otherIncome }} Ⓜ️</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <th scope="row">Total incomings</th>
+                            <th scope="row"> £{{ $totalIncome }}</td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr class="bg-danger">
+                            <th scope="col">Outgoings</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>Rent, service charge, other landlord fees</td>
+                            <td>£{{ $rent }} Ⓜ️</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>Electricity</td>
+                            <td>£ {{ $electric }} Ⓜ️</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>Other outgoings</td>
+                            <td>£{{ $otherOutgoings }} Ⓜ️</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <th scope="row">Total outgoings</th>
+                            <th scope="row"> £{{ $totalOutgoings }}</td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr class="bg-info">
+                            <th scope="col">Difference</th>
+                            <td></td>
+                            <th scope="col">£{{ $totalIncome - $totalOutgoings }}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        @else
+            <div class="alert alert-danger">
+                Detailed breakdown available to active members only
+            </div>
+        @endif
     </div>
-    <div class="col-sm-12 col-md-6 col-xl-4">
-        <h3 class="text-center">Incomings</h3>
-        <ul>
-            <li><b>Membership dues:</b> £{{ $expectedIncome }}</li>
-            <li><b>Other:</b> Ⓜ️£0</li>
-        </ul>    
-    </div>
-    <div class="col-sm-12 col-md-6 col-xl-4">
-        <h3 class="text-center">Outgoings</h3>
-            <ul>
-                <li><b>Rent:</b> Ⓜ️£1940</li>
-                <li><b>Elec:</b> Ⓜ️£280</li>
-                <li></li>
-            </ul>
-    </div>
-
 </div>
 
 <div class="row">
     <div class="col-sm-12 col-md-6 col-xl-4">
         <div class="well">
             <h3 class="text-center">Payment Methods</h3>
-            <p>Of the {{ $numMembers }} members, A pay by direct debit (preferred) and B pay by standing order.
+            <p class="text-center">Paying by Direct Debit saves time and ensures your membership stays up to date.</p>
+
             <div id="paymentMethods" style="height:400px"></div>
         </div>
     </div>
     <div class="col-sm-12 col-md-6 col-xl-4">
         <div class="well">
-            <h3 class="text-center">Monthly Subscription Amounts</h3>
-            <div id="monthlyAmounts" style="height:400px"></div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-6 col-xl-4">
-        <div class="well">
-
-            <h3 class="text-center">Average Monthly Subscription</h3>
-            <p class="text-center">
-                <span class="key-figure">&pound;{{ $averageMonthlyAmount }}</span>
-            </p>
-
 
             <h3 class="text-center">Paying Members</h3>
             <p class="text-center">
                 <span class="key-figure">{{ $numMembers }}</span>
             </p>
+
+            <h3 class="text-center">Paying at least &pound;{{ $recommendedPayment}}</h3>
+            <p class="text-center">
+                <span class="key-figure">
+                    {{ round($numMembers / $payingRecommendedOrAbove) }}% 
+                    ({{ round($payingRecommendedOrAbove) }} members)
+                </span>
+            </p>
+            <p class="text-center">
+                This is the recommended membership amount for those who can pay it.
+                Paying the recommended amount helps keep the space open!
+            </p>
+
         </div>
     </div>
     <div class="col-sm-12 col-md-6 col-xl-4">
         <div class="well">
-            <h3 class="text-center">Members Visiting the Maker Space</h3>
+            <h3 class="text-center">Active Users</h3>
 
             <h4 class="text-center">Last 30 days</h4>
             <p class="text-center">
                 <span class="key-figure">{{ $numActiveUsers }}</span>
             </p>
-
+            
             <h4 class="text-center">Last 90 days</h4>
             <p class="text-center">
                 <span class="key-figure">{{ $numActiveUsersQuarter }}</span>
             </p>
+            
+            <p class="text-center">
+                ⚠️Coming soon. <br/>This is how many members have scanned into the space.
+            </p>
+            
         </div>
     </div>
 </div>
@@ -83,8 +156,6 @@ Stats
 
     BB.chartData = BB.chartData || {};
     BB.chartData.paymentMethods = {!! json_encode($paymentMethods) !!};
-    BB.chartData.monthlyAmounts = {!! json_encode($monthlyAmountsData) !!};
-
     google.load("visualization", "1", {packages:["corechart"]});
 
 
@@ -99,23 +170,6 @@ Stats
 
         var chart = new google.visualization.PieChart(document.getElementById('paymentMethods'));
         chart.draw(data, options);
-    }
-
-
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-
-        var data = google.visualization.arrayToDataTable(BB.chartData.monthlyAmounts);
-
-        var options = {
-            //title: 'Monthly Subscription Amounts',
-            legend: { position: 'none' },
-            vAxis: {format: '#', gridlines: {}}
-        };
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('monthlyAmounts'));
-        chart.draw(data, options);
-
     }
 
 </script>

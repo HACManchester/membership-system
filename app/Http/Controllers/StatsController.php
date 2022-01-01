@@ -16,7 +16,6 @@ class StatsController extends Controller
      */
     private $activityRepository;
 
-
     function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\ActivityRepository $activityRepository)
     {
         $this->userRepository = $userRepository;
@@ -30,8 +29,22 @@ class StatsController extends Controller
      */
     public function index()
     {
+
+        /**
+         * MANUAL HARDCODED VALUES HERE
+         */
+
+        $otherIncome = 0;
+        $electric = 280;
+        $rent = 1940;
+        $otherOutgoings = 0;
+        $recommendedPayment = 25;
+        // END OF HARDCODED VALUES
+
+        $user = \Auth::user();
         $users = $this->userRepository->getActive();
         $expectedIncome = 0;
+        $payingRecommendedOrAbove = 0;
 
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
@@ -42,10 +55,15 @@ class StatsController extends Controller
         foreach ($users as $user) {
             $expectedIncome = $expectedIncome + $user->monthly_subscription;
             
+            if($user->monthly_subscription >= $recommendedPayment){
+                $payingRecommendedOrAbove += 1;
+            }
+
             if (isset($paymentMethodsNumbers[$user->payment_method])) {
                 $paymentMethodsNumbers[$user->payment_method]++;
             }
         }
+
         $paymentMethods = [
             [
                 'Payment Method', 'Number'
@@ -116,9 +134,18 @@ class StatsController extends Controller
         $numActiveUsersQuarter = count(array_unique($userArray));
 
         return \View::make('stats.index')
+            ->with('user', $user)
+            ->with('expectedIncome', $expectedIncome)
+            ->with('otherIncome', $otherIncome)
+            ->with('rent', $rent)
+            ->with('electric', $electric)
+            ->with('otherOutgoings', $otherOutgoings)
+            ->with('totalIncome', $otherIncome + $expectedIncome)
+            ->with('totalOutgoings', $rent + $electric + $otherOutgoings)
             ->with('averageMonthlyAmount', round($averageMonthlyAmount))
             ->with('numMembers', $numMembers)
-            ->with('expectedIncome', $expectedIncome)
+            ->with('recommendedPayment', $recommendedPayment)
+            ->with('payingRecommendedOrAbove', $payingRecommendedOrAbove)
             ->with('numActiveUsers', $numActiveUsers)
             ->with('numActiveUsersQuarter', $numActiveUsersQuarter)
             ->with('paymentMethods', $paymentMethods)
