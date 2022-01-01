@@ -4,7 +4,7 @@
 @section('content')
 
 	<div class="col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
-        <div class="panel panel-default" style="opacity:1;box-shadow:0 0 40px white;">
+        <div class="panel panel-default" style="opacity:1;">
             <div class="panel-body">
                 <div class="menuToggleButton" style="float: none; padding: 0">
                     <span class="icon-bar"></span>
@@ -47,11 +47,7 @@
                         </div>
                     </div>
                 @else
-                    <p class="lead">
-                        Hackspace Manchester Membership System
-                    </p>
-
-                    <div style="border-left: 3px solid green; padding-left: 1em;">
+                    <div class="alert alert-success">
                         <p>
                             <h3>👋 Welcome back, <a href="{{ route('account.show', [$user->id]) }}">{{$user->name}}</a></h3>
                             <p>
