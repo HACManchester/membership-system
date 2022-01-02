@@ -174,7 +174,7 @@ class StorageBoxController extends Controller
 
     private function selfClaimBox($boxId, $userId)
     {
-        $adminUser = \Auth::user()->isAdmin() || Auth::user()->hasRole('storage');
+        $adminUser = \Auth::user()->isAdmin() || \Auth::user()->hasRole('storage');
 
         if ($userId != \Auth::user()->id && !$adminUser) {
             throw new \BB\Exceptions\AuthenticationException();
