@@ -71,6 +71,13 @@ class SessionController extends Controller
 
         // Decode SSO object from discourse and convert URL string to variables
         parse_str(base64_decode($input['sso']), $decoded);
+
+
+        if(empty($decoded['nonce']) || empty($decoded['return_url'])){
+            return \View::make('session.error')
+                ->with('code', '3');
+        }
+
         $nonce = $decoded['nonce'];
         $return_sso_url = $decoded['return_sso_url'];
 
