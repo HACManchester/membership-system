@@ -73,7 +73,7 @@ class SessionController extends Controller
         parse_str(base64_decode($input['sso']), $decoded);
 
 
-        if(empty($decoded['nonce']) || empty($decoded['return_url'])){
+        if(empty($decoded['nonce']) || empty($decoded['return_sso_url'])){
             return \View::make('session.error')
                 ->with('code', '3');
         }
