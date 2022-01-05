@@ -112,6 +112,7 @@ class MemberSubscriptionCharges
         }
 
 
+        $gc_billed = 0;
         //Charge the gocardless users
         foreach ($goCardlessUsers as $charge) {
             $amount = $charge->user->monthly_subscription;
@@ -122,9 +123,14 @@ class MemberSubscriptionCharges
                     $status = 'pending';
                 }
                 $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $amount, $status, 0, $charge->id);
+                $gc_billed += 1;
             }
         };
 
+        return array(
+            "gc_users" => count($goCardlessUsers),
+            "gc_users_billed" => $gc_billed
+        );
     }
 
 

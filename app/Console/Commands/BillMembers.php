@@ -49,9 +49,11 @@ class BillMembers extends Command
 
         //Bill the due charges
         $this->info('Billing members');
-        $this->subscriptionChargeService->billMembers();
+        $result = $this->subscriptionChargeService->billMembers();
 
         $this->info('Finished');
+
+        return $result;
     }
 
 }

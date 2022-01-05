@@ -32,35 +32,60 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        $schedule->command('bb:calculate-proposal-votes')->hourly()
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/U6l211ROnnZR1vI'); } );
+        // $schedule->command('bb:calculate-proposal-votes')->hourly()
+        //     ->then( function () { $this->notifyTelegram(''); } );
 
-        $schedule->command('bb:check-memberships')->dailyAt('06:00')
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/76TWKkWBBpaIyOe'); } );
+        // $schedule->command('bb:fix-equipment-log')->hourly()
+        //     ->then( function () { $this->notifyTelegram(''); } );
 
-        $schedule->command('bb:fix-equipment-log')->hourly()
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/nxi4SJkwZpIAkBv'); } );
+        // $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
+        //     ->then( function () { $this->notifyTelegram(''); } );
 
-        $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/tFdRdkUoqSa8X66'); } );
+        $schedule
+            ->command('bb:check-memberships')
+            ->dailyAt('06:00')
+            ->then( function () { 
+                $this->notifyTelegram('✅ Checked Memberships'); 
+            });
 
-        $schedule->command('bb:update-balances')->dailyAt('03:00')
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/TSmoQANsHU9jbtU'); } );
+        $schedule
+            ->command('bb:update-balances')
+            ->dailyAt('03:00')
+            ->then( function () { 
+                $this->notifyTelegram('✅ Updated balances'); 
+            });
 
-        $schedule->command('bb:create-todays-sub-charges')->dailyAt('01:00')
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/wSIUR1E2wjVBzPg'); } );
+        $schedule
+            ->command('bb:create-todays-sub-charges')
+            ->dailyAt('01:00')
+            ->then( function () { 
+                $this->notifyTelegram('✅ Created today\'s subscription charges'); 
+            } );
 
-        $schedule->command('bb:bill-members')->dailyAt('01:30')
-            ->then( function () { $this->pingIfProduction('http://beats.envoyer.io/heartbeat/nxAz59P6LXlu2P1'); } );
+        $schedule
+            ->command('bb:bill-members')
+            ->dailyAt('01:30')
+            ->then( function ($result) { 
+                $notification = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
+                $this->notifyTelegram($notification); 
+            });
 
-        $schedule->command('device:check-online')->everyTenMinutes()
-            ->then( function () { $this->pingIfProduction('https://beats.envoyer.io/heartbeat/WU4zql7LwZs1CzT'); } );
+        $schedule
+            ->command('device:check-online')
+            ->everyTenMinutes()
+            ->then( function () { 
+                $this->notifyTelegram('✅ Devices check');
+             });
     }
 
-    protected function pingIfProduction($url)
+    protected function notifyTelegram($notification)
     {
         if (env('APP_ENV', 'production') == 'production') {
-            (new HttpClient)->get($url);
+            (new HttpClient)->get(
+                "https://api.telegram.org/" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
+                "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+                "&message=⏲️" . $notification
+            );
         }
     }
 
