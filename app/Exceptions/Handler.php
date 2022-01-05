@@ -46,13 +46,13 @@ class Handler extends ExceptionHandler {
 
     protected function notifyTelegram($error)
     {
-        $notification = "<b>" . $error->getMessage() . "</b><br/>" . 
-            $error->getFile() . "<br/>" .
-            "on line" . $error->getLine();
+        $notification = "<b>" . $error->getMessage() . "</b> - " . 
+            $error->getFile() . "" .
+            " - on line " . $error->getLine();
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?parse_mode=HTML&chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=🚨 Exception: " . $notification
+            "&text=🚨 Exception: " . urlencode($notification)
         );
     }
 
