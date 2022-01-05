@@ -33,9 +33,26 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
+        try{
+            notifyTelegram($e);
+        } catch (Exception $e) {
+        }
+
         //The parent will log exceptions that aren't of the types above
 		parent::report($e);
 	}
+
+
+    protected function notifyTelegram($notification)
+    {
+        if (env('APP_ENV', 'production') == 'production') {
+            (new HttpClient)->get(
+                "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
+                "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+                "&message=🚨 Exception: " . $notification
+            );
+        }
+    }
 
 	/**
 	 * Render an exception into an HTTP response.
