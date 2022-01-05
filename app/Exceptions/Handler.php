@@ -49,7 +49,7 @@ class Handler extends ExceptionHandler {
         $notification = "Message: *" . $error->getMessage() . "* \n " . 
             "File: *" . $error->getFile() . "* \n" .
             "Line: *" . $error->getLine() . "* \n" . 
-            "More Info: https://members.hacman.org.uk/logs"
+            "More Info: https://members.hacman.org.uk/logs";
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
