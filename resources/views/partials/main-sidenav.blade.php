@@ -193,7 +193,7 @@
             
             @if(!Auth::guest())
                 @if (Auth::user()->isAdmin())
-                    {!! HTML::sideNavLink('👮 Admin', 'activity.index') !!}
+                    {!! HTML::sideNavLink('👮 Admin', 'admin') !!}
                     {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
                     {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
                 @endif
