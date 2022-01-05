@@ -195,7 +195,6 @@
                 @if (Auth::user()->hasRole('admin'))
                     {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
                     {!! HTML::sideNavLink('👮 Activity', 'activity.index') !!}
-                    {!! HTML::sideNavLink('👮 Proposals', 'proposals.index') !!} 
                     {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
                 @endif
 

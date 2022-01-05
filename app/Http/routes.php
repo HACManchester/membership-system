@@ -14,6 +14,7 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 Route::get('login', ['as' => 'login', 'uses' => 'SessionController@create']);
 Route::get('logout', ['as' => 'logout', 'uses' => 'SessionController@destroy']);
 Route::get('gift', ['as' => 'gift', 'uses' => 'GiftController@index']);
+Route::get('admin', ['as' => 'admin', 'uses' => 'AdminController@index', 'middleware'=>'role:admin']);
 Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
 Route::post('session/pusher', ['uses' => 'SessionController@pusherAuth', 'middleware' => 'role:member', 'as' => 'session.pusher']);
 Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
@@ -250,13 +251,13 @@ Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 
 # Proposals
 ##########################
 
-Route::get('proposals', ['uses'=>'ProposalController@index', 'as'=>'proposals.index', 'middleware'=>'role:member']);
-Route::get('proposals/create', ['uses'=>'ProposalController@create', 'as'=>'proposals.create', 'middleware'=>'role:admin']);
-Route::post('proposals', ['uses'=>'ProposalController@store', 'as'=>'proposals.store', 'middleware'=>'role:admin']);
-Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'middleware'=>'role:member']);
-Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'middleware'=>'role:member']);
-Route::get('proposals/{id}/edit', ['uses'=>'ProposalController@edit', 'as'=>'proposals.edit', 'middleware'=>'role:admin']);
-Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=>'proposals.update', 'middleware'=>'role:admin']);
+// Route::get('proposals', ['uses'=>'ProposalController@index', 'as'=>'proposals.index', 'middleware'=>'role:member']);
+// Route::get('proposals/create', ['uses'=>'ProposalController@create', 'as'=>'proposals.create', 'middleware'=>'role:admin']);
+// Route::post('proposals', ['uses'=>'ProposalController@store', 'as'=>'proposals.store', 'middleware'=>'role:admin']);
+// Route::get('proposals/{id}', ['uses'=>'ProposalController@show', 'as'=>'proposals.show', 'middleware'=>'role:member']);
+// Route::post('proposals/{id}', ['uses'=>'ProposalController@vote', 'as'=>'proposals.vote', 'middleware'=>'role:member']);
+// Route::get('proposals/{id}/edit', ['uses'=>'ProposalController@edit', 'as'=>'proposals.edit', 'middleware'=>'role:admin']);
+// Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=>'proposals.update', 'middleware'=>'role:admin']);
 
 
 

@@ -73,9 +73,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command('device:check-online')
             ->everyTenMinutes()
-            ->then( function () { 
-                $this->notifyTelegram('✅ Devices check');
-             });
+            ->then( function () { });
     }
 
     protected function notifyTelegram($notification)
