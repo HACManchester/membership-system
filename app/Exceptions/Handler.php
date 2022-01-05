@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler {
 	public function report(Exception $e)
 	{
         try{
-            notifyTelegram($e);
+            $this->notifyTelegram($e);
         } catch (Exception $e) {
         }
 
