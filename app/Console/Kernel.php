@@ -83,7 +83,7 @@ class Kernel extends ConsoleKernel
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&message=⏲️" . $notification
+            "&text=⏲️" . $notification
         );
     }
 
