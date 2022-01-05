@@ -192,21 +192,21 @@
             {!! HTML::sideNavLink('Teams', 'groups.index') !!}
             
             @if(!Auth::guest())
-                @if (Auth::user()->hasRole('admin'))
+                @if (Auth::user()->isAdmin())
+                    {!! HTML::sideNavLink('👮 Admin', 'activity.index') !!}
                     {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
-                    {!! HTML::sideNavLink('👮 Activity', 'activity.index') !!}
                     {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
                 @endif
 
-                @if (Auth::user()->hasRole('comms'))
+                @if (Auth::user()->hasRole('comms') || Auth::user()->isAdmin())
                     {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}
                 @endif
 
-                @if (Auth::user()->hasRole('acs'))
+                @if (Auth::user()->hasRole('acs') || Auth::user()->isAdmin())
                     {!! HTML::sideNavLink('🔑 Devices', 'devices.index') !!}
                 @endif
 
-                @if (Auth::user()->hasRole('finance'))
+                @if (Auth::user()->hasRole('finance') || Auth::user()->isAdmin())
                     {!! HTML::sideNavLink('💰 Payments', 'payments.index') !!}
                     {!! HTML::sideNavLink('💰 Expenses <span class="badge js-expenses-count"></span>', 'expenses.index') !!}
                 @endif
