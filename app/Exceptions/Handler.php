@@ -38,10 +38,12 @@ class Handler extends ExceptionHandler {
             
             $level = 'error';
             $title = 'Exception Thrown';
+            $suppress = false;
 
             if($statusCode == 404){
                 $level = 'warn';
-                $title = 'Not Found -' . \Request::path();
+                $title = 'Not Found - ' . \Request::path();
+                $suppress = true;
             }
 
             if($e instanceof NotImplementedException){
@@ -49,7 +51,7 @@ class Handler extends ExceptionHandler {
                 $title = 'Not Implemented';
             }
 
-            $this->notifyTelegram($level, $title, $e);
+            $this->notifyTelegram($level, $title, $suppress, $e);
         } catch (Exception $e) {
         }
 
@@ -58,7 +60,7 @@ class Handler extends ExceptionHandler {
 	}
 
 
-    protected function notifyTelegram($level = 'error', $title = 'Exception', $error)
+    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, $error)
     {
         $icon = array(
             'error'=> '🛑',
@@ -66,7 +68,7 @@ class Handler extends ExceptionHandler {
             'info' => 'ℹ️'
         );
 
-        $notification = 
+        $notification = $suppress ? 'Trace suppressed' :  
             "Message: <b>" . $error->getMessage() . "</b> \n"  . 
             "File: <b>" . $error->getFile() . "</b>  \n"  .
             "Line: <b>" . $error->getLine() . "</b> \n"  . 
