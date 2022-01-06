@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler {
         try{
             $statusCode = $e->getStatusCode();
             
-            $level = loglevel['error'];
+            $level = $loglevel['error'];
             if($statusCode == 404){
                 $level = loglevel['warn'];
             }
