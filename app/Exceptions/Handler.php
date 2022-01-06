@@ -39,9 +39,9 @@ class Handler extends ExceptionHandler {
         try{
             $statusCode = $e->getStatusCode();
             
-            $level = $loglevel['error'];
+            $level = $this->loglevel['error'];
             if($statusCode == 404){
-                $level = loglevel['warn'];
+                $level = $this->loglevel['warn'];
             }
 
             $this->notifyTelegram($level, $e);
