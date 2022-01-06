@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler {
 
             if($statusCode == 404){
                 $level = 'warn';
-                $title = 'Not Found';
+                $title = 'Not Found -' . \Request::path();
             }
 
             if($e instanceof NotImplementedException){
