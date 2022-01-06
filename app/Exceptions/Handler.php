@@ -34,16 +34,19 @@ class Handler extends ExceptionHandler {
 	public function report(Exception $e)
 	{
         try{
-            $statusCode = $e->getStatusCode();
-            
             $level = 'error';
-            $title = 'Exception Thrown';
+            $title = 'Error';
             $suppress = false;
 
-            if($statusCode == 404){
-                $level = 'warn';
-                $title = 'Not Found - ' . \Request::path();
-                $suppress = true;
+            $has_status_code = method_exists($e, 'getStatusCode');
+            if($has_status_code){
+                $statusCode = $e->getStatusCode();
+                
+                if($statusCode == 404){
+                    $level = 'warn';
+                    $title = 'Not Found - ' . \Request::path();
+                    $suppress = true;
+                }
             }
 
             if($e instanceof NotImplementedException){
