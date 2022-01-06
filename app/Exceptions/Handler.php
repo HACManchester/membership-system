@@ -9,9 +9,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use GuzzleHttp\Client as HttpClient;
 
 class Handler extends ExceptionHandler {
-
-    private $loglevel = array('error' => 0, 'warn' => 1, 'info' => 2);
-    
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
@@ -39,12 +36,20 @@ class Handler extends ExceptionHandler {
         try{
             $statusCode = $e->getStatusCode();
             
-            $level = $this->loglevel['error'];
+            $level = 'error';
+            $title = 'Exception Thrown';
+
             if($statusCode == 404){
-                $level = $this->loglevel['warn'];
+                $level = 'warn';
+                $title = 'Not Found';
             }
 
-            $this->notifyTelegram($level, $e);
+            if($e instanceof NotImplementedException){
+                $level = 'info';
+                $title = 'Not Implemented';
+            }
+
+            $this->notifyTelegram($level, $title, $e);
         } catch (Exception $e) {
         }
 
@@ -53,7 +58,7 @@ class Handler extends ExceptionHandler {
 	}
 
 
-    protected function notifyTelegram($level, $error)
+    protected function notifyTelegram($level = 'error', $title = 'Exception', $error)
     {
         $icon = array(
             'error'=> '🛑',
@@ -69,7 +74,7 @@ class Handler extends ExceptionHandler {
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?parse_mode=HTML&chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=" . $icon['level'] . urlencode("<b>Error Thrown</b> \n \n " . $notification)
+            "&text=" . $icon['level'] . urlencode("<b>{$title}</b> \n \n " . $notification)
         );
     }
 
