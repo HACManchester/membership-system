@@ -10,6 +10,8 @@ use GuzzleHttp\Client as HttpClient;
 
 class Handler extends ExceptionHandler {
 
+    private $loglevel = array('error' => 0, 'warn' => 1, 'info' => 2);
+    
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
@@ -35,7 +37,14 @@ class Handler extends ExceptionHandler {
 	public function report(Exception $e)
 	{
         try{
-            $this->notifyTelegram($e);
+            $statusCode = $e->getStatusCode();
+            
+            $level = loglevel['error'];
+            if($statusCode == 404){
+                $level = loglevel['warn'];
+            }
+
+            $this->notifyTelegram($level, $e);
         } catch (Exception $e) {
         }
 
@@ -44,8 +53,14 @@ class Handler extends ExceptionHandler {
 	}
 
 
-    protected function notifyTelegram($error)
+    protected function notifyTelegram($level, $error)
     {
+        $icon = array(
+            'error'=> '🛑',
+            'warn' => '⚠️',
+            'info' => 'ℹ️'
+        );
+
         $notification = 
             "Message: <b>" . $error->getMessage() . "</b> \n"  . 
             "File: <b>" . $error->getFile() . "</b>  \n"  .
@@ -54,7 +69,7 @@ class Handler extends ExceptionHandler {
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?parse_mode=HTML&chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=🚨 " . urlencode("<b>Error Thrown</b> \n \n " . $notification)
+            "&text=" . $icon['level'] . urlencode("<b>Error Thrown</b> \n \n " . $notification)
         );
     }
 
