@@ -74,7 +74,7 @@ class Handler extends ExceptionHandler {
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?parse_mode=HTML&chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=" . $icon['level'] . urlencode("<b>{$title}</b> \n \n " . $notification)
+            "&text=" . $icon[$level] . urlencode("<b>{$title}</b> \n \n " . $notification)
         );
     }
 
