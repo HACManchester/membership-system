@@ -24,13 +24,19 @@ class StatsController extends Controller
     }
 
     private function reduceArray($data, $key){
-        return array_reduce($data, function ($acc, $d) use ($key){
+        $toReturn = array_reduce($data, function ($acc, $d) use ($key){
             if ($d['label'] != $key) {
                 return $acc;
             }
 
             return array_merge($acc, [[ "date" => $d['date'], "value" => $d['value'] ]]);
         }, []);
+
+        usort($toReturn, function($a, $b){
+            return strtotime($a["date"]) > strtotime($b["date"]);
+        });
+
+        return toReturn;
     }
 
     public function history(){
