@@ -26,7 +26,9 @@ class StatsController extends Controller
     public function history(){
         $start = strtotime(date("Y-m-d", strtotime("-7 day")));
         $data = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
-        die(var_dump($data));
+        
+        return \View::make('stats.history')
+            ->with('historyData', $data);
     }
 
     /**
