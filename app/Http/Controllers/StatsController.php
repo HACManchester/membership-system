@@ -37,9 +37,9 @@ class StatsController extends Controller
         $start = strtotime(date("Y-m-d", strtotime("-7 day")));
         $rawdata = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
         
-        $memberCount = reduceArray($rawdata, 'members');
-        $join = reduceArray($rawdata, 'join');
-        $left = reduceArray($rawdata, 'left');
+        $memberCount = $this->reduceArray($rawdata, 'members');
+        $join = $this->reduceArray($rawdata, 'join');
+        $left = $this->reduceArray($rawdata, 'left');
 
         $graph = array(
             array("Total", "Joined", "Left"),
