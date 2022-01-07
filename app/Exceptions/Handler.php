@@ -73,7 +73,7 @@ class Handler extends ExceptionHandler {
 
         $userString = \Auth::guest() ? "A guest": \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
 
-        $notification = $suppress ? 'Trace suppressed' :  
+        $notification = $suppress ? 'Trace suppressed' :
             "Path: <b>/" . \Request::path() . "</b>" .
             "User: <b>" . $userString . "</b>" . 
             "Message: <b>" . $error->getMessage() . "</b> \n"  . 
