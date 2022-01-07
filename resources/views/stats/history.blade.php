@@ -47,7 +47,7 @@ Stats
 
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('membershipHistory'));
+        var chart = new google.visualization.ComboChart(document.getElementById('membershipHistory'));
         chart.draw(data, options);
     }
 
