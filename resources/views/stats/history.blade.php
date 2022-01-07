@@ -15,8 +15,6 @@ Stats
         <div class="col-sm-12">
             <h4>Membership History</h4>
             <div id="membershipHistory" style="height:400px"></div>
-
-            {{ var_dump($historyData) }}
         </div>
     </div>
 </div>

@@ -25,8 +25,20 @@ class StatsController extends Controller
 
     public function history(){
         $start = strtotime(date("Y-m-d", strtotime("-7 day")));
-        $data = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
+        $rawdata = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
         
+        $data = array();
+
+        foreach($rawdata as $item){
+            var_dump($rawdata);
+            array_push($data, array());
+        }
+
+        $graph = array(
+            array("Total", "Joined", "Left"),
+            $data
+        );
+
         return \View::make('stats.history')
             ->with('historyData', $data);
     }
