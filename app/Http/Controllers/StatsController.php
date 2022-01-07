@@ -36,7 +36,7 @@ class StatsController extends Controller
             return strtotime($a["date"]) > strtotime($b["date"]);
         });
 
-        return toReturn;
+        return $toReturn;
     }
 
     public function history(){
