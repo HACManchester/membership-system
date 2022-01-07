@@ -23,20 +23,27 @@ class StatsController extends Controller
         $this->statRepository = $statRepository;
     }
 
+    private function reduceArray($data, $key){
+        return array_reduce($data, function ($acc, $d) {
+            if ($d['label'] != $key) {
+                return $acc;
+            }
+
+            return array_merge($acc, [ $d['date'], $d['value'] ]);
+        }, []);
+    }
+
     public function history(){
         $start = strtotime(date("Y-m-d", strtotime("-7 day")));
         $rawdata = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
         
-        $data = array();
-
-        foreach($rawdata as $item){
-            var_dump($rawdata);
-            array_push($data, array());
-        }
+        $memberCount = reduceArray($rawdata, 'members');
+        $join = reduceArray($rawdata, 'join');
+        $left = reduceArray($rawdata, 'left');
 
         $graph = array(
             array("Total", "Joined", "Left"),
-            $data
+            array_merge(null, $memberCount, $join, $left)
         );
 
         return \View::make('stats.history')
