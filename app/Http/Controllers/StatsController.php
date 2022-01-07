@@ -33,7 +33,7 @@ class StatsController extends Controller
             ));
         }
 
-        return array_reduce($data, function ($acc, $d) {
+        return array_reduce($arr, function ($acc, $d) {
             if ($d['label'] != $key) {
                 return $acc;
             }
