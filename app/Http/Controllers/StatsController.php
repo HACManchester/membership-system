@@ -29,7 +29,7 @@ class StatsController extends Controller
                 return $acc;
             }
 
-            return array_merge($acc, [ $d['date'], $d['value'] ]);
+            return array_merge($acc, [[ "date" => $d['date'], "value" => $d['value'] ]]);
         }, []);
     }
 
@@ -41,13 +41,18 @@ class StatsController extends Controller
         $join = $this->reduceArray($rawdata, 'join');
         $left = $this->reduceArray($rawdata, 'left');
 
-        $graph = array(
-            array("Total", "Joined", "Left"),
-            array_merge(null, $memberCount, $join, $left)
-        );
+        $graph = [["Date", "Total", "Joined", "Left"]];
+        foreach($memberCount as $k => $v) {
+                array_push($graph,[
+                    $memberCount[$k]['date'],
+                    (int)$memberCount[$k]['value'],
+                    (int)$join[$k]['value'],
+                    (int)$left[$k]['value']
+                ]);
+        }
 
         return \View::make('stats.history')
-            ->with('historyData', $data);
+            ->with('historyData', $graph);
     }
 
     /**

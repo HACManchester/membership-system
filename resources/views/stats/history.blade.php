@@ -31,6 +31,19 @@ Stats
 
         var options = {
             title: 'Membership History',
+            series: {
+                // Gives each series an axis name that matches the Y-axis below.
+                0: {axis: 'Temps'},
+                1: {axis: 'Daylight'}
+            },
+            axes: {
+                // Adds labels to each axis; they don't have to match the axis names.
+                y: {
+                    Temps: {label: 'Temps (Celsius)'},
+                    Daylight: {label: 'Daylight'}
+                }
+            }
+
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('membershipHistory'));
