@@ -26,7 +26,7 @@ class StatsController extends Controller
     private function reduceArray($data, $key){
         $arr = array();
         foreach($data as $d){
-            array_push(array(
+            array_push($arr, array(
                 $d['date'],
                 $d['label'],
                 $d['value'], 
