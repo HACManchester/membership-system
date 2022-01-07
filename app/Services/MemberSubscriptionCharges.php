@@ -8,6 +8,7 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
+use GuzzleHttp\Client as HttpClient;
 
 class MemberSubscriptionCharges
 {
@@ -44,13 +45,30 @@ class MemberSubscriptionCharges
      */
     public function createSubscriptionCharges($targetDate)
     {
-        $users = $this->userRepository->getBillableActive();
-        foreach ($users as $user) {
-            if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
-                $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
+        try {
+            $users = $this->userRepository->getBillableActive();
+            foreach ($users as $user) {
+                if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
+                    $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
+                }
             }
+            $this->notifyTelegram("✔️ createSubsriptionCharges ran");
+        }
+        catch(Exception $e) {
+            $this->notifyTelegram("🚨 createSubsriptionCharges encountered an exception");
+            \Log::error($e);
         }
     }
+
+    protected function notifyTelegram($notification)
+    {
+        (new HttpClient)->get(
+            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
+            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+            "&text=⏲️" . urlencode($notification)
+        );
+    }
+
 
     /**
      * Locate all charges that are for today or the past and mark them as due

@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use GuzzleHttp\Client as HttpClient;
 
 class BillMembers extends Command
 {
@@ -43,17 +44,33 @@ class BillMembers extends Command
      */
     public function handle()
     {
-        //Update the payments status from pending to due
-        $this->info('Moving sub charges to due');
-        $this->subscriptionChargeService->makeChargesDue();
+        try{
+            //Update the payments status from pending to due
+            $this->info('Moving sub charges to due');
+            $this->subscriptionChargeService->makeChargesDue();
+    
+            //Bill the due charges
+            $this->info('Billing members');
+            $result = $this->subscriptionChargeService->billMembers();
+    
+            $this->info('Finished');
+    
+            $this->notifyTelegram("✔️ billMembers ran");
+            $this->notifyTelegram("Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.");
+            
+        }catch(Exception $e){
+            $this->notifyTelegram("🚨 billMembers encountered an exception");
+            \Log::error($e);
+        }
+    }
 
-        //Bill the due charges
-        $this->info('Billing members');
-        $result = $this->subscriptionChargeService->billMembers();
-
-        $this->info('Finished');
-
-        return $result;
+    protected function notifyTelegram($notification)
+    {
+        (new HttpClient)->get(
+            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
+            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+            "&text=⏲️" . urlencode($notification)
+        );
     }
 
 }
