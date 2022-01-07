@@ -74,10 +74,10 @@ class Handler extends ExceptionHandler {
         $userString = \Auth::guest() ? "A guest": \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
 
         $notification = $suppress ? 'Trace suppressed' :
-            "Path: <b>/" . \Request::path() . "</b>" .
-            "User: <b>" . $userString . "</b>" . 
+            "Path: <b>/" . \Request::path() . "</b> \n" .
+            "User: <b>" . $userString . "</b> \n" . 
             "Message: <b>" . $error->getMessage() . "</b> \n"  . 
-            "File: <b>" . $error->getFile() . "</b>  \n"  .
+            "File: <b>" . $error->getFile() . "</b> \n"  .
             "Line: <b>" . $error->getLine() . "</b> \n"  . 
             "More Info: https://members.hacman.org.uk/logs";
         (new HttpClient)->get(
