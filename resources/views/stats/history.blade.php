@@ -33,15 +33,16 @@ Stats
             title: 'Membership History',
             series: {
                 // Gives each series an axis name that matches the Y-axis below.
-                0: {axis: 'Temps'},
-                1: {axis: 'Daylight'}
+                0: {targetAxisIndex: 0, pointSize: 5},
+                1: {targetAxisIndex: 1, type: 'line', color: '#5a0'},
+                2: {targetAxisIndex: 1, type: 'line', color: '#f00'}
             },
-            axes: {
+            seriesType: 'area',
+            pointSize: 10,
+            vAxes: {
                 // Adds labels to each axis; they don't have to match the axis names.
-                y: {
-                    Temps: {label: 'Temps (Celsius)'},
-                    Daylight: {label: 'Daylight'}
-                }
+                0: {title: "Total Members", maxValue: 200, minValue: 100},
+                1: {title: "Joins & Leaves", gridlines: { interval: 1 }}
             }
 
         };
