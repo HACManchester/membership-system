@@ -17,11 +17,22 @@ class StatRepository extends DBRepository
 
     public function getCategoryDates($category, $start, $end)
     {
-        return $this->model
+        $obj = $this->model
             ->where('category', $category)
             ->whereDate('date', '>=', $start)
             ->whereDate('date', '<=', $end)
             ->get();
+
+        $arr = array();
+        foreach($obj as $d){
+            array_push($arr, array(
+                "date"=>$d['date'],
+                "label"=>$d['label'],
+                "value"=>$d['value'], 
+            ));
+        }
+
+        return $arr;
     }
 
 } 

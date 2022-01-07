@@ -24,16 +24,7 @@ class StatsController extends Controller
     }
 
     private function reduceArray($data, $key){
-        $arr = array();
-        foreach($data as $d){
-            array_push($arr, array(
-                $d['date'],
-                $d['label'],
-                $d['value'], 
-            ));
-        }
-
-        return array_reduce($arr, function ($acc, $d) {
+        return array_reduce($arr, function ($acc, $d) use ($key){
             if ($d['label'] != $key) {
                 return $acc;
             }
