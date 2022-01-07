@@ -235,6 +235,7 @@ Route::put('large_project/{id}', ['uses'=>'LargeProjectController@update', 'as'=
 
 Route::get('stats', ['uses'=>'StatsController@index', 'middleware'=>'role:member', 'as'=>'stats.index']);
 Route::get('stats/gocardless', ['uses'=>'StatsController@ddSwitch', 'middleware'=>'role:member', 'as'=>'stats.gocardless']);
+Route::get('stats/history', ['uses'=>'StatsController@history', 'middleware'=>'role:member', 'as'=>'stats.history']);
 
 
 

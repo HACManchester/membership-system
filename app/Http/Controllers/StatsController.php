@@ -1,25 +1,32 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Helpers\StatsHelper;
+use BB\Repo\StatRepository;
 
 class StatsController extends Controller
 {
 
     protected $layout = 'layouts.main';
 
-    /**
-     * @var \BB\Repo\UserRepository
-     */
     private $userRepository;
-    /**
-     * @var \BB\Repo\ActivityRepository
-     */
     private $activityRepository;
+    private $statRepository;
 
-    function __construct(\BB\Repo\UserRepository $userRepository, \BB\Repo\ActivityRepository $activityRepository)
+    function __construct(
+        \BB\Repo\UserRepository $userRepository, 
+        \BB\Repo\ActivityRepository $activityRepository,
+        \BB\Repo\StatRepository $statRepository
+        )
     {
         $this->userRepository = $userRepository;
         $this->activityRepository = $activityRepository;
+        $this->statRepository = $statRepository;
+    }
+
+    public function history(){
+        $start = strtotime(date("Y-m-d", strtotime("-7 day")));
+        $data = $this->statRepository->getCategoryDates('membercount', $start, date("Y-m-d"));
+        die(var_dump($data));
     }
 
     /**
