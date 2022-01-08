@@ -37,7 +37,8 @@ class Handler extends ExceptionHandler {
             $level = 'error';
             $title = 'Error';
             $suppress = false;
-
+            $ignore = false;
+            
             $has_status_code = method_exists($e, 'getStatusCode');
             if($has_status_code){
                 $statusCode = $e->getStatusCode();
@@ -46,6 +47,7 @@ class Handler extends ExceptionHandler {
                     $level = 'warn';
                     $title = 'Not Found - ' . \Request::path();
                     $suppress = true;
+                    $ignore = true;
                 }
             }
 
@@ -54,7 +56,7 @@ class Handler extends ExceptionHandler {
                 $title = 'Not Implemented';
             }
 
-            $this->notifyTelegram($level, $title, $suppress, $e);
+            if(!$ignore) $this->notifyTelegram($level, $title, $suppress, $e);
         } catch (Exception $e) {
         }
 

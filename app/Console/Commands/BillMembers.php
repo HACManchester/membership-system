@@ -51,16 +51,15 @@ class BillMembers extends Command
     
             //Bill the due charges
             $this->info('Billing members');
-            $result = $this->subscriptionChargeService->billMembers();
+            $this->subscriptionChargeService->billMembers();
     
             $this->info('Finished');
     
             $this->notifyTelegram("✔️ billMembers ran");
-            $this->notifyTelegram("Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.");
-            
+
         }catch(Exception $e){
-            $this->notifyTelegram("🚨 billMembers encountered an exception");
             \Log::error($e);
+            $this->notifyTelegram("🚨 billMembers encountered an exception");
         }
     }
 
