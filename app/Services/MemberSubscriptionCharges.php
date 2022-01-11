@@ -52,7 +52,7 @@ class MemberSubscriptionCharges
                     $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
                 }
             }
-            $this->notifyTelegram("✔️ createSubsriptionCharges ran");
+            $this->notifyTelegram("✔️ createSubsriptionCharges ran for " . $targetDate);
         }
         catch(Exception $e) {
             $this->notifyTelegram("🚨 createSubsriptionCharges encountered an exception");

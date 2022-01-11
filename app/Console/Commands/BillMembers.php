@@ -46,20 +46,22 @@ class BillMembers extends Command
     {
         try{
             //Update the payments status from pending to due
+            $this->notifyTelegram("✔️ start billing");
+
             $this->info('Moving sub charges to due');
             $this->subscriptionChargeService->makeChargesDue();
-    
+            $this->notifyTelegram("✔️ moved sub charges to due");
+            
             //Bill the due charges
             $this->info('Billing members');
             $this->subscriptionChargeService->billMembers();
-    
-            $this->info('Finished');
-    
             $this->notifyTelegram("✔️ billMembers ran");
 
+            $this->info('Finished');
+
         }catch(Exception $e){
-            \Log::error($e);
             $this->notifyTelegram("🚨 billMembers encountered an exception");
+            \Log::error($e);
         }
     }
 
