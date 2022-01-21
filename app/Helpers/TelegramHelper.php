@@ -41,7 +41,7 @@ class TelegramHelper
         (new HttpClient)->get(
             "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
             "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=" . $this->getId($level) . urlencode($notification)
+            "&text=" . $this->getId($level) . urlencode($message)
         );
     }
 
