@@ -3,7 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use GuzzleHttp\Client as HttpClient;
+use BB\Helpers\TelegramHelper;
 
 class BillMembers extends Command
 {
@@ -27,6 +27,8 @@ class BillMembers extends Command
      */
     private $subscriptionChargeService;
 
+    private $telegramHelper;
+
     /**
      * Create a new command instance.
      */
@@ -35,6 +37,7 @@ class BillMembers extends Command
         parent::__construct();
 
         $this->subscriptionChargeService = \App::make('\BB\Services\MemberSubscriptionCharges');
+        $this->telegramHelper = new TelegramHelper("billMembers");
     }
 
     /**
@@ -46,32 +49,36 @@ class BillMembers extends Command
     {
         try{
             //Update the payments status from pending to due
-            $this->notifyTelegram("✔️ start billing");
+            $this->telegramHelper->notify(
+                TelegramHelper::JOB, 
+                "Start billing..."
+            );
 
             $this->info('Moving sub charges to due');
             $this->subscriptionChargeService->makeChargesDue();
-            $this->notifyTelegram("✔️ moved sub charges to due");
+            $this->telegramHelper->notify(
+                TelegramHelper::JOB, 
+                "Moved sub charges to due"
+            );
+
             
             //Bill the due charges
             $this->info('Billing members');
             $this->subscriptionChargeService->billMembers();
-            $this->notifyTelegram("✔️ billMembers ran");
+            $this->telegramHelper->notify(
+                TelegramHelper::JOB, 
+                "Billed members - job ran."
+            );
 
             $this->info('Finished');
 
         }catch(Exception $e){
-            $this->notifyTelegram("🚨 billMembers encountered an exception");
+            $this->telegramHelper->notify(
+                TelegramHelper::ERROR, 
+                "billMembers encountered an exception"
+            );
+
             \Log::error($e);
         }
     }
-
-    protected function notifyTelegram($notification)
-    {
-        (new HttpClient)->get(
-            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
-            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=⏲️" . urlencode($notification)
-        );
-    }
-
 }

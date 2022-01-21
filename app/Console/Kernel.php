@@ -2,7 +2,7 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use GuzzleHttp\Client as HttpClient;
+use BB\Helpers\TelegramHelper;
 
 class Kernel extends ConsoleKernel
 {
@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         Commands\CheckDeviceOnlineStatuses::class,
     ];
 
+    
     /**
      * Define the application's command schedule.
      *
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $telegram = new TelegramHelper("createSubscriptionCharges");
 
         // $schedule->command('bb:calculate-proposal-votes')->hourly()
         //     ->then( function () { $this->notifyTelegram(''); } );
@@ -45,21 +47,30 @@ class Kernel extends ConsoleKernel
             ->command('bb:check-memberships')
             ->dailyAt('06:00')
             ->then( function () { 
-                $this->notifyTelegram('✅ Checked Memberships'); 
+                $telegram->notify(
+                    TelegramHelper::JOB, 
+                    "✔️ Checked Memberships"
+                );
             });
 
         $schedule
             ->command('bb:update-balances')
             ->dailyAt('03:00')
-            ->then( function () { 
-                $this->notifyTelegram('✅ Updated balances'); 
+            ->then( function () {
+                $telegram->notify(
+                    TelegramHelper::JOB, 
+                    "✔️ Updated Balances"
+                ); 
             });
 
         $schedule
             ->command('bb:create-todays-sub-charges')
             ->dailyAt('01:00')
             ->then( function () { 
-                $this->notifyTelegram('✅ Created today\'s subscription charges'); 
+                $telegram->notify(
+                    TelegramHelper::JOB, 
+                    "✔️ Created today's subscription charges"
+                );
             } );
 
         $schedule
@@ -67,7 +78,10 @@ class Kernel extends ConsoleKernel
             ->dailyAt('01:30')
             ->then( function ($result) { 
                 $notification = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
-                $this->notifyTelegram($notification); 
+                $telegram->notify(
+                    TelegramHelper::JOB, 
+                    $notification
+                );
             });
 
         $schedule
@@ -75,14 +89,4 @@ class Kernel extends ConsoleKernel
             ->everyTenMinutes()
             ->then( function () { });
     }
-
-    protected function notifyTelegram($notification)
-    {
-        (new HttpClient)->get(
-            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
-            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=⏲️" . urlencode($notification)
-        );
-    }
-
 }
