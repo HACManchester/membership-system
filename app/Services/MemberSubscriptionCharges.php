@@ -4,11 +4,11 @@ use BB\Entities\User;
 use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
 use BB\Helpers\GoCardlessHelper;
+use BB\Helpers\TelegramHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
-use GuzzleHttp\Client as HttpClient;
 
 class MemberSubscriptionCharges
 {
@@ -30,12 +30,15 @@ class MemberSubscriptionCharges
      */
     private $paymentRepository;
 
+    private $telegramHelper;
+
     function __construct(UserRepository $userRepository, SubscriptionChargeRepository $subscriptionChargeRepository, GoCardlessHelper $goCardless, PaymentRepository $paymentRepository)
     {
         $this->userRepository = $userRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
         $this->goCardless = $goCardless;
         $this->paymentRepository = $paymentRepository;
+        $this->telegramHelper = new TelegramHelper("createSubscriptionCharges");
     }
 
     /**
@@ -52,23 +55,20 @@ class MemberSubscriptionCharges
                     $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
                 }
             }
-            $this->notifyTelegram("✔️ createSubsriptionCharges ran for " . $targetDate);
+
+            $this->telegramHelper.notify(
+                TelegramHelper::JOB, 
+                "✔️ Job ran for " . date_format($targetDate,"Y-m-d")
+            );
         }
         catch(Exception $e) {
-            $this->notifyTelegram("🚨 createSubsriptionCharges encountered an exception");
+            $this->telegramHelper.notify(
+                TelegramHelper::ERROR, 
+                "Exception running" . date_format($targetDate,"Y-m-d")
+            );
             \Log::error($e);
         }
     }
-
-    protected function notifyTelegram($notification)
-    {
-        (new HttpClient)->get(
-            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
-            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
-            "&text=⏲️" . urlencode($notification)
-        );
-    }
-
 
     /**
      * Locate all charges that are for today or the past and mark them as due

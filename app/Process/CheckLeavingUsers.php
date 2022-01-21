@@ -33,9 +33,9 @@ class CheckLeavingUsers
                     $this->userRepository->memberLeft($user->id);
                     
                     //an email will be sent by the user observer
-                }else{
-                    \Log::error("User marked as active without an expiry date!");
                 }
+            }else{
+                \Log::error("User marked as active without an expiry date!");
             }
 
         }
