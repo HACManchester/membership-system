@@ -67,7 +67,7 @@ class CheckMemberships
 
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "✔️ Checked Memberships - set suspended: " . implode(", ", $members)
+            "Checked Memberships - set suspended: " . implode(", ", $members)
         );
 
     }

@@ -1,6 +1,9 @@
 <?php namespace BB\Observer;
 
 use BB\Mailer\UserMailer;
+use BB\Helpers\TelegramHelper;
+
+$telegramHelper = new TelegramHelper("UserObserver");
 
 class UserObserver
 {
@@ -63,7 +66,11 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendWelcomeMessage();
 
-        $this->sendSlackNotification('#general', $user->name . ' has just joined Hackspace Manchester');
+        $this->telegramHelper->notify(
+            TelegramHelper::RENDER, 
+            "New Member! Welcome to " . $user->name
+        );
+
     }
 
     private function sendConfirmationEmail($user){
@@ -75,6 +82,12 @@ class UserObserver
     {
         $userMailer = new UserMailer($user);
         $userMailer->sendPaymentWarningMessage();
+
+        $this->telegramHelper->notify(
+            TelegramHelper::RENDER, 
+            "User marked with payment warning: " . $user->name
+        );
+
     }
 
     private function suspended($user)
@@ -82,7 +95,10 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendSuspendedMessage();
 
-        $this->sendSlackNotification('#board', $user->name . ' has been suspended for non payment');
+        $this->telegramHelper->notify(
+            TelegramHelper::RENDER, 
+            "User marked as suspended for non payment: " . $user->name
+        );
     }
 
     private function userLeft($user)
@@ -90,7 +106,10 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendLeftMessage();
 
-        $this->sendSlackNotification('#board', $user->name . ' has left Hackspace Manchester');
+        $this->telegramHelper->notify(
+            TelegramHelper::RENDER, 
+            "User marked as left: " . $user->name
+        );
     }
 
     /**

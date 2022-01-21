@@ -38,7 +38,8 @@ class TelegramHelper
                 break;
         }
 
-        return urlencode($emoji . " " . $this->identifier ? " [" . $this->identifier . "] " : " ");
+        $id = $this->identifier ? " [" . $this->identifier . "] " : "";
+        return urlencode("$emoji $id ");
     }
 
     public function notify($level, $message)

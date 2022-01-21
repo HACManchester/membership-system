@@ -35,7 +35,7 @@ class CheckLeavingUsers
                     
                     //set the status to left and active to false
                     $this->userRepository->memberLeft($user->id);
-                    array_push($members, $user->username);
+                    array_push($members, $user->name);
 
                     //an email will be sent by the user observer
                 }
