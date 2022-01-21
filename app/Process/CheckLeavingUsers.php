@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Repo\UserRepository;
+use BB\Helpers\TelegramHelper;
 use Carbon\Carbon;
 
 class CheckLeavingUsers
@@ -11,16 +12,19 @@ class CheckLeavingUsers
      * @var UserRepository
      */
     private $userRepository;
+    private $telegramHelper;
 
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
+        $this->telegramHelper = new TelegramHelper("CheckLeavingUsers");
     }
 
     public function run()
     {
 
         $today = new Carbon();
+        $members = [];
 
         //Fetch and check over active users which have a status of leaving
         $users = User::leaving()->notSpecialCase()->get();
@@ -31,7 +35,8 @@ class CheckLeavingUsers
                     
                     //set the status to left and active to false
                     $this->userRepository->memberLeft($user->id);
-                    
+                    array_push($members, $user->username);
+
                     //an email will be sent by the user observer
                 }
             }else{
@@ -39,6 +44,11 @@ class CheckLeavingUsers
             }
 
         }
+
+        $this->telegramHelper->notify(
+            TelegramHelper::JOB, 
+            "✔️ Members set as left: " . implode(", ", $members)
+        );
     }
 
 } 

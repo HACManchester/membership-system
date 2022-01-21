@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
+use BB\Helpers\TelegramHelper;
 use BB\Services\MemberSubscriptionCharges;
 
 /**
@@ -17,16 +18,20 @@ class CheckMemberships
      * @var MemberSubscriptionCharges
      */
     private $memberSubscriptionCharges;
+    private $telegramHelper;
 
     public function __construct(MemberSubscriptionCharges $memberSubscriptionCharges)
     {
         $this->memberSubscriptionCharges = $memberSubscriptionCharges;
+        $this->telegramHelper = new TelegramHelper("CheckMemberships");
     }
 
     public function run()
     {
 
         $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
+        $members = [];
+
         foreach ($users as $user) {
             /** @var $user \BB\Entities\User */
             echo $user->name;
@@ -53,10 +58,17 @@ class CheckMemberships
             if ($expired) {
                 $user->setSuspended();
                 echo ' - Suspended';
+                array_push($members, $user->name);
             }
 
 
             echo PHP_EOL;
         }
+
+        $this->telegramHelper->notify(
+            TelegramHelper::JOB, 
+            "✔️ Checked Memberships - set suspended: " . implode(", ", $members)
+        );
+
     }
 } 
