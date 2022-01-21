@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
+use BB\Helpers\TelegramHelper;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
 
@@ -12,16 +13,19 @@ class CheckPaymentWarnings
      * @var UserRepository
      */
     private $userRepository;
+    private $telegramHelper;
 
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
+        $this->telegramHelper = new TelegramHelper("CheckPaymentWarnings");
     }
 
     public function run()
     {
 
         $today = new Carbon();
+        $members = [];
 
         //Fetch and check over active users which have a status of leaving
         $users = User::paymentWarning()->get();
@@ -30,6 +34,7 @@ class CheckPaymentWarnings
             if ($user->subscription_expires->lt($today)) {
                 //User has passed their expiry date
                 echo $user->name . ' has a payment warning and has passed their expiry date' . PHP_EOL;
+                array_push($members, $user->name);
 
                 //Check the actual expiry date
 
@@ -51,6 +56,11 @@ class CheckPaymentWarnings
                 echo $user->name . ' has a payment warning but is within their expiry date' . PHP_EOL;
             }
         }
+
+        $this->telegramHelper->notify(
+            TelegramHelper::JOB, 
+            "✔️ Members with payment warning: " . implode(", ", $members)
+        );
     }
 
 } 
