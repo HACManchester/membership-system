@@ -47,7 +47,7 @@ class CheckLeavingUsers
 
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "✔️ Members set as left: " . implode(", ", $members)
+            "Members set as left: " . implode(", ", $members)
         );
     }
 

@@ -59,7 +59,7 @@ class CheckPaymentWarnings
 
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "✔️ Members with payment warning: " . implode(", ", $members)
+            "Members with payment warning: " . implode(", ", $members)
         );
     }
 

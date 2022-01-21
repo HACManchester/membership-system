@@ -20,20 +20,25 @@ class TelegramHelper
     private function getId($level){
         $emoji = "ℹ️";
 
-        switch ($level){
+        switch ($level) { 
             case(self::JOB):
                 $emoji = "⏰";
+                break;
             case(self::LOG):
                 $emoji = "📜";
+                break;
             case(self::RENDER):
                 $emoji = "👀";
+                break;
             case(self::ERROR):
                 $emoji = "🛑";
+                break;
             case(self::WARNING):
                 $emoji = "⚠️";
+                break;
         }
 
-        return $emoji . $this->identifier ? " [" . $this->identifier . "] " : " ";
+        return urlencode($emoji . " " . $this->identifier ? " [" . $this->identifier . "] " : " ");
     }
 
     public function notify($level, $message)

@@ -58,7 +58,7 @@ class MemberSubscriptionCharges
 
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
-                "✔️ Job ran for " . date_format($targetDate,"Y-m-d")
+                "Charges ran for " . date_format($targetDate,"Y-m-d")
             );
         }
         catch(Exception $e) {

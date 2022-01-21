@@ -57,7 +57,7 @@ class CheckSuspendedUsers
 
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "✔️ Members with payment warning: " . implode(", ", $members)
+            "Suspended members marked as left: " . implode(", ", $members)
         );
 
     }
