@@ -56,13 +56,13 @@ class MemberSubscriptionCharges
                 }
             }
 
-            $this->telegramHelper.notify(
+            $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
                 "✔️ Job ran for " . date_format($targetDate,"Y-m-d")
             );
         }
         catch(Exception $e) {
-            $this->telegramHelper.notify(
+            $this->telegramHelper->notify(
                 TelegramHelper::ERROR, 
                 "Exception running" . date_format($targetDate,"Y-m-d")
             );

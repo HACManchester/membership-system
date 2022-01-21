@@ -21,15 +21,15 @@ class TelegramHelper
         $emoji = "ℹ️";
 
         switch ($level){
-            case($this->JOB):
+            case(self::JOB):
                 $emoji = "⏰";
-            case($this->LOG):
+            case(self::LOG):
                 $emoji = "📜";
-            case($this->RENDER):
+            case(self::RENDER):
                 $emoji = "👀";
-            case($this->ERROR):
+            case(self::ERROR):
                 $emoji = "🛑";
-            case($this->WARNING):
+            case(self::WARNING):
                 $emoji = "⚠️";
         }
 
