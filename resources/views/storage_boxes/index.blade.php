@@ -42,9 +42,12 @@
         </div>
         <div class="col-md-6">
             <div class="well">
-                Each member can claim up to 1 storage cube or half a shelf of member storage.
+                <h2>New! Storage Shelves</h2>
+                <p>New storage shelves have been set up - read <a href="https://list.hacman.org.uk/t/storage-has-moved-wheres-my-stuff-gone/3065">this</a> post on the forum for information on where things have been moved.</p>
                 <br />
                 Storage is managed by the <a href="{{ route('groups.show', 'storage') }}">member storage</a> team
+                <br />
+
             </div>
             
         </div>
@@ -65,7 +68,10 @@
     </thead>
 @foreach ($storageBoxes as $box)
     <tbody>
-        <tr @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif>
+        <tr 
+            @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif
+            @if($box->location == 'Old Members Storage') style="display:none;"@endif
+        >
             <td><a href="/storage_boxes/{{$box->id}}">{{ $box->id }}</a></td>
             <td>{{ $box->location }}</td>
             <td>{{ $box->user->name or 'Available' }}</td>
