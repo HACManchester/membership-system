@@ -3,11 +3,8 @@
 use BB\Mailer\UserMailer;
 use BB\Helpers\TelegramHelper;
 
-$telegramHelper = new TelegramHelper("UserObserver");
-
 class UserObserver
 {
-
     /**
      * Welcome online only users when they create their account
      */
@@ -66,6 +63,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendWelcomeMessage();
 
+        $telegramHelper = new TelegramHelper("UserObserver");
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             "New Member! Welcome to " . $user->name
@@ -83,6 +81,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendPaymentWarningMessage();
 
+        $telegramHelper = new TelegramHelper("UserObserver");
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             "User marked with payment warning: " . $user->name
@@ -95,6 +94,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendSuspendedMessage();
 
+        $telegramHelper = new TelegramHelper("UserObserver");
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             "User marked as suspended for non payment: " . $user->name
@@ -106,6 +106,7 @@ class UserObserver
         $userMailer = new UserMailer($user);
         $userMailer->sendLeftMessage();
 
+        $telegramHelper = new TelegramHelper("UserObserver");
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             "User marked as left: " . $user->name
