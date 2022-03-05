@@ -13,6 +13,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        'BB\Http\Middleware\UserSeen',
         'BB\Http\Middleware\ACSSessionControl',
         'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
         'Illuminate\Cookie\Middleware\EncryptCookies',

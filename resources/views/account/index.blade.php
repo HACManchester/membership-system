@@ -57,7 +57,7 @@ Members
             <th>{!! HTML::sortUsersBy('status', 'Status') !!}</th>
             <th class="hidden-xs">{!! HTML::sortUsersBy('key_holder', 'Key Holder') !!}</th>
             <th class="hidden-xs">{!! HTML::sortUsersBy('trusted', 'Trusted') !!}</th>
-            <th class="hidden-xs">Subscription</th>
+            <th class="hidden-xs">{!! HTML::sortUsersBy('created_at', 'Created') !!}/{!! HTML::sortUsersBy('seen_at', 'Seen') !!}</th>
         </tr>
     </thead>
     <tbody>

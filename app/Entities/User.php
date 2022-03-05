@@ -46,6 +46,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property int         monthly_subscription
  * @property string      gocardless_setup_id
  * @property bool   postFob (false=collect, true=post)
+ * @property date last_seen
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
@@ -80,7 +81,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
         'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
-        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob', 'gift'
+        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob', 'gift', 'seen_at'
     ];
 
 
@@ -100,7 +101,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed','seen_at');
     }
 
 
@@ -417,10 +418,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $this->email_verified = true;
         $this->save();
     }
-
+    
     public function emailChanging()
     {
         $this->email_verified = false;
+    }
+
+    public function markAsSeen($userId){
+        $this->seen_at = date("Y-m-d H:i:s");
+        $this->save();
     }
 
     /**

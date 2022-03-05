@@ -42,6 +42,7 @@
         {{ $user->present()->paymentMethod }}<br />
         <span style="color:red;">Expires: {{ $user->present()->subscriptionExpiryDate }}</span><br />
         <span style="color:green">Created: {{ $user->created_at }}</span>
+        <span style="color:blue">Seen: {{ $user->seen_at }}</span>
     </td>
     <!--
     <td>
