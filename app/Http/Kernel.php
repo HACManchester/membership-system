@@ -24,7 +24,7 @@ class Kernel extends HttpKernel
         BrandingHeaders::class,
         //\Clockwork\Support\Laravel\ClockworkMiddleware::class,
         // appending custom middleware 
-        'BB\Http\Middleware\HttpsProtocol' 
+        'BB\Http\Middleware\HttpsProtocol',
         'BB\Http\Middleware\UserSeen',
     ];
 

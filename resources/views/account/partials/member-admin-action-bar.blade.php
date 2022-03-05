@@ -23,6 +23,9 @@
                             )
                             </small>
                         </li>
+                        <li>
+                            <b>Last Seen:</b> {{ date("Y-m-d H:i:s", $user->seen_at) }}
+                        </li>
                     </div>
                     <!-- Panel -->
                     <div class="col-md-6" style="border-left: 3px solid green;">
