@@ -24,7 +24,7 @@
                             </small>
                         </li>
                         <li>
-                            <b>Last Seen:</b> {{ date("Y-m-d H:i:s", $user->seen_at) }}
+                            <b>Last Seen:</b> {{ $user->seen_at }}
                         </li>
                     </div>
                     <!-- Panel -->
