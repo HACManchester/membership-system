@@ -13,7 +13,6 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        'BB\Http\Middleware\UserSeen',
         'BB\Http\Middleware\ACSSessionControl',
         'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
         'Illuminate\Cookie\Middleware\EncryptCookies',
@@ -26,6 +25,7 @@ class Kernel extends HttpKernel
         //\Clockwork\Support\Laravel\ClockworkMiddleware::class,
         // appending custom middleware 
         'BB\Http\Middleware\HttpsProtocol' 
+        'BB\Http\Middleware\UserSeen',
     ];
 
     /**

@@ -424,7 +424,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $this->email_verified = false;
     }
 
-    public function markAsSeen($userId){
+    public function markAsSeen(){
         $this->seen_at = date("Y-m-d H:i:s");
         $this->save();
     }
