@@ -10,6 +10,7 @@
                 <h4>Manage Members</h4>
                 <ul>
                     <li><a href="/account">Search, find, view accounts</a></li>
+                    <li><a href="/account?sortBy=seen_at&direction=desc&limit=20">Recent Members</a></li>
                 </ul>
             </div>
             <div class="col-md-6 well">

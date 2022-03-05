@@ -62,7 +62,8 @@ class UserRepository extends DBRepository
             ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
             ->orWhereHas('keyfobs', function(Builder $q) use ($params){
                 $q->where('key_id', 'like', $params['filter']);
-            });
+            })
+            ->take($params['limit']);
         }
 
         if(!$params['include_online_only']) {
