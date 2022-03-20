@@ -16,7 +16,10 @@ class NewsletterController extends Controller
     {
         $users = $this->userRepository->getWantNewsletter();
 
-        return \Response::json($users);
+        return \Response::json([
+            'count'     => count($users),
+            'emails'    => $users
+        ]);
     }
 
 
