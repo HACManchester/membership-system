@@ -79,7 +79,7 @@ Some inductions require a small expense for test materials, the rest are free. O
 Inductions are conducted in different ways, as stated on the tool page:
 
  - Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
- - Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
+ - Some are conducted online via Moodle at [https://moodle.hacman.org.uk](https://moodle.hacman.org.uk) - to access this use your member system username and password. 
  - Some tools such as the Laser Cutter require an in-person induction
 
 Once you have done the above you will be enrolled onto the appropriate moodle course for the induction and you should also make contact with a trainer to arrange any required in person training this can be done via moodle or through telegram
