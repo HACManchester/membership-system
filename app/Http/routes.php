@@ -74,6 +74,16 @@ Route::group(array('middleware' => 'role:member'), function() {
 });
 
 
+##########################
+# Newsletter
+##########################
+
+Route::group(array('middleware' => 'role:admin'), function() {
+    Route::resource('newsletter', 'NewsletterController', ['only' => ['index', 'show',]]);
+});
+
+
+
 
 ##########################
 # Subscriptions / Payments

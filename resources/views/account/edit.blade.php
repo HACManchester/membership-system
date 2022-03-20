@@ -164,7 +164,7 @@ Edit your details
     </div>
 </div>
 
-<h4>Newsletter Opt-In</h4>
+<h4 id="newsletter">Newsletter Opt-In</h4>
 <div class="row">
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}">
