@@ -19,6 +19,7 @@ We have an inclusive and welcoming community, and these rules ensure it remains 
 
 ## The Member Handbook explains the basics
 We have a member handbook which provides a brief overview of the key aspects of our space. Please take a moment to flick through the member handbook so you're grounded in how the space operates such as:
+
 - Emptying the bins
 - Maintaining tools
 - Parking and Transport
@@ -47,12 +48,12 @@ In your membership account, go to [Keys and Codes](https://members.hacman.org.uk
 On the signup desk as you come in, you'll find a holder of fobs and welcome leaflets. Choose a fob, then follow the instructions to add the fob to your account.
 
 You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
+
 - Click "Your Membership" in the left hand menu
 - Click "Edit" in the top right
 - Enter your key fob ID in the "Key Fob" section 
 - Click save.
 
-**⚠️ Your fob will not work until you have completed this induction, and your first payment has gone through.**
 
 
 -----
@@ -65,6 +66,7 @@ You'll need to enter this ID into the membership system in order to link the fob
 ⚠️ Inductions are mandatory for the more dangerous and expensive machines around the space.
 
 These include but are not limited to:
+
  - the laser cutter
  - 3D printer 
  - lathes (wood, metal)
@@ -75,6 +77,7 @@ Some inductions require a small expense for test materials, the rest are free. O
 ✅ Book inductions on the tool pages. 
 
 Inductions are conducted in different ways, as stated on the tool page:
+
  - Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
  - Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
  - Some tools such as the Laser Cutter require an in-person induction
