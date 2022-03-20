@@ -91,9 +91,10 @@ class HtmlBuilder extends IlluminateHtmlBuilder
         ])->render();
     }
 
-    public function sideNavLink($name, $route, $routeParams = [])
+    public function sideNavLink($name, $route, $routeParams = [], $highlight=false)
     {
-        return '<li><a href="' . route($route, $routeParams) . '">' . $name . '</a></li>';
+        $style = $highlight ? "background:yellow;" : "";
+        return '<li><a style="' . $style . '" href="' . route($route, $routeParams) . '">' . $name . '</a></li>';
     }
 
     public function paymentFormMethodDropdown($methods = [])
