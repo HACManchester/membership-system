@@ -22,8 +22,8 @@
         }
     </style>
     @if(!$user->induction_completed)
-    <div class="alert alert-danger">
-        <b>Please complete this induction to keep access to the space</b>
+    <div class="alert alert-danger" style="background: yellow">
+        <b>⚠️ You have not completed this induction</b>. Please read and confirm you've understood this induction to continue using the space.
     </div>
     @endif
 
