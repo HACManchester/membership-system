@@ -136,7 +136,7 @@ class UserRepository extends DBRepository
 
     public function getWantNewsletter()
     {
-        return $this->model->where('newsletter', '1');
+        return $this->model->where('newsletter', '1')->get();
     }
 
     /**
