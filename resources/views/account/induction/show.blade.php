@@ -21,6 +21,12 @@
             object-fit: cover;
         }
     </style>
+    @if(!$user->induction_completed)
+    <div class="alert alert-danger">
+        <b>Please complete this induction to keep access to the space</b>
+    </div>
+    @endif
+
     <div class="col-sm-12 col-lg-8 col-sm-offset-2 well">
         {!! $document !!}
     </div>
