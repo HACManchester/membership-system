@@ -6,7 +6,7 @@ class UserSeen
 {
     public function handle($request, Closure $next)
     {
-        if(\Auth::user()) {
+        if(!\Auth::guest()) {
             \Auth::user()->markAsSeen();
         }
 

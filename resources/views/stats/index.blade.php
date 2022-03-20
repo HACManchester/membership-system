@@ -146,7 +146,7 @@ Stats
             </p>
             
             <p class="text-center">
-                ⚠️Coming soon. <br/>This is how many members have scanned into the space.
+                ⚠️Keypad entries only. <br/>This is how many members have scanned into the space.
             </p>
             
         </div>

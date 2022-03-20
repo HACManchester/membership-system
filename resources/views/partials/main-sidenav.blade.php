@@ -166,7 +166,7 @@
             </ul>
 
             {!! HTML::sideNavLink('💳 Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
-            {!! HTML::sideNavLink('ℹ️ Getting Started', 'account.induction.show', [Auth::id()]) !!}
+            {!! HTML::sideNavLink('ℹ️ General Induction', 'account.induction.show', [Auth::id()]) !!}
            
         </ul>
         @endif

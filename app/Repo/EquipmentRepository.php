@@ -21,6 +21,11 @@ class EquipmentRepository extends DBRepository
         return $this->model->all();
     }
 
+    public function getByRoom()
+    {
+        return $this->model->groupBy('room')->get();
+    }
+
     public function getRequiresInduction()
     {
         return $this->model->where('requires_induction', true)->get();

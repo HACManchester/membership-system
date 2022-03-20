@@ -82,8 +82,24 @@ class EquipmentController extends Controller
     {
         $requiresInduction = $this->equipmentRepository->getRequiresInduction();
         $doesntRequireInduction = $this->equipmentRepository->getDoesntRequireInduction();
+        $allTools = $this->equipmentRepository->getAll();
 
-        return \View::make('equipment.index')->with('requiresInduction', $requiresInduction)->with('doesntRequireInduction', $doesntRequireInduction);
+        $rooms = [];
+        foreach($allTools as $tool){
+          if (!isset($rooms[$tool->room]))
+          {
+            $rooms[$tool->room] = [];
+          }
+          array_push($rooms[$tool->room], $tool);
+        }
+
+        ksort($rooms);
+
+        return \View::make('equipment.index')
+            ->with('byRoom', $rooms)
+            ->with('rooms', $rooms)
+            ->with('requiresInduction', $requiresInduction)
+            ->with('doesntRequireInduction', $doesntRequireInduction);
     }
 
     public function show($equipmentId)

@@ -1,4 +1,23 @@
-<div class="alert"  style="background: rgba(255,255,255,0.5);">
+<div class="alert alert-info" style="background:white; border-left: 2px solid">
+    @if ($user->keyFob())
+        @foreach ($user->keyFobs()->get() as $fob)
+            @if (substr( $fob->key_id, 0, 2 ) == "ff")
+                <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
+                    🔢 Access code: {{ str_replace('f', '', $fob->key_id) }}
+                </a>
+            @else
+                <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
+                    🔑 Fob: {{ $fob->key_id }}
+                </a>
+            @endif
+        @endforeach
+    @else
+        <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
+            🔑 Set up an access method
+        </a>
+    @endif
+</div>
+<div class="alert alert-info">
     <div class="btn-group" role="group" aria-label="Basic example">
         @if($user->online_only)
             <a href="#" type="button" class="btn btn-warning">Online Only</a>
@@ -10,10 +29,6 @@
         
         <a href="#" type="button" class="btn">
             {!! HTML::spaceAccessLabel($user->active) !!}
-        </a>
-            
-        <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
-            🔑 Access method set up: {{ $user->keyFob() ? "✔️" : "❌" }}
         </a>
 
         @if (!$user->online_only)

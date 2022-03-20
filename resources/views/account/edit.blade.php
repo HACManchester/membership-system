@@ -211,7 +211,7 @@ Edit your details
             Active, paid up, non-banned members have two ways to access the space:
             <ul>
                 <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
-                <li>Using an access code <b>Coming Soon!</b> - this is auto-generated and cannot be edited.</li>
+                <li>Using an access code - this is auto-generated and cannot be edited.</li>
             </ul>
             Use is logged to prevent abuse of this secondary access system.
             </p>
