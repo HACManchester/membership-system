@@ -1,11 +1,13 @@
 # General Member Induction
-**You will not be able to access the space until this is complete.** 
+**⚠️ You will soon not be able to access the space until this is complete.** 
 
 !['the hackspace'](https://www.hacman.org.uk/wp-content/uploads/2016/08/IMG_20200720_225443.jpg)
 <hr/>   
 
 ## You must follow the rules
-Every member must follow the rules in place to ensure that everyone can continue to use the space. We have an inclusive and welcoming community, and these rules ensure it remains as such.
+Every member must follow the rules in place to ensure that everyone can continue to use the space. 
+
+We have an inclusive and welcoming community, and these rules ensure it remains as such.
 
 * You must behave in accordance with the rules
 * You must use tools safely
@@ -16,7 +18,11 @@ Every member must follow the rules in place to ensure that everyone can continue
 ✅ The rules can be read at any time [here](https://hacman.org.uk/rules).
 
 ## The Member Handbook explains the basics
-We have a member handbook which provides a brief overview of the key aspects of our space. Please take a moment to flick through the member handbook so you're grounded in how the space operates.
+We have a member handbook which provides a brief overview of the key aspects of our space. Please take a moment to flick through the member handbook so you're grounded in how the space operates such as:
+- Emptying the bins
+- Maintaining tools
+- Parking and Transport
+- How to report issues
 
 ✅ You can read [a copy online](https://list.hacman.org.uk/t/member-handbook/2890/1)
 
@@ -30,17 +36,15 @@ We have a member handbook which provides a brief overview of the key aspects of 
 
 
 ## Getting in the space for the first time
-When you signed up you'll have selected to either have your fob posted to you, or to collect it.
+Access to the space is either by keycode, or fob. Your access method will start working once your first payment has gone through, and will only remain working as long as your membership is active.
 
-**If your fob is being posted to you**
+### Keycode access - great for your first visit
+In your membership account, go to [Keys and Codes](https://members.hacman.org.uk/account/0/edit#access), where you can generate an access code. These are 8 digits, randomly generated, and associated with your acocunt. 
 
-You need to fill in your payment information. Once done, you'll be posted a fob and a welcome flyer. The fob grants you 24/7 access to the space.
-This flyer will have the ID of the enclosed fob written on it, usually something like:
-`ABCDEF12` or `AB12CD34`. The fob ID will be made up of numbers `0-9`, and letters `A-F`. 
+🚫 Do not give your code out or write it down next to anything indicating it's for Hackspace Manchester.
 
-**If you selected to collect your fob**
-
-On the signup desk as you come in, you'll find a holder of fobs and a welcome leaflet. Choose a fob, then follow the instructions to add the fob to your account. Your fob will start working once your first payment has gone through.
+### Fob access - great for convenience
+On the signup desk as you come in, you'll find a holder of fobs and welcome leaflets. Choose a fob, then follow the instructions to add the fob to your account.
 
 You'll need to enter this ID into the membership system in order to link the fob to your account. This is easy - when it arrives:
 - Click "Your Membership" in the left hand menu
@@ -61,31 +65,42 @@ You'll need to enter this ID into the membership system in order to link the fob
 ⚠️ Inductions are mandatory for the more dangerous and expensive machines around the space.
 
 These include but are not limited to:
- * the laser cutter
- * 3D printer 
- * lathes (wood, metal)
- * CNC machines
+ - the laser cutter
+ - 3D printer 
+ - lathes (wood, metal)
+ - CNC machines
   
 Some inductions require a small expense for test materials, the rest are free. Our inductions are run by volunteer members, and are a mixture of face to face instructions and online. You can find out what tools need inductions and how to book them through the tools & equipment page here on the membership system. 
 
 ✅ Book inductions on the tool pages. 
 
 Inductions are conducted in different ways, as stated on the tool page:
- * Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
- * Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
- * Some tools such as the Laser Cutter require an in-person induction
+ - Some inductions are simply reading the manual, or watching some videos so you understand how to use and maintail the tool, others are done in person. 
+ - Some are conducted online via Moodle at [https://moodle.hacman.org.uk] (https://moodle.hacman.org.uk) - to access this use your member system username and password. 
+ - Some tools such as the Laser Cutter require an in-person induction
 
 Once you have done the above you will be enrolled onto the appropriate moodle course for the induction and you should also make contact with a trainer to arrange any required in person training this can be done via moodle or through telegram
 
+🚫 Using a tool inapproproately can mean you lose your inducted status.
 
-## Members Storage
+
+## Storing Items in the space
+Storage is strictly limited to either
+- Members' Storage
+- Large Project Storage
+
+We operate a box of shame, where items left out are put into. They're rotated every week, and after three weeks, they're binned. If you see something left out, put it in the box of shame. Don't add tools or peoples' phones, valuables etc into it.
+
+🚫 Do not store things around the space. It's fine to leave something out for a day if it needs to dry, but add a label explaining this, and make sure you store it properly within a day. Else it could get put in the box of shame.
+
+### Members' Storage
 Active members are permitted to store some things within a 600x400mm space. You need to claim your space on the membership system, which correlates to a physical storage area in the hackspace. 
 
 ✅ To Claim a storage space, find a place that works for you in the hackspace, note the ID, then go to the membership system, and in the "Member Storage" page, and simply find the corresponding number and click claim.  
 
-If you no longer need your members storage space or you are leaving the hackspace please ensure you return the space. If not it will remain occupied until someone does a manual clearout - anything that is left after you leave may be destroyed, disposed of, moved or hacked.
+⚠️ If you do not claim a storage space that you're using, it could be cleared out. Make sure your box or items are labeled. Anything that is left after you leave the space may be destroyed, disposed of, moved or hacked.
 
-## Large Project Storage
+### Large Project Storage
 We have extremely limited space for the storage of large projects. This is detailed in the Member Handbook - but all projects stored there must be labelled appropriately with contact details, and be actively worked on.
 
 -----
