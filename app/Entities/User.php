@@ -80,7 +80,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $fillable = [
         'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
-        'monthly_subscription', 'profile_private', 'hash', 'rules_agreed',
+        'monthly_subscription', 'profile_private', 'newsletter', 'hash', 'rules_agreed',
         'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob', 'gift', 'seen_at'
     ];
 
@@ -95,6 +95,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'induction_completed'   => 0,
         'payment_day'           => 0,
         'profile_private'       => 0,
+        'newsletter'            => 0,
         'cash_balance'          => 0,
     ];
 
