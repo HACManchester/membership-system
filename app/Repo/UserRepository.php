@@ -134,6 +134,11 @@ class UserRepository extends DBRepository
         return $memberDropdown;
     }
 
+    public function getWantNewsletter()
+    {
+        return $this->model->where('newsletter', '1');
+    }
+
     /**
      * @param array   $memberData The new members details
      * @param boolean $isAdminCreating Is the user making the change an admin

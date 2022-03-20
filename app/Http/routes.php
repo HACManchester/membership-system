@@ -83,8 +83,6 @@ Route::group(array('middleware' => 'role:admin'), function() {
 });
 
 
-
-
 ##########################
 # Subscriptions / Payments
 ##########################

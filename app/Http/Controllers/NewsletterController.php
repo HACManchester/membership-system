@@ -1,16 +1,22 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Repo\UserRepository;
+
 class NewsletterController extends Controller
 {
 
+    private $userRepository;
+
+    function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function index()
     {
-        $guest = \Auth::guest();
-        $user = \Auth::user();
+        $users = $this->userRepository->getWantNewsletter();
 
-        \View::share('body_class', 'home');
-        return \View::make('home')->with('guest', $guest)->with('user', $user);
+        return \Response::json($users);
     }
 
 
