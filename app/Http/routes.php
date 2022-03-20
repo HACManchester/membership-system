@@ -78,7 +78,7 @@ Route::group(array('middleware' => 'role:member'), function() {
 # Newsletter
 ##########################
 
-Route::group(array('middleware' => 'role:admin'), function() {
+Route::group(array('middleware' => 'trusted'), function() {
     Route::resource('newsletter', 'NewsletterController', ['only' => ['index', 'show',]]);
 });
 
