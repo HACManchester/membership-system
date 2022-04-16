@@ -205,7 +205,7 @@ class AccountController extends Controller
             'profile_photo_private',
             'rules_agreed',
             'visited_space',
-            'postFob',
+            //'postFob',
             'gift_code'
         );
 

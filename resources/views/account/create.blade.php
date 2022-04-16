@@ -236,33 +236,7 @@ Join Hackspace Manchester
             {!! Notification::getErrorDetail('newsletter') !!}
             <span class="help-block">Optionally, sign up to receive monthly to quarterly emails with updates about goings on, upcoming events, etc</span>
         </div>
-    </div>
-
-    <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
-        <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,255,0,0.2)">
-            <h4>Access to the space</h4>
-            <b>Once paid up, you can get 24/7 access with an access code.</b>
-            <p>You can also set up a fob, which can be posted to you, or you can collect it from the space.<br/></p>
-            <div class="radio">
-                <label data-toggle="tooltip" title="Collect my fob from the space">
-                    {!! Form::radio('postFob', false, true) !!}
-                    Collect my fob from the space
-                </label>
-                <p style="color: darkblue;padding-left: 1.5em;">
-                    Use an access code for immediate access, and set up a fob when you're in the space.
-                </p>
-            </div>
-            <div class="radio">
-                <label data-toggle="tooltip" title="Have my fob posted to me">
-                    {!! Form::radio('postFob', true, false) !!}
-                    Have my fob posted to me
-                </label>
-                <p style="color: darkblue;padding-left: 1.5em;">
-                    Your fob will be posted to the address above, after payment has been completed. It may take a week to arrive.
-                </p>
-            </div>
-        </div>
-    </div>
+    </div>         
 
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,0,0,0.05)">
