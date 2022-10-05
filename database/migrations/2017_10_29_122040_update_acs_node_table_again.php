@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUserSubscriptionIdField extends Migration
+class UpdateAcsNodeTableAgain extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddUserSubscriptionIdField extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('gocardless_setup_id')->nullable()->after('subscription_id');
+        Schema::table('acs_nodes', function (Blueprint $table) {
+            $table->boolean('entry_device')->default(0)->after('monitor_heartbeat');
         });
     }
 
@@ -24,8 +24,8 @@ class AddUserSubscriptionIdField extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['gocardless_setup_id']);
+        Schema::table('acs_nodes', function (Blueprint $table) {
+            $table->dropColumn(['entry_device']);
         });
     }
 }
