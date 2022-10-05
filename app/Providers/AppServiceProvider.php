@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar',
 			'BB\Services\Registrar'
 		);
-	}
+		
+		if ($this->app->isLocal()) {
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+		}
 
+	}
 }

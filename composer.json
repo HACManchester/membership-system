@@ -38,7 +38,8 @@
         "mockery/mockery": "~0.9",
         "codeception/codeception": "~2.1@beta",
         "codeception/mockery-module": "~0.2",
-        "fzaninotto/faker": "~1.4"
+        "fzaninotto/faker": "~1.4",
+        "barryvdh/laravel-ide-helper": "*"
     },
     "autoload": {
         "classmap": [
@@ -61,7 +62,9 @@
             "php artisan optimize"
         ],
         "post-update-cmd": [
-            "php artisan optimize"
+            "php artisan optimize",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta"
         ],
         "post-create-project-cmd": [
             "php -r \"copy('.env.example', '.env');\"",
