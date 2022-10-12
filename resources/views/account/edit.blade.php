@@ -210,8 +210,7 @@ Edit your details
         <div class="panel panel-info">
             <div class="panel-heading">Adding a keyfob</div>
             <div class="panel-body">
-                <p><b>If you have your welcome flyer and fob,</b> just enter the ID on the flyer into the box below and hit "Add a new fob"
-                <p><b>If you are at the space signup desk,</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
+                <p><b>If you are at the space signup desk</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
             </div>
         </div>
     @endif
@@ -223,9 +222,9 @@ Edit your details
             Active, paid up, non-banned members have two ways to access the space:
             <ul>
                 <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
-                <li>Using an access code - this is auto-generated and cannot be edited.</li>
+                <li>Using an access code - once you have a fob, you may generate an access code which is auto-generated and cannot be edited.</li>
             </ul>
-            Use is logged to prevent abuse of this secondary access system.
+            Use is logged to prevent abuse of the space.
             </p>
         </div>
     </div>
@@ -267,37 +266,49 @@ Edit your details
     @endforeach
     </ol>
 
-    @if ($user->keyFobs()->count() < 2)
-    <div class="row well">
-        <div class="col-md-6">
-            <h4>Add a Keyfob</h4>
-            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-5">
-                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                    Characters A-F and numbers 0-9 only.
+    @if ($user->induction_completed)
+        @if ($user->keyFobs()->count() < 2)
+            <div class="row well">
+                <div class="col-md-6">
+                    <h4>Add a Keyfob</h4>
+                    {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                            Characters A-F and numbers 0-9 only.
+                        </div>
+                        <div class="col-sm-3">
+                            {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
+                        </div>
+                    </div>
+                    {!! Form::hidden('user_id', $user->id) !!}
+                    {!! Form::close() !!}
                 </div>
-                <div class="col-sm-3">
-                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
+                <div class="col-md-6">
+                    <h4>Request access code</h4>
+                    @if($user->keyFobs()->count() > 0)
+                    {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            {!! Form::hidden('key_id', 'ff00000000') !!}
+                            {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+                        </div>
+                    </div>
+                    {!! Form::hidden('user_id', $user->id) !!}
+                    {!! Form::close() !!}
+                    @else
+                        <p><b>Sorry, you need to set up a fob first</b> This is so that new members meet with an existing member to set their fob up and get a general induction</p>
+                    @endif
                 </div>
             </div>
-            {!! Form::hidden('user_id', $user->id) !!}
-            {!! Form::close() !!}
-        </div>
-        <div class="col-md-6">
-            <h4>Request access code</h4>
-            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-            <div class="form-group">
-                <div class="col-sm-3">
-                    {!! Form::hidden('key_id', 'ff00000000') !!}
-                    {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
-                </div>
-            </div>
-            {!! Form::hidden('user_id', $user->id) !!}
-            {!! Form::close() !!}
-        </div>
-    </div>
-
+        @else
+            <p>You have added the maximum number of entry methods permitted.</p>
+        @endif
+    @else
+        <p>
+            You must <a href="/account/0/induction">complete your General Induction</a> before you can get physical access to the space.<br>
+            This is so you understand and agree to the rules.
+        </p>
     @endif
 @else
 <div class="alert alert-danger">

@@ -35,16 +35,21 @@ class KeyFobController extends Controller
      */
     public function store()
     {
-        if(\Auth::user()->online_only){
+        if(\Auth::user()->online_only || !\Auth::user()->induction_completed){
             throw new \BB\Exceptions\AuthenticationException();
         }
 
         $input = \Input::only('user_id', 'key_id');
 
-        //If the fob befins with ff it's a request for an access cod
+        //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
-
         if(substr( $input['key_id'], 0, 2 ) === "ff"){
+            // Don't allow users to set up a keycode if they don't have an access method (i.e. fob)
+            if(\Auth::user()->keyFobs()->count() == 0){
+                throw new \BB\Exceptions\AuthenticationException();
+            }
+
+            // generate random access code, if there's a collision, it'll fail due to db constraints
             $input['key_id']="ff".rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
         }
 
