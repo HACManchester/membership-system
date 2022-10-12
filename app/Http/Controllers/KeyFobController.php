@@ -61,7 +61,7 @@ class KeyFobController extends Controller
         ]);
 
         \Notification::success("Key fob/Access code has been activated");
-        return \Redirect::route('account.show', $input['user_id']);
+        return \Redirect::route('account.show', \Auth::user()->id);
     }
 
 
