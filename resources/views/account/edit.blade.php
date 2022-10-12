@@ -207,14 +207,6 @@ Edit your details
 
 <h2 id="access">Key Fobs and Access Codes</h4>
 @if (!$user->online_only)
-    @if (!$user->keyfob())
-        <div class="panel panel-info">
-            <div class="panel-heading">Adding a keyfob</div>
-            <div class="panel-body">
-                <p><b>If you are at the space signup desk</b> select the text box to add a new fob, then scan your fob with the reader. Then hit "Add new fob"</p>   
-            </div>
-        </div>
-    @endif
 
     <div class="panel panel-warning">
         <div class="panel-heading">Getting into the space</b></div>
@@ -281,6 +273,16 @@ Edit your details
 
     <h3>Add a new entry method</h3>
     @if ($user->induction_completed)
+        @if (!$user->keyfob())
+            <div class="panel panel-info">
+                <div class="panel-heading">You have no entry methods added</div>
+                <div class="panel-body">
+                    <p><b>If you are logged in on the hackspace computer</b> select the text box below, then scan your fob with the reader. The ID will be typed in.</p>   
+                    <p><b>If you are logged in on your own device</b>, open a blank text document, then scan your fob. The fob ID will be typed in. Add this to your account below.</p>   
+                </div>
+            </div>
+        @endif
+        
         @if ($user->keyFobs()->count() < 2)
             <div class="row well">
                 <div class="col-md-6">
