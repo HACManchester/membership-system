@@ -208,7 +208,7 @@ Edit your details
 <h2 id="access">Key Fobs and Access Codes</h4>
 @if (!$user->online_only)
 
-    <div class="panel panel-warning">
+    <div class="panel panel-info">
         <div class="panel-heading">Getting into the space</b></div>
         <div class="panel-body">
             <p>
@@ -224,7 +224,7 @@ Edit your details
 
     <h3>Your existing entry methods</h3>
     @if ($user->keyFobs()->count() == 0)
-        <div class="panel panel-info">
+        <div class="panel panel-warning">
             <div class="panel-heading">No entry methods</div>
             <div class="panel-body">
                 <p>
@@ -329,7 +329,7 @@ Edit your details
             <p>You have added the maximum number of entry methods permitted.</p>
         @endif
     @else
-        <div class="panel panel-info">
+        <div class="panel panel-warning">
             <div class="panel-heading">You need to do your online general induction</div>
             <div class="panel-body">
                 <p>
