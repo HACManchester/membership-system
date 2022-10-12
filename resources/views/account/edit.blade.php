@@ -229,43 +229,56 @@ Edit your details
         </div>
     </div>
 
-    <ol>
-    @foreach ($user->keyFobs()->get() as $fob)
-        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
-            <li>
-                @if (substr( $fob->key_id, 0, 2 ) !== "ff")
-                    <p>
-                        <div class="badge" style="background:forestgreen">
-                        🔑 Fob
+    <h3>Your existing entry methods</h3>
+    @if ($user->keyFobs()->count() == 0)
+        <div class="panel panel-info">
+            <div class="panel-heading">No entry methods</div>
+            <div class="panel-body">
+                <p>
+                    You have no entry methods added to your account.
+                </p>
+            </div>
+        </div>
+    @else
+        <ol>
+        @foreach ($user->keyFobs()->get() as $fob)
+            {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
+                <li>
+                    @if (substr( $fob->key_id, 0, 2 ) !== "ff")
+                        <p>
+                            <div class="badge" style="background:forestgreen">
+                            🔑 Fob
+                            </div>
+                            <div class="badge">
+                                Fob ID: {{ $fob->key_id }}
+                            </div> 
+                            <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                        </p>
+                        <div class="">
+                            {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
                         </div>
-                        <div class="badge">
-                            Fob ID: {{ $fob->key_id }}
-                        </div> 
-                        <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                    </p>
-                    <div class="">
-                        {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
-                    </div>
-                @else
-                    <p>
-                        <div class="badge" style="background:tomato">
-                        🔢 Access Code
+                    @else
+                        <p>
+                            <div class="badge" style="background:tomato">
+                            🔢 Access Code
+                            </div>
+                            <div class="badge">
+                                Code: {{ str_replace('f', '', $fob->key_id) }}
+                            </div> 
+                            <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                        </p>
+                        <div class="">
+                            {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
                         </div>
-                        <div class="badge">
-                            Code: {{ str_replace('f', '', $fob->key_id) }}
-                        </div> 
-                        <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                    </p>
-                    <div class="">
-                        {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
-                    </div>
-                @endif
-            </li>
-        {!! Form::hidden('user_id', $user->id) !!}
-        {!! Form::close() !!}
-    @endforeach
-    </ol>
+                    @endif
+                </li>
+            {!! Form::hidden('user_id', $user->id) !!}
+            {!! Form::close() !!}
+        @endforeach
+        </ol>
+    @endif
 
+    <h3>Add a new entry method</h3>
     @if ($user->induction_completed)
         @if ($user->keyFobs()->count() < 2)
             <div class="row well">
@@ -305,10 +318,15 @@ Edit your details
             <p>You have added the maximum number of entry methods permitted.</p>
         @endif
     @else
-        <p>
-            You must <a href="/account/0/induction">complete your General Induction</a> before you can get physical access to the space.<br>
-            This is so you understand and agree to the rules.
-        </p>
+        <div class="panel panel-info">
+            <div class="panel-heading">You need to do your online general induction</div>
+            <div class="panel-body">
+                <p>
+                    You must <a href="/account/0/induction">complete your General Induction</a> before you can get physical access to the space.<br>
+                    This is so you understand and agree to the rules.
+                </p>
+            </div>
+        </div>
     @endif
 @else
 <div class="alert alert-danger">
