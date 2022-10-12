@@ -6,6 +6,9 @@ ARG WWWGROUP
 ARG NODE_VERSION=6
 ARG POSTGRES_VERSION=13
 
+# This won't be entirely reliable across versions as package names may vary
+ARG PHP_VERSION=7.2
+
 WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -23,14 +26,14 @@ RUN apt-get update \
     && gpg --export 0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c > /usr/share/keyrings/ppa_ondrej_php.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu bionic main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
     && apt-get update \
-    && apt-get install -y php7.1-cli php7.1-dev \
-       php7.1-pgsql php7.1-sqlite3 php7.1-gd \
-       php7.1-curl php7.1-memcached \
-       php7.1-imap php7.1-mysql php7.1-mbstring \
-       php7.1-xml php7.1-zip php7.1-bcmath php7.1-soap \
-       php7.1-intl php7.1-readline php7.1-pcov \
-       php7.1-msgpack php7.1-igbinary php7.1-ldap \
-       php7.1-redis php7.1-xdebug \
+    && apt-get install -y php$PHP_VERSION-cli php$PHP_VERSION-dev \
+       php$PHP_VERSION-pgsql php$PHP_VERSION-sqlite3 php$PHP_VERSION-gd \
+       php$PHP_VERSION-curl php$PHP_VERSION-memcached \
+       php$PHP_VERSION-imap php$PHP_VERSION-mysql php$PHP_VERSION-mbstring \
+       php$PHP_VERSION-xml php$PHP_VERSION-zip php$PHP_VERSION-bcmath php$PHP_VERSION-soap \
+       php$PHP_VERSION-intl php$PHP_VERSION-readline php$PHP_VERSION-pcov \
+       php$PHP_VERSION-msgpack php$PHP_VERSION-igbinary php$PHP_VERSION-ldap \
+       php$PHP_VERSION-redis php$PHP_VERSION-xdebug \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Node 6 doesn't install properly by default. We need to prioritise the nodesource repo
@@ -52,14 +55,14 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php7.1
+RUN setcap "cap_net_bind_service=+ep" /usr/bin/php$PHP_VERSION
 
 RUN groupadd --force -g $WWWGROUP sail
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
 
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/7.1/cli/conf.d/99-sail.ini
+COPY php.ini /etc/php/$PHP_VERSION/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 8000

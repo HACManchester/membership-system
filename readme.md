@@ -68,7 +68,7 @@ The encryption key is essential and cannot be changed or lost once set<br />
 
 ### Getting started
 
-We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)), adjusted to run PHP 7.1 and Node 6 as was standard for Laravel 5.1.
+We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)), adjusted to run PHP 7.2 and Node 6 (our live environment is running 4.8.2, but it's too much faff downgrading far enough to run that).
 
 Prerequisites:
 

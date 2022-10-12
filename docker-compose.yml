@@ -3,7 +3,7 @@ version: "3"
 services:
   laravel:
     build:
-      context: .docker/runtimes/7.1
+      context: .docker/runtimes/7.2
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP}"
