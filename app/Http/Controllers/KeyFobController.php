@@ -55,7 +55,7 @@ class KeyFobController extends Controller
 
         $this->keyFobForm->validate($input);
 
-        KeyFob::create((
+        KeyFob::create(array(
             "user_id" => \Auth::user()->id, 
             "key_id" => $input['key_id']
         ));
