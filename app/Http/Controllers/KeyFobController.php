@@ -55,10 +55,10 @@ class KeyFobController extends Controller
 
         $this->keyFobForm->validate($input);
 
-        KeyFob::create(array(
-            "user_id" => \Auth::user()->id, 
-            "key_id" => $input['key_id']
-        ));
+        KeyFob::create([
+            'user_id' => \Auth::user()->id, 
+            'key_id' => $input['key_id']
+        ]);
 
         \Notification::success("Key fob/Access code has been activated");
         return \Redirect::route('account.show', $input['user_id']);
