@@ -11,6 +11,7 @@ Edit your details
 @section('content')
 
 
+<h2>Your Details</h2>
 {!! Form::model($user, array('route' => ['account.update', $user->id], 'method'=>'PUT', 'files'=>true)) !!}
 
 <div class="row">
@@ -164,7 +165,7 @@ Edit your details
     </div>
 </div>
 
-<h4 id="newsletter">Newsletter Opt-In</h4>
+<h2 id="newsletter">Newsletter Opt-In</h4>
 <div class="row">
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}">
@@ -204,7 +205,7 @@ Edit your details
 
 {!! Form::close() !!}
 
-<h4 id="access">Key Fobs and Access Codes</h4>
+<h2 id="access">Key Fobs and Access Codes</h4>
 @if (!$user->online_only)
     @if (!$user->keyfob())
         <div class="panel panel-info">
