@@ -302,7 +302,6 @@ Edit your details
                                     {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
                                 </div>
                             </div>
-                            {!! Form::hidden('user_id', $user->id) !!}
                             {!! Form::close() !!}
                         </div>
                         <div class="col-md-6">
@@ -315,7 +314,6 @@ Edit your details
                                         {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
                                     </div>
                                 </div>
-                                {!! Form::hidden('user_id', $user->id) !!}
                                 {!! Form::close() !!}
                             @else
                                 <p><b>Sorry, you need to set up a fob before you get an access code.</b><br>

@@ -39,7 +39,7 @@ class KeyFobController extends Controller
             throw new \BB\Exceptions\AuthenticationException();
         }
 
-        $input = \Input::only('user_id', 'key_id');
+        $input = \Input::only('key_id');
 
         //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
@@ -55,7 +55,10 @@ class KeyFobController extends Controller
 
         $this->keyFobForm->validate($input);
 
-        KeyFob::create($input);
+        KeyFob::create((
+            "user_id" => \Auth::user()->id, 
+            "key_id" => $input['key_id']
+        );
 
         \Notification::success("Key fob/Access code has been activated");
         return \Redirect::route('account.show', $input['user_id']);
