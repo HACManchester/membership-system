@@ -287,15 +287,15 @@ Edit your details
                 <div class="col-md-6">
                     <h4>Request access code</h4>
                     @if($user->keyFobs()->count() > 0)
-                    {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            {!! Form::hidden('key_id', 'ff00000000') !!}
-                            {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+                        {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                {!! Form::hidden('key_id', 'ff00000000') !!}
+                                {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+                            </div>
                         </div>
-                    </div>
-                    {!! Form::hidden('user_id', $user->id) !!}
-                    {!! Form::close() !!}
+                        {!! Form::hidden('user_id', $user->id) !!}
+                        {!! Form::close() !!}
                     @else
                         <p><b>Sorry, you need to set up a fob first</b> This is so that new members meet with an existing member to set their fob up and get a general induction</p>
                     @endif
