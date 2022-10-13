@@ -259,12 +259,17 @@ class EquipmentController extends Controller
             'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe', 'docs'
         ];
 
-        $trustedFields = \Auth::user()->trusted || \Auth::user()->isAdmin() ? 
+        $isTrainerOrAdmin = $this
+        ->inductionRepository
+        ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
+
+        $additionalFields = $isTrainerOrAdmin ? 
         ['dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
             'induction_instructions', 'trainer_instructions', 'trained_instructions'
         ]: [];
 
-        $data = \Request::only(array_merge($trustedFields, $normalFields));
+        $data = \Request::only(array_merge($additionalFields, $normalFields));
         $this->equipmentValidator->validate($data, $equipment->id);
 
         $this->equipmentRepository->update($equipment->id, $data);
