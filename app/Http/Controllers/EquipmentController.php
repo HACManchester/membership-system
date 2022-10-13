@@ -220,12 +220,17 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
+        $isTrainer = Induction::where('user_id', \Auth::user()->id)
+            ->where('key', $equipment->induction_category)
+            ->where('is_trainer', 1)
+            ->count() > 0;
+        
         return \View::make('equipment.edit')
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
             ->with('ppeList', $this->ppeList)
-            ->with('trusted', \Auth::user()->trusted || \Auth::user()->isAdmin());
+            ->with('isTrainer', $isTrainer || \Auth::user()->isAdmin());
     }
 
 
