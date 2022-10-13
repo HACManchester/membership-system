@@ -44,6 +44,16 @@ class InductionRepository extends DBRepository
         });
     }
 
+    /**
+     * @param $userID
+     * @return bool
+     */
+    public function isTrainerForEquipment($deviceId){
+        return $this->model->where('user_id', \Auth::user()->id)
+            ->where('key', $deviceId)
+            ->where('is_trainer', 1)
+            ->count() > 0;
+    }
 
     /**
      * Get all the users who have been trained on a piece of equipment

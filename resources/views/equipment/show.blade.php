@@ -175,7 +175,7 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
                         </a>
                         {{ $trainer->user->name }}
-                        @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                        @if (Auth::user()->isAdmin() || $isTrainerOrAdmin)
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
                             {!! Form::hidden('not_trainer', '1') !!}
                             {!! Form::hidden('slug', $equipment->slug) !!}
@@ -200,7 +200,7 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
-                        @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                        @if (Auth::user()->isAdmin() || $isTrainerOrAdmin)
                             {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('mark_untrained', '1') !!}
                             {!! Form::hidden('slug', $equipment->slug) !!}
@@ -229,7 +229,7 @@ Tools and Equipment
                             {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                             {{ $trainedUser->user->name }}
                         </a>
-                        @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                        @if (Auth::user()->isAdmin() || $isTrainerOrAdmin)
                             {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
                             {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                             {!! Form::hidden('slug', $equipment->slug) !!}
@@ -244,7 +244,7 @@ Tools and Equipment
                         @endif
                     </div>
                 @endforeach
-                @if (Auth::user()->isAdmin() || Auth::user()->trusted)
+                @if (Auth::user()->isAdmin() || $isTrainerOrAdmin)
                     <div class="list-group-item">
                         <p>Add a member</p>
                         {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
