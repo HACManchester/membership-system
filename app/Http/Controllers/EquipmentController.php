@@ -128,7 +128,7 @@ class EquipmentController extends Controller
 
         $isTrainerOrAdmin = $this
             ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin()
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
 
         // Get info from the docs system
         $docs ='';
@@ -227,7 +227,7 @@ class EquipmentController extends Controller
 
         $isTrainerOrAdmin = $this
             ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin()
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
 
         
         return \View::make('equipment.edit')
