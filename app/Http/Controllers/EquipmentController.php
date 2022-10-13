@@ -126,6 +126,10 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
+        $isTrainerOrAdmin = $this
+            ->inductionRepository
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
         // Get info from the docs system
         $docs ='';
         if($equipment->docs){
@@ -149,6 +153,7 @@ class EquipmentController extends Controller
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
             ->with('user', $user)
+            ->with('isTrainerOrAdmin', $isTrainerOrAdmin)
             ->with('memberList', $memberList)
             ->with('docs', $docs);
     }
@@ -220,12 +225,17 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::lists('title', 'id');
 
+        $isTrainerOrAdmin = $this
+            ->inductionRepository
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
+        
         return \View::make('equipment.edit')
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
             ->with('ppeList', $this->ppeList)
-            ->with('trusted', \Auth::user()->trusted || \Auth::user()->isAdmin());
+            ->with('isTrainerOrAdmin', $isTrainerOrAdmin);
     }
 
 
