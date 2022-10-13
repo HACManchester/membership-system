@@ -85,12 +85,12 @@ class KeyFobController extends Controller
      */
     public function destroy($id)
     {
-        $fob = KeyFob::where('id', $id);
+        $fobQuery = KeyFob::where('id', $id);
 
         if(!\Auth::user()->isAdmin()){
-            $fob->where('user_id', \Auth::user()->id);
+            $fobQuery->where('user_id', \Auth::user()->id);
         }
-        $fob->first();
+        $fob = $fobQuery->firstOrFail();
         $fob->markLost();
         \Notification::success("Key Fob marked as lost/broken");
         return \Redirect::route('account.show',$fob->user_id);
