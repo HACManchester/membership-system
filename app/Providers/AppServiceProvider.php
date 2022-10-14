@@ -35,7 +35,15 @@ class AppServiceProvider extends ServiceProvider {
 		);
 		
 		if ($this->app->isLocal()) {
-			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+			/**
+			 * This was breaking live (:
+			 * 
+			 * TODO: Properly re-install ide-helper as per 2.4.2 instructions (last compatible with Laravel 5.1)
+			 * @see https://github.com/barryvdh/laravel-ide-helper/tree/v2.4.3#install
+			 * 
+			 * Will also need a composer install on live, which hasn't been done in a while. Need to carefully plan.
+			 */
+			// $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 
 	}
