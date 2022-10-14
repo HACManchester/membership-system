@@ -165,7 +165,7 @@ Join Hackspace Manchester
         @else
         <ul>
             <li>£20 a month, like a cheap gym membership, is the recommended amount for new starters.</li>
-            <li>You can pay less, perhaps if you're on lower income.</li>
+            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of £15. Click the link above for more advice.</li>
             <li>You can pay more (£25-£50) if you'd like to support the space.</li>
         </ul>
         @endif
@@ -269,12 +269,12 @@ Join Hackspace Manchester
             <div class="modal-body">
                 <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
 
-                &pound;12.50 - &pound;15 a month:
+                Minimum &pound;15 a month:
                 <ul>
                     <li>You are on a low income and unable to afford a higher amount.</li>
                 </ul>
 
-                &pound;15 - &pound;20 a month:
+                &pound;20 a month:
                 <ul>
                     <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
                 </ul>
@@ -290,7 +290,7 @@ Join Hackspace Manchester
                 </p>
 
                 <p>
-                    If you would like to pay less than &pound;12.50 a month please select an amount over £12.50 and complete
+                    If you would like to pay less than &pound;15 a month please select an amount over £15 and complete
                     this form, on the next page you will be asked to setup a subscription payment.
                     Before you do this please send the board an email letting them know how much you would like to
                     pay, they will then override the amount so you can continue to setup a subscription.
