@@ -479,10 +479,10 @@ class AccountController extends Controller
     {
         $amount = \Input::get('monthly_subscription');
 
-        if ($amount < 12.50) {
-            throw new ValidationException('The minimum subscription is 12.50 GBP');
-        } elseif (!\Auth::user()->isAdmin() && ($amount < 12.50)) {
-            throw new ValidationException('The minimum subscription is 12.50 GBP, please contact the board for a lower amount. board@hacman.org.uk');
+        if ($amount < 15.00) {
+            throw new ValidationException('The minimum subscription is 15.00 GBP');
+        } elseif (!\Auth::user()->isAdmin() && ($amount < 15.00)) {
+            throw new ValidationException('The minimum subscription is 15.00 GBP, please contact the board for a lower amount. board@hacman.org.uk');
         }
 
         $user = User::findWithPermission($id);
