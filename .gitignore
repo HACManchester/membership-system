@@ -11,7 +11,7 @@ storage/tmp
 database.sqlite
 /public/query2.php
 yarn-error.log
-/public/css
+/public/css/*.css
 /public/fonts
 /public/js
 
