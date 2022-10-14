@@ -23,7 +23,7 @@ class UserValidator extends FormValidator
         'address.line_3'        => '',
         'address.line_4'        => '',
         'address.postcode'      => 'required_if:online_only,0|postcode',
-        'monthly_subscription'  => 'required_if:online_only,0|integer|min:12',
+        'monthly_subscription'  => 'required_if:online_only,0|integer|min:15',
         'emergency_contact'     => 'required_if:online_only,0',
         'rules_agreed'          => 'accepted',
     
