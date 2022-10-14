@@ -104,21 +104,6 @@
                         {!! Form::hidden('user_id', $user->id) !!}
                         {!! Form::close() !!}
                         @endforeach
-
-                        @if ($user->keyFobs()->count() < 2)
-                            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-                            <div class="form-group">
-                                <div class="col-sm-5">
-                                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                                </div>
-                                <div class="col-sm-3">
-                                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-default')) !!}
-                                </div>
-                            </div>
-                            {!! Form::hidden('user_id', $user->id) !!}
-                            {!! Form::close() !!}
-                        @endif
-
                     </div>
                 
                     <!-- Panel -->
