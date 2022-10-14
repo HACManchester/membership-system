@@ -164,9 +164,9 @@ Join Hackspace Manchester
         </ul>
         @else
         <ul>
-            <li>£20 a month, like a cheap gym membership, is the recommended amount for new starters.</li>
-            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of £15. Click the link above for more advice.</li>
-            <li>You can pay more (£25-£50) if you'd like to support the space.</li>
+            <li>&pound;20 a month, like a cheap gym membership, is the recommended amount for new starters.</li>
+            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of &pound;15. Click the link above for more advice.</li>
+            <li>You can pay more (&pound;25-&pound;50) if you'd like to support the space.</li>
         </ul>
         @endif
     </div>
