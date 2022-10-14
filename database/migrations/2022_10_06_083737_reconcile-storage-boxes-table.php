@@ -12,7 +12,6 @@ class ReconcileStorageBoxesTable extends Migration
      */
     public function up()
     {
-        // TODO: Reconcile this with the exact columns in production
         Schema::table('storage_boxes', function(Blueprint $table) {
             $table->string('location')->nullable();
         });
