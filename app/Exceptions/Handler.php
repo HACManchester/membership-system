@@ -67,6 +67,13 @@ class Handler extends ExceptionHandler {
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, $error)
     {
+        $botKey = config('telegram.bot_key');
+        $botChat = config('telegram.bot_chat');
+
+        if (empty($botKey) || empty($botChat)) {
+            return;
+        }
+
         $icon = array(
             'error'=> '🛑',
             'warn' => '⚠️',
@@ -82,9 +89,11 @@ class Handler extends ExceptionHandler {
             "File: <b>" . $error->getFile() . "</b> \n"  .
             "Line: <b>" . $error->getLine() . "</b> \n"  . 
             "More Info: https://members.hacman.org.uk/logs";
+        
+        // TODO: Use TelegramHelper??
         (new HttpClient)->get(
-            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
-            "?parse_mode=HTML&chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+            "https://api.telegram.org/bot{$botKey}/sendMessage" .
+            "?parse_mode=HTML&chat_id=${botChat}". 
             "&text=" . $icon[$level] . urlencode("<b>{$title}</b> \n \n " . $notification)
         );
     }

@@ -20,7 +20,7 @@ class Gift extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'gifter_name', 'gitee_name', 'months', 'credit', 'expires'
+        'code', 'gifter_name', 'giftee_name', 'months', 'credit', 'expires'
     ];
 
 } 

@@ -35,14 +35,14 @@
                         <div class="col-sm-6">
                             <div class="well">
                                 <h4>Ready to join?</h4>
-                                <a href="https://members.hacman.org.uk/register" class="btn btn-primary">✨ Become a member</a><br/>
-                                <a href="/gift">🎁 Got a gift code?</a>
+                                <a href="{{ route('register') }}" class="btn btn-primary">✨ Become a member</a><br/>
+                                <a href="{{ route('gift') }}">🎁 Got a gift code?</a>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="well">
                                 <h4>Already a member?</h4>
-                                <a href="https://members.hacman.org.uk/login" class="btn btn-secondary">🔑 Log in</a>
+                                <a href="{{ route('login') }}" class="btn btn-secondary">🔑 Log in</a>
                             </div>
                         </div>
                     </div>

@@ -14,6 +14,14 @@ class CreateUsersTable extends Migration {
 	{
 		Schema::create('users', function(Blueprint $table)
 		{
+            // This has been modified 2022-10-14 to ensure new databases have the same collation and charset
+            // settings as the live one. Editing historic migrations like this is a bad practice, but this will
+            // only affect local DBs so I'm not too worried. Only necessary because updating the columns
+            // individually seems impossible in Laravel 5.1 migrations.
+            $table->charset = "utf8mb4";
+            $table->collation = "utf8mb4_unicode_ci";
+            // End 2022-10-14 modifications
+
             $table->increments('id');
             $table->string('hash', 50)->nullable();
             $table->string('given_name', 100);

@@ -1,0 +1,3 @@
+[submodule "resources/polices/constitution"]
+	path = resources/polices/constitution
+	url = https://github.com/HACManchester/constitution.git

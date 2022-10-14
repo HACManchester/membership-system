@@ -66,6 +66,74 @@ GoCardless for Direct Debit payments<br />
 MailGun for sending email - completely optional<br />
 The encryption key is essential and cannot be changed or lost once set<br />
 
+### Getting started
+
+We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)), adjusted to run PHP 7.2 and Node 6 (our live environment is running 4.8.2, but it's too much faff downgrading far enough to run that).
+
+Prerequisites:
+
+* [Docker](https://www.docker.com/)
+* [Docker Compose](https://docs.docker.com/compose/install/) (comes pre-installed with Docker Desktop)
+
+1. Set up a .env file by copying `.env.example` to `.env`.
+
+2. Install dependencies with:
+
+    ```sh
+    docker-compose run laravel composer install
+    docker-compose run laravel yarn install
+    ```
+
+3. Build frontend assets with:
+
+    ```sh
+    docker-compose run laravel yarn run build
+    ```
+
+4. Start the local runtime with:
+
+    ```sh
+    docker-compose up -d
+    ```
+
+5. Provision the development database
+
+    ```sh
+    docker-compose run laravel php artisan migrate
+    ```
+
+6. Visit [https://localhost:8080](https://localhost:8080)
+
+### Running console commands
+
+If you need to run any console or `artisan` commands, you must do so within the Docker container.
+
+You can open a shell directly in the container with:
+
+```sh
+docker-compose exec laravel bash
+```
+
+Or run your command from your host machine, prepended with:
+
+```sh
+docker-compose run laravel [command]
+```
+
+### Troubleshooting
+
+If you have any issues, see if the docker logs have any useful information:
+
+```sh
+docker-compose logs laravel
+```
+
+Or the Laravel log file at [storage/logs/laravel-DATE.log](./storage/logs):
+
+```sh
+tail -n 20 storage/logs/laravel-$(date -I).log
+```
+
 ### Server
 The system runs in docker
 

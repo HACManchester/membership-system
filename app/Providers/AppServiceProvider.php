@@ -11,9 +11,11 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot()
-	{$this->app['request']->server->set('HTTPS', true);
-		//URL::forceScheme('https');
-		//
+	{
+		if (!$this->app->isLocal()) {
+			// TODO: What's this doing? 🤔
+			$this->app['request']->server->set('HTTPS', true);
+		}
 	}
 
 	/**
@@ -31,6 +33,10 @@ class AppServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar',
 			'BB\Services\Registrar'
 		);
-	}
+		
+		if ($this->app->isLocal()) {
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+		}
 
+	}
 }

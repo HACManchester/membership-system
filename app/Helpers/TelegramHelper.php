@@ -44,9 +44,17 @@ class TelegramHelper
 
     public function notify($level, $message)
     {
+        $botKey = config('telegram.bot_key');
+        $botChat = config('telegram.bot_chat');
+
+        if (empty($botKey) || empty($botChat)) {
+            return;
+        }
+        
+        // TODO: Replace with Notifications pushing to a Telegram notification channel?
         (new HttpClient)->get(
-            "https://api.telegram.org/bot" . env('TELEGRAM_BOT_KEY') . "/sendMessage" .
-            "?chat_id=" . env('TELEGRAM_BOT_CHAT') . 
+            "https://api.telegram.org/bot{$botKey}/sendMessage" .
+            "?parse_mode=HTML&chat_id=${botChat}". 
             "&text=" . $this->getId($level) . urlencode($message)
         );
     }
