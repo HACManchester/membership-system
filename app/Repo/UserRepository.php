@@ -202,7 +202,6 @@ class UserRepository extends DBRepository
         //user needs to have a recent sub charge and one that was paid or is due
 
         $user->active = true;
-        $user->status = 'active';
         $user->save();
 
         $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
