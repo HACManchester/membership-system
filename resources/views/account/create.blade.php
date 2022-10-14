@@ -290,7 +290,7 @@ Join Hackspace Manchester
                 </p>
 
                 <p>
-                    If you would like to pay less than &pound;15 a month please select an amount over £15 and complete
+                    If you would like to pay less than &pound;15 a month please select an amount over &pound;15 and complete
                     this form, on the next page you will be asked to setup a subscription payment.
                     Before you do this please send the board an email letting them know how much you would like to
                     pay, they will then override the amount so you can continue to setup a subscription.
