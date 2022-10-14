@@ -12,16 +12,24 @@ class ReconcileUsersTable extends Migration
      */
     public function up()
     {
-        // TODO: Reconcile this with the exact columns in production
-        Schema::table('users', function(Blueprint $table) {
-            $table->string('announce_name')->nullable();
-            $table->boolean('online_only')->nullable();
-            $table->boolean('newsletter')->nullable();
-            $table->boolean('postFob')->nullable();
-            $table->string('gift')->nullable();
-            $table->date('seen_at')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            // Reconcile existing columns
+            $table->text('display_name')->nullable()->change();
+            $table->boolean('trusted')->default(1)->change();
 
-            $table->foreign('gift')->references('code')->on('gifts');
+            // Add new columns
+            $table->text('announce_name')->nullable()->charset('utf32')->collation('utf32_unicode_520_ci')->after('display_name');
+            $table->timestamp('seen_at')->nullable();
+            $table->string('find_us')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+            $table->integer('online_only')->nullable(); // Should be boolean?
+            $table->boolean('postFob')->nullable()->default(0);
+            $table->string('gift', 20);
+            $table->integer('newsletter'); // Should be boolean?
+
+            // Timestamps still have different defaults but there seems to be no
+            // nice way to solve that in Laravel 5.1. It shouldn't cause any
+            // meaningful discrepancies between local and live testing.
         });
     }
 
@@ -32,8 +40,10 @@ class ReconcileUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropForeign(['gift']);
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('display_name')->nullable()->change();
+            $table->boolean('trusted')->default(null)->change();
+
             $table->dropColumn([
                 'announce_name',
                 'online_only',
@@ -41,6 +51,8 @@ class ReconcileUsersTable extends Migration
                 'postFob',
                 'gift',
                 'seen_at',
+                'find_us',
+                'deleted_at',
             ]);
         });
     }

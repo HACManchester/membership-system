@@ -12,13 +12,16 @@ class ReconcileEquipmentTable extends Migration
      */
     public function up()
     {
-        // TODO: Reconcile this with the exact columns in production
         Schema::table('equipment', function (Blueprint $table) {
-            $table->boolean('dangerous');
-            $table->string('induction_instructions')->nullable();
-            $table->string('trainer_instructions')->nullable();
-            $table->string('trained_instructions')->nullable();
-            $table->string('docs')->nullable();
+            $table->boolean('dangerous')->default(0)->nullable();
+            $table->longText('induction_instructions')->nullable();
+            $table->longText('trainer_instructions')->nullable();
+            $table->longText('trained_instructions')->nullable();
+            $table->string('docs', 300)->nullable();
+
+            // Timestamps still have different defaults but there seems to be no
+            // nice way to solve that in Laravel 5.1. It shouldn't cause any
+            // meaningful discrepancies between local and live testing.
         });
     }
 

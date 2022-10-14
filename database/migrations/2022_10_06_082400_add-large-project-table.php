@@ -12,15 +12,17 @@ class AddLargeProjectTable extends Migration
      */
     public function up()
     {
-        // TODO: Reconcile this with the exact columns in production
-        Schema::create('large_project', function(Blueprint $table) {
+        Schema::create('large_project', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('size');
+            $table->string('size', 10);
+            $table->integer('user_id');
             $table->boolean('active');
-            $table->unsignedInteger('user_id');        
-            $table->timestamps();    
+            $table->timestamps();
+            $table->date('expires_at')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            // Live has 'on update current timestamp' on created_at and updated_at, but that feels like a mistake. I
+            // also can't seem to replicate it with Laravel migrations. Shouldn't cause an issue with dev testing
+            // however.
         });
     }
 
