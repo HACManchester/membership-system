@@ -158,13 +158,21 @@ class AccountController extends Controller
         }
 
 
+        $minAmount = MembershipPayments::getMinimumPrice();
+        $recommendedAmount = MembershipPayments::getRecommendedPrice();
+
+        $confetti = $gift ? $gift_valid : true;
+
         \View::share('body_class', 'register_login');
-        return \View::make('account.create')
-            ->with('gift', $gift)
-            ->with('gift_code', $gift_code)
-            ->with('gift_valid', $gift_valid)
-            ->with('gift_details', $gift_details)
-            ->with('confetti', $gift ? $gift_valid : true );
+        return \View::make('account.create', compact(
+            'minAmount',
+            'recommendedAmount',
+            'gift',
+            'gift_code',
+            'gift_valid',
+            'gift_details',
+            'confetti'
+        ));
     }
 
     /**
@@ -482,12 +490,12 @@ class AccountController extends Controller
 
         $minAmountPence = MembershipPayments::getMinimumPrice();
         $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
-        $minAmount = $minAmountPence / 100;
+        $minAmountPounds = $minAmountPence / 100;
 
         // TODO: Lift this into some sort of "contact" config?
         $boardEmail = 'board@hacman.org.uk';
 
-        if ($amount < $minAmount) {
+        if ($amount < $minAmountPounds) {
             throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 

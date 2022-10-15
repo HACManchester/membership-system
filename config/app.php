@@ -215,6 +215,7 @@ return [
         'Image'        => 'Intervention\Image\Facades\Image',
         'Slack'        => 'Maknz\Slack\Facades\Slack',
 
+		'MembershipPayments' => 'BB\Helpers\MembershipPayments',
     ],
 
 ];
