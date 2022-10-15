@@ -115,7 +115,7 @@ return [
 		 */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
-        Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        	Illuminate\Broadcasting\BroadcastServiceProvider::class,
 		'Illuminate\Bus\BusServiceProvider',
 		'Illuminate\Cache\CacheServiceProvider',
 		'Illuminate\Foundation\Providers\ConsoleSupportServiceProvider',
@@ -136,7 +136,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-        'Illuminate\Html\HtmlServiceProvider',
+        	'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -154,11 +154,11 @@ return [
 	        /*
 		 * 3rd Party Providers...
 		 */
-        'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
-        'Jenssegers\Rollbar\RollbarServiceProvider',
-        'Maknz\Slack\SlackServiceProvider',
-        'Intervention\Image\ImageServiceProvider',
-        ArthurGuy\Notifications\NotificationServiceProvider::class,
+        	'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
+        	'Jenssegers\Rollbar\RollbarServiceProvider',
+       		'Maknz\Slack\SlackServiceProvider',
+        	'Intervention\Image\ImageServiceProvider',
+        	ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
 
 	],
