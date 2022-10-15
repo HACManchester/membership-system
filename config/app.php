@@ -143,16 +143,15 @@ return [
 		 */
 		'BB\Providers\AppServiceProvider',
 		'BB\Providers\BusServiceProvider',
-        'BB\Providers\ConfigServiceProvider',
-        'BB\Providers\EventServiceProvider',
-        'BB\Providers\RouteServiceProvider',
-        'BB\Providers\StripeServiceProvider',
-        'BB\Providers\ValidatorServiceProvider',
-        'BB\Providers\HtmlServiceProvider',
-        \BB\Providers\ObserverServiceProvider::class,
+        	'BB\Providers\ConfigServiceProvider',
+        	'BB\Providers\EventServiceProvider',
+        	'BB\Providers\RouteServiceProvider',
+        	'BB\Providers\StripeServiceProvider',
+        	'BB\Providers\ValidatorServiceProvider',
+        	'BB\Providers\HtmlServiceProvider',
+        	\BB\Providers\ObserverServiceProvider::class,
 
-
-        /*
+	        /*
 		 * 3rd Party Providers...
 		 */
         'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
@@ -214,8 +213,7 @@ return [
         'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
         'Slack'        => 'Maknz\Slack\Facades\Slack',
-
-		'MembershipPayments' => 'BB\Helpers\MembershipPayments',
+	'MembershipPayments' => 'BB\Helpers\MembershipPayments',
     ],
 
 ];
