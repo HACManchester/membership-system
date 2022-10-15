@@ -8,6 +8,7 @@ use BB\Entities\Settings;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 use BB\Exceptions\ValidationException;
+use BB\Helpers\MembershipPayments;
 use BB\Mailer\UserMailer;
 use BB\Validators\InductionValidator;
 
@@ -479,10 +480,15 @@ class AccountController extends Controller
     {
         $amount = \Input::get('monthly_subscription');
 
-        if ($amount < 15.00) {
-            throw new ValidationException('The minimum subscription is 15.00 GBP');
-        } elseif (!\Auth::user()->isAdmin() && ($amount < 15.00)) {
-            throw new ValidationException('The minimum subscription is 15.00 GBP, please contact the board for a lower amount. board@hacman.org.uk');
+        $minAmountPence = MembershipPayments::getMinimumPrice();
+        $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
+        $minAmount = $minAmountPence / 100;
+
+        // TODO: Lift this into some sort of "contact" config?
+        $boardEmail = 'board@hacman.org.uk';
+
+        if ($amount < $minAmount) {
+            throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 
         $user = User::findWithPermission($id);

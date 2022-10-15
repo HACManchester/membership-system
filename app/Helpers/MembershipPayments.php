@@ -103,6 +103,6 @@ class MembershipPayments
      */
     public static function formatPrice(int $pence)
     {
-        return "£" . number_format($pence / 100, 2, ',');
+        return "£" . number_format($pence / 100, 2);
     }
 } 

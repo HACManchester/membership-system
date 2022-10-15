@@ -1,5 +1,7 @@
 <?php namespace BB\Validators;
 
+use BB\Helpers\MembershipPayments;
+
 class UserValidator extends FormValidator
 {
 
@@ -23,7 +25,7 @@ class UserValidator extends FormValidator
         'address.line_3'        => '',
         'address.line_4'        => '',
         'address.postcode'      => 'required_if:online_only,0|postcode',
-        'monthly_subscription'  => 'required_if:online_only,0|integer|min:15',
+        'monthly_subscription'  => 'required_if:online_only,0|integer', // Min will be added in getValidationRules
         'emergency_contact'     => 'required_if:online_only,0',
         'rules_agreed'          => 'accepted',
     
@@ -47,4 +49,16 @@ class UserValidator extends FormValidator
         'phone'             => '',
     ];
 
+
+    protected function getValidationRules(array $replacements = []) {
+        $rules = parent::getValidationRules($replacements);
+
+        // Set minimum monthly subscription, being careful not to apply to updates
+        if (!empty($rules['monthly_subscription'])) {
+            $minPrice = intval(MembershipPayments::getMinimumPrice() / 100);
+            $rules['monthly_subscription'] .= '|min:' . $minPrice;
+        }
+
+        return $rules;
+    }
 } 
