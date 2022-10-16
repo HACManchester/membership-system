@@ -71,6 +71,14 @@ Running the membership system relies on a number of third-party services:
 
 These can be configured via environmental variables, or by setting up a `.env` file in the root of the project. See [`.env.example`](./.env.example) for reference.
 
+### Storage
+
+We don't use any third-party Cloud providers for storage of files.
+
+All user-uploaded content is currently stored in the 'public/img/local' , which is symlinked to via `/public/local`.
+
+⚠️ By convention, stateful content is expected to be stored in `storage` in the Laravel ecosystem. By breaking that convention, using standard deployment tooling or guides could cause us to lose user-uploaded content.
+
 ## Development
 
 The system is built on the PHP Laravel 5 framework so familiarity with that would help.
