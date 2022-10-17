@@ -32,14 +32,16 @@ return [
 	'disks' => [
 
 		'local' => [
-			'driver' => 'local',
-			'root'   => 'img', // TODO: Move this under the 'storage' folder
+			'driver' => 'local',	
+			'root'   => storage_path('app'),
 		],
 
-		// TODO: Set up custom disks for
-		// - equipment-images
-		// - expenses
-		// - user-photo		
+		'public' => [
+			'driver' => 'local',
+			'root' => storage_path('app/public'),
+			'visibility' => 'public',
+		],
+
 	],
 
 ];
