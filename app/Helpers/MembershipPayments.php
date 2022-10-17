@@ -74,4 +74,35 @@ class MembershipPayments
             return $otherCutoff;
         }
     }
+
+    /**
+     * The minimum price for a membership to the space
+     *
+     * @return int Price in pence
+     */
+    public static function getMinimumPrice()
+    {
+        return config('membership.prices.minimum');
+    }
+
+    /**
+     * The recommended price for a membership to the space
+     *
+     * @return int Price in pence
+     */
+    public static function getRecommendedPrice()
+    {
+        return config('membership.prices.recommended');
+    }
+
+    /**
+     * Format membership prices for consistent display across the website
+     *
+     * @param integer $pence
+     * @return string
+     */
+    public static function formatPrice(int $pence)
+    {
+        return "£" . number_format($pence / 100, 2);
+    }
 } 
