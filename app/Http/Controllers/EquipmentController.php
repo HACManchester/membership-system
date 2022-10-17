@@ -176,7 +176,8 @@ class EquipmentController extends Controller
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
             ->with('ppeList', $this->ppeList)
-            ->with('trusted', true);
+            ->with('trusted', true)
+            ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
     }
 
 
