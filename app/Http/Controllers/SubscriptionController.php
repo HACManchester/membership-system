@@ -34,6 +34,12 @@ class SubscriptionController extends Controller
     public function create($userId)
     {
         $user = User::findWithPermission($userId);
+
+        if(!$user->monthly_subscription) {
+            \Notification::error("Attempt to set up invalid direct debit, blocked.");
+            return \Redirect::route('account.show', $user->id);
+        }
+
         $payment_details = array(
             "description"          => "Hackspace Manchester",
             'success_redirect_url' => str_replace('http://','https://',route('account.subscription.store', $user->id)),

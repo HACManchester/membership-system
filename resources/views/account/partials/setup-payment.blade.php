@@ -1,8 +1,14 @@
 <h3>💳 Set up a direct debit</h3>
 <p>Not able to pay by direct debit? Email the board, board@hacman.org.uk</p>
 
-<a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
-<small><a href="#" class="js-show-alter-subscription-amount">Change your monthly direct debit amount</a></small>
+@if(round($user->monthly_subscription) > 0)
+    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+    <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly direct debit amount</a></small>
+@else
+    <p>
+        <strong>You haven't set how much you'd like to pay per month yet.</strong> Before you can set up a Direct Debit, you need to <a href="#" class="btn btn-success js-show-alter-subscription-amount">set your monthly direct debit amount</a>
+    </p>
+@endif
 {!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) !!}
 <div class="input-group">
     <div class="input-group-addon">&pound;</div>

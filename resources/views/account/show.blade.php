@@ -82,7 +82,7 @@
                     <h4>You're an online only user, and not a member of the space (yet).</h4>
                     <p>
                         To become a member, edit your account and mark yourself as not an online only member.
-                        You'll need to add address details, emergency contact detials, and setup a direct debit for the monthly subscription.
+                        You'll need to add address details, emergency contact details, and setup a direct debit for the monthly subscription.
                     </p>
                     <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}">
                         <i class="material-icons">mode_edit</i> 
