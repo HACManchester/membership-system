@@ -75,9 +75,7 @@ These can be configured via environmental variables, or by setting up a `.env` f
 
 We don't use any third-party Cloud providers for storage of files.
 
-All user-uploaded content is currently stored in the 'public/img/local' , which is symlinked to via `/public/local`.
-
-⚠️ By convention, stateful content is expected to be stored in `storage` in the Laravel ecosystem. By breaking that convention, using standard deployment tooling or guides could cause us to lose user-uploaded content.
+All user-uploaded content is stored via the public storage disk at `storage/app/public`. There is a symlink pointing to this directory at `/public/storage`. This replicates the [public storage disk](https://laravel.com/docs/5.2/filesystem#the-public-disk) introduced in Laravel 5.2 (the next version above us).
 
 ## Development
 
