@@ -7,6 +7,7 @@ use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
 use Illuminate\Support\Facades\Storage;
+use Input;
 use Michelf\Markdown;
 
 class EquipmentController extends Controller
@@ -37,6 +38,9 @@ class EquipmentController extends Controller
      */
     private $equipmentPhotoValidator;
 
+    /** @var \Illuminate\Filesystem\FilesystemAdapter */
+    protected $disk;
+
     /**
      * @param InductionRepository                    $inductionRepository
      * @param EquipmentRepository                    $equipmentRepository
@@ -59,6 +63,7 @@ class EquipmentController extends Controller
         $this->userRepository         = $userRepository;
         $this->equipmentValidator = $equipmentValidator;
         $this->equipmentPhotoValidator = $equipmentPhotoValidator;
+        $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
       
@@ -302,16 +307,15 @@ class EquipmentController extends Controller
 
         $this->equipmentPhotoValidator->validate($data);
 
-        if (\Input::file('photo')) {
+        $photo = Input::file('photo');
+        if ($photo) {
             try {
-                $filePath = \Input::file('photo')->getRealPath();
-                $ext = \Input::file('photo')->guessClientExtension();
-                $mimeType = \Input::file('photo')->getMimeType();
-                $fileData = \Image::make($filePath)->fit(1000)->encode($ext);
+                $ext = $photo->guessClientExtension() ?: 'png';
+                $stream = \Image::make($photo->getRealPath())->fit(1000)->stream($ext);
+                
+                $newFilename = sprintf('%s.%s', str_random(), $ext);
 
-                $newFilename = str_random() . '.' . $ext;
-
-                Storage::put($equipment->getPhotoBasePath() . $newFilename, (string)$fileData, 'public');
+                $this->disk->put($equipment->getPhotoBasePath() . $newFilename, $stream);
 
                 $equipment->addPhoto($newFilename);
 
@@ -332,10 +336,13 @@ class EquipmentController extends Controller
         }
 
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
-        $photo = $equipment->photos[$photoId];
-        $equipment->removePhoto($photoId);
+        $photoPath = $equipment->getPhotoPath($photoId);
 
-        Storage::delete($equipment->getPhotoBasePath() . $photo['path']);
+        if ($this->disk->exists($photoPath)) {
+            $this->disk->delete($photoPath);
+        }
+
+        $equipment->removePhoto($photoId);
 
         \Notification::success("Image deleted");
         return \Redirect::route('equipment.edit', $equipmentId);

@@ -125,7 +125,7 @@ class Equipment extends Model
      */
     public function getPhotoBasePath()
     {
-        return \App::environment() . '/equipment-images/';
+        return 'equipment-images/';
     }
 
     /**
@@ -157,7 +157,7 @@ class Equipment extends Model
      */
     public function getPhotoUrl($num = 1)
     {
-        return 'https://members.hacman.org.uk' . getenv('S3_BUCKET') . '/' . $this->getPhotoPath($num);
+        return asset('storage/' . $this->getPhotoPath($num));
     }
 
     public function getNumPhotos()
