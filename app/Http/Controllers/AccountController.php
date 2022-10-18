@@ -8,6 +8,7 @@ use BB\Entities\Settings;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 use BB\Exceptions\ValidationException;
+use BB\Helpers\MembershipPayments;
 use BB\Mailer\UserMailer;
 use BB\Validators\InductionValidator;
 
@@ -157,13 +158,21 @@ class AccountController extends Controller
         }
 
 
+        $minAmount = MembershipPayments::getMinimumPrice();
+        $recommendedAmount = MembershipPayments::getRecommendedPrice();
+
+        $confetti = $gift ? $gift_valid : true;
+
         \View::share('body_class', 'register_login');
-        return \View::make('account.create')
-            ->with('gift', $gift)
-            ->with('gift_code', $gift_code)
-            ->with('gift_valid', $gift_valid)
-            ->with('gift_details', $gift_details)
-            ->with('confetti', $gift ? $gift_valid : true );
+        return \View::make('account.create', compact(
+            'minAmount',
+            'recommendedAmount',
+            'gift',
+            'gift_code',
+            'gift_valid',
+            'gift_details',
+            'confetti'
+        ));
     }
 
     /**
@@ -479,10 +488,15 @@ class AccountController extends Controller
     {
         $amount = \Input::get('monthly_subscription');
 
-        if ($amount < 15.00) {
-            throw new ValidationException('The minimum subscription is 15.00 GBP');
-        } elseif (!\Auth::user()->isAdmin() && ($amount < 15.00)) {
-            throw new ValidationException('The minimum subscription is 15.00 GBP, please contact the board for a lower amount. board@hacman.org.uk');
+        $minAmountPence = MembershipPayments::getMinimumPrice();
+        $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
+        $minAmountPounds = $minAmountPence / 100;
+
+        // TODO: Lift this into some sort of "contact" config?
+        $boardEmail = 'board@hacman.org.uk';
+
+        if ($amount < $minAmountPounds) {
+            throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 
         $user = User::findWithPermission($id);

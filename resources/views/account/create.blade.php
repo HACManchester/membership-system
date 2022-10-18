@@ -144,7 +144,7 @@ Join Hackspace Manchester
             <div class="col-sm-9 col-lg-7">
                 <div class="input-group">
                     <div class="input-group-addon">&pound;</div>
-                    {!! Form::input('number', 'monthly_subscription', 20, ['class'=>'form-control', 'placeholder'=>'20', 'min'=>'12', 'step'=>'1']) !!}
+                    {!! Form::input('number', 'monthly_subscription', $recommendedAmount / 100, ['class' => 'form-control', 'placeholder' => $recommendedAmount / 100, 'min' => $minAmount / 100, 'step' => '1']) !!}
                 </div>
                 {!! Notification::getErrorDetail('monthly_subscription') !!}
                 <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
@@ -164,8 +164,8 @@ Join Hackspace Manchester
         </ul>
         @else
         <ul>
-            <li>&pound;20 a month, like a cheap gym membership, is the recommended amount for new starters.</li>
-            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of &pound;15. Click the link above for more advice.</li>
+            <li>{{ MembershipPayments::formatPrice($recommendedAmount) }} a month, like a cheap gym membership, is the recommended amount for new starters.</li>
+            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of {{ MembershipPayments::formatPrice($minAmount) }}. Click the link above for more advice.</li>
             <li>You can pay more (&pound;25-&pound;50) if you'd like to support the space.</li>
         </ul>
         @endif
@@ -269,12 +269,12 @@ Join Hackspace Manchester
             <div class="modal-body">
                 <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
 
-                Minimum &pound;15 a month:
+                Minimum {{ MembershipPayments::formatPrice($minAmount) }} a month:
                 <ul>
                     <li>You are on a low income and unable to afford a higher amount.</li>
                 </ul>
 
-                &pound;20 a month:
+                {{ MembershipPayments::formatPrice($recommendedAmount) }} a month:
                 <ul>
                     <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
                 </ul>
@@ -290,7 +290,7 @@ Join Hackspace Manchester
                 </p>
 
                 <p>
-                    If you would like to pay less than &pound;15 a month please select an amount over &pound;15 and complete
+                    If you would like to pay less than {{ MembershipPayments::formatPrice($minAmount) }} a month please select an amount over {{ MembershipPayments::formatPrice($minAmount) }} and complete
                     this form, on the next page you will be asked to setup a subscription payment.
                     Before you do this please send the board an email letting them know how much you would like to
                     pay, they will then override the amount so you can continue to setup a subscription.
