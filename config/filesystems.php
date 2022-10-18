@@ -33,10 +33,13 @@ return [
 
 		'local' => [
 			'driver' => 'local',
-			'root'   => 'img',
+			'root'   => 'img', // TODO: Move this under the 'storage' folder
 		],
 
-		
+		// TODO: Set up custom disks for
+		// - equipment-images
+		// - expenses
+		// - user-photo		
 	],
 
 ];
