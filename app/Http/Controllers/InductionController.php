@@ -33,7 +33,17 @@ class InductionController extends Controller
     public function create(){
         $slug = \Input::get('slug', false);
         $userId = \Input::get('user_id');
-        
+
+        $equipment = $this->equipmentRepository->findBySlug($slug);
+
+        $isTrainerOrAdmin = $this
+            ->inductionRepository
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
+        if(!$isTrainerOrAdmin) {
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         Induction::create([
             'user_id' => $userId,
             'key' => $slug,
@@ -56,6 +66,16 @@ class InductionController extends Controller
     {
         $slug = \Input::get('slug', false);
         $induction = Induction::findOrFail($id);
+
+        $equipment = $this->equipmentRepository->findBySlug($slug);
+
+        $isTrainerOrAdmin = $this
+            ->inductionRepository
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
+        if(!$isTrainerOrAdmin) {
+            throw new \BB\Exceptions\AuthenticationException();
+        }
 
         if (\Input::get('mark_trained', false)) {
             $induction->trained = \Carbon\Carbon::now();
@@ -99,6 +119,16 @@ class InductionController extends Controller
     {
         $slug = \Input::get('slug', false);
         $induction = Induction::findOrFail($id);
+        $equipment = $this->equipmentRepository->findBySlug($slug);
+
+        $isTrainerOrAdmin = $this
+            ->inductionRepository
+            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+
+        if(!$isTrainerOrAdmin) {
+            throw new \BB\Exceptions\AuthenticationException();
+        }
+
         $induction->delete();
         
         return \Redirect::route('equipment.show', $slug);
