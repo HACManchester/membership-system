@@ -249,7 +249,7 @@ Tools and Equipment
                         <p>Add a member</p>
                         {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
                         {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                        {!! Form::hidden('slug', $equipment->induction_category) !!}
+                        {!! Form::hidden('slug', $equipment->slug) !!}
                         {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
                         {!! Form::close() !!}
                     </div>

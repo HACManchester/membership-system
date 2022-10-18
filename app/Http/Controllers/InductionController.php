@@ -46,7 +46,7 @@ class InductionController extends Controller
 
         Induction::create([
             'user_id' => $userId,
-            'key' => $slug,
+            'key' => $equipment->induction_category,
             'paid' => true,
             'payment_id' => 0
         ]);
