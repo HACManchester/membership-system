@@ -171,20 +171,45 @@
     </div>
 </div>
 
-<div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
-    {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
-        {!! Notification::getErrorDetail('requires_induction') !!}
-    </div>
-</div>
 
-<div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
-    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! Form::text('induction_category', null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
-        <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
-        {!! Notification::getErrorDetail('induction_category') !!}
+<div class="well">
+    <h4>Induction requirements</h4>
+
+    <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
+        {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            {!! Notification::getErrorDetail('requires_induction') !!}
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
+        {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::text('induction_category', null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
+            {!! Notification::getErrorDetail('induction_category') !!}
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('quiz_url', 'has-error has-feedback') }}">
+        {!! Form::label('quiz_url', 'Quiz URL', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::text('quiz_url', null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            <p class="help-block">Enter a TypeForm URL here, which will let users self-certify themselves on this tool.</p>
+            {!! Notification::getErrorDetail('quiz_url') !!}
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('quiz_pass_mark', 'has-error has-feedback') }}">
+        {!! Form::label('quiz_pass_mark', 'Quiz Pass Mark', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            <div class="input-group">
+                {!! Form::input('number', 'quiz_pass_mark', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            </div>
+            <p class="help-block">How many points are needed to pass the training quiz?</p>
+            {!! Notification::getErrorDetail('quiz_pass_mark') !!}
+        </div>
     </div>
 </div>
 
