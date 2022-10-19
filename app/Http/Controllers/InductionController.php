@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\Induction;
+use BB\Entities\User;
 use BB\Exceptions\PaymentException;
 use BB\Repo\PaymentRepository;
 
@@ -132,6 +133,48 @@ class InductionController extends Controller
         $induction->delete();
         
         return \Redirect::route('equipment.show', $slug);
+    }
+
+
+        /*
+    *  Quiz callback takes the webhook from TypeForm and processes the result
+    */
+    public function quiz_callback(Request $request){
+        $response = json_encode($request->getContent())['form_response'];
+
+        // From the response, get the hidden fields `induction_id` and `hash`, and normal field `score`
+        $form_id        =   $response['form_id']
+        $user_id        =   $response['hidden']['user_id'];
+        $equipment_id   =   $response['hidden']['equipment_id'];
+        $hash           =   $response['hidden']['hash'];
+        $score          =   $response['calculated']['score'];
+
+        // Check the IDs match the hash
+        $calculatedHash = hash_hmac('sha256', "{$user_id}/{$equipment_id}", env('QUIZ_HASH_SECRET'), false);
+
+        if($calculatedHash != $hash) {
+            throw new \BB\Exceptions\AuthenticationException("Invalid hash for quiz callback");
+        }
+        
+        // Get the user and equipment
+        $user = User::findOrFail($user_id);
+        $equipment = Equipment::findOrFail($equipment_id);
+        $induction = Induction::where('user_id', $user->id)->where('key', $equipment->induction_category)->first();
+        
+        // From the response, check the form ID matches the split form ID in the Equipment
+        if($form_id != end(explode('/', $equipment->quiz_url))) {
+            throw new \BB\Exceptions\AuthenticationException("Invalid form ID for quiz callback");
+        }
+        
+        if($score >= $equipment->quiz_pass_mark){
+            $induction->trained = \Carbon\Carbon::now();
+            $induction->trainer_user_id = \Input::get($user->id, false);
+            $induction->save();
+        }else{
+            $induction->delete();
+        }
+
+        return \Response::make('Success', 200);
     }
 
 

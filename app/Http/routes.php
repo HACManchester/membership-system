@@ -136,6 +136,7 @@ Route::group(array('middleware' => 'role:member'), function() {
     Route::resource('account.induction', 'InductionController', ['only' => ['update', 'destroy', 'create']]);
 });
 
+Route::post('equipment_training/quiz_callback', ['uses'=>'InductionController@quiz_callback', 'as'=>'equipment_training.quiz_callback']);
 
 
 ##########################

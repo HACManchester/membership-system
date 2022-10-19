@@ -132,6 +132,15 @@ Tools and Equipment
                             <h4>🔴 Induction Next Steps</h4>
                             <p>{{ $equipment->induction_instructions }}</p>
                             <br/>
+                            @if ($quiz_link)
+                                <h4>Complete the quiz to self-certify as trained</h4>
+                                <p><strong>To self-certify, complete the <a href="{{ $quiz_link }}" target="_blank">quiz here</a>.</strong></p>
+                                <p>
+                                    Once the quiz is submitted, it will update your training record automatically.<br/>
+                                    If you pass the quiz, you'll be marked as trained! <br/>
+                                    If you don't pass, you'll need to request an induction again.
+                                </p>
+                            @endif
                         </div>
                         @endif
                     @endif

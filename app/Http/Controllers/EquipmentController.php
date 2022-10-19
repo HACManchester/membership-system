@@ -126,6 +126,12 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
+        $quiz_link = "";
+        if($equipment->quiz_url){
+            $sig = hash_hmac('sha256', "{$user->id}/{$equipment->id}", env('QUIZ_HASH_SECRET') );
+            $quiz_link = "{$equipment->quiz_url}?user_id={$user->id}&equipment_id={$equipment->id}&hash={$sig}";
+        }
+
         $isTrainerOrAdmin = $this
             ->inductionRepository
             ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
@@ -155,6 +161,7 @@ class EquipmentController extends Controller
             ->with('user', $user)
             ->with('isTrainerOrAdmin', $isTrainerOrAdmin)
             ->with('memberList', $memberList)
+            ->with('quiz_link', $quiz_link)
             ->with('docs', $docs);
     }
 
