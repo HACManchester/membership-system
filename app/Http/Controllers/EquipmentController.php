@@ -274,7 +274,7 @@ class EquipmentController extends Controller
 
         $additionalFields = $isTrainerOrAdmin ? 
         ['dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
-            'induction_instructions', 'trainer_instructions', 'trained_instructions'
+            'induction_instructions', 'trainer_instructions', 'trained_instructions', 'quiz_url', 'quiz_pass_mark'
         ]: [];
 
         $data = \Request::only(array_merge($additionalFields, $normalFields));
