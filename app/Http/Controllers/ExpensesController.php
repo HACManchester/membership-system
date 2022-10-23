@@ -5,6 +5,7 @@ use BB\Exceptions\ImageFailedException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Input;
 
 class ExpensesController extends Controller {
 
@@ -79,16 +80,17 @@ class ExpensesController extends Controller {
 
         $this->expenseValidator->validate($data);
 
-
-        if (\Input::file('file')) {
+        $file = Input::file('file');
+        if ($file) {
             try {
-                $filePath = \Input::file('file')->getRealPath();
-                $ext = \Input::file('file')->guessClientExtension();
-                $mimeType = \Input::file('file')->getMimeType();
+                $filePath = $file->getRealPath();
+                $ext = $file->guessClientExtension();
 
-                $newFilename = \App::environment().'/expenses/' . str_random() . '.' . $ext;
+                $newFilename = sprintf('expenses/%s.%s', str_random(), $ext);
 
-                Storage::put($newFilename, file_get_contents($filePath), 'public');
+                // Should expenses be accessible publically? Or should we have them in a private directory accessonly
+                // only through an role-restricted endpoint (admin only?)?
+                Storage::disk('public')->put($newFilename, file_get_contents($filePath), 'public');
 
                 $data['file'] = $newFilename;
 

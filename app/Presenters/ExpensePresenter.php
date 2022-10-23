@@ -37,7 +37,12 @@ class ExpensePresenter extends Presenter
 
     public function file()
     {
-        return 'https://members.hacman.org.uk' . env('S3_BUCKET', '') . '/' . $this->entity->file;
+        $filePath = $this->entity->file;
+
+        // Strip 'local' from the beginning, if this was saved before we moved the storage folder
+        $filePath = preg_replace('/^local\//', '', $filePath);
+
+        return asset('storage/' . $filePath);
     }
 
 } 
