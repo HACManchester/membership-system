@@ -25,7 +25,9 @@
                     </p>
                     @endif
                     @if ($role->email_public)
-                    Email: <a href="{{ $role->email_public }}">{{ $role->email_public }}</a>
+                    <p>
+                        Email: <a href="mailto:{{ $role->email_public }}">{{ $role->email_public }}</a>
+                    </p>
                     @endif
                 </div>
             </div>
