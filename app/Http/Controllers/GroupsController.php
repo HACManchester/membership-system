@@ -27,7 +27,7 @@ class GroupsController extends Controller
      */
     public function show($roleName)
     {
-        $role = Role::with('Users')->where('name', $roleName)->first();
+        $role = Role::with('Users')->where('name', $roleName)->firstOrFail();
         return View::make('groups.show')->with('role', $role);
     }
 
