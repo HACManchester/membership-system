@@ -158,6 +158,9 @@ class UserRepository extends DBRepository
 
         $memberData['rules_agreed'] = $memberData['rules_agreed']? Carbon::now(): null;
 
+        // Sign up to newsletter by default (legitimate interest comms to members)
+        $memberData['newsletter'] = true;
+
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
