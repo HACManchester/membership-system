@@ -165,14 +165,15 @@ Edit your details
     </div>
 </div>
 
-<h2 id="newsletter">Newsletter Opt-In</h4>
+<h2 id="newsletter">Newsletter</h4>
 <div class="row">
     <div class="col-xs-12 col-md-8">
         <div class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}">
             {!! Form::checkbox('newsletter', true, null, ['class'=>'']) !!}
-            {!! Form::label('newsletter', 'Opt in to occasional newsletters', ['class'=>'']) !!}
+            {!! Form::label('newsletter', 'Opt in to membership newsletters', ['class'=>'']) !!}
             {!! Notification::getErrorDetail('newsletter') !!}
-            <p>You can opt out at any time. Newsletters will be sent between once a month and once a quarter, and are for non-essential but interesting items such as goings on in the space, upcoming events etc.</p>
+            <p>Newsletters will be sent out quarterly to keep you up-to-date with announcements and news relevant to your membership of the space.</p>
+            <p>If you do not want to receive these, you can opt-out at any time.</p>
         </div>
     </div>
 </div>
