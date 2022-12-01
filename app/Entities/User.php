@@ -339,6 +339,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('status', '=', 'suspended');
     }
 
+    public function scopeRecentlyLapsed($query)
+    {
+        return $query->whereActive(false)
+            ->where('subscription_expires', '>=', Carbon::today()->subMonths(6));
+    }
+
+    public function scopeNewsletterOptIns($query)
+    {
+        return $query->where('newsletter', '=', true);
+    }
+
 
     /*
     |--------------------------------------------------------------------------

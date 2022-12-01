@@ -196,6 +196,7 @@
                     {!! HTML::sideNavLink('👮 Admin', 'admin') !!}
                     {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
                     {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
+                    {!! HTML::sideNavLink('💌 Newsletter', 'newsletter') !!}
                 @endif
 
                 @if (Auth::user()->hasRole('comms') || Auth::user()->isAdmin())

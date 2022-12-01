@@ -1,4 +1,6 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Repo\UserRepository;
 
@@ -14,14 +16,9 @@ class NewsletterController extends Controller
 
     public function index()
     {
-        $users = $this->userRepository->getWantNewsletter();
+        $activeMembers = $this->userRepository->getActive();
+        $newsletterRecipients = $this->userRepository->getWantNewsletter();
 
-        return \Response::json([
-            'count'     => count($users),
-            'emails'    => $users
-        ]);
+        return view('newsletter.index', compact('activeMembers', 'newsletterRecipients'));
     }
-
-
-
 }

@@ -134,9 +134,26 @@ class UserRepository extends DBRepository
         return $memberDropdown;
     }
 
+    /**
+     * Returns a list of members we want to send newsletters to
+     * 
+     * This is scoped to users who:
+     * - Have not opted out of newsletters
+     * - Have an active membership, or their membership lapsed witihn the last 6 months
+     *
+     * @return User[]
+     */
     public function getWantNewsletter()
     {
-        return $this->model->select("email")->where('newsletter', '1')->get();
+        return $this->model
+            ->NewsletterOptIns()
+            ->where(function($query) {
+                $query->active();
+            })
+            ->orWhere(function($query) {
+                $query->recentlyLapsed();
+            })
+            ->get();
     }
 
     /**
