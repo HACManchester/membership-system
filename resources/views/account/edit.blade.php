@@ -168,12 +168,28 @@ Edit your details
 <h2 id="newsletter">Newsletter</h4>
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}">
-            {!! Form::checkbox('newsletter', true, null, ['class'=>'']) !!}
-            {!! Form::label('newsletter', 'Opt in to membership newsletters', ['class'=>'']) !!}
+        <div
+            class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}"
+            role="radiogroup"
+            aria-labelledby="newsletter_label"
+        >
+            <p>Newsletters will be sent out periodically to keep you up to date with announcements, news and events relevant to your membership of the space.</p>
+
+            <label id="newsletter_label">Do you want to receive the membership newsletters?</label>
+
+            <div class="radio">
+                <label>
+                    {!! Form::radio('newsletter', true, null, ['class'=>'']) !!}
+                    Yes, I am happy to receive the membership newsletters
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    {!! Form::radio('newsletter', false, null, ['class'=>'']) !!}
+                    No, please do not send me membership newsletters
+                </label>
+            </div>
             {!! Notification::getErrorDetail('newsletter') !!}
-            <p>Newsletters will be sent out quarterly to keep you up-to-date with announcements and news relevant to your membership of the space.</p>
-            <p>If you do not want to receive these, you can opt-out at any time.</p>
         </div>
     </div>
 </div>
