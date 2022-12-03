@@ -134,9 +134,26 @@ class UserRepository extends DBRepository
         return $memberDropdown;
     }
 
+    /**
+     * Returns a list of members we want to send newsletters to
+     * 
+     * This is scoped to users who:
+     * - Have not opted out of newsletters
+     * - Have an active membership, or their membership lapsed witihn the last 6 months
+     *
+     * @return User[]
+     */
     public function getWantNewsletter()
     {
-        return $this->model->select("email")->where('newsletter', '1')->get();
+        return $this->model
+            ->NewsletterOptIns()
+            ->where(function($query) {
+                $query->active();
+            })
+            ->orWhere(function($query) {
+                $query->recentlyLapsed();
+            })
+            ->get();
     }
 
     /**
@@ -157,6 +174,9 @@ class UserRepository extends DBRepository
         $memberData['hash'] = str_random(30);
 
         $memberData['rules_agreed'] = $memberData['rules_agreed']? Carbon::now(): null;
+
+        // Sign up to newsletter by default (legitimate interest comms to members)
+        $memberData['newsletter'] = true;
 
         $user = $this->model->create($memberData);
         $this->profileDataRepository->createProfile($user->id);

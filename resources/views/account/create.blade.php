@@ -227,16 +227,7 @@ Join Hackspace Manchester
             {!! Notification::getErrorDetail('emergency_contact') !!}
             <span class="help-block">Please give us the name and contact details of someone we can contact if needed.</span>
         </div>
-    </div>
-
-    <div class="form-group {{ Notification::hasErrorDetail('newsletter', 'has-error has-feedback') }}">
-        {!! Form::label('newsletter', 'Join the newsletter', ['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-9 col-lg-7">
-            {!! Form::checkbox('newsletter', true, null, ['class'=>'']) !!}
-            {!! Notification::getErrorDetail('newsletter') !!}
-            <span class="help-block">Optionally, sign up to receive monthly to quarterly emails with updates about goings on, upcoming events, etc</span>
-        </div>
-    </div>         
+    </div>      
 
     <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,0,0,0.05)">
