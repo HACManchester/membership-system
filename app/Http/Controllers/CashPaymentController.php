@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use Illuminate\Http\Request;
 
 class CashPaymentController extends Controller
 {
@@ -31,15 +32,24 @@ class CashPaymentController extends Controller
      * @throws \BB\Exceptions\FormValidationException
      * @throws \BB\Exceptions\NotImplementedException
      */
-    public function store($userId)
+    public function store($userId, Request $request)
     {
         User::findWithPermission($userId);
 
-        $amount     = \Request::get('amount');
-        $reason     = \Request::get('reason');
-        $sourceId   = \Request::get('source_id');
-        $returnPath = \Request::get('return_path');
+        $this->validateWithBag('credit', $request, [
+            'amount' => 'required|numeric|min:0',
+            'reason' => 'required',
+            'source_id' => 'required',
+            'return_path' => 'required',
+        ]);
+
+        $amount     = $request->get('amount');
+        $reason     = $request->get('reason');
+        $sourceId   = $request->get('source_id');
+        $returnPath = $request->get('return_path');
+
         $sourceId = $sourceId . ':' . time();
+        
         $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
 
         \Notification::success("Top Up successful");
@@ -66,22 +76,24 @@ class CashPaymentController extends Controller
      * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\InvalidDataException
      */
-    public function destroy($userId)
+    public function destroy($userId, Request $request)
     {
         $user = User::findWithPermission($userId);
         $this->bbCredit->setUserId($userId);
 
-        $amount     = \Request::get('amount');
-        $returnPath = \Request::get('return_path');
-        $ref = \Request::get('ref');
-
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('withdrawal');
+        $maxWithdrawal = ($user->cash_balance / 100) + $minimumBalance;
+        
+        $this->validateWithBag('withdrawal', $request, [
+            'amount' => "required|numeric|min:0|max:{$maxWithdrawal}",
+            'ref' => 'required',
+            'return_path' => 'required',
+        ]);
 
-        if (($user->cash_balance + ($minimumBalance * 100)) < ($amount * 100)) {
-            \Notification::error("Not enough money");
-            return \Redirect::to($returnPath);
-        }
-
+        $amount     = $request->get('amount');
+        $ref = $request->get('ref');
+        $returnPath = $request->get('return_path');
+        
         $this->paymentRepository->recordPayment('withdrawal', $userId, 'balance', '', $amount, 'paid', 0, $ref);
 
         $this->bbCredit->recalculate();
