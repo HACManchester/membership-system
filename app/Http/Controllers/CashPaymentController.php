@@ -35,7 +35,7 @@ class CashPaymentController extends Controller
     {
         User::findWithPermission($userId);
 
-        $amount     = \Request::get('amount') /100;
+        $amount     = \Request::get('amount');
         $reason     = \Request::get('reason');
         $sourceId   = \Request::get('source_id');
         $returnPath = \Request::get('return_path');
