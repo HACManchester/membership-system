@@ -9,10 +9,10 @@ class PaymentModule extends React.Component {
     super(props);
 
     this.state = {
-      amount: this.props.amount,
+      amount: this.props.amount || '0.00',
       method: "gocardless",
+      errorMessage: null,
       stripeToken: null,
-      stripeLowValueWarning: false,
       csrfToken: this.props.csrfToken,
       requestInProgress: false,
       desiredPaymentMethods: this.props.methods.split(","),
@@ -51,55 +51,50 @@ class PaymentModule extends React.Component {
 
   handleAmountChange(event) {
     //this doesn't allow decimal places to be entered by hand
-    var amount = parseFloat(event.target.value);
-
-    if (amount > 200) {
-      //We should probably do something here as gocardless will most likely fail
-    }
+    var amount = event.target.value;
 
     this.setState({ amount });
-
-    this.checkLowValue(this.state.method, amount);
   }
 
   handleMethodChange(event) {
     var method = event.target.value;
 
     this.setState({ method });
-
-    this.checkLowValue(method, this.state.amount);
-  }
-
-  /**
-   * Ensure that if stripe is being used the amount isnt to low
-   * @param method
-   * @param amount
-   */
-  checkLowValue(method, amount) {
-    var stripeLowValueWarning = method === "stripe" && amount < 10;
-    this.setState({ stripeLowValueWarning });
   }
 
   handleSubmit() {
     var $ = require("jquery");
 
-    if (this.state.stripeLowValueWarning) {
+    var parsedAmount = parseFloat(this.state.amount);
+    console.log(parsedAmount, this.state);
+
+    if (this.state.method === "stripe" && parsedAmount < 10) {
+      this.setState({ errorMessage: 'Because of fees the payment must be £10 or over when paying by card'})
       return;
     }
 
-    if (this.state.amount == 0) {
+    if (parsedAmount < 0) {
+      this.setState({ errorMessage: 'Amount cannot be negative'})
+      return;
+    }
+
+    if (isNaN(parsedAmount)) {
+      this.setState({ 
+        errorMessage: 'Invalid amount. Please re-enter'
+      })
       return;
     }
 
     //The stripe process starts with the dialog box to collect card details
     if (this.state.method === "stripe" && this.state.stripeToken === null) {
       StripePayment.collectCardDetails(
-        this.state.amount * 100,
+        parsedAmount * 100,
         this.props.description
       );
       return;
     }
 
+    this.setState({ errorMessage: null})
     this.setState({ requestInProgress: true });
 
     // loading indicator
@@ -133,7 +128,7 @@ class PaymentModule extends React.Component {
           document.location.href = responseData.url;
         }
 
-        BB.SnackBar.displayMessage(responseData.error);
+        this.setState({ errorMessage: responseData.error})
       }.bind(this),
     });
   }
@@ -193,7 +188,7 @@ class PaymentModule extends React.Component {
             <input
               style={{ width: 70 }}
               className="form-control"
-              step="0.1"
+              step="0.01"
               required="required"
               type="number"
               value={this.state.amount}
@@ -228,17 +223,17 @@ class PaymentModule extends React.Component {
             this.state.requestInProgress ? "has-feedback has-success" : "hidden"
           }
         >
-          <span className="help-block">Please wait, processing...</span>
+          <p className="help-block">Please wait, processing...</p>
         </div>
 
         <div className="has-feedback has-error">
-          <span
+          <p
             className={
-              this.state.stripeLowValueWarning ? "help-block" : "hidden"
+              this.state.errorMessage !== null ? "help-block" : "hidden"
             }
           >
-            Because of fees the payment must be £10 or over when paying by card
-          </span>
+            {this.state.errorMessage}
+          </p>
         </div>
       </div>
     );
@@ -249,7 +244,7 @@ PaymentModule.defaultProps = {
   name: "Hackspace Manchester",
   email: null,
   userId: null,
-  amount: 0,
+  amount: null,
   buttonLabel: "Pay Now",
   onSuccess: function () {},
   methods: "gocardless,stripe,cash,balance",

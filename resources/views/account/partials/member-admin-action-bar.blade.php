@@ -111,23 +111,29 @@
                         <h4>Balance - Top up</h4>
                         <p>Use this if the member has given you some cash to top up their balance.</p>
 
-                        {!! Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-horizontal']) !!}
+                        {!! Form::open(['method'=>'POST', 'route' => ['account.payment.cash.create', $user->id], 'class'=>'form-inline']) !!}
 
-                        <div class="form-group">
-                            <div class="col-sm-5">
+                            <div class="form-group {{ $errors->credit->has('amount') ? 'has-error' : '' }}">
+                                <label class="sr-only" for="amount">Amount</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">&pound;</div>
                                     {!! Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) !!}
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                {!! Form::submit('Add Credit', array('class'=>'btn btn-primary')) !!}
-                            </div>
-                        </div>
 
-                        {!! Form::hidden('reason', 'balance') !!}
-                        {!! Form::hidden('source_id', 'user:' . \Auth::id()) !!}
-                        {!! Form::hidden('return_path', 'account/'.$user->id) !!}
+                            {!! Form::submit('Add Credit', array('class'=>'btn btn-primary')) !!}
+
+                            <div class="help-block">
+                                <ul>
+                                    @foreach ($errors->credit->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+
+                            {!! Form::hidden('reason', 'balance') !!}
+                            {!! Form::hidden('source_id', 'user:' . \Auth::id()) !!}
+                            {!! Form::hidden('return_path', 'account/'.$user->id) !!}
                         {!! Form::close() !!}
                     </div>
 
@@ -136,22 +142,30 @@
                         <h4>Balance - Withdraw</h4>
                         <p>This will remove money from their balance, its used if your giving them cash.</p>
 
-                        {!! Form::open(['method'=>'DELETE', 'route' => ['account.payment.cash.destroy', $user->id], 'class'=>'form-horizontal']) !!}
+                        {!! Form::open(['method'=>'DELETE', 'route' => ['account.payment.cash.destroy', $user->id], 'class'=>'form-inline']) !!}
 
-                        <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="form-group {{ $errors->withdrawal->has('amount') ? 'has-error' : '' }}">
+                                <label class="sr-only" for="amount">Amount</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">&pound;</div>
                                     {!! Form::input('number', 'amount', '', ['class'=>'form-control', 'step'=>'0.01', 'required'=>'required']) !!}
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+
+                            <div class="form-group {{ $errors->withdrawal->has('ref') ? 'has-error' : '' }}">
+                                <label class="sr-only" for="ref">Reimbursemed via</label>
                                 {!! Form::select('ref', ['cash'=>'Cash', 'bank-transfer'=>'Bank Transfer'], null, ['class'=>'form-control']) !!}
                             </div>
-                            <div class="col-sm-3">
-                                {!! Form::submit('Remove Credit', array('class'=>'btn btn-primary')) !!}
+                            
+                            {!! Form::submit('Remove Credit', array('class'=>'btn btn-primary')) !!}
+
+                            <div class="help-block">
+                                <ul>
+                                    @foreach ($errors->withdrawal->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        </div>
 
                         {!! Form::hidden('return_path', 'account/'.$user->id) !!}
                         {!! Form::close() !!}

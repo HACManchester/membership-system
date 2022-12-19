@@ -109,7 +109,7 @@ Route::post('account/{account}/payment/cash2', ['as'=>'account.payment.cash2.cre
 
 
 //Cash
-Route::group(array('middleware' => 'role:member'), function() {
+Route::group(array('middleware' => 'role:admin'), function() {
     Route::post('account/{account}/payment/cash/create', ['as'=>'account.payment.cash.create', 'uses' => 'CashPaymentController@store']);
     Route::delete('account/{account}/payment/cash', ['as'=>'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 });
