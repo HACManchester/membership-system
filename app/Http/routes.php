@@ -53,8 +53,6 @@ Route::get('account/confirm-email/{id}/{hash}', ['as'=>'account.confirm-email', 
 Route::get('account/{account}/balance', ['uses'=>'BalanceController@index', 'as'=>'account.balance.index', 'middleware'=>'role:member']);
 //Route::post('account/{account}/balance/withdrawal', ['uses'=>'BalanceController@withdrawal', 'as'=>'account.balance.withdrawal', 'middleware'=>'role:member']);
 Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as'=>'account.balance.transfer.create']);
-Route::get('shop', ['uses'=>'CheckoutController@index', 'as'=>'shop.index', 'middleware'=>'role:member']);
-Route::post('shop', ['uses'=>'CheckoutController@store', 'as'=>'shop.store', 'middleware'=>'role:member']);
 
 
 
