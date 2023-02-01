@@ -47,6 +47,14 @@ class SiteInteraction {
             jQuery("body").removeClass("menuOpen");
         });
 
+
+        //Change sub amount button
+        jQuery('.js-show-alter-subscription-amount').click(function(event) {
+            event.preventDefault();
+            jQuery('.js-alter-subscription-amount-form').removeClass('hidden');
+            jQuery(this).hide();
+        });
+
         jQuery('.js-notification-row').click(function(event) {
             event.preventDefault();
             var id = jQuery(this).data('id');
