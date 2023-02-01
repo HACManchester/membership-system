@@ -3,8 +3,6 @@
 class GoCardlessHelper
 {
 
-    private $account_details;
-
     /**
      * @var \GoCardlessPro\Client
      */
@@ -17,13 +15,6 @@ class GoCardlessHelper
 
     public function setup()
     {
-        $this->account_details = array(
-            'app_id'        => env('GOCARDLESS_APP_ID', ''),
-            'app_secret'    => env('GOCARDLESS_APP_SECRET', ''),
-            'merchant_id'   => env('GOCARDLESS_MERCHANT_ID', ''),
-            'access_token'  => env('GOCARDLESS_ACCESS_TOKEN', ''),
-        );
-
         $this->client = new \GoCardlessPro\Client([
             'access_token' => env('GOCARDLESS_ACCESS_TOKEN'),
             'environment' => (env('NEW_GOCARDLESS_ENV', 'LIVE') == 'LIVE')? \GoCardlessPro\Environment::LIVE: \GoCardlessPro\Environment::SANDBOX,
