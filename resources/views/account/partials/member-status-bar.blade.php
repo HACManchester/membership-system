@@ -1,23 +1,3 @@
-<div class="alert alert-info" style="background:white; border-left: 2px solid">
-    @if ($user->keyFob())
-        @foreach ($user->keyFobs()->get() as $fob)
-            @if (substr( $fob->key_id, 0, 2 ) == "ff")
-                <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
-                    🔢 Access code: {{ str_replace('f', '', $fob->key_id) }}
-                </a>
-            @else
-                <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
-                    🔑 Fob: {{ $fob->key_id }}
-                </a>
-            @endif
-        @endforeach
-    @else
-        <a href="/account/{{ $user->id }}/edit#access" type="button" class="btn">
-            🔑 Set up an access method
-        </a>
-    @endif
-</div>
-
 <div class="member-status-bar">
     @if($user->online_only)
         <div>
@@ -34,7 +14,7 @@
     </div>
 
     @if (!$user->online_only)
-        <a href="/account/{{ $user->id }}/balance" type="button" class="btn">
+        <a href="/account/{{ $user->id }}/balance">
             💰 Balance: {{ $memberBalance }}
         </a>
 
@@ -98,6 +78,19 @@
                 </div>
             </div>
         @endif
+    
+        <div>
+            @if ($user->keyFob())
+                
+            <a href="/account/{{ $user->id }}/edit#access">
+                    🔑 {{ $user->keyFobs()->count() }} access {{ str_plural('method', $user->keyFobs()->count() )}}
+                </a>
+            @else
+                <a href="/account/{{ $user->id }}/edit#access">
+                    🔑 Set up an access method
+                </a>
+            @endif
+        </div>
     @endif
 </div>
 
