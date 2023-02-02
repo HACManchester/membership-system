@@ -14,7 +14,7 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
 
 @if(!$user->online_only && $countOfConditions !== $countOfCompletedConditions)
     <div class="row">
-        <div class="col-xs-12 col-lg-6">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Getting Started</h3>
