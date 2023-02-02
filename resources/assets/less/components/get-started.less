@@ -1,0 +1,23 @@
+.get-started-checklist {
+    .list-unstyled;
+}
+  
+.get-started-checklist_item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1rem;
+
+    &\:checked {
+        text-decoration: line-through;
+    }
+
+    .get-started-checklist_item_id {
+        width: 2rem;
+        text-align: right;
+    }
+
+    .get-started-checklist_item_body {
+        flex: 1;
+    }
+}

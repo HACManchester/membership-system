@@ -44,9 +44,7 @@
 
 @include('account.partials.member-admin-action-bar')
 
-@if($user->status == 'active' && !$user->online_only)
-    @include('account.partials.get-started')
-@endif  
+@include('account.partials.get-started')
 
 @if ($user->promoteGoCardless())
 
