@@ -6,7 +6,7 @@
                 <h4 class="modal-title" id="changeSubscriptionModelLabel">Change subscription amount</h4>
             </div>
             <div class="modal-body">
-                @if (!$user->canMemberChangeSubAmount())
+                @if (!$user->canMemberChangeSubAmount() && $user->payment_method)
                     <p>Unfortunately we cannot change your subscription amount with your current payment provider. Please contact the board for assistance.</p>
                 @else
                     {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-payment', $user->id])) !!}

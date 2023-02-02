@@ -34,8 +34,16 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
                             'title' => 'Set up your membership payment via Direct Debit',
                             'link' => route('account.subscription.create', $user->id),
                             'rawDescription' => <<<DESC
-                                <p>We will take your membership payment of &pound;{$fmtMonthlySubscription} monthly on the same date it was originally set up.</p>
-                                <p>All payments will be protected by the <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">Direct Debit guarantee.</a></p>
+                                <p>
+                                    Visit our payment provider to set up your monthly membership payment of &pound;{$fmtMonthlySubscription}
+                                    (<button class="btn btn-link" data-toggle="modal" data-target="#changeSubscriptionModel">Change amount</button>).
+                                </p>
+                                <p>Payments will be taken monthly from the date you complete this step.</p>
+                                <p>
+                                    All payments will be protected by the
+                                    <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">Direct Debit guarantee</a>,
+                                    and you will be able to cancel at any point through this website or through your bank.
+                                </p>
 DESC
                         ])
                         @include('account.partials.get-started-checklist-item', [
