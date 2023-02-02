@@ -32,20 +32,9 @@
 @include('account.partials.get-started')
 @include('account.partials.online-only-upsell')
 
-@if ($user->promoteGoCardless())
-
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            @include('account.partials.switch-to-gocardless-panel')
-        </div>
-    </div>
-
-@endif
-
-@if ($user->promoteVariableGoCardless())
-    @include('account.partials.gocardless-variable-switch')
-@endif
-
+{{-- Payment provider migrations. TODO: Check rollout progress and remove if no longer needed --}}
+@include('account.partials.switch-to-gocardless-panel')
+@include('account.partials.gocardless-variable-switch')
 
 {{-- Hide these panels from setting-up or online-only users. --}}
 
