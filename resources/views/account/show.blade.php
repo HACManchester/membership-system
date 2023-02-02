@@ -167,4 +167,6 @@
 @endif
 
 
+@include('account.partials.change-subscription-modal')
+
 @stop
