@@ -20,6 +20,8 @@
 @brand-warning: #f0ad4e;
 @brand-danger: #d9534f;
 
+@hacman-primary: #fff000;
+
 //== Scaffolding
 //
 //## Settings for some of the most global styles.
@@ -40,7 +42,7 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-@font-family-sans-serif: "Asap", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif: "Asap", "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif: Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 @font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -66,7 +68,7 @@
 @headings-font-family: inherit;
 @headings-font-weight: 500;
 @headings-line-height: 1.1;
-@headings-color: inherit;
+@headings-color: @gray-darker;
 
 //== Iconography
 //
@@ -142,9 +144,9 @@
 @btn-default-bg: #fff;
 @btn-default-border: #ccc;
 
-@btn-primary-color: #fff;
-@btn-primary-bg: @brand-primary;
-@btn-primary-border: darken(@btn-primary-bg, 5%);
+@btn-primary-color: #000;
+@btn-primary-bg: @hacman-primary;
+@btn-primary-border: darken(@brand-primary, 5%);
 
 @btn-secondary-color: #fff;
 @btn-secondary-bg: @brand-secondary;
@@ -819,7 +821,7 @@
 //** Abbreviations and acronyms border color
 @abbr-border-color: @gray-light;
 //** Headings small color
-@headings-small-color: @gray-lightest;
+@headings-small-color: @gray-darker;
 //** Blockquote small color
 @blockquote-small-color: @gray-light;
 //** Blockquote font size
