@@ -28,7 +28,9 @@
 
 @include('account.partials.member-admin-action-bar')
 
+{{-- These have equal page priority, but end up being mutually exclusive --}}
 @include('account.partials.get-started')
+@include('account.partials.online-only-upsell')
 
 @if ($user->promoteGoCardless())
 
@@ -46,30 +48,8 @@
 
 
 {{-- Hide these panels from setting-up or online-only users. --}}
-@if ($user->status != 'setting-up' || $user->online_only)
-    @if ($user->online_only)
-    <div class="row">
-        <div class="col-xs-12 col-md-12 pull-left">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Online Only user</h3>
-                </div>
-                <div class="panel-body">
-                    <h4>You're an online only user, and not a member of the space (yet).</h4>
-                    <p>
-                        To become a member, edit your account and mark yourself as not an online only member.
-                        You'll need to add address details, emergency contact details, and setup a direct debit for the monthly subscription.
-                    </p>
-                    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}">
-                        <i class="material-icons">mode_edit</i> 
-                        Edit your account to become a member
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
 
+@if ($user->status != 'setting-up' || $user->online_only)
     @if ($user->status == 'left')
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
