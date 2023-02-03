@@ -166,6 +166,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
     }
 
+    public function storageBoxes()
+    {
+        return $this->hasMany('\BB\Entities\StorageBox')->where('active', true);
+    }
+
 
 
     /*

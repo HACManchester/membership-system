@@ -50,6 +50,9 @@
 
 
 @if ($user->status != 'setting-up')
+    {{-- Call to action / signposting section --}}
+    @include('account.partials.signposts.list')
+
     @if (!$user->isSuspended())
         <div class="row">
             <div class="col-xs-12 col-lg-12">
