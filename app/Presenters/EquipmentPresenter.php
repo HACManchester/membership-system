@@ -47,13 +47,13 @@ class EquipmentPresenter extends Presenter
 
     public function accessFee()
     {
-        return '&pound' . number_format($this->entity->access_fee, 0);
+        return '&pound;' . number_format($this->entity->access_fee, 2);
     }
 
     public function usageCost()
     {
         if ($this->entity->usage_cost) {
-            return '&pound' . number_format($this->entity->usage_cost, 2) . ' per ' . $this->entity->usage_cost_per;
+            return '&pound;' . number_format($this->entity->usage_cost, 2) . ' per ' . $this->entity->usage_cost_per;
         }
     }
 
