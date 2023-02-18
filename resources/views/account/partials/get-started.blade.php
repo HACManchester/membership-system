@@ -11,8 +11,7 @@ $countOfCompletedConditions = count(array_filter($conditions));
 $pctComplete = 100 / $countOfConditions * $countOfCompletedConditions;
 $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
 ?>
-
-@if(!$user->online_only && $countOfConditions !== $countOfCompletedConditions)
+@if(!$user->online_only && !in_array($user->status, ['leaving', 'left', 'suspended']) && $countOfConditions !== $countOfCompletedConditions)
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             <div class="panel panel-default">
