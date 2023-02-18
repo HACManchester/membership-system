@@ -1,0 +1,37 @@
+.progress-rounded {
+    border-radius: @line-height-computed / 2;
+}
+
+.progress-bordered {
+    border: 1px solid;
+    position: relative;
+
+    &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: @line-height-computed / 2;
+        border: 1px solid @progress-bg;
+    }
+}
+
+.progress-bordered-success {
+    border-color: @progress-bar-success-bg;
+}
+
+.progress-bordered-info {
+    border-color: @progress-bar-info-bg;
+}
+
+.progress-bordered-warning {
+    border-color: @progress-bar-warning-bg;
+}
+
+.progress-bordered-danger {
+    border-color: @progress-bar-danger-bg;
+}
+  

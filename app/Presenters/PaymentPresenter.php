@@ -88,14 +88,16 @@ class PaymentPresenter extends Presenter
 
     public function amount()
     {
-        return '&pound;' . $this->entity->amount;
+        return '&pound;' . number_format($this->entity->amount, 2);
     }
 
     public function balanceAmount()
     {
         if ($this->entity->source == 'balance') {
             return '-&pound;' . $this->entity->amount;
-        } elseif ($this->entity->reason == 'balance') {
+        }
+
+        if ($this->entity->reason == 'balance') {
             return '&pound;' . $this->entity->amount;
         }
     }
@@ -104,7 +106,9 @@ class PaymentPresenter extends Presenter
     {
         if ($this->entity->source == 'balance') {
             return 'danger';
-        } elseif ($this->entity->reason == 'balance') {
+        }
+
+        if ($this->entity->reason == 'balance') {
             return 'success';
         }
     }

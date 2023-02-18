@@ -24,134 +24,44 @@
 
 @include('account.partials.member-status-bar')
 
-@if (($user->status != 'setting-up' || $user->online_only) && count($user->getAlerts()) > 0)
-<div class="alert alert-warning" role="alert">
-    <ul>
-        @foreach ($user->getAlerts() as $alert)
-            @if ($alert == 'email-not-verified')
-                <li><strong>Your email isn't verified</strong>, please check your inbox for the welcome email and click the link. You won't be able to sign into online services with this login until you do this. <br/>Didn't get the email? <a href="/account/confirm-email/send">Click here to re-send it.</a></li>
-            @endif
-            @if ($alert == 'missing-profile-photo')
-                <li><strong>Missing profile photo</strong>, Please upload a profile picture - <a href="{{ route('account.profile.edit', [$user->id]) }}" class="alert-link">upload a photo</a></li>
-            @endif
-            @if ($alert == 'missing-phone')
-                <li><strong>No phone number</strong>, please enter a phone number - we need this in case we have to get in contact with you - <a href="{{ route('account.edit', [$user->id]) }}" class="alert-link">edit your profile</a></li>
-            @endif
-        @endforeach
-    </ul>
-</div>
-@endif
+@include('account.partials.alerts')
 
 @include('account.partials.member-admin-action-bar')
 
-@if($user->status == 'active' && !$user->online_only)
-    @include('account.partials.get-started')
-@endif  
+{{-- These have equal page priority, but end up being mutually exclusive --}}
+@include('account.partials.get-started')
+@include('account.partials.online-only-upsell')
 
-@if ($user->promoteGoCardless())
+{{-- Payment provider migrations. TODO: Check rollout progress and remove if no longer needed --}}
+@include('account.partials.switch-to-gocardless-panel')
+@include('account.partials.gocardless-variable-switch')
 
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            @include('account.partials.switch-to-gocardless-panel')
-        </div>
-    </div>
-
+@if ($user->status == 'left')
+    @include('account.partials.rejoin')
+@endif
+    
+@if ($user->status == 'leaving')
+    @include('account.partials.leaving-warning')
 @endif
 
-@if ($user->promoteVariableGoCardless())
-    @include('account.partials.gocardless-variable-switch')
+@if ($user->isSuspended())
+    @include('account.partials.payment-problem-panel')
 @endif
 
 
-@if ($user->status == 'setting-up' && !$user->online_only)
-    <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
-            @include('account.partials.setup-panel')
-        </div>
-    </div>
-@else
+@if ($user->status != 'setting-up')
+    {{-- Call to action / signposting section --}}
+    @include('account.partials.signposts.list')
 
-    @if ($user->online_only)
-    <div class="row">
-        <div class="col-xs-12 col-md-12 pull-left">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Online Only user</h3>
-                </div>
-                <div class="panel-body">
-                    <h4>You're an online only user, and not a member of the space (yet).</h4>
-                    <p>
-                        To become a member, edit your account and mark yourself as not an online only member.
-                        You'll need to add address details, emergency contact details, and setup a direct debit for the monthly subscription.
-                    </p>
-                    <a class="btn btn-secondary" href="{{ route('account.edit', [$user->id]) }}">
-                        <i class="material-icons">mode_edit</i> 
-                        Edit your account to become a member
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    @if ($user->status == 'left')
-    <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Member Left</h3>
-                </div>
-                <div class="panel-body">
-                    <p>To rejoin please setup a direct debit for the monthly subscription.</p>
-                    @include('account.partials.setup-payment')
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    @if ($user->status == 'leaving')
-    <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Member Leaving</h3>
-                </div>
-                <div class="panel-body">
-                    <p class="lead">
-                        You're currently setup to leave Hackspace Manchester once your subscription payment expires.<br />
-                        Once this happens you will no longer have access to the work space, mailing list or any other member areas.
-                    </p>
-                    <p>
-                        If you wish to rejoin please use the payment options below
-                    </p>
-                    @include('account.partials.setup-payment')
-
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    @if ($user->isSuspended())
+    @if (!$user->isSuspended())
         <div class="row">
-            <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
-                @include('account.partials.payment-problem-panel')
+            <div class="col-xs-12 col-lg-12">
+                @include('account.partials.induction-panel')
             </div>
         </div>
     @endif
 
-    @if (!$user->isSuspended() && !$user->online_only)
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            @include('account.partials.induction-panel')
-        </div>
-    </div>
-    @endif
-
-
-    @if ($user->status != 'honorary' && !$user->online_only)
-
+    @if ($user->status != 'honorary')
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
                 @include('account.partials.sub-charges')
@@ -181,8 +91,9 @@
         </div>
         @endif
     @endif
-
 @endif
 
+
+@include('account.partials.change-subscription-modal')
 
 @stop

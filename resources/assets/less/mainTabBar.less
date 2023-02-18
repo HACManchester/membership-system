@@ -1,8 +1,9 @@
 #mainTabBar {
   height: 64px;
-  background-color: @brand-primary;
+  background-color: darken(@hacman-primary, 5%);
+  // background-color: #fff000;
   margin-top: 0px;
-  color: #FFF;
+  color: #000;
   font-size: ceil((@font-size-base * 1.3));
 
   ul {
@@ -18,10 +19,10 @@
     display: block;
 
     &.active {
-      border-bottom:5px solid #FFF;
+      border-bottom:5px solid #000;
     }
     &:hover {
-      border-bottom:5px solid #FFF;
+      border-bottom:5px solid #000;
     }
 
 
@@ -30,7 +31,7 @@
     position: relative;
     display: block;
     padding: 15px 25px 12px;
-    color: #FFF;
+    color: #000;
 
     &:hover, &:active, &:visited, &:focus {
       text-decoration: none;

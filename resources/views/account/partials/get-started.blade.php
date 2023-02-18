@@ -1,34 +1,68 @@
-<div class="row">
-    <div class="col-xs-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Helpful hints to get going</h3>
-            </div>
-            <div class="panel-body">
-                <h4>🚀 Membership checklist and quickstart</h4>
-                <ul style="list-style-type: none; padding-left: 20px">
-                    <li>
-                        @if ($user->keyFobs()->count() > 0)✅@else🟠@endif 
-                        <b>Get an access method</b> - You can <a href="/account/0/edit#access">set up a fob or access code</a> on your account page. 
-                    </li>
-                    <li>
-                        @if ($user->induction_completed)✅@else🟠@endif 
-                        <b>Do the general membership induction</b> - all members need to have read the general <a href="/account/0/induction">member induction</a>
-                    </li>
-                    <li>
-                        💬
-                        <b>Join in the chat</b> - we have a <a href="https://list.hacman.org.uk" target="_blank">forum</a> and <a href="https://t.me/hacmanchester" target="_blank">Telegram group chat</a>
-                    </li>
-                    <li>➡️<b>Find our common resources</b> - we have a page of <a href="/resources">resources</a> outlining the basics</li>
-                    <li>➡️<b>Get trained on equipment</b> - Some equipment requires training, check out the <a href="/equipment">equipment</a> page and request inductions.</li>
-                    <li>➡️<b>Get a storage location</b> - every member can <a href="/storage_boxes">claim a storage location</a> subject to the rules.</li>
-                </ul>
+<?php
+$conditions = [
+    $user->payment_method,
+    $user->induction_completed,
+    $user->keyFob()
+];
 
-                <h4>Handy links</h4>
-                <a href="/resources" class="btn btn-primary">Resources</a>
-                <a href="https://list.hacman.org.uk/t/member-handbook/2890/1" class="btn btn-primary">Read the Handbook</a>
-                <a href="https://docs.hacman.org.uk" class="btn btn-primary">Documentation</a>
+$countOfConditions = count($conditions);
+$countOfCompletedConditions = count(array_filter($conditions));
+
+$pctComplete = 100 / $countOfConditions * $countOfCompletedConditions;
+$fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
+?>
+@if(!$user->online_only && !in_array($user->status, ['leaving', 'left', 'suspended']) && $countOfConditions !== $countOfCompletedConditions)
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Getting Started</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Welcome to Hackspace Manchester! Let's get your membership set up.</p>
+
+                    <div class="progress progress-rounded progress-bordered progress-bordered-success">
+                        <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ max(1, $pctComplete)  }}%">
+                        </div>
+                    </div>
+
+                    <ul class="get-started-checklist">
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '1',
+                            'condition' => $user->payment_method,
+                            'title' => 'Set up your membership payment via Direct Debit',
+                            'link' => route('account.subscription.create', $user->id),
+                            'rawDescription' => <<<DESC
+                                <p>
+                                    Visit our payment provider to set up your monthly membership payment of &pound;{$fmtMonthlySubscription}
+                                    (<button class="btn btn-link" data-toggle="modal" data-target="#changeSubscriptionModel">Change amount</button>).
+                                </p>
+                                <p>Payments will be taken monthly from the date you complete this step.</p>
+                                <p>
+                                    All payments will be protected by the
+                                    <a href="https://gocardless.com/direct-debit/guarantee/" target="_blank">Direct Debit guarantee</a>,
+                                    and you will be able to cancel at any point through this website or through your bank.
+                                </p>
+DESC
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '2',
+                            'condition' => $user->induction_completed,
+                            'title' => 'Read through our General Induction',
+                            'link' => route('account.induction.show', $user->id),
+                            'description' => 'Our General Induction includes important information about being a member, how to get to the Hackspace, and other important information.'
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '3',
+                            'condition' => $user->keyFob(),
+                            'title' => 'Visit the Hackspace to finish setting up',
+                            'link' => 'https://www.hacman.org.uk/visit-us/',
+                            'link_target' => '_blank',
+                            'description' => 'Come along on one of our open evenings for an introduction to the space, and to set up your 24/7 access fob.'
+                        ])
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endif

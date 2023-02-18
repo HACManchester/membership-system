@@ -49,7 +49,7 @@ class UserPresenter extends Presenter
 
     public function monthlySubscription()
     {
-        return '&pound;' . number_format(round($this->entity->monthly_subscription));
+        return '&pound;' . number_format(round($this->entity->monthly_subscription), 2);
     }
 
     public function subscriptionDetailLine()

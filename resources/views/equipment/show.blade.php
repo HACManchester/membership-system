@@ -32,7 +32,7 @@ Tools and Equipment
                     @if ($equipment->present()->manufacturerModel) 🔧 Make: {{ $equipment->present()->manufacturerModel }}<br />@endif
                     @if ($equipment->present()->purchaseDate) Purchased: {{ $equipment->present()->purchaseDate }}<br />@endif
                     @if ($equipment->hasUsageCharge())
-                        💵 Usage Cost: {!! $equipment->present()->usageCost() !!}<br />
+                        💵 Usage Cost: {{ $equipment->present()->usageCost }}<br />
                     @endif
                     @if ($equipment->isManagedByGroup())
                         🤗 Managed By: <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
@@ -77,7 +77,7 @@ Tools and Equipment
                             @if (!$userInduction)
                                 <p>
                                 ⚠️ An induction is required before you may use this tool. The access fee goes towards equipment maintenance.<br />
-                                <strong>Equipment access fee: &pound{{ $equipment->access_fee }}</strong><br />
+                                <strong>Equipment access fee: {{ $equipment->present()->accessFee }}</strong><br />
                                 </p>
     
                                 @if(Auth::user()->online_only)
