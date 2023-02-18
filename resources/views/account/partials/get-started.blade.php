@@ -57,7 +57,7 @@ DESC
                             'number' => '3',
                             'condition' => $user->keyFob(),
                             'title' => 'Visit the Hackspace to finish setting up',
-                            'link' => 'https://docs.hacman.org.uk/open_evenings/',
+                            'link' => 'https://www.hacman.org.uk/visit-us/',
                             'link_target' => '_blank',
                             'description' => 'Come along on one of our open evenings for an introduction to the space, and to set up your 24/7 access fob.'
                         ])
