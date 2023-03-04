@@ -76,7 +76,7 @@ Thanks for reading all that, and we look forward to seeing you soon!
 <br></br>
 <b>Manchester Hackspace Board of Directors a.k.a The Board</b><br></br>
 <hr></hr>
-<a href="hacman.org.uk">hacman.org.uk</a>
+<a href="https://hacman.org.uk">hacman.org.uk</a>
 <p>Manchester Hackspace is a not for profit community run maker space on the edge of Ancoats, Central Manchester. Anyone is welcome to become a member and make use of the space and its wide variety of tools.<br>
 Woodwork. Metalwork. Arts. Crafts. 3D Printing. Laser Cutting. Electronics.
 <br></br>
