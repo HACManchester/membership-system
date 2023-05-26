@@ -136,17 +136,7 @@ class EquipmentController extends Controller
             ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
 
         // Get info from the docs system
-        $docs ='';
-        if($equipment->docs){
-            try {
-                preg_match('/(https?:\/\/)?docs.hacman.org.uk\/(.+)/', $equipment->docs, $matches, PREG_OFFSET_CAPTURE);
-                $url =  'https://raw.githubusercontent.com/HACManchester/documentation/master/docs/' . rtrim($matches[2][0], "/") .'.md';
-                $contents = @file_get_contents($url);
-                $contents = utf8_encode($contents);
-                $docs = Markdown::defaultTransform($contents);
-            }
-            catch(Exception $e){}
-        }
+        $docs = $equipment->docs || "";
 
         return \View::make('equipment.show')
             ->with('equipmentId', $equipmentId)

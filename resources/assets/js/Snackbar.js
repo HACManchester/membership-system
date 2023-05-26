@@ -37,7 +37,7 @@ class Snackbar {
                 //Add the content to the div
                 var snackBarContent = document.createElement("div");
                 snackBarContent.innerHTML = message;
-                this.snackBarDiv.innerHTML = '';
+                this.snackBarDiv.innerHTML = '<strong>For your information:</strong><br>';
                 this.snackBarDiv.appendChild(snackBarContent);
 
                 this.display();
@@ -45,7 +45,7 @@ class Snackbar {
                 var self = this;
                 this.timeoutID = setTimeout(function () {
                     self.remove();
-                }, 3000);
+                }, 10000);
             },
             displayMessages: function(messages) {
                 var message = '<ul>';

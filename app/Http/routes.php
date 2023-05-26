@@ -57,11 +57,8 @@ Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@
 
 
 //Inductions
-Route::get('account/{account}/induction', ['uses'=>'MemberInductionController@show', 'as'=>'account.induction.show', 'middleware'=>'role:member']);
-Route::put('account/{account}/induction', ['uses'=>'MemberInductionController@update', 'as'=>'account.induction.update', 'middleware'=>'role:member']);
-Route::get('member_inductions', ['uses'=>'MemberInductionController@index', 'as'=>'account.induction.index', 'middleware'=>'role:member']);
-Route::put('member_inductions/{account}', ['uses'=>'MemberInductionController@approve', 'as'=>'account.induction.approve', 'middleware'=>'role:member']);
-
+Route::get('general_induction', ['uses'=>'MemberInductionController@show', 'as'=>'general-induction.show', 'middleware'=>'role:member']);
+Route::put('general_induction', ['uses'=>'MemberInductionController@update', 'as'=>'general-induction.update', 'middleware'=>'role:member']);
 
 ##########################
 # Public Member List

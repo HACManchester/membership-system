@@ -9,8 +9,8 @@ class InductionValidator extends FormValidator
      * @var array
      */
     protected $rules = [
-        'induction_completed'   => 'accepted',
         'rules_agreed'          => 'accepted',
+        'inductee_email'        => 'required|email'
     ];
 
 

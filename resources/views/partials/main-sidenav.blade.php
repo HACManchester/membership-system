@@ -106,12 +106,6 @@
         <a href="https://list.hacman.org.uk" target="_blank">Forum</a>
     </li>
     <li class="topNavItem  hidden-xs visible-s">
-        <a href="https://moodle.hacman.org.uk" target="_blank">Moodle</a>
-    </li>
-    <li class="topNavItem">
-        <a href="https://www.hacman.org.uk/covid-19-information/" target="_blank">COVID-19</a>
-    </li>
-    <li class="topNavItem  hidden-xs visible-s">
         <a href="https://docs.hacman.org.uk" target="_blank">Documentation</a>
     </li>
 
@@ -166,7 +160,7 @@
             </ul>
 
             {!! HTML::sideNavLink('💳 Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
-            {!! HTML::sideNavLink('ℹ️ General Induction', 'account.induction.show', [Auth::id()], !Auth::user()->induction_completed) !!}
+            {!! HTML::sideNavLink('ℹ️ General Induction', 'general-induction.show', [Auth::id()], !Auth::user()->induction_completed) !!}
            
         </ul>
         @endif
@@ -197,10 +191,6 @@
                     {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
                     {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
                     {!! HTML::sideNavLink('💌 Newsletter', 'newsletter') !!}
-                @endif
-
-                @if (Auth::user()->hasRole('comms') || Auth::user()->isAdmin())
-                    {!! HTML::sideNavLink('Members Inductions', 'account.induction.index') !!}
                 @endif
 
                 @if (Auth::user()->hasRole('acs') || Auth::user()->isAdmin())

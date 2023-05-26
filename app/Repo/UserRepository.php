@@ -326,6 +326,7 @@ class UserRepository extends DBRepository
         $user = $this->getById($userId);
 
         $user->induction_completed = true;
+        $user->inducted_by = \Auth::user()->id;
 
         $user->rules_agreed = $user->rules_agreed? $user->rules_agreed: Carbon::now();
 

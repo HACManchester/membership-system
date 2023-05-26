@@ -48,17 +48,17 @@ DESC
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '2',
                             'condition' => $user->induction_completed,
-                            'title' => 'Read through our General Induction',
-                            'link' => route('account.induction.show', $user->id),
-                            'description' => 'Our General Induction includes important information about being a member, how to get to the Hackspace, and other important information.'
+                            'title' => 'Get a General Induction',
+                            'link' => route('general-induction.show', $user->id),
+                            'description' => 'Come along to an open evening and get a General Induction which includes a tour and important information about being a member.'
                         ])
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '3',
                             'condition' => $user->keyFob(),
-                            'title' => 'Visit the Hackspace to finish setting up',
+                            'title' => 'Get an access method set up',
                             'link' => 'https://www.hacman.org.uk/visit-us/',
                             'link_target' => '_blank',
-                            'description' => 'Come along on one of our open evenings for an introduction to the space, and to set up your 24/7 access fob.'
+                            'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.'
                         ])
                     </ul>
                 </div>
