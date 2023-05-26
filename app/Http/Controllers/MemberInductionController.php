@@ -40,15 +40,19 @@ class MemberInductionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Request $request)
     { 
         $user = false;
         if(!\Auth::guest()){
             $user = \Auth::user();
         }
         $induction_code = Settings::get("general_induction_code");
+        $prefill_code = $request->has('code') ? $request->input('code') : '';
 
-        return view('general-induction.show')->with('user', $user)->with('general_induction_code', $induction_code);
+        return view('general-induction.show')
+            ->with('user', $user)
+            ->with('general_induction_code', $induction_code)
+            ->with('prefill_induction_code', $prefill_code);
     }
 
     /**

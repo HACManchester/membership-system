@@ -38,7 +38,7 @@
                 <ol>
                     <li>Visit the space on open evening</li>
                     <li>Ask for a general induction</li>
-                    <li>Give your email to the person who completes the induction to mark you as inducted</li>
+                    <li>Mark yourself as inducted by entering the induction code, or give your email to the person who completes the induction.</li>
                 </ol>
             @else
                 <h2>You've had the general induction, and can now induct others!</h2>
@@ -58,7 +58,7 @@
                 <div class="form-group {{ Notification::hasErrorDetail('induction_code', 'has-error has-feedback') }}">
                     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
                         <h3>Enter the code for the general induction</h3>
-                        {!! Form::text('induction_code', "", ["class"=>"form-control", "placeholder" => "XXXX", 'required' => 'required']) !!}
+                        {!! Form::text('induction_code', $prefill_induction_code, ["class"=>"form-control", "placeholder" => "XXXX", 'required' => 'required']) !!}
                         {!! Form::label('induction_code', 'Enter the induction code') !!}
                         {!! Notification::getErrorDetail('induction_code') !!}
                     </div>
