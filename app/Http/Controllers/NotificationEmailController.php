@@ -151,10 +151,6 @@ class NotificationEmailController extends Controller
                 }
 
                 if($allowed){
-                    $getUser = function($item){
-                        return $item->user;
-                    };
-
                     if($status == "trainer"){
                         $users = $this->inductionRepository
                             ->getTrainersForEquipment($equipment->induction_category)
