@@ -1,0 +1,24 @@
+.tool-info {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000;
+
+    &__detail {
+        display: flex;
+        flex-direction: row;
+        background: linear-gradient(90deg, #fffaaa 0%, #fff 100%);
+    }
+
+    &__detail:not(:last-of-type) {
+        border-bottom: 1px solid black;
+    }
+    
+    &__key, &__value {
+        flex: 1;
+        padding: 0.5em;
+    }
+
+    &__key {
+        font-weight: bold;
+    }
+}

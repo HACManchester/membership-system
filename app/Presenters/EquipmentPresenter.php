@@ -32,6 +32,21 @@ class EquipmentPresenter extends Presenter
         return Markdown::defaultTransform($this->entity->description);
     }
 
+    public function induction_instructions()
+    {
+        return Markdown::defaultTransform($this->entity->induction_instructions);
+    }
+
+    public function trained_instructions()
+    {
+        return Markdown::defaultTransform($this->entity->trained_instructions);
+    }
+
+    public function trainer_instructions()
+    {
+        return Markdown::defaultTransform($this->entity->trainer_instructions);
+    }
+
     public function help_text()
     {
         return Markdown::defaultTransform($this->entity->help_text);
