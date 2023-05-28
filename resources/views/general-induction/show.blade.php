@@ -19,35 +19,57 @@
 
     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
         <div class="well infobox">
-            <h2>How general inductions work</h2>
-            <ul>
-                <li>General inductions are given in the space by members, following the tour sheet by the doors</li>
-                <li>Once the induction is complete, the new member must be marked as inducted on the membership system (below):
-                    <ul>
-                        <li>by passing the induction code to the new member, for them to fill in</li>
-                        <li>by entering the code yourself, alongside the new member's email</li>
-                    </ul>
-                </li>
-                <li>Anyone can mark another member as inducted using their email address</li>
-            </ul>
-
             @if($user && !$user->induction_completed)
-                <h2>You need to have a general induction before you can get access to the space</h2>
-                <p>The general induction is given on open evenings and includes a tour of the space.</p>
+                <h3>You need to have a general induction before you can get access to the space</h3>
+                <p>To get an general induction:</p>
                 
                 <ol>
-                    <li>Visit the space on open evening</li>
+                    <li>Visit the space on open evening (or arrange to visit a member on Telegram)</li>
                     <li>Ask for a general induction</li>
-                    <li>Mark yourself as inducted by entering the induction code, or give your email to the person who completes the induction.</li>
+                    <li>Have the induction marked as completed:
+                        <ul>
+                            <li>by entering the induction completion code into the form below,</li>
+                            <li> or giving your email to the person who completes the induction.</li>
+                        </ul>
+                    </ul>
                 </ol>
             @else
-                <h2>You've had the general induction, and can now induct others!</h2>
-                <p>Follow the induction sheet by the entrance to give inductions to new members.</p>
-                <h3>The general induction code</h3>
+                <h2>You can give the general induction to others!</h2>
+                <p>Follow the induction crib sheet by the entrance, it includes
+                    <ul>
+                        <li>giving a tour of the space</li>
+                        <li>sharing important information on how the space works</li>
+                    </ul>    
+                </p>
+                <p>The crib sheets lives in the orange tray by the first aid kit by the main door.</p>
+                <h3>The general induction completion code</h3>
+                <p>The completion code may be issued after a tour, and can be found at the bottom of the sheet, or below.</p>
                 <p>Please only give this code to new members <strong>after</strong> giving them the full general induction as specified by the induction sheet.
                 <div class="infobox__code">{!! $general_induction_code !!}</div>
             @endif
         </div>
+
+        <div class="well">
+            <h2>How general inductions work</h2>
+            <ul>
+                <li>All new members are given a general induction before they have access to the space.</li>
+                <li>A general induction consists of a tour of the space followed by important information on how we operate.</li>
+                <li>Any active member who has done the general induction can give a general induction, following the crib sheet by the main doors.</li>
+            </ul>
+            
+            <h3>Getting marked as having completed the induction</h3>
+            <p>
+                Once your induction is complete, you will need to be marked as inducted on the membership system.
+            </p>
+                This can be done by filling in the form below, either by the person doing the induction:
+                    <ul>
+                        <li>passing you the induction code, for you to fill in</li>
+                        <li>entering your email address into this form on their account</li>
+                    </ul>
+                </li>
+            </p>
+        </div>
+        
             
             
         <div class="well">
