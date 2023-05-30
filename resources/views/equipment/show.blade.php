@@ -27,30 +27,27 @@ Tools and Equipment
     </div>
 </div>
 
-
-
-
-    
 <div class="row">
     <div class="col-sm-12">
         <div class="member-status-bar">
-            @if (!$userInduction)
-                <h4><span class="label label-danger">Training is required</span></h4>
-            @elseif ($userInduction->is_trained)
-                <h4><span class="label label-success">You have been inducted and can use this equipment</span></h4>
-            @elseif ($userInduction)
-                <h4><span class="label label-warning">Training to be completed</span></h4>
+            @if($equipment->requiresInduction())
+                @if (!$userInduction)
+                    <h4><span class="label label-danger">Training is required</span></h4>
+                @elseif ($userInduction->is_trained)
+                    <h4><span class="label label-success">You have been inducted and can use this equipment</span></h4>
+                    @if ($equipment->access_code)
+                        <h4><span class="label label-info">Access code: {{$equipment->access_code}}</span></h4>
+                    @endif
+                @elseif ($userInduction)
+                    <h4><span class="label label-warning">Training to be completed</span></h4>
+                @endif
             @endif
             @if (!$equipment->isWorking())
                 <h4><span class="label label-info">Out of action</span></h4>
             @endif
-            @if ($equipment->access_code)
-                <h4><span class="label label-info">Access code: {{$equipment->access_code}}</span></h4>
-            @endif
             @if ($equipment->dangerous)
                 <h4><span class="label label-danger">Bloody Dangerous</h4>
             @endif
-                    
         </div>
     </div>
 </div>
@@ -92,7 +89,7 @@ Tools and Equipment
                             @endif
 
                             @if ($equipment->trained_instructions)
-                            <h3>Instructions for Use</h3>
+                                <h3>Instructions for Use</h3>
                                 <div class="infobox well">
                                     <p>{!! $equipment->present()->trained_instructions !!}</p>
                                     <br/>
@@ -100,8 +97,8 @@ Tools and Equipment
                             @endif
 
                             @if (in_array($equipment->slug, ['laser', 'laser-1', 'printer-lfp-1', '3dprint-mendel90', '3dprint-mendelmax', 'vac-former-1', 'ultimaker']))
-                                <div style="border-left: 3px solid burlywood; padding-left: 1em;">
-                                    <h4>Pay for usage</h4>
+                                <h3>Pay for usage</h3>
+                                <div class="infobox well">
                                     <p>
                                         Make a payment for your usage of this equipment below.
                                     </p>
@@ -278,18 +275,20 @@ Tools and Equipment
                 <p>These people can train others and maintain the tool - if there's any issues with the tool speak to them.</p>
                 <div class="infobox__grid">
                     @foreach($trainers as $trainer)
-                        <div class="infobox__grid-item">
+                        <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainer->user->hash) !!}')">
                             <a href="{{ route('members.show', $trainer->user->id) }}">
                                 {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
                             </a>
                             {{ $trainer->user->name }}
-                            @if ($isTrainerOrAdmin)
+                            <div>
+                                @if ($isTrainerOrAdmin)
                                 {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
                                 {!! Form::hidden('not_trainer', '1') !!}
                                 {!! Form::hidden('slug', $equipment->slug) !!}
-                                {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
+                                {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
                                 {!! Form::close() !!}
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -312,26 +311,25 @@ Tools and Equipment
                 <p>There are currently <strong>{{ count($trainedUsers) }}</strong> members who are trained to use this tool.</p>
                 <div class="infobox__grid">
                     @foreach($trainedUsers as $trainedUser)
-                        <div class="infobox__grid-item">
+                        <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainedUser->user->hash) !!}')">
                             <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
                                 {{ $trainedUser->user->name }}
                             </a>
                             @if ($isTrainerOrAdmin)
-                                {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                                {!! Form::hidden('mark_untrained', '1') !!}
-                                {!! Form::hidden('slug', $equipment->slug) !!}
-                                {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
-                                {!! Form::close() !!}
+                                <div>
+                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                                    {!! Form::hidden('mark_untrained', '1') !!}
+                                    {!! Form::hidden('slug', $equipment->slug) !!}
+                                    {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
+                                    {!! Form::close() !!}
 
-                                {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                                {!! Form::hidden('is_trainer', '1') !!}
-                                {!! Form::hidden('slug', $equipment->slug) !!}
-                                {!! Form::submit('🎓', array('class'=> $trainedUser->is_trainer ? 'btn btn-xs disabled' : 'btn btn-xs btn-default')) !!}
-                                {!! Form::close() !!}
-                            
+                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                                    {!! Form::hidden('is_trainer', '1') !!}
+                                    {!! Form::hidden('slug', $equipment->slug) !!}
+                                    {!! Form::submit('🎓', array('class'=> $trainedUser->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default')) !!}
+                                    {!! Form::close() !!}
+                                </div>
                             @endif
-
                         </div>
                     @endforeach
                 </div>
@@ -362,31 +360,33 @@ Tools and Equipment
                                 <p>To get trained, ask on the forum or on Telegram.</p>
                             @endif
                         </div>
-                        <div></div>
                     @endif
 
                     @foreach($usersPendingInduction as $trainedUser)
                         @if ($isTrainerOrAdmin || $trainedUser->user->id == $user->id)
-                            <div class="infobox__grid-item">
-                                <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                    {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
-                                    {{ $trainedUser->user->name }}
-                                </a>
-                                
-                                ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})
-                                
+                            <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainedUser->user->hash) !!}')" >
+                                <div>
+                                    <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
+                                        {{ $trainedUser->user->name }}
+                                    </a>
+                                    
+                                    ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})
+                                </div>
                                 @if ($isTrainerOrAdmin )
-                                    {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
-                                    {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
-                                    {!! Form::hidden('slug', $equipment->slug) !!}
-                                    {!! Form::submit('❌', array('class'=>'btn btn-default btn-xs')) !!}
-                                    {!! Form::close() !!}
-                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                                    {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
-                                    {!! Form::hidden('mark_trained', '1') !!}
-                                    {!! Form::hidden('slug', $equipment->slug) !!}
-                                    {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
-                                    {!! Form::close() !!}
+                                    <div>
+                                        {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
+                                        {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
+                                        {!! Form::hidden('slug', $equipment->slug) !!}
+                                        {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
+                                        {!! Form::close() !!}
+                                        {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                                        {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
+                                        {!! Form::hidden('mark_trained', '1') !!}
+                                        {!! Form::hidden('slug', $equipment->slug) !!}
+                                        {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
+                                        {!! Form::close() !!}
+                                    </div>
                                 @endif
                             </div>
                         @endif
@@ -398,7 +398,7 @@ Tools and Equipment
                             {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
                             {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
                             {!! Form::hidden('slug', $equipment->slug) !!}
-                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) !!}
+                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
                             {!! Form::close() !!}
                         </div>
                     @endif

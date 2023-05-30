@@ -29,13 +29,7 @@
     @media screen and (min-width: @screen-md) {
         &__grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-areas: 
-                "header header ."
-                "main main main"
-                "main main main"
-                "main main main"
-                "footer footer footer";
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-gap: 1em;
             padding: 1em;
         }
@@ -47,18 +41,28 @@
         border: 1px solid black;
         border-left-width: 3px;
         padding: 1em;
-        background-color: white;
+        
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
 
         &--header{ 
-            grid-area: header;
+            grid-column-end: -1;
+            grid-column-start: 1;
         }
-        &--main{ 
-            grid-area: main;
+        &--main{  
             grid-column: auto;
             grid-row: auto;
         }
         &--footer{ 
-            grid-area: footer;
+            grid-column-end: -1;
+            grid-column-start: 1;
+        }
+
+        &--user{
+            background-color: #eee;
+            background-blend-mode: overlay;
+            background-size: cover;
         }
     }
 }
