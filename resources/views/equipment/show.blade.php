@@ -275,9 +275,9 @@ Tools and Equipment
                 <p>These people can train others and maintain the tool - if there's any issues with the tool speak to them.</p>
                 <div class="infobox__grid">
                     @foreach($trainers as $trainer)
-                        <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainer->user->hash) !!}')">
+                        <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainer->user->id) }}">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, '') !!}
+                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm') !!}
                             </a>
                             {{ $trainer->user->name }}
                             <div>
@@ -311,8 +311,9 @@ Tools and Equipment
                 <p>There are currently <strong>{{ count($trainedUsers) }}</strong> members who are trained to use this tool.</p>
                 <div class="infobox__grid">
                     @foreach($trainedUsers as $trainedUser)
-                        <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainedUser->user->hash) !!}')">
+                        <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                {!! HTML::memberPhoto($trainer->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
                                 {{ $trainedUser->user->name }}
                             </a>
                             @if ($isTrainerOrAdmin)
@@ -364,10 +365,10 @@ Tools and Equipment
 
                     @foreach($usersPendingInduction as $trainedUser)
                         @if ($isTrainerOrAdmin || $trainedUser->user->id == $user->id)
-                            <div class="infobox__grid-item infobox__grid-item--user" style="background-image:url('{!! \BB\Helpers\UserImage::thumbnailUrl($trainedUser->user->hash) !!}')" >
+                            <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, '') !!}
+                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
                                         {{ $trainedUser->user->name }}
                                     </a>
                                     
