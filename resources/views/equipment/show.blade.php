@@ -313,7 +313,7 @@ Tools and Equipment
                     @foreach($trainedUsers as $trainedUser)
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
+                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
                                 {{ $trainedUser->user->name }}
                             </a>
                             @if ($isTrainerOrAdmin)
