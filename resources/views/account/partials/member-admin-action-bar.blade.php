@@ -10,7 +10,7 @@
                     </a>
                 </h3>
             </div>
-            <div class="infobox infobox__grid" role="tabpanel">
+            <div id="collapseMemberAdminActions" class="infobox infobox__grid" role="tabpanel">
                 <div class="infobox__grid-item infobox__grid-item--header">
                     <h4>Particulars</h4>
                     <li>
