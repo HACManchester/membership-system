@@ -70,7 +70,7 @@ class MemberInductionController extends Controller
 
         $induction_code = Settings::get("general_induction_code");
 
-        if(strtolower($input['induction_code']) != strtolower($induction_code)){
+        if(trim(strtolower($input['induction_code'])) != strtolower($induction_code)){
             throw new \BB\Exceptions\ValidationException("Invalid induction code.");
         }
 
