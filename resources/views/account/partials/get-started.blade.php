@@ -56,7 +56,7 @@ DESC
                             'number' => '3',
                             'condition' => $user->keyFob(),
                             'title' => 'Get an access method set up',
-                            'link' => 'https://www.hacman.org.uk/visit-us/',
+                            'link' => route('account.edit', $user->id),
                             'link_target' => '_blank',
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.'
                         ])
