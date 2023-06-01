@@ -224,7 +224,7 @@ Edit your details
 
 <h2 id="access">Key Fobs and Access Codes</h4>
 @if (!$user->online_only)
-    @if($user->induction_completed)
+    @if($user->isAdmin() || $user->induction_completed || $user->keyFobs()->count() > 0)
         <div class="panel panel-info">
             <div class="panel-heading">Getting into the space</b></div>
             <div class="panel-body">
@@ -289,62 +289,51 @@ Edit your details
         @endif
 
         <h3>Add a new entry method</h3>
-        @if ($user->induction_completed)
-            @if ($user->keyFobs()->count() < 2)
-                <div class="panel panel-success">
-                    <div class="panel-heading">Add a new entry method</div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4>Add a keyfob</h4>
-                                
-                                <div class="panel panel-info">
-                                    <div class="panel-heading">How to add an entry method using the membership PC</div>
-                                    <div class="panel-body">
-                                        <p><strong>In the hackspace?</strong> Select a fob from the pot, or use a compatible 13.56Mhz fob you already have, select the text box below, then scan your fob with the reader. The ID will be typed in.</p>   
-                                    </div>
-                                </div>
-                                
-                                {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
-                                        Characters A-F and numbers 0-9 only.
-                                    </div>
-                                    <div class="col-sm-3">
-                                        {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
-                            </div>
-                            <div class="col-md-6">
-                                <h4>Request access code</h4>
-                                {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        {!! Form::hidden('key_id', 'ff00000000') !!}
-                                        {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
-                               
-                            </div>
-                        </div>  
-                    </div>
-                </div>
-            @else
-                <p>You have added the maximum number of entry methods permitted.</p>
-            @endif
-        @else
-            <div class="panel panel-warning">
-                <div class="panel-heading">You need to do your online general induction</div>
+    
+        @if (($user->keyFobs()->count() < 2 && $user->induction_completed) || $user->isAdmin())
+            <div class="panel panel-success">
+                <div class="panel-heading">Add a new entry method</div>
                 <div class="panel-body">
-                    <p>
-                        You must <a href="/account/0/induction">complete your General Induction</a> before you can get physical access to the space.<br>
-                        This is so you understand and agree to the rules.
-                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Add a keyfob</h4>
+                            
+                            <div class="panel panel-info">
+                                <div class="panel-heading">How to add an entry method using the membership PC</div>
+                                <div class="panel-body">
+                                    <p><strong>In the hackspace?</strong> Select a fob from the pot, or use a compatible 13.56Mhz fob you already have, select the text box below, then scan your fob with the reader. The ID will be typed in.</p>   
+                                </div>
+                            </div>
+                            
+                            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                            <div class="form-group">
+                                <div class="col-sm-5">
+                                    {!! Form::text('key_id', '', ['class'=>'form-control']) !!}
+                                    Characters A-F and numbers 0-9 only.
+                                </div>
+                                <div class="col-sm-3">
+                                    {!! Form::submit('Add a new fob', array('class'=>'btn btn-primary')) !!}
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Request access code</h4>
+                            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    {!! Form::hidden('key_id', 'ff00000000') !!}
+                                    {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                            
+                        </div>
+                    </div>  
                 </div>
             </div>
+        @else
+            <p>You have added the maximum number of entry methods permitted.</p>
         @endif
     @else
         <div class="alert alert-warning">

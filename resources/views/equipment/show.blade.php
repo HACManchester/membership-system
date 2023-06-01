@@ -277,7 +277,7 @@ Tools and Equipment
                     @foreach($trainers as $trainer)
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainer->user->id) }}">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm') !!}
+                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
                             </a>
                             {{ $trainer->user->name }}
                             <div>
@@ -313,7 +313,7 @@ Tools and Equipment
                     @foreach($trainedUsers as $trainedUser)
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
+                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                 {{ $trainedUser->user->name }}
                             </a>
                             @if ($isTrainerOrAdmin)
@@ -368,7 +368,7 @@ Tools and Equipment
                             <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm') !!}
+                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                         {{ $trainedUser->user->name }}
                                     </a>
                                     
