@@ -224,91 +224,87 @@ Edit your details
 
 <h2 id="access">Key Fobs and Access Codes</h4>
 @if (!$user->online_only)
-
-    <div class="panel panel-info">
-        <div class="panel-heading">Getting into the space</b></div>
-        <div class="panel-body">
-            <p>
-            Active, paid up, non-banned members have two ways to access the space:
-            <ul>
-                <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
-                <li>Using an access code - once you have a fob, you may generate an access code which is auto-generated and cannot be edited.</li>
-            </ul>
-            Use is logged to prevent abuse of the space.
-            </p>
-        </div>
-    </div>
-
-    <h3>Your existing entry methods</h3>
-    @if ($user->keyFobs()->count() == 0)
-        <div class="panel panel-warning">
-            <div class="panel-heading">No entry methods</div>
+    @if($user->isAdmin() || $user->induction_completed || $user->keyFobs()->count() > 0)
+        <div class="panel panel-info">
+            <div class="panel-heading">Getting into the space</b></div>
             <div class="panel-body">
                 <p>
-                    You have no entry methods added to your account.
+                Active, paid up, non-banned members have two ways to access the space:
+                <ul>
+                    <li>Using a fob - this is the primary method - enter the ID of the fob below to add a fob.</li>
+                    <li>Using an access code - once you have a fob, you may generate an access code which is auto-generated and cannot be edited.</li>
+                </ul>
+                Use is logged to prevent abuse of the space.
                 </p>
             </div>
         </div>
-    @else
-        <ol>
-        @foreach ($user->keyFobs()->get() as $fob)
-            {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
-                <li>
-                    @if (substr( $fob->key_id, 0, 2 ) !== "ff")
-                        <p>
-                            <div class="badge" style="background:forestgreen">
-                            🔑 Fob
-                            </div>
-                            <div class="badge">
-                                Fob ID: {{ $fob->key_id }}
-                            </div> 
-                            <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                        </p>
-                        <div class="">
-                            {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
-                        </div>
-                    @else
-                        <p>
-                            <div class="badge" style="background:tomato">
-                            🔢 Access Code
-                            </div>
-                            <div class="badge">
-                                Code: {{ str_replace('f', '', $fob->key_id) }}
-                            </div> 
-                            <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
-                        </p>
-                        <div class="">
-                            {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
-                        </div>
-                    @endif
-                </li>
-            {!! Form::hidden('user_id', $user->id) !!}
-            {!! Form::close() !!}
-        @endforeach
-        </ol>
-    @endif
 
-    <h3>Add a new entry method</h3>
-    @if ($user->induction_completed)
-        @if (!$user->keyfob())
-            <div class="panel panel-info">
-                <div class="panel-heading">How to add an entry method using the membership PC</div>
+        <h3>Your existing entry methods</h3>
+        @if ($user->keyFobs()->count() == 0)
+            <div class="panel panel-warning">
+                <div class="panel-heading">No entry methods</div>
                 <div class="panel-body">
-                    <p>If you are logged in to the membership system <b>on the hackspace PC</b> select the text box below, then scan your fob with the reader. The ID will be typed in.</p>   
-                    <p>If you are logged in to the membership system <b>on your own device</b>, open a blank text document, then scan your fob. The fob ID will be typed in. Add this to your account below.</p>   
+                    <p>
+                        You have no entry methods added to your account.
+                    </p>
                 </div>
             </div>
+        @else
+            <ol>
+            @foreach ($user->keyFobs()->get() as $fob)
+                {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
+                    <li>
+                        @if (substr( $fob->key_id, 0, 2 ) !== "ff")
+                            <p>
+                                <div class="badge" style="background:forestgreen">
+                                🔑 Fob
+                                </div>
+                                <div class="badge">
+                                    Fob ID: {{ $fob->key_id }}
+                                </div> 
+                                <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                            </p>
+                            <div class="">
+                                {!! Form::submit('Mark Fob Lost', array('class'=>'btn btn-default')) !!}
+                            </div>
+                        @else
+                            <p>
+                                <div class="badge" style="background:tomato">
+                                🔢 Access Code
+                                </div>
+                                <div class="badge">
+                                    Code: {{ str_replace('f', '', $fob->key_id) }}
+                                </div> 
+                                <small>(added {{ $fob->created_at->toFormattedDateString() }})</small>
+                            </p>
+                            <div class="">
+                                {!! Form::submit('Mark Code Lost', array('class'=>'btn btn-default')) !!}
+                            </div>
+                        @endif
+                    </li>
+                {!! Form::hidden('user_id', $user->id) !!}
+                {!! Form::close() !!}
+            @endforeach
+            </ol>
         @endif
-        
-        @if ($user->keyFobs()->count() < 2)
+
+        <h3>Add a new entry method</h3>
+    
+        @if (($user->keyFobs()->count() < 2 && $user->induction_completed) || $user->isAdmin())
             <div class="panel panel-success">
                 <div class="panel-heading">Add a new entry method</div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Add a keyfob</h4>
-                            <p>Select a fob from the pot, or use a compatible 13.56Mhz fob you already have</p>
-
+                            
+                            <div class="panel panel-info">
+                                <div class="panel-heading">How to add an entry method using the membership PC</div>
+                                <div class="panel-body">
+                                    <p><strong>In the hackspace?</strong> Select a fob from the pot, or use a compatible 13.56Mhz fob you already have, select the text box below, then scan your fob with the reader. The ID will be typed in.</p>   
+                                </div>
+                            </div>
+                            
                             {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
                             <div class="form-group">
                                 <div class="col-sm-5">
@@ -323,19 +319,15 @@ Edit your details
                         </div>
                         <div class="col-md-6">
                             <h4>Request access code</h4>
-                            @if($user->keyFobs()->count() > 0)
-                                {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        {!! Form::hidden('key_id', 'ff00000000') !!}
-                                        {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
-                                    </div>
+                            {!! Form::open(array('method'=>'POST', 'route' => ['keyfob.store'], 'class'=>'form-horizontal')) !!}
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    {!! Form::hidden('key_id', 'ff00000000') !!}
+                                    {!! Form::submit('Request access code', array('class'=>'btn btn-info')) !!}
                                 </div>
-                                {!! Form::close() !!}
-                            @else
-                                <p><b>Sorry, you need to set up a fob before you get an access code.</b><br>
-                                This is so that new members meet with an existing member to set their fob up.</p>
-                            @endif
+                            </div>
+                            {!! Form::close() !!}
+                            
                         </div>
                     </div>  
                 </div>
@@ -344,20 +336,14 @@ Edit your details
             <p>You have added the maximum number of entry methods permitted.</p>
         @endif
     @else
-        <div class="panel panel-warning">
-            <div class="panel-heading">You need to do your online general induction</div>
-            <div class="panel-body">
-                <p>
-                    You must <a href="/account/0/induction">complete your General Induction</a> before you can get physical access to the space.<br>
-                    This is so you understand and agree to the rules.
-                </p>
-            </div>
+        <div class="alert alert-warning">
+            You need to have been given the general induction before you can add access methods. 
         </div>
     @endif
 @else
-<div class="alert alert-danger">
-    <b>Online User Only</b> You can't add access methods as you're an online only user. 
-</div>
+    <div class="alert alert-danger">
+        <b>Online User Only</b> You can't add access methods as you're an online only user. 
+    </div>
 @endif
 </div>
 

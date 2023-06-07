@@ -161,7 +161,7 @@ class StorageBoxController extends Controller
                 //User is returning their own box
             } else {
                 //No id - reclaiming the box
-                if ( ! \Auth::user()->hasRole('storage')) {
+                if ( !\Auth::user()->isAdmin() && !\Auth::user()->hasRole('storage')) {
                     throw new \BB\Exceptions\AuthenticationException();
                 }
             }

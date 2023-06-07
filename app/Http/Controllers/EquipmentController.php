@@ -136,17 +136,9 @@ class EquipmentController extends Controller
             ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
 
         // Get info from the docs system
-        $docs ='';
-        if($equipment->docs){
-            try {
-                preg_match('/(https?:\/\/)?docs.hacman.org.uk\/(.+)/', $equipment->docs, $matches, PREG_OFFSET_CAPTURE);
-                $url =  'https://raw.githubusercontent.com/HACManchester/documentation/master/docs/' . rtrim($matches[2][0], "/") .'.md';
-                $contents = @file_get_contents($url);
-                $contents = utf8_encode($contents);
-                $docs = Markdown::defaultTransform($contents);
-            }
-            catch(Exception $e){}
-        }
+        $docs = $equipment->docs || "";
+
+        $now = new \DateTime("");
 
         return \View::make('equipment.show')
             ->with('equipmentId', $equipmentId)
@@ -160,7 +152,8 @@ class EquipmentController extends Controller
             ->with('user', $user)
             ->with('isTrainerOrAdmin', $isTrainerOrAdmin)
             ->with('memberList', $memberList)
-            ->with('docs', $docs);
+            ->with('docs', $docs)
+            ->with('now', $now);
     }
 
     /**
@@ -262,7 +255,7 @@ class EquipmentController extends Controller
         $normalFields = [
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
             'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'ppe', 'docs'
+            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'docs'
         ];
 
         $isTrainerOrAdmin = $this
@@ -272,7 +265,7 @@ class EquipmentController extends Controller
 
         $additionalFields = $isTrainerOrAdmin ? 
         ['dangerous', 'requires_induction', 'induction_category', 'access_fee', 'usage_cost',
-            'induction_instructions', 'trainer_instructions', 'trained_instructions'
+            'induction_instructions', 'trainer_instructions', 'trained_instructions', 'ppe', 'access_code'
         ]: [];
 
         $data = \Request::only(array_merge($additionalFields, $normalFields));

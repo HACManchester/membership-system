@@ -16,7 +16,7 @@
     }
     body {
         height: 100%;
-        background-image: url("/img/404.jpg");
+        background: repeating-linear-gradient( 45deg, #fafafa, #fafafa 80px, #fff 80px, #fff 160px );
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

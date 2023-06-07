@@ -9,6 +9,7 @@ use BB\Validators\InductionValidator;
 use Illuminate\Http\Request;
 use BB\Http\Requests;
 use Michelf\Markdown;
+use BB\Entities\Settings;
 
 class MemberInductionController extends Controller
 {
@@ -34,73 +35,53 @@ class MemberInductionController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $users = $this->userRepository->getPendingInductionConfirmation();
-        return \View::make('account.induction.index')->withUsers($users);
-    }
-
-    /**
-     * Action the admin approve requests
-     *
-     * @param $id
-     *
-     * @return mixed
-     * @throws \BB\Exceptions\AuthenticationException
-     */
-    public function approve($id)
-    {
-        $user = User::findWithPermission($id, 'comms');
-
-        if (\Input::has('inducted_by')) {
-            $user->inducted_by = \Auth::id();
-
-            $user->save();
-
-            \Notification::success('Updated');
-        }
-
-        return \Redirect::route('account.induction.index');
-    }
-
-    /**
-     * Display the specified resource.
+     * Show the peer induction page
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $user = User::findWithPermission($id);
+    public function show(Request $request)
+    { 
+        $user = false;
+        if(!\Auth::guest()){
+            $user = \Auth::user();
+        }
+        $induction_code = Settings::get("general_induction_code");
+        $prefill_code = $request->has('code') ? $request->input('code') : '';
 
-        $document = $this->policyRepository->getByName('member-agreement');
-
-        $htmlDocument = Markdown::defaultTransform($document);
-
-        return view('account.induction.show')->with('user', $user)->with('document', $htmlDocument);
+        return view('general-induction.show')
+            ->with('user', $user)
+            ->with('general_induction_code', $induction_code)
+            ->with('prefill_induction_code', $prefill_code);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Set a peer induction.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $user = User::findWithPermission($id);
-
-        $input = $request->only('rules_agreed', 'induction_completed');
-
+        $input = $request->only('rules_agreed', 'inductee_email', 'induction_code');
+        
         $this->inductionValidator->validate($input);
 
-        $this->userRepository->recordInductionCompleted($id);
+        $induction_code = Settings::get("general_induction_code");
 
-        return \Redirect::route('account.show', [$user->id]);
+        if(trim(strtolower($input['induction_code'])) != strtolower($induction_code)){
+            throw new \BB\Exceptions\ValidationException("Invalid induction code.");
+        }
+
+        $user = User::where('email', '=', $input['inductee_email'])->first();
+        if(!$user){
+            throw new \BB\Exceptions\ValidationException("Cannot find the inductee - check the email is the one used for signing up.");
+        }
+
+        $this->userRepository->recordInductionCompleted($user->id);
+
+        \Notification::success('Member marked as inducted! They can now set up entry methods on their account.');
+        return \Redirect::route('general-induction.show');
     }
 }

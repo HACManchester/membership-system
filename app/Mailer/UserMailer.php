@@ -92,11 +92,31 @@ class UserMailer
 
     public function sendNotificationEmail($subject, $message)
     {
+        //TODO, check if sent by trainer and apply template with correct signature
         $user = $this->user;
         \Mail::queue('emails.notification', ['messageBody'=>$message, 'user'=>$user], function ($message) use ($user, $subject) {
             $message->addReplyTo('board@hacman.org.uk', 'Hackspace Manchester Board');
             $message->to($user->email, $user->email)->subject($subject);
         });
+    }
+ 
+    public function sendEquipmentNotificationEmail($subject, $message, $equipment_name, $training_status)
+    {
+        //TODO, check if sent by trainer and apply template with correct signature
+        $user = $this->user;
+        \Mail::queue(
+            'emails.equipment-notification', 
+            [
+                'messageBody'=>$message, 
+                'user'=>$user, 
+                'equipment_name'=>$equipment_name, 
+                'training_status'=>$training_status
+            ], 
+            function ($message) use ($user, $subject) {
+            $message->addReplyTo('info@hacman.org.uk', 'Hackspace Manchester Info');
+            $message->to($user->email, $user->email)->subject($subject);
+            }
+        );
     }
 
     public function sendSuspendedMessage()

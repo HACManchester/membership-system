@@ -57,11 +57,8 @@ Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@
 
 
 //Inductions
-Route::get('account/{account}/induction', ['uses'=>'MemberInductionController@show', 'as'=>'account.induction.show', 'middleware'=>'role:member']);
-Route::put('account/{account}/induction', ['uses'=>'MemberInductionController@update', 'as'=>'account.induction.update', 'middleware'=>'role:member']);
-Route::get('member_inductions', ['uses'=>'MemberInductionController@index', 'as'=>'account.induction.index', 'middleware'=>'role:member']);
-Route::put('member_inductions/{account}', ['uses'=>'MemberInductionController@approve', 'as'=>'account.induction.approve', 'middleware'=>'role:member']);
-
+Route::get('general_induction', ['uses'=>'MemberInductionController@show', 'as'=>'general-induction.show', 'middleware'=>'role:member']);
+Route::put('general_induction', ['uses'=>'MemberInductionController@update', 'as'=>'general-induction.update', 'middleware'=>'role:member']);
 
 ##########################
 # Public Member List
@@ -247,6 +244,7 @@ Route::get('stats/history', ['uses'=>'StatsController@history', 'middleware'=>'r
 # Notification Emails
 ##########################
 
+Route::get('notification_email/equipment/{tool_id}/status/{status}', ['as' => 'notificationemail.equipment', 'uses' => 'NotificationEmailController@tool', 'middleware'=>'role:member']);
 Route::get('notification_email/create', ['as' => 'notificationemail.create', 'uses' => 'NotificationEmailController@create', 'middleware'=>'role:member']);
 Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'middleware'=>'role:member']);
 
