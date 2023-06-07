@@ -270,7 +270,7 @@ Tools and Equipment
     <div class="row">
         <div class="col-sm-12">
             <div class="well">
-                <h3>🎓 Trainers/Maintainers</h3>
+                <h3>🎓 Trainers</h3>
 
                 <p>These people can train others and maintain the tool - if there's any issues with the tool speak to them.</p>
                 <div class="infobox__grid">

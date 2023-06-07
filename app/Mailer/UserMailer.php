@@ -113,7 +113,7 @@ class UserMailer
                 'training_status'=>$training_status
             ], 
             function ($message) use ($user, $subject) {
-            $message->addReplyTo('board@hacman.org.uk', 'Hackspace Manchester Board');
+            $message->addReplyTo('info@hacman.org.uk', 'Hackspace Manchester Info');
             $message->to($user->email, $user->email)->subject($subject);
             }
         );

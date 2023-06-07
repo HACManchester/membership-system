@@ -18,7 +18,7 @@ Email members by training status
             <ul>
                 <li>Awaiting training</li>
                 <li>Trained</li>
-                <li>Trainers/Maintainers</li>
+                <li>Trainers</li>
             </ul>
             <p>It's essential that all communication is strictly tool based, and non-personal. Emails are copied to the board.</p>
         </div>
