@@ -106,12 +106,11 @@ Join Hackspace Manchester
     <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">        
         {!! Form::label('announce_name', 'Announce Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'announce-name', 'required' => 'required']) !!}
+            {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'announce-name']) !!}
             {!! Notification::getErrorDetail('announce_name') !!}
         </div>
     </div>
-    Note: announce name will be used to announce your entry into the Hackspace on our Hackscreen and Telegram Channel. <br>
-    If you wish this to not be the case please set announce name to <i>anon</i>
+    Make an entrance! Announce name, if set, will be used to announce your entry into the Hackspace both in the space and on the Hackscreen Telegram Channel.<br>
     <br>
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
