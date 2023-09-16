@@ -109,6 +109,8 @@ Prerequisites:
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/install/) (comes pre-installed with Docker Desktop)
 
+For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might be worth exploring as a more efficient alternative to Docker for Mac.
+
 1. Set up a .env file by copying `.env.example` to `.env`.
 
 2. Install dependencies with:
