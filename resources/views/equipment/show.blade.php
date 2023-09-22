@@ -278,8 +278,8 @@ Tools and Equipment
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <a href="{{ route('members.show', $trainer->user->id) }}">
                                 {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                {{ $trainer->user->name }}
                             </a>
-                            {{ $trainer->user->name }}
                             <div>
                                 @if ($isTrainerOrAdmin)
                                 {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
@@ -316,6 +316,7 @@ Tools and Equipment
                                 {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                 {{ $trainedUser->user->name }}
                             </a>
+                            <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
                             @if ($isTrainerOrAdmin)
                                 <div>
                                     {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
@@ -370,9 +371,8 @@ Tools and Equipment
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
                                         {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                         {{ $trainedUser->user->name }}
-                                    </a>
-                                    
-                                    ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})
+                                    </a>                              
+                                    <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
                                 @if ($isTrainerOrAdmin )
                                     <div>

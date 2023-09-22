@@ -1,5 +1,8 @@
-<?php namespace BB\Entities;
+<?php
 
+namespace BB\Entities;
+
+use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
@@ -19,7 +22,6 @@ use Laracasts\Presenter\PresentableTrait;
  */
 class Equipment extends Model
 {
-
     use PresentableTrait;
 
     protected $presenter = 'BB\Presenters\EquipmentPresenter';
@@ -38,6 +40,14 @@ class Equipment extends Model
         'usage_cost', 'usage_cost_per', 'ppe', 'dangerous', 'induction_instructions', 'trainer_instructions', 'trained_instructions', 'docs', 'access_code'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // TODO: Would be nice to support multiple orderings, i.e. order by "Working: yes/no" primarily, name secondarily
+        static::addGlobalScope(new OrderScope('name', 'asc'));
+    }
+
     public function getDates()
     {
         return array('created_at', 'updated_at', 'obtained_at', 'removed_at');
@@ -55,7 +65,7 @@ class Equipment extends Model
      */
     public function hasActivity()
     {
-        return ! empty($this->device_key);
+        return !empty($this->device_key);
     }
 
     /**
@@ -239,5 +249,4 @@ class Equipment extends Model
     {
         $this->attributes['ppe'] = json_encode($value);
     }
-
-} 
+}

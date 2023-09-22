@@ -31,7 +31,7 @@
         <tbody>
         @foreach ($inductions as $item)
         <tr>
-            <td>{{ $item->name }}</td>
+            <td><a href="{{ route('equipment.index') }}/{{ $item->slug }}">{{ $item->name }}</a></td>
             <td>&pound;{{ $item->access_fee }}</td>
             <td>
                 @if ($item->userInduction && ($item->userInduction->is_trained))
