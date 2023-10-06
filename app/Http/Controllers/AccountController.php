@@ -215,7 +215,8 @@ class AccountController extends Controller
             'rules_agreed',
             'visited_space',
             //'postFob',
-            'gift_code'
+            'gift_code',
+            'pronouns'
         );
 
         $this->userForm->validate($input);
@@ -312,7 +313,26 @@ class AccountController extends Controller
     public function update($id)
     {
         $user = User::findWithPermission($id);
-        $input = \Input::only('given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'phone', 'address.line_1', 'address.line_2', 'address.line_3', 'address.line_4', 'address.postcode', 'emergency_contact', 'profile_private', 'newsletter');
+        $input = \Input::only(
+            'given_name', 
+            'family_name', 
+            'email', 
+            'secondary_email', 
+            'display_name', 
+            'announce_name', 
+            'online_only', 
+            'password', 
+            'phone', 
+            'address.line_1', 
+            'address.line_2', 
+            'address.line_3', 
+            'address.line_4', 
+            'address.postcode', 
+            'emergency_contact', 
+            'profile_private', 
+            'newsletter', 
+            'pronouns'
+        );
 
         $this->userForm->validate($input, $user->id);
 

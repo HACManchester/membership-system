@@ -96,11 +96,21 @@ Join Hackspace Manchester
         </div>
 
     </div>
+    
     <div class="form-group {{ Notification::hasErrorDetail('display_name', 'has-error has-feedback') }}">
         {!! Form::label('display_name', 'Username', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
             {!! Form::text('display_name', null, ['class'=>'form-control', 'autocomplete'=>'display-name', 'required' => 'required']) !!}
             {!! Notification::getErrorDetail('display_name') !!}
+        </div>
+    </div>
+
+    <div class="form-group {{ Notification::hasErrorDetail('pronouns', 'has-error has-feedback') }}">
+        {!! Form::label('pronouns', 'Pronouns (optional)', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::text('pronouns', null, ['class'=>'form-control']) !!}
+            {!! Notification::getErrorDetail('pronouns') !!}
+            <span class="help-block">We want everybody to feel welcome at Hackspace Manchester. If you would like to share your pronouns on your profile, you can provide them here.</span>
         </div>
     </div>
 

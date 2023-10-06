@@ -46,6 +46,17 @@ Edit your details
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('pronouns', 'has-error has-feedback') }}">
+                    {!! Form::label('pronouns', 'Pronouns (optional)') !!}
+                    {!! Form::text('pronouns', null, ['class'=>'form-control']) !!}
+                    {!! Notification::getErrorDetail('pronouns') !!}
+                    <span class="help-block">We want everybody to feel welcome at Hackspace Manchester. If you would like to share your pronouns on your profile, you can provide them here.</span>
+                </div>
+            </div>
+        </div>
+
         <!--
         <div class="row">
             <div class="col-xs-12 col-md-8">

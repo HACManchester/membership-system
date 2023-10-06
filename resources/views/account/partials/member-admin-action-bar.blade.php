@@ -27,6 +27,7 @@
                                 @endif
                             )
                         </li>
+                        <li><b>Pronouns:</b> {{ $user->pronouns ?: '(Not set)'}}</li>
                         <li>
                             <b>General induction done?:</b> {{ $user->induction_completed ? "Yes" : "No" }} 
                             @if($user->inducted_by)

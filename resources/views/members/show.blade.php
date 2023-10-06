@@ -5,7 +5,10 @@
 @stop
 
 @section('page-title')
-{{ $user->name }}
+    {{ $user->name }}
+    @if (trim($user->pronouns))
+        <em>({{ $user->pronouns }})</em>
+    @endif
 @stop
 
 @section('page-action-buttons')
@@ -24,9 +27,7 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
-
                 {!! HTML::memberPhoto($profileData, $user->hash) !!}
-                
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
                 <h3 style="border-bottom: 1px solid black; padding-bottom: 5px;">{{ $profileData->present()->tagline }}</h3>

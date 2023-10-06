@@ -79,9 +79,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'given_name', 'family_name', 'email', 'secondary_email', 'display_name', 'announce_name', 'online_only', 'password', 'emergency_contact', 'phone',
-        'monthly_subscription', 'profile_private', 'newsletter', 'hash', 'rules_agreed',
-        'key_holder', 'key_deposit_payment_id', 'trusted', 'induction_completed', 'payment_method', 'active', 'status', 'postFob', 'gift', 'seen_at'
+        'given_name', 
+        'family_name', 
+        'email', 
+        'secondary_email', 
+        'display_name', 
+        'announce_name', 
+        'online_only', 
+        'password', 
+        'emergency_contact', 
+        'phone',
+        'monthly_subscription', 
+        'profile_private', 
+        'newsletter', 
+        'hash', 
+        'rules_agreed',
+        'key_holder', 
+        'key_deposit_payment_id', 
+        'trusted', 
+        'induction_completed', 
+        'payment_method', 
+        'active', 
+        'status', 
+        'postFob', 
+        'gift', 
+        'seen_at',
+        'pronouns'
     ];
 
 

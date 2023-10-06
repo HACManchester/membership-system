@@ -276,10 +276,15 @@ Tools and Equipment
                 <div class="infobox__grid">
                     @foreach($trainers as $trainer)
                         <div class="infobox__grid-item infobox__grid-item--user">
-                            <a href="{{ route('members.show', $trainer->user->id) }}">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                {{ $trainer->user->name }}
-                            </a>
+                            <div>
+                                <a href="{{ route('members.show', $trainer->user->id) }}">
+                                    {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    {{ $trainer->user->name }}
+                                </a>
+                                @if ($trainer->user->pronouns)
+                                    <span>({{ $trainer->user->pronouns }})</span>
+                                @endif
+                            </div>
                             <div>
                                 @if ($isTrainerOrAdmin)
                                 {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
@@ -312,10 +317,15 @@ Tools and Equipment
                 <div class="infobox__grid">
                     @foreach($trainedUsers as $trainedUser)
                         <div class="infobox__grid-item infobox__grid-item--user">
-                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                {{ $trainedUser->user->name }}
-                            </a>
+                            <div>
+                                <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                    {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    {{ $trainedUser->user->name }}
+                                </a>
+                                @if ($trainedUser->user->pronouns)
+                                    <span>({{ $trainedUser->user->pronouns }})</span>
+                                @endif
+                            </div>
                             <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
                             @if ($isTrainerOrAdmin)
                                 <div>
@@ -371,7 +381,10 @@ Tools and Equipment
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
                                         {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                         {{ $trainedUser->user->name }}
-                                    </a>                              
+                                    </a>
+                                    @if ($trainedUser->user->pronouns)
+                                        <span>({{ $trainedUser->user->pronouns }})</span>
+                                    @endif
                                     <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
                                 @if ($isTrainerOrAdmin )

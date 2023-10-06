@@ -17,6 +17,7 @@ class UserValidator extends FormValidator
         'secondary_email'       => 'email|unique:users',
         'display_name'          => 'required|unique:users',
         'announce_name'         => 'max:150',
+        'pronouns'              => '',
         'online_only'           => 'required|boolean',
         'password'              => 'required|min:8',
         'phone'                 => 'required_if:online_only,0|min:10',
