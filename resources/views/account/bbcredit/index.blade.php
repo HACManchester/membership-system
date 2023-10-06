@@ -30,7 +30,7 @@ Hackspace Manchester Balance
             <div class="panel-body">
 
                 <h4>
-                    Manage your Hackspace Balance, you can use it for purchasing snackspace items, paying for laser time, paying for materials that you use in the space.
+                    Manage your Hackspace Balance, you can use it for paying for laser time, paying for materials that you use in the space, or paying for replacement access fobs.
                 </h4>
                 <br>
                 <p>
@@ -66,29 +66,6 @@ Hackspace Manchester Balance
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Snackspace Expenditure</h3>
-            </div>
-            <div class="panel-body">
-                <p>Spent money in snackspace? Log it here</p>
-                <div class="paymentModule" data-reason="snackspace" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="snackspace"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Fob Purchase</h3>
-            </div>
-            <div class="panel-body">
-                <p>Only do this if you need another fob - the first one is on the house</p>
-                <p>Suggested donation is £2</p>
-                <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
                 <h3 class="panel-title">Materials</h3>
             </div>
             <div class="panel-body">
@@ -101,6 +78,18 @@ Hackspace Manchester Balance
                 <div class="paymentModule" data-reason="Heat Press Items" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="heat-press-items"></div>
                 <hr/><p>Other material purchases</p>
                 <div class="paymentModule" data-reason="Misc Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="misc-materials"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Fob Purchase</h3>
+            </div>
+            <div class="panel-body">
+                <p>Only do this if you need another fob - the first one is on the house</p>
+                <p>Suggested donation is £2</p>
+                <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
             </div>
         </div>
     </div>
