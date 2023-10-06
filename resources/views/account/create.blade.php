@@ -103,6 +103,8 @@ Join Hackspace Manchester
             {!! Notification::getErrorDetail('display_name') !!}
         </div>
     </div>
+
+    <!--
     <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">        
         {!! Form::label('announce_name', 'Announce Name', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
@@ -112,6 +114,10 @@ Join Hackspace Manchester
     </div>
     Make an entrance! Announce name, if set, will be used to announce your entry into the Hackspace both in the space and on the Hackscreen Telegram Channel.<br>
     <br>
+    -->
+
+    <h4>Account information</h4>
+
     <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
@@ -119,7 +125,6 @@ Join Hackspace Manchester
             {!! Notification::getErrorDetail('email') !!}
         </div>
     </div>
-
 
     <div class="form-group {{ Notification::hasErrorDetail('password', 'has-error has-feedback') }}">
         {!! Form::label('password', 'Password', ['class'=>'col-sm-3 control-label']) !!}

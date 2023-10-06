@@ -16,7 +16,7 @@ Edit your details
 <div class="panel panel-info">
     <div class="panel-heading">Your details, address, and preferences</div>
     <div class="panel-body">    
-        <h3>Your details</h3>                      
+        <h3>Basic information</h3>                      
         {!! Form::model($user, array('route' => ['account.update', $user->id], 'method'=>'PUT', 'files'=>true)) !!}
         <div class="row">
             <div class="col-xs-12 col-md-4">
@@ -37,6 +37,32 @@ Edit your details
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('display_name', 'has-error has-feedback') }}">
+                    {!! Form::label('display_name', 'Username') !!}
+                    {!! Form::text('display_name', null, ['class'=>'form-control', 'autocomplete'=>'off', 'readonly'=>'readonly']) !!}
+                    <span class="help-block">Your Username will be used for display purposes on the members system, it cannot be changed once set without contacting the board </span>
+                    {!! Notification::getErrorDetail('display_name') !!}
+                </div>
+            </div>
+        </div>
+
+        <!--
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">
+                    {!! Form::label('announce_name', 'Announce Name') !!}
+                    {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
+                    <span class="help-block">Make an entrance! Your Announce Name, if set, will be announced on the Hackscreen Telegram chat and in the space when you scan in.
+                    </span>
+                    {!! Notification::getErrorDetail('display_name') !!}
+                </div>
+            </div>
+        </div>
+        -->
+
+        <h3>Account information</h3>
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
                     {!! Form::label('email', 'Email') !!}
                     {!! Form::text('email', null, ['class'=>'form-control', 'autocomplete'=>'email']) !!}
@@ -44,6 +70,19 @@ Edit your details
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ Notification::hasErrorDetail('password', 'has-error has-feedback') }}">
+                    {!! Form::label('password', 'Password') !!}
+                    {!! Form::password('password', ['class'=>'form-control', 'autocomplete'=>'off']) !!}
+                    {!! Notification::getErrorDetail('password') !!}
+                </div>
+            </div>
+        </div>
+
+        <h3>Contact Details</h3>
+
         <div class="row">
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('secondary_email', 'has-error has-feedback') }}">
@@ -61,39 +100,6 @@ Edit your details
                     {!! Form::label('phone', 'Phone', ['class'=>'control-label']) !!}
                         {!! Form::input('tel', 'phone', $user->present()->phone, ['class'=>'form-control', 'x-autocompletetype'=>'tel']) !!}
                         {!! Notification::getErrorDetail('phone') !!}
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('display_name', 'has-error has-feedback') }}">
-                    {!! Form::label('display_name', 'Username') !!}
-                    {!! Form::text('display_name', null, ['class'=>'form-control', 'autocomplete'=>'off', 'readonly'=>'readonly']) !!}
-                    <span class="help-block">Your Username will be used for display purposes on the members system, it cannot be changed once set without contacting the board </span>
-                    {!! Notification::getErrorDetail('display_name') !!}
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">
-                    {!! Form::label('announce_name', 'Announce Name') !!}
-                    {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
-                    <span class="help-block">Make an entrance! Your Announce Name, if set, will be announced on the Hackscreen Telegram chat and in the space when you scan in.
-                    </span>
-                    {!! Notification::getErrorDetail('display_name') !!}
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('password', 'has-error has-feedback') }}">
-                    {!! Form::label('password', 'Password') !!}
-                    {!! Form::password('password', ['class'=>'form-control', 'autocomplete'=>'off']) !!}
-                    {!! Notification::getErrorDetail('password') !!}
                 </div>
             </div>
         </div>
@@ -255,6 +261,7 @@ Edit your details
                                 <strong>You have no entry methods</strong> and won't be able to access the space outside of open evenings.
                             </div>
                         @else
+                            <!--
                             <p>
                                 @if ($user->announce_name)
                                     🎉 Your announce name is set to: <code>{{$user->announce_name}}</code> (<a href="#announce_name">edit</a>)
@@ -264,6 +271,7 @@ Edit your details
                                 <br><br>
                                 Announce names are announced in the space and on the Hackscreen chat when you enter - have fun, set a conversation starter, just don't add anything rude, offensive or personal. 
                             </p>
+                            -->
                 
                             @if ($user->keyFobs()->count() > 0)
                                 <div class="row">
