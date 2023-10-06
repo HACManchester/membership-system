@@ -57,19 +57,16 @@ Edit your details
             </div>
         </div>
 
-        <!--
         <div class="row">
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ Notification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">
-                    {!! Form::label('announce_name', 'Announce Name') !!}
+                    {!! Form::label('announce_name', 'Entry Announcement Name (optional)') !!}
                     {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}
-                    <span class="help-block">Make an entrance! Your Announce Name, if set, will be announced on the Hackscreen Telegram chat and in the space when you scan in.
-                    </span>
-                    {!! Notification::getErrorDetail('display_name') !!}
+                    <span class="help-block">If you set a name here, each time you visit the Hackspace we will announce your arrival on a screen in the Hackspace, as well as the Hackscreen Telegram group.</span>
+                    {!! Notification::getErrorDetail('announce_name') !!}
                 </div>
             </div>
         </div>
-        -->
 
         <h3>Account information</h3>
         <div class="row">
