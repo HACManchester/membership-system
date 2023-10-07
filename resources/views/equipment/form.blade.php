@@ -9,7 +9,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('name', 'has-error has-feedback') }}">
             {!! Form::label('name', 'Name', ['class'=>'']) !!}
-            {!! Form::text('name', null, ['class'=>'form-control']) !!}
+            {!! Form::text('name', null, ['class'=>'form-control', 'required']) !!}
             <p class="help-block">Aim for a short but descriptive name, i.e. Metal Bandsaw</p>
             {!! Notification::getErrorDetail('name') !!}
         </div>
@@ -17,7 +17,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('slug', 'has-error has-feedback') }}">
             {!! Form::label('slug', 'Slug', ['class'=>'']) !!}
-            {!! Form::text('slug', null, ['class'=>'form-control']) !!}
+            {!! Form::text('slug', null, ['class'=>'form-control', 'required']) !!}
             <p class="help-block">This is the unique reference for the item, no special characters. i.e. metal-bandsaw or cordless-drill-1</p>
             {!! Notification::getErrorDetail('slug') !!}
         
@@ -85,7 +85,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('room', 'has-error has-feedback') }}">
             {!! Form::label('room', 'Room', ['class'=>'']) !!}
-            {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control']) !!}
+            {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control', 'required']) !!}
             {!! Notification::getErrorDetail('room') !!}
         </div>
     </div>
@@ -210,9 +210,9 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $isTrainerOrAdmin ? "" : "disabled", 'required']) !!}
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page', $isTrainerOrAdmin ? "" : "disabled"], null, ['class'=>'']) !!}
+            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'', 'required',$isTrainerOrAdmin ? "" : "disabled"]) !!}
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>

@@ -226,7 +226,7 @@ class Equipment extends Model
 
     public function setUsageCostAttribute($value)
     {
-        $this->attributes['usage_cost'] = $value * 100;
+        $this->attributes['usage_cost'] = floatval($value) * 100;
     }
 
     /**
