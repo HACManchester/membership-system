@@ -17,28 +17,6 @@
 
         @include('equipment/form')
 
-        @if (!$equipment->obtained_at)
-        <div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
-            {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
-            <div class="col-sm-9 col-lg-7">
-                {!! Form::text('obtained_at', null, ['class'=>'form-control js-date-select']) !!}
-                <p class="help-block">When did Hackspace Manchester obtain/purchase the item?</p>
-                {!! Notification::getErrorDetail('obtained_at') !!}
-            </div>
-        </div>
-        @endif
-
-        @if (!$equipment->removed_at)
-        <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
-            {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
-            <div class="col-sm-9 col-lg-7">
-                {!! Form::text('removed_at', null, ['class'=>'form-control js-date-select']) !!}
-                <p class="help-block">When did Hackspace Manchester get rid of it?</p>
-                {!! Notification::getErrorDetail('removed_at') !!}
-            </div>
-        </div>
-        @endif
-
         <div class="row">
             <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
                 {!! Form::submit('Update', array('class'=>'btn btn-primary')) !!}

@@ -235,7 +235,7 @@ class Equipment extends Model
 
     public function getObtainedAtAttribute()
     {
-        if ($this->attributes['obtained_at'] == '0000-00-00') {
+        if (!$this->attributes['obtained_at'] || $this->attributes['obtained_at'] == '0000-00-00') {
             return null;
         }
         return new Carbon($this->attributes['obtained_at']);
@@ -243,7 +243,7 @@ class Equipment extends Model
 
     public function getRemovedAtAttribute()
     {
-        if ($this->attributes['removed_at'] == '0000-00-00') {
+        if (!$this->attributes['removed_at'] || $this->attributes['removed_at'] == '0000-00-00') {
             return null;
         }
         return new Carbon($this->attributes['removed_at']);
