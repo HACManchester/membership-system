@@ -67,35 +67,40 @@ class Handler extends ExceptionHandler {
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, $error)
     {
-        $botKey = config('telegram.bot_key');
-        $botChat = config('telegram.bot_chat');
+        try {
+            $botKey = config('telegram.bot_key');
+            $botChat = config('telegram.bot_chat');
 
-        if (empty($botKey) || empty($botChat)) {
-            return;
+            if (empty($botKey) || empty($botChat)) {
+                return;
+            }
+
+            $icon = array(
+                'error'=> '🛑',
+                'warn' => '⚠️',
+                'info' => 'ℹ️'
+            );
+
+            $userString = \Auth::guest() ? "A guest": \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
+
+            $notification = $suppress ? 'Trace suppressed' :
+                "Path: <b>/" . \Request::path() . "</b> \n" .
+                "User: <b>" . $userString . "</b> \n" . 
+                "Message: <b>" . $error->getMessage() . "</b> \n"  . 
+                "File: <b>" . $error->getFile() . "</b> \n"  .
+                "Line: <b>" . $error->getLine() . "</b> \n"  . 
+                "More Info: https://members.hacman.org.uk/logs";
+            
+            // TODO: Use TelegramHelper??
+            (new HttpClient)->get(
+                "https://api.telegram.org/bot{$botKey}/sendMessage" .
+                "?parse_mode=HTML&chat_id=${botChat}". 
+                "&text=" . $icon[$level] . urlencode("<b>{$title}</b> \n \n " . $notification)
+            );
+        } catch (Exception $e) {
+            // Make sure Telegram exceptions don't stop regular exceptions being logged
+            $this->log->error($e);
         }
-
-        $icon = array(
-            'error'=> '🛑',
-            'warn' => '⚠️',
-            'info' => 'ℹ️'
-        );
-
-        $userString = \Auth::guest() ? "A guest": \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
-
-        $notification = $suppress ? 'Trace suppressed' :
-            "Path: <b>/" . \Request::path() . "</b> \n" .
-            "User: <b>" . $userString . "</b> \n" . 
-            "Message: <b>" . $error->getMessage() . "</b> \n"  . 
-            "File: <b>" . $error->getFile() . "</b> \n"  .
-            "Line: <b>" . $error->getLine() . "</b> \n"  . 
-            "More Info: https://members.hacman.org.uk/logs";
-        
-        // TODO: Use TelegramHelper??
-        (new HttpClient)->get(
-            "https://api.telegram.org/bot{$botKey}/sendMessage" .
-            "?parse_mode=HTML&chat_id=${botChat}". 
-            "&text=" . $icon[$level] . urlencode("<b>{$title}</b> \n \n " . $notification)
-        );
     }
 
 	/**
