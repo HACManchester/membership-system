@@ -69,10 +69,16 @@ Tools and Equipment
                                     <li><strong>Equipment access fee: {{ $equipment->present()->accessFee }}</strong></li>
                                 </ul>
                                 
-                                @if(Auth::user()->online_only)
-                                <h4>Online Only users may not use tools or request inductions.</h4>
+                                @if ($equipment->accepting_inductions)
+                                    @if(Auth::user()->online_only)
+                                        <h4>Online Only users may not use tools or request inductions.</h4>
+                                    @else
+                                        <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                    @endif
                                 @else
-                                <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                    <div class="alert alert-warning">
+                                        <strong>Inductions are currently paused for {{ $equipment->name }}.</strong>
+                                    </div>
                                 @endif
                             </div>
                         @endif

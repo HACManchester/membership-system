@@ -38,6 +38,7 @@ class EquipmentValidator extends FormValidator
         'induction_instructions'          => '',
         'trainer_instructions'          => '',
         'trained_instructions'          => '',
+        'accepting_inductions' => 'required_if:requires_induction,1'
     ];
 
     //During an update these rules will override the ones above

@@ -48,6 +48,7 @@ Tools and Equipment
                     </td>
                     <td>
                         @if (!!$tool->requires_induction)<span class="label label-info">Induction Required</span>@endif
+                        @if (!!$tool->requires_induction && !$tool->accepting_inductions)<span class="label label-warning">Inductions paused</span>@endif
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>

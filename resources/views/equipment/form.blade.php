@@ -187,6 +187,15 @@
     </div>
 </div>
 
+<div class="form-group {{ Notification::hasErrorDetail('accepting_inductions', 'has-error has-feedback') }}">
+    {!! Form::label('accepting_inductions', 'Accepting Induction Requests', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! Form::select('accepting_inductions', [null => '', 0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        <div class="help-block">Ability to enable/disable inductions, depending on maintainer/trainer workload.</div>
+        {!! Notification::getErrorDetail('accepting_inductions') !!}
+    </div>
+</div>
+
 <div class="form-group {{ Notification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
     {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
