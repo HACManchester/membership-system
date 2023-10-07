@@ -204,7 +204,7 @@ class EquipmentController extends Controller
 
         $this->equipmentRepository->create($data);
 
-        return \Redirect::route('equipment.edit', $data['slug']);
+        return \Redirect::route('equipment.show', $data['slug']);
     }
 
 

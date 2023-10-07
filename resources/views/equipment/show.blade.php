@@ -108,8 +108,8 @@ Tools and Equipment
                             @endif
                         @else
                             @if ($equipment->induction_instructions)
-                                <h3>🔴 Training Next Steps</h3>
-                                <div class="infobox well">
+                            <div class="alert alert-info">
+                                    <h3>🔴 Training Next Steps</h3>
                                     {!! $equipment->present()->induction_instructions !!}
                                 </div>
                             @endif
@@ -362,17 +362,17 @@ Tools and Equipment
                
                 <p>There are currently <strong>{{ count($usersPendingInduction) }}</strong> member(s) who are awaiting training for this tool.</p>
                 
+                @if ($userInduction && !$userInduction->is_trained)
+                    <div class="alert alert-info">
+                        <h3>🔴 Training Next Steps</h3>
+                        @if ($equipment->induction_instructions)
+                            {!! $equipment->present()->induction_instructions !!}
+                        @else
+                            <p>To get trained, ask on the forum or on Telegram.</p>
+                        @endif
+                    </div>
+                @endif
                 <div class="infobox__grid">
-                    @if ($userInduction && !$userInduction->is_trained)
-                        <div class="infobox__grid-item infobox__grid-item--header">
-                            <h3>🔴 Training Next Steps</h3>
-                            @if ($equipment->induction_instructions)
-                                {!! $equipment->present()->induction_instructions !!}
-                            @else
-                                <p>To get trained, ask on the forum or on Telegram.</p>
-                            @endif
-                        </div>
-                    @endif
 
                     @foreach($usersPendingInduction as $trainedUser)
                         @if ($isTrainerOrAdmin || $trainedUser->user->id == $user->id)

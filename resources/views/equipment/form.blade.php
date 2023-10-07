@@ -153,7 +153,7 @@
 </div>
 
 
-<h4>Health, Safety, Training and Inductions</h4>
+<h4>Health & Safety</h4>
 <div class="alert alert-info">
     To maintain the integrity of H&S and the training system, only admins and trainers can edit this section.<br/>
     <b>{{ $isTrainerOrAdmin ? "✔️ You can read/write the fields in this area" : "🔒 The fields in this area can not be edited at the moment"}}</b>
@@ -176,6 +176,9 @@
     </div>
 </div>
 
+
+<h3>Training & Inductions</h3>
+
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
@@ -192,6 +195,37 @@
         {!! Notification::getErrorDetail('induction_category') !!}
     </div>
 </div>
+
+<div class="form-group {{ Notification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('induction_instructions', 'Instructions to those awaiting training', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
+        <p class="help-block">Shown to members after they have requested training. Possible uses: Linking to Telegram group to request training, or schedule of frequent training sessions. Uses markdown for formatting.</p>
+        <p class="help-block"></p>
+        {!! Notification::getErrorDetail('induction_instructions') !!}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('trained_instructions', 'Instructions for trained users', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        <p class="help-block">Instructions for those who have been trained. You could use this to remind them of important notes about the equipment, or share access/padlock codes to use the equipment. Use markdown for formatting.</p>
+        {!! Notification::getErrorDetail('trained_instructions') !!}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        <p class="help-block">Only trainers see this - e.g. documents to risk assessments. Use markdown for formatting.</p>
+        {!! Notification::getErrorDetail('trainer_instructions') !!}
+    </div>
+</div>
+
+
+<h3>Misc</h3>
 
 <div class="form-group {{ Notification::hasErrorDetail('access_fee', 'has-error has-feedback') }}">
     {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label']) !!}
@@ -229,37 +263,6 @@
     </div>
 </div>
 
-<div class="form-group {{ Notification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('induction_instructions', 'Induction Instructions', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
-        <p class="help-block">Instructions on what to do once an induction is requested. e.g. visit a telegram group.</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('induction_instructions') !!}
-    </div>
-</div>
-
-<div class="form-group {{ Notification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('trained_instructions', 'Trained Instructions', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
-        <p class="help-block">Instructions for trained users - such as reminders or access codes</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('trained_instructions') !!}
-    </div>
-</div>
-
-<div class="form-group {{ Notification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
-        <p class="help-block">Only trainers see this - e.g. documents to risk assessments</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('trainer_instructions') !!}
-    </div>
-</div>
-
-<h3>Misc</h3>
 <div class="form-group {{ Notification::hasErrorDetail('asset_tag_id', 'has-error has-feedback') }}">
     {!! Form::label('asset_tag_id', 'Asset Tag ID', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
