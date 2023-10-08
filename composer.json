@@ -21,7 +21,6 @@
         "stripe/stripe-php": "1.*",
         "michelf/php-markdown": "~1.4",
         "jenssegers/rollbar": "~1.4",
-        "maknz/slack": "~1.5",
         "sybio/gif-creator": "~1.0",
         "filp/whoops": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",

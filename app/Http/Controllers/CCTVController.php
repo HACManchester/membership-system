@@ -19,8 +19,6 @@ class CCTVController extends Controller
 
             $newFilename = \App::environment() . '/cctv/' . $date->year . '/' . $date->month . '/' . $date->day . '/' . $fileName . '.jpg';
             Storage::put($newFilename, file_get_contents($file), 'public');
-
-            \Slack::to("#cctv")->attach(['image_url'=>'https://members.hacman.org.uk/' . $newFilename, 'color'=>'warning'])->send('New image');
         }
     }
 
@@ -127,8 +125,6 @@ class CCTVController extends Controller
 
 
             //Log::debug('Event Gif generated :https://members.hacman.org.uk/'.$newFilename);
-
-            \Slack::to("#cctv")->attach(['image_url'=>'https://members.hacman.org.uk/' . $newFilename, 'color'=>'warning'])->send('Movement detected');
 
         }
     }

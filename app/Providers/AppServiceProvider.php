@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider {
 			 * 
 			 * Will also need a composer install on live, which hasn't been done in a while. Need to carefully plan.
 			 */
-			// $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 
 	}

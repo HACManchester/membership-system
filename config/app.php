@@ -156,7 +156,6 @@ return [
 		 */
         	'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
         	'Jenssegers\Rollbar\RollbarServiceProvider',
-       		'Maknz\Slack\SlackServiceProvider',
         	'Intervention\Image\ImageServiceProvider',
         	ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
@@ -212,7 +211,6 @@ return [
         'HTML'         => 'Illuminate\Html\HtmlFacade',
         'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
-        'Slack'        => 'Maknz\Slack\Facades\Slack',
 	'MembershipPayments' => 'BB\Helpers\MembershipPayments',
     ],
 

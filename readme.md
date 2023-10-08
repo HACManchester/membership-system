@@ -67,7 +67,6 @@ Running the membership system relies on a number of third-party services:
 - ~~Amazon Web Services~~ (unused)
 - ~~Paypal~~ (unused)
 - ~~Pusher~~ (unused)
-- ~~Slack~~ (unused)
 
 These can be configured via environmental variables, or by setting up a `.env` file in the root of the project. See [`.env.example`](./.env.example) for reference.
 

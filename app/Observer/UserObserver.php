@@ -112,17 +112,4 @@ class UserObserver
             "User marked as left: " . $user->name
         );
     }
-
-    /**
-     * Send a notification to slack
-     *
-     * @param string $channel
-     * @param string $message
-     */
-    private function sendSlackNotification($channel, $message)
-    {
-        if (\App::environment('production')) {
-            \Slack::to($channel)->send($message);
-        }
-    }
 } 
