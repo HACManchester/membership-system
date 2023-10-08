@@ -31,11 +31,7 @@ class InductionCompletedNotification extends AbstractInductionNotification
             ->line("This means you're free to start making things!");
 
         if ($trainedInstructions->count() > 0) {
-            $mailMessage->line("We have the following instructions noted for those who are trained on the following pieces of equipment:");
-
-            foreach ($trainedInstructions as $equipment) {
-                $mailMessage->line("- {$equipment->name}: {$equipment->trained_instructions}");
-            }
+            $mailMessage->line("Double check the equipment page online for any notes or instructions for using the equipment. This is where you might find access codes or software discounts, if those might be applicable to this equipment.");
         }
 
         $mailMessage->line('Please reach out in the forum or Telegram group chats if you have any questions or need any help organising training.');
