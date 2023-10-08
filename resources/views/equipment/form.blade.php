@@ -294,7 +294,7 @@
 <div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
     {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('obtained_at', $equipment ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled"]) !!}
         <p class="help-block">When did Hackspace Manchester obtain/purchase the item?</p>
         {!! Notification::getErrorDetail('obtained_at') !!}
     </div>
@@ -302,11 +302,10 @@
 
 {{-- Only show on edit page--}}
 @if (isset($equipment))
-{{$equipment->removed_at}}
     <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('removed_at', $equipment ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled"]) !!}
             <p class="help-block">When did Hackspace Manchester get rid of it?</p>
             {!! Notification::getErrorDetail('removed_at') !!}
         </div>
