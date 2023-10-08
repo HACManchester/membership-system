@@ -3,6 +3,7 @@
 use BB\Entities\Induction;
 use BB\Entities\Payment;
 use BB\Entities\User;
+use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Exceptions\NotImplementedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -167,12 +168,13 @@ class PaymentController extends Controller
                     'status'           => 'paid'
                 ]);
                 $payment = $user->payments()->save($payment);
-                Induction::create([
+                $induction = Induction::create([
                     'user_id'    => $user->id,
                     'key'        => $ref,
                     'paid'       => true,
                     'payment_id' => $payment->id
                 ]);
+                \Event::fire(new InductionRequestedEvent($induction));
             } else {
                 throw new \BB\Exceptions\NotImplementedException();
             }

@@ -12,6 +12,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class User
@@ -51,8 +52,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-    use UserRoleTrait, PresentableTrait, Authenticatable, CanResetPassword;
-
+    use UserRoleTrait, PresentableTrait, Authenticatable, CanResetPassword, Notifiable;
 
     /**
      * The database table used by the model.
@@ -156,32 +156,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function payments()
     {
-        return $this->hasMany('\BB\Entities\Payment')->orderBy('created_at', 'desc');
+        return $this->hasMany(Payment::class)->orderBy('created_at', 'desc');
     }
 
     public function inductions()
     {
-        return $this->hasMany('\BB\Entities\Induction');
+        return $this->hasMany(Induction::class);
     }
 
     public function keyFob()
     {
-        return $this->hasMany('\BB\Entities\KeyFob')->where('active', true)->first();
+        return $this->hasMany(KeyFob::class)->where('active', true)->first();
     }
 
     public function keyFobs()
     {
-        return $this->hasMany('\BB\Entities\KeyFob')->where('active', true);
+        return $this->hasMany(KeyFob::class)->where('active', true);
     }
 
     public function profile()
     {
-        return $this->hasOne('\BB\Entities\ProfileData');
+        return $this->hasOne(ProfileData::class);
     }
 
     public function address()
     {
-        return $this->hasOne('\BB\Entities\Address')->orderBy('approved', 'asc');
+        return $this->hasOne(Address::class)->orderBy('approved', 'asc');
     }
 
     public function notifications()
@@ -191,7 +191,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function storageBoxes()
     {
-        return $this->hasMany('\BB\Entities\StorageBox')->where('active', true);
+        return $this->hasMany(StorageBox::class)->where('active', true);
     }
 
 

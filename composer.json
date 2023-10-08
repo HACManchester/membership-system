@@ -29,7 +29,8 @@
         "doctrine/dbal": "^2.5",
         "itsgoingd/clockwork": "~1.8",
         "zircote/swagger-php": "^2.0",
-        "gocardless/gocardless-pro": "~1.1"
+        "gocardless/gocardless-pro": "~1.1",
+        "laravel-notification-channels/backport": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
