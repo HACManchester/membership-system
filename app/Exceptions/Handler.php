@@ -1,5 +1,8 @@
 <?php namespace BB\Exceptions;
 
+use BB\Helpers\TelegramErrorHelper;
+use BB\Helpers\TelegramHelper;
+use BB\Notifications\ErrorNotification;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -64,39 +67,11 @@ class Handler extends ExceptionHandler {
 		parent::report($e);
 	}
 
-
-    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, $error)
+    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
     {
         try {
-            $botKey = config('telegram.bot_key');
-            $botChat = config('telegram.bot_chat');
-
-            if (empty($botKey) || empty($botChat)) {
-                return;
-            }
-
-            $icon = array(
-                'error'=> '🛑',
-                'warn' => '⚠️',
-                'info' => 'ℹ️'
-            );
-
-            $userString = \Auth::guest() ? "A guest": \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
-
-            $notification = $suppress ? 'Trace suppressed' :
-                "Path: <b>/" . \Request::path() . "</b> \n" .
-                "User: <b>" . $userString . "</b> \n" . 
-                "Message: <b>" . $error->getMessage() . "</b> \n"  . 
-                "File: <b>" . $error->getFile() . "</b> \n"  .
-                "Line: <b>" . $error->getLine() . "</b> \n"  . 
-                "More Info: https://members.hacman.org.uk/logs";
-            
-            // TODO: Use TelegramHelper??
-            (new HttpClient)->get(
-                "https://api.telegram.org/bot{$botKey}/sendMessage" .
-                "?parse_mode=HTML&chat_id=${botChat}". 
-                "&text=" . $icon[$level] . urlencode("<b>{$title}</b> \n \n " . $notification)
-            );
+            $helper = new TelegramErrorHelper();
+            $helper->notify(new ErrorNotification($level, $title, $suppress, $e));
         } catch (Exception $e) {
             // Make sure Telegram exceptions don't stop regular exceptions being logged
             $this->log->error($e);

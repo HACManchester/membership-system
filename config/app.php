@@ -162,6 +162,7 @@ return [
 		ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
 		Illuminate\Notifications\NotificationServiceProvider::class,
+		NotificationChannels\Telegram\TelegramServiceProvider::class,
 	],
 
 	/*
