@@ -28,8 +28,8 @@ class EquipmentValidator extends FormValidator
         'dangerous'          => 'boolean',
         'permaloan_user_id'  => 'exists:users,id|required_if:permaloan,1',
         'access_fee'         => 'integer',
-        'usage_cost'         => 'numeric',
-        'usage_cost_per'     => 'in:hour,gram,page',
+        'usage_cost'         => 'required|numeric',
+        'usage_cost_per'     => 'required|in:hour,gram,page',
         'photo'              => 'image',
         'archive'            => 'boolean',
         'asset_tag_id'       => 'unique:equipment,asset_tag_id',
@@ -38,6 +38,7 @@ class EquipmentValidator extends FormValidator
         'induction_instructions'          => '',
         'trainer_instructions'          => '',
         'trained_instructions'          => '',
+        'accepting_inductions' => 'required_if:requires_induction,1'
     ];
 
     //During an update these rules will override the ones above

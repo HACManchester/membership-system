@@ -21,7 +21,6 @@
         "stripe/stripe-php": "1.*",
         "michelf/php-markdown": "~1.4",
         "jenssegers/rollbar": "~1.4",
-        "maknz/slack": "~1.5",
         "sybio/gif-creator": "~1.0",
         "filp/whoops": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
@@ -30,7 +29,9 @@
         "doctrine/dbal": "^2.5",
         "itsgoingd/clockwork": "~1.8",
         "zircote/swagger-php": "^2.0",
-        "gocardless/gocardless-pro": "~1.1"
+        "gocardless/gocardless-pro": "~1.1",
+        "laravel-notification-channels/backport": "^1.0",
+        "laravel-notification-channels/telegram": "^0.0.5"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",

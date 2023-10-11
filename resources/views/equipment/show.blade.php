@@ -69,10 +69,16 @@ Tools and Equipment
                                     <li><strong>Equipment access fee: {{ $equipment->present()->accessFee }}</strong></li>
                                 </ul>
                                 
-                                @if(Auth::user()->online_only)
-                                <h4>Online Only users may not use tools or request inductions.</h4>
+                                @if ($equipment->accepting_inductions)
+                                    @if(Auth::user()->online_only)
+                                        <h4>Online Only users may not use tools or request inductions.</h4>
+                                    @else
+                                        <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                    @endif
                                 @else
-                                <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                    <div class="alert alert-warning">
+                                        <strong>Inductions are currently paused for {{ $equipment->name }}.</strong>
+                                    </div>
                                 @endif
                             </div>
                         @endif
@@ -108,8 +114,8 @@ Tools and Equipment
                             @endif
                         @else
                             @if ($equipment->induction_instructions)
-                                <h3>🔴 Training Next Steps</h3>
-                                <div class="infobox well">
+                            <div class="alert alert-info">
+                                    <h3>🔴 Training Next Steps</h3>
                                     {!! $equipment->present()->induction_instructions !!}
                                 </div>
                             @endif
@@ -276,10 +282,15 @@ Tools and Equipment
                 <div class="infobox__grid">
                     @foreach($trainers as $trainer)
                         <div class="infobox__grid-item infobox__grid-item--user">
-                            <a href="{{ route('members.show', $trainer->user->id) }}">
-                                {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                {{ $trainer->user->name }}
-                            </a>
+                            <div>
+                                <a href="{{ route('members.show', $trainer->user->id) }}">
+                                    {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    {{ $trainer->user->name }}
+                                </a>
+                                @if ($trainer->user->pronouns)
+                                    <span>({{ $trainer->user->pronouns }})</span>
+                                @endif
+                            </div>
                             <div>
                                 @if ($isTrainerOrAdmin)
                                 {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
@@ -312,10 +323,15 @@ Tools and Equipment
                 <div class="infobox__grid">
                     @foreach($trainedUsers as $trainedUser)
                         <div class="infobox__grid-item infobox__grid-item--user">
-                            <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                {{ $trainedUser->user->name }}
-                            </a>
+                            <div>
+                                <a href="{{ route('members.show', $trainedUser->user->id) }}">
+                                    {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    {{ $trainedUser->user->name }}
+                                </a>
+                                @if ($trainedUser->user->pronouns)
+                                    <span>({{ $trainedUser->user->pronouns }})</span>
+                                @endif
+                            </div>
                             <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
                             @if ($isTrainerOrAdmin)
                                 <div>
@@ -352,17 +368,17 @@ Tools and Equipment
                
                 <p>There are currently <strong>{{ count($usersPendingInduction) }}</strong> member(s) who are awaiting training for this tool.</p>
                 
+                @if ($userInduction && !$userInduction->is_trained)
+                    <div class="alert alert-info">
+                        <h3>🔴 Training Next Steps</h3>
+                        @if ($equipment->induction_instructions)
+                            {!! $equipment->present()->induction_instructions !!}
+                        @else
+                            <p>To get trained, ask on the forum or on Telegram.</p>
+                        @endif
+                    </div>
+                @endif
                 <div class="infobox__grid">
-                    @if ($userInduction && !$userInduction->is_trained)
-                        <div class="infobox__grid-item infobox__grid-item--header">
-                            <h3>🔴 Training Next Steps</h3>
-                            @if ($equipment->induction_instructions)
-                                {!! $equipment->present()->induction_instructions !!}
-                            @else
-                                <p>To get trained, ask on the forum or on Telegram.</p>
-                            @endif
-                        </div>
-                    @endif
 
                     @foreach($usersPendingInduction as $trainedUser)
                         @if ($isTrainerOrAdmin || $trainedUser->user->id == $user->id)
@@ -371,7 +387,10 @@ Tools and Equipment
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
                                         {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
                                         {{ $trainedUser->user->name }}
-                                    </a>                              
+                                    </a>
+                                    @if ($trainedUser->user->pronouns)
+                                        <span>({{ $trainedUser->user->pronouns }})</span>
+                                    @endif
                                     <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
                                 @if ($isTrainerOrAdmin )

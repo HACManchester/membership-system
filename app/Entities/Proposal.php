@@ -36,7 +36,7 @@ class Proposal extends Model
 
     public function votes()
     {
-        return $this->hasMany('ProposalVote');
+        return $this->hasMany(ProposalVote::class);
     }
 
     /**

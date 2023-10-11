@@ -1,5 +1,8 @@
 <?php namespace BB\Providers;
 
+use BB\Events\Inductions\InductionCompletedEvent;
+use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
+use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
 use BB\Events\UnknownPayPalPaymentReceived;
@@ -13,10 +16,11 @@ use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailboardAboutExpense;
 use BB\Listeners\ExtendMembership;
+use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
+use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
+use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
 use BB\Listeners\RecalculateMemberBalance;
 use BB\Listeners\RecordMemberActivity;
-use BB\Listeners\SlackActivityNotification;
-use BB\Listeners\SlackMemberNotification;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -64,13 +68,11 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'BB\Events\MemberActivity' => [
             RecordMemberActivity::class,
-            SlackActivityNotification::class
         ],
         'BB\Events\MemberGivenTrustedStatus' => [
             EmailMemberAboutTrustedStatus::class
         ],
         'BB\Events\NewMemberNotification' => [
-            SlackMemberNotification::class
         ],
         UnknownPayPalPaymentReceived::class => [
             EmailDonorAboutUnknownPayPalPayment::class
@@ -83,6 +85,15 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		SubscriptionPayment\InsufficientFundsTryingDirectDebit::class => [
 			EmailMemberAboutFailedSubscriptionPaymentGoingToBackup::class
+		],
+		InductionRequestedEvent::class => [
+			InductionRequestedListener::class
+		],
+		InductionCompletedEvent::class => [
+			InductionCompletedListener::class
+		],
+		InductionMarkedAsTrainerEvent::class => [
+			InductionMarkedAsTrainerListener::class
 		],
 	];
 

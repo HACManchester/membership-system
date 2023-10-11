@@ -1,6 +1,7 @@
 <?php namespace BB\Handlers;
 
 use BB\Entities\Induction;
+use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Exceptions\PaymentException;
 use BB\Repo\InductionRepository;
 use BB\Repo\PaymentRepository;
@@ -190,12 +191,13 @@ class PaymentEventHandler
     {
         /* @TODO: Replace with a repo */
         /* @TODO: Verify payment amount is valid - this could have been changed */
-        Induction::create([
+        $induction = Induction::create([
             'user_id' => $userId,
             'key' => $ref,
             'paid' => true,
             'payment_id' => $paymentId
         ]);
+        \Event::fire(new InductionRequestedEvent($induction));
     }
 
     private function recordDoorKeyPaymentId($userId, $paymentId)

@@ -2,6 +2,7 @@
 
 use BB\Entities\Equipment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class EquipmentRepository extends DBRepository
 {
@@ -64,5 +65,14 @@ class EquipmentRepository extends DBRepository
     public function findByDeviceKey($device)
     {
         return $this->model->where('device_key', $device)->firstOrFail();
+    }
+
+    /**
+     * @param $induction_category
+     * @return Collection
+     */
+    public function findByInductionCategory($induction_category)
+    {
+        return $this->model->where('induction_category', $induction_category)->get();
     }
 } 

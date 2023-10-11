@@ -2,6 +2,8 @@
 
 return [
 
+	'name' => 'Hackspace Manchester',
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Application Debug Mode
@@ -154,13 +156,13 @@ return [
 	        /*
 		 * 3rd Party Providers...
 		 */
-        	'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
-        	'Jenssegers\Rollbar\RollbarServiceProvider',
-       		'Maknz\Slack\SlackServiceProvider',
-        	'Intervention\Image\ImageServiceProvider',
-        	ArthurGuy\Notifications\NotificationServiceProvider::class,
+		'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
+		'Jenssegers\Rollbar\RollbarServiceProvider',
+		'Intervention\Image\ImageServiceProvider',
+		ArthurGuy\Notifications\NotificationServiceProvider::class,
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
-
+		Illuminate\Notifications\NotificationServiceProvider::class,
+		NotificationChannels\Telegram\TelegramServiceProvider::class,
 	],
 
 	/*
@@ -212,8 +214,7 @@ return [
         'HTML'         => 'Illuminate\Html\HtmlFacade',
         'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
-        'Slack'        => 'Maknz\Slack\Facades\Slack',
-	'MembershipPayments' => 'BB\Helpers\MembershipPayments',
+		'MembershipPayments' => 'BB\Helpers\MembershipPayments',
     ],
 
 ];

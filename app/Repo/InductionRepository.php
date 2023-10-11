@@ -34,7 +34,7 @@ class InductionRepository extends DBRepository
 
     /**
      * @param $deviceId
-     * @return array
+     * @return Collection
      */
     public function getTrainersForEquipment($deviceId)
     {

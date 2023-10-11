@@ -34,10 +34,40 @@ class Equipment extends Model
     protected $table = 'equipment';
 
     protected $fillable = [
-        'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'location', 'room', 'detail', 'slug',
-        'device_key', 'description', 'help_text', 'managing_role_id', 'requires_induction', 'induction_category', 'working',
-        'permaloan', 'permaloan_user_id', 'access_fee', 'photos', 'archive', 'obtained_at', 'removed_at', 'asset_tag_id',
-        'usage_cost', 'usage_cost_per', 'ppe', 'dangerous', 'induction_instructions', 'trainer_instructions', 'trained_instructions', 'docs', 'access_code'
+        'name',
+        'manufacturer',
+        'model_number',
+        'serial_number',
+        'colour',
+        'location',
+        'room',
+        'detail',
+        'slug',
+        'device_key',
+        'description',
+        'help_text',
+        'managing_role_id',
+        'requires_induction',
+        'induction_category',
+        'working',
+        'permaloan',
+        'permaloan_user_id',
+        'access_fee',
+        'photos',
+        'archive',
+        'obtained_at',
+        'removed_at',
+        'asset_tag_id',
+        'usage_cost',
+        'usage_cost_per',
+        'ppe',
+        'dangerous',
+        'induction_instructions',
+        'trainer_instructions',
+        'trained_instructions',
+        'docs',
+        'access_code',
+        'accepting_inductions'
     ];
 
     protected static function boot()
@@ -205,7 +235,7 @@ class Equipment extends Model
 
     public function getObtainedAtAttribute()
     {
-        if ($this->attributes['obtained_at'] == '0000-00-00') {
+        if (!$this->attributes['obtained_at'] || $this->attributes['obtained_at'] == '0000-00-00') {
             return null;
         }
         return new Carbon($this->attributes['obtained_at']);
@@ -213,7 +243,7 @@ class Equipment extends Model
 
     public function getRemovedAtAttribute()
     {
-        if ($this->attributes['removed_at'] == '0000-00-00') {
+        if (!$this->attributes['removed_at'] || $this->attributes['removed_at'] == '0000-00-00') {
             return null;
         }
         return new Carbon($this->attributes['removed_at']);
@@ -226,7 +256,7 @@ class Equipment extends Model
 
     public function setUsageCostAttribute($value)
     {
-        $this->attributes['usage_cost'] = $value * 100;
+        $this->attributes['usage_cost'] = floatval($value) * 100;
     }
 
     /**

@@ -9,7 +9,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('name', 'has-error has-feedback') }}">
             {!! Form::label('name', 'Name', ['class'=>'']) !!}
-            {!! Form::text('name', null, ['class'=>'form-control']) !!}
+            {!! Form::text('name', null, ['class'=>'form-control', 'required']) !!}
             <p class="help-block">Aim for a short but descriptive name, i.e. Metal Bandsaw</p>
             {!! Notification::getErrorDetail('name') !!}
         </div>
@@ -17,7 +17,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('slug', 'has-error has-feedback') }}">
             {!! Form::label('slug', 'Slug', ['class'=>'']) !!}
-            {!! Form::text('slug', null, ['class'=>'form-control']) !!}
+            {!! Form::text('slug', null, ['class'=>'form-control', 'required']) !!}
             <p class="help-block">This is the unique reference for the item, no special characters. i.e. metal-bandsaw or cordless-drill-1</p>
             {!! Notification::getErrorDetail('slug') !!}
         
@@ -85,7 +85,7 @@
     <div class="col-md-6">
         <div class="{{ Notification::hasErrorDetail('room', 'has-error has-feedback') }}">
             {!! Form::label('room', 'Room', ['class'=>'']) !!}
-            {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control']) !!}
+            {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control', 'required']) !!}
             {!! Notification::getErrorDetail('room') !!}
         </div>
     </div>
@@ -153,7 +153,7 @@
 </div>
 
 
-<h4>Health, Safety, Training and Inductions</h4>
+<h4>Health & Safety</h4>
 <div class="alert alert-info">
     To maintain the integrity of H&S and the training system, only admins and trainers can edit this section.<br/>
     <b>{{ $isTrainerOrAdmin ? "✔️ You can read/write the fields in this area" : "🔒 The fields in this area can not be edited at the moment"}}</b>
@@ -176,11 +176,23 @@
     </div>
 </div>
 
+
+<h3>Training & Inductions</h3>
+
 <div class="form-group {{ Notification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
         {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
         {!! Notification::getErrorDetail('requires_induction') !!}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('accepting_inductions', 'has-error has-feedback') }}">
+    {!! Form::label('accepting_inductions', 'Accepting Induction Requests', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! Form::select('accepting_inductions', [null => '', 0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        <div class="help-block">Ability to enable/disable inductions, depending on maintainer/trainer workload.</div>
+        {!! Notification::getErrorDetail('accepting_inductions') !!}
     </div>
 </div>
 
@@ -192,6 +204,37 @@
         {!! Notification::getErrorDetail('induction_category') !!}
     </div>
 </div>
+
+<div class="form-group {{ Notification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('induction_instructions', 'Instructions to those awaiting training', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
+        <p class="help-block">Shown to members after they have requested training. Possible uses: Linking to Telegram group to request training, or schedule of frequent training sessions. Uses markdown for formatting.</p>
+        <p class="help-block"></p>
+        {!! Notification::getErrorDetail('induction_instructions') !!}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('trained_instructions', 'Instructions for trained users', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        <p class="help-block">Instructions for those who have been trained. You could use this to remind them of important notes about the equipment, or share access/padlock codes to use the equipment. Use markdown for formatting.</p>
+        {!! Notification::getErrorDetail('trained_instructions') !!}
+    </div>
+</div>
+
+<div class="form-group {{ Notification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
+    {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! $isTrainerOrAdmin ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        <p class="help-block">Only trainers see this - e.g. documents to risk assessments. Use markdown for formatting.</p>
+        {!! Notification::getErrorDetail('trainer_instructions') !!}
+    </div>
+</div>
+
+
+<h3>Misc</h3>
 
 <div class="form-group {{ Notification::hasErrorDetail('access_fee', 'has-error has-feedback') }}">
     {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label']) !!}
@@ -210,9 +253,9 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $isTrainerOrAdmin ? "" : "disabled", 'required']) !!}
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page', $isTrainerOrAdmin ? "" : "disabled"], null, ['class'=>'']) !!}
+            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'', 'required',$isTrainerOrAdmin ? "" : "disabled"]) !!}
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>
@@ -229,37 +272,6 @@
     </div>
 </div>
 
-<div class="form-group {{ Notification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('induction_instructions', 'Induction Instructions', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
-        <p class="help-block">Instructions on what to do once an induction is requested. e.g. visit a telegram group.</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('induction_instructions') !!}
-    </div>
-</div>
-
-<div class="form-group {{ Notification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('trained_instructions', 'Trained Instructions', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
-        <p class="help-block">Instructions for trained users - such as reminders or access codes</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('trained_instructions') !!}
-    </div>
-</div>
-
-<div class="form-group {{ Notification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
-    {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
-        <p class="help-block">Only trainers see this - e.g. documents to risk assessments</p>
-        <p class="help-block">Use markdown for formatting</p>
-        {!! Notification::getErrorDetail('trainer_instructions') !!}
-    </div>
-</div>
-
-<h3>Misc</h3>
 <div class="form-group {{ Notification::hasErrorDetail('asset_tag_id', 'has-error has-feedback') }}">
     {!! Form::label('asset_tag_id', 'Asset Tag ID', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
@@ -278,4 +290,24 @@
     </div>
 </div>
 
+{{-- Allow anybody to set on creation, but only admins/trainers to edit --}}
+<div class="form-group {{ Notification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
+    {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
+    <div class="col-sm-9 col-lg-7">
+        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        <p class="help-block">When did Hackspace Manchester obtain/purchase the item?</p>
+        {!! Notification::getErrorDetail('obtained_at') !!}
+    </div>
+</div>
 
+{{-- Only show on edit page--}}
+@if (isset($equipment))
+    <div class="form-group {{ Notification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
+        {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            <p class="help-block">When did Hackspace Manchester get rid of it?</p>
+            {!! Notification::getErrorDetail('removed_at') !!}
+        </div>
+    </div>
+@endif

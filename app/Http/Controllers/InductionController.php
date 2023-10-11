@@ -1,6 +1,9 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\Induction;
+use BB\Events\Inductions\InductionCompletedEvent;
+use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
+use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Exceptions\PaymentException;
 use BB\Repo\PaymentRepository;
 
@@ -44,12 +47,13 @@ class InductionController extends Controller
             throw new \BB\Exceptions\AuthenticationException();
         }
 
-        Induction::create([
+        $induction = Induction::create([
             'user_id' => $userId,
             'key' => $equipment->induction_category,
             'paid' => true,
             'payment_id' => 0
         ]);
+        \Event::fire(new InductionRequestedEvent($induction));
         
         return \Redirect::route('equipment.show', $slug);
     }
@@ -81,9 +85,13 @@ class InductionController extends Controller
             $induction->trained = \Carbon\Carbon::now();
             $induction->trainer_user_id = \Input::get('trainer_user_id', false);
             $induction->save();
+            
+            \Event::fire(new InductionCompletedEvent($induction));
         } elseif (\Input::get('is_trainer', false)) {
             $induction->is_trainer = true;
             $induction->save();
+            
+            \Event::fire(new InductionMarkedAsTrainerEvent($induction));
         } elseif (\Input::get('not_trainer', false)) {
             $induction->is_trainer = false;
             $induction->save();
