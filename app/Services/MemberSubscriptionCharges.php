@@ -9,6 +9,9 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
+use Exception;
+use GoCardlessPro\Core\Exception\InvalidStateException;
+use GoCardlessPro\Core\Exception\ValidationFailedException;
 
 class MemberSubscriptionCharges
 {
@@ -131,23 +134,41 @@ class MemberSubscriptionCharges
 
         //Charge the gocardless users
         $members = [];
+        $membersWeCouldntBill = [];
         foreach ($goCardlessUsers as $charge) {
             $amount = $charge->user->monthly_subscription;
-            $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
-            if ($bill) {
-                array_push($members, $charge->user->name);
+            try {
+                $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
+                $members[] = $charge->user->name;
                 $status = $bill->status;
                 if ($status == 'pending_submission') {
                     $status = 'pending';
                 }
-                $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $amount, $status, 0, $charge->id);
             }
+            catch (InvalidStateException | ValidationFailedException $e) {
+                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMemberships
+                $status = 'failed';
+                $membersWeCouldntBill[] = $charge->user->name;
+            }
+            catch (Exception $e) {
+                $status = 'error';
+                $membersWeCouldntBill[] = $charge->user->name;
+            }
+
+            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $amount, $status, 0, $charge->id);
         };
 
         $this->telegramHelper->notify(
-            TelegramHelper::JOB, 
+            TelegramHelper::JOB,
             "Created bills for: " . implode(", ", $members)
         );
+
+        if (count($membersWeCouldntBill) > 0) {
+            $this->telegramHelper->notify(
+                TelegramHelper::JOB,
+                "Could not create bills for: " . implode(", ", $members)
+            );
+        }
     }
 
 

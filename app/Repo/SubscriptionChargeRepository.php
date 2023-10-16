@@ -4,6 +4,9 @@ use BB\Entities\SubscriptionCharge;
 use BB\Events\SubscriptionChargePaid;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
+use Exception;
+use GoCardlessPro\Core\Exception\InvalidStateException;
+use GoCardlessPro\Core\Exception\ValidationFailedException;
 
 class SubscriptionChargeRepository extends DBRepository
 {
@@ -54,15 +57,23 @@ class SubscriptionChargeRepository extends DBRepository
     {
         $charge = $this->createCharge($userId, $date, $amount, $status);
 
-        $bill = $this->goCardless->newBill($DDAuthId, $amount * 100, $this->goCardless->getNameFromReason('subscription'));
-        if ($bill) {
+        try {
+            $bill = $this->goCardless->newBill($DDAuthId, $amount * 100, $this->goCardless->getNameFromReason('subscription'));
             $status = $bill->status;
             if ($status == 'pending_submission') {
                 $status = 'pending';
             }
-            $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
-                $bill->amount / 100, $status, 0, $charge->id);
         }
+        catch (InvalidStateException | ValidationFailedException $e) {
+            $status = 'failed';
+        } catch (Exception $e) {
+            $status = 'error';
+        }
+
+        $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
+            $bill->amount / 100, $status, 0, $charge->id);
+
+        return $charge;
     }
 
     /**

@@ -1,6 +1,11 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use Exception;
+use GoCardlessPro\Core\Exception\InvalidStateException;
+use GoCardlessPro\Core\Exception\ValidationFailedException;
 
 class GoCardlessPaymentController extends Controller
 {
@@ -41,15 +46,12 @@ class GoCardlessPaymentController extends Controller
         if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
             return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
-
         } elseif ($user->payment_method == 'gocardless') {
 
             return $this->ddMigratePrompt($returnPath);
-
         } else {
 
             abort(500, 'Not supported');
-
         }
     }
 
@@ -77,9 +79,8 @@ class GoCardlessPaymentController extends Controller
         if (is_null($ref)) {
             $ref = '';
         }
-        $bill = $this->goCardless->newBill($user->mandate_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
-
-        if ($bill) {
+        try {
+            $bill = $this->goCardless->newBill($user->mandate_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
             //Store the payment
             $fee = 0;
             $paymentSourceId = $bill->id;
@@ -97,17 +98,34 @@ class GoCardlessPaymentController extends Controller
             }
 
             \Notification::success("The payment was submitted successfully");
-        } else {
-            //something went wrong - we still have the pre auth though
+
+            return \Redirect::to($returnPath);
+        }
+        catch (InvalidStateException | ValidationFailedException $e) {
+            $status = 'failed';
+            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
 
             if (\Request::wantsJson()) {
-                return \Response::json(['error' => 'There was a problem charging your account'], 400);
+                return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
             }
 
-            \Notification::error("There was a problem charging your account");
+            \Notification::error("We were unable to take payment from your account. Please try again.");
+            return \Redirect::to($returnPath);
         }
+        catch (Exception $e) {
+            // Genuine app exception... needs investigation
+            \Log::info($e);
 
-        return \Redirect::to($returnPath);
+            $status = 'error';
+            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
+
+            if (\Request::wantsJson()) {
+                return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);
+            }
+
+            \Notification::error("We encountered an error taking your payment.");
+            return \Redirect::to($returnPath);
+        }
     }
 
 

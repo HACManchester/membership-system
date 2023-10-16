@@ -38,6 +38,7 @@ class CheckMemberships
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
             if ( ! $user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
+                // TODO: Send email warning members who've fallen within the grace period?
                 $expired = true;
             }
 
