@@ -48,7 +48,7 @@ class EquipmentRepository extends DBRepository
      * @param $slug
      * @return Equipment
      */
-    public function findBySLug($slug)
+    public function findBySlug($slug)
     {
         $record = $this->model->where('slug', $slug)->first();
         if ($record) {

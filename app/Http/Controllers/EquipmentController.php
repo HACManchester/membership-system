@@ -1,5 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Entities\Equipment;
 use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
@@ -85,26 +86,22 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        $requiresInduction = $this->equipmentRepository->getRequiresInduction();
-        $doesntRequireInduction = $this->equipmentRepository->getDoesntRequireInduction();
+        $user = \Auth::user();
         $allTools = $this->equipmentRepository->getAll();
 
-        $rooms = [];
-        foreach($allTools as $tool){
-          if (!isset($rooms[$tool->room]))
-          {
-            $rooms[$tool->room] = [];
-          }
-          array_push($rooms[$tool->room], $tool);
-        }
+        $equipmentWithTrainingStatus = $allTools->map(function (Equipment $equipment) use ($user) {
+            $trained = $this->inductionRepository->isUserTrained($user->id, $equipment->induction_category);
 
-        ksort($rooms);
+            return [
+                'equipment' => $equipment,
+                'trained' => $equipment->requires_induction && $trained
+            ];
+        });
+
+        $equipmentByRoom = $equipmentWithTrainingStatus->groupBy('equipment.room')->sort();
 
         return \View::make('equipment.index')
-            ->with('byRoom', $rooms)
-            ->with('rooms', $rooms)
-            ->with('requiresInduction', $requiresInduction)
-            ->with('doesntRequireInduction', $doesntRequireInduction);
+            ->with('equipmentByRoom', $equipmentByRoom);
     }
 
     public function show($equipmentId)

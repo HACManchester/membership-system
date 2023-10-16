@@ -27,7 +27,7 @@ Tools and Equipment
         the <a href="https://members.hacman.org.uk/groups/equipment">equipment</a> team
     </div>
 
-    @foreach($byRoom as $k => $tools)
+    @foreach($equipmentByRoom as $k => $tools)
     <div class="panel panel-info">
         <div class="panel-heading">
             <h3 class="panel-title">Tools in {{ ucfirst(str_replace('-', ' ', $k)) }}</h3>
@@ -41,7 +41,7 @@ Tools and Equipment
                 <th></th>
             </tr>
             </thead>
-            @foreach($tools as $tool)
+            @foreach($tools as ['equipment' => $tool, 'trained' => $userIsTrained])
                 <tr>
                     <td>
                         <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
@@ -51,6 +51,11 @@ Tools and Equipment
                         @if (!!$tool->requires_induction && !$tool->accepting_inductions)<span class="label label-warning">Inductions paused</span>@endif
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
+                        @if ($tool->access_code)
+                            @if ($userIsTrained)
+                                <span class="label label-info">🔑 Access Code: <span>{{ $tool->access_code}}</span></span>
+                            @endif
+                        @endif
                     </td>
                     <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
                     <td>
