@@ -38,7 +38,6 @@ Tools and Equipment
                 <th>Name</th>
                 <th>Status</th>
                 <th>Bloody Dangerous</th>
-                <th>Access Code</th>
                 <th></th>
             </tr>
             </thead>
@@ -52,17 +51,13 @@ Tools and Equipment
                         @if (!!$tool->requires_induction && !$tool->accepting_inductions)<span class="label label-warning">Inductions paused</span>@endif
                         @if (!$tool->isWorking())<span class="label label-danger">Out of action</span>@endif
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
-                    </td>
-                    <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
-                    <td>
                         @if ($tool->access_code)
                             @if ($userIsTrained)
-                                <code>{{ $tool->access_code}}</code>
-                            @else
-                                <span>🔒</span>
+                                <span class="label label-info">🔑 Access Code: <span>{{ $tool->access_code}}</span></span>
                             @endif
                         @endif
                     </td>
+                    <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
                     <td>
                         @if (!Auth::guest() && !Auth::user()->online_only)
                             <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
