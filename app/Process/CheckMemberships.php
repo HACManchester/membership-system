@@ -28,8 +28,7 @@ class CheckMemberships
 
     public function run()
     {
-
-        $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
+        $users = User::active()->notSpecialCase()->get();
         $members = [];
 
         foreach ($users as $user) {

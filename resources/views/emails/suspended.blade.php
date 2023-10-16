@@ -11,7 +11,7 @@
     Your latest subscription payment has failed to process and we need you to login and retry your payment or make a manual payment.
 </p>
 <p>
-    While your membership is suspended you wont have access to Hackspace Manchester and if you have one your key fob wont work.
+    While your membership is suspended you wont have access to Hackspace Manchester.
 </p>
 <p>
     Please login as soon as you can and make your subscription payment.<br />
