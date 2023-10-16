@@ -27,7 +27,7 @@ Tools and Equipment
         the <a href="https://members.hacman.org.uk/groups/equipment">equipment</a> team
     </div>
 
-    @foreach($byRoom as $k => $tools)
+    @foreach($equipmentByRoom as $k => $tools)
     <div class="panel panel-info">
         <div class="panel-heading">
             <h3 class="panel-title">Tools in {{ ucfirst(str_replace('-', ' ', $k)) }}</h3>
@@ -38,10 +38,11 @@ Tools and Equipment
                 <th>Name</th>
                 <th>Status</th>
                 <th>Bloody Dangerous</th>
+                <th>Access Code</th>
                 <th></th>
             </tr>
             </thead>
-            @foreach($tools as $tool)
+            @foreach($tools as ['equipment' => $tool, 'trained' => $userIsTrained])
                 <tr>
                     <td>
                         <a href="{{ route('equipment.show', $tool->slug) }}">{{ $tool->name }}</a>
@@ -53,6 +54,15 @@ Tools and Equipment
                         @if ($tool->isPermaloan())<span class="label label-warning">Permaloan</span>@endif
                     </td>
                     <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
+                    <td>
+                        @if ($tool->access_code)
+                            @if ($userIsTrained)
+                                <code>{{ $tool->access_code}}</code>
+                            @else
+                                <span>🔒</span>
+                            @endif
+                        @endif
+                    </td>
                     <td>
                         @if (!Auth::guest() && !Auth::user()->online_only)
                             <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>

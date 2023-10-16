@@ -14,6 +14,7 @@
             <th>Name</th>
             <th>Cost</th>
             <th>Induction</th>
+            <th>Access Code</th>
             <th>
                 @if (Auth::user()->isAdmin())
                 Inducted Status
@@ -43,8 +44,15 @@
                 @endif
             </td>
             <td>
-
-
+                @if ($item->access_code)
+                    @if ($item->userInduction && ($item->userInduction->is_trained))
+                        <code>{{ $item->access_code }}</code>
+                    @else
+                        <span>🔒</span>
+                    @endif
+                @endif
+            </td>
+            <td>
                 @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
                 {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
                 {!! Form::text('trainer_user_id', '', ['class'=>'form-control']) !!}
