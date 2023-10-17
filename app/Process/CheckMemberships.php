@@ -28,8 +28,7 @@ class CheckMemberships
 
     public function run()
     {
-
-        $users = User::active()->where('status', '=', 'active')->notSpecialCase()->get();
+        $users = User::active()->notSpecialCase()->get();
         $members = [];
 
         foreach ($users as $user) {
@@ -39,6 +38,7 @@ class CheckMemberships
 
             $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
             if ( ! $user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
+                // TODO: Send email warning members who've fallen within the grace period?
                 $expired = true;
             }
 
