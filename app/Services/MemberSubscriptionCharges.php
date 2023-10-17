@@ -166,7 +166,7 @@ class MemberSubscriptionCharges
         if (count($membersWeCouldntBill) > 0) {
             $this->telegramHelper->notify(
                 TelegramHelper::JOB,
-                "Could not create bills for: " . implode(", ", $members)
+                "Could not create bills for: " . implode(", ", $membersWeCouldntBill)
             );
         }
     }
