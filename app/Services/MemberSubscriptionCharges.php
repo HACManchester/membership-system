@@ -155,7 +155,7 @@ class MemberSubscriptionCharges
                 $membersWeCouldntBill[] = $charge->user->name;
             }
 
-            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id, $amount, $status, 0, $charge->id);
+            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id ?? null, $amount, $status, 0, $charge->id);
         };
 
         $this->telegramHelper->notify(

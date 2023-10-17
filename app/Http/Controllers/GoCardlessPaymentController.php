@@ -103,7 +103,7 @@ class GoCardlessPaymentController extends Controller
         }
         catch (InvalidStateException | ValidationFailedException $e) {
             $status = 'failed';
-            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
+            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
             if (\Request::wantsJson()) {
                 return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
@@ -117,7 +117,7 @@ class GoCardlessPaymentController extends Controller
             \Log::info($e);
 
             $status = 'error';
-            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
+            $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
             if (\Request::wantsJson()) {
                 return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);

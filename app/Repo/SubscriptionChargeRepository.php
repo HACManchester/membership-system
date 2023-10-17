@@ -70,8 +70,8 @@ class SubscriptionChargeRepository extends DBRepository
             $status = 'error';
         }
 
-        $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id,
-            $bill->amount / 100, $status, 0, $charge->id);
+        $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id ?? null,
+            $amount, $status, 0, $charge->id);
 
         return $charge;
     }
