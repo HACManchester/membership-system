@@ -112,6 +112,9 @@ return [
 
     'log' => env('APP_LOG', 'single'),
 
+    // Keep 90d of daily logs
+    'log_max_files' => 90,
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
