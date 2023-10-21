@@ -24,7 +24,7 @@ class Handler extends ExceptionHandler {
         MethodNotAllowedHttpException::class,
         FormValidationException::class,
         AuthenticationException::class,         //These are logged separately below
-	];
+	];    
 
 	/**
 	 * Report or log an exception.
@@ -36,6 +36,10 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $e)
 	{
+        if ($this->shouldReport($e) && app()->bound('sentry')) {
+            app('sentry')->captureException($e);
+        }
+        
         try{
             $level = 'error';
             $title = 'Error';

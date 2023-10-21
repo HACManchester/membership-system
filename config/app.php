@@ -163,6 +163,7 @@ return [
 		Clockwork\Support\Laravel\ClockworkServiceProvider::class,
 		Illuminate\Notifications\NotificationServiceProvider::class,
 		NotificationChannels\Telegram\TelegramServiceProvider::class,
+		Sentry\Laravel\ServiceProvider::class,
 	],
 
 	/*
@@ -215,6 +216,7 @@ return [
         'Notification' => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'        => 'Intervention\Image\Facades\Image',
 		'MembershipPayments' => 'BB\Helpers\MembershipPayments',
+		'Sentry' => Sentry\Laravel\Facade::class,
     ],
 
 ];
