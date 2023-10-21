@@ -37,7 +37,7 @@
         <div class="row">
             <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
                 <div class="col-xs-12">
-                    {!! Form::text('email', null, ['class'=>'form-control', 'placeholder'=>'Email']) !!}
+                    {!! Form::text('email', $email, ['class'=>'form-control', 'placeholder'=>'Email']) !!}
                     {!! Notification::getErrorDetail('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
                 </div>
             </div>

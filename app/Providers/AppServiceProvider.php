@@ -1,7 +1,6 @@
 <?php namespace BB\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -29,22 +28,17 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		// We're running a higher PHP version than Laravel 5.2 supports. Temporarily ignore certain notices.
+		if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
+			error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+		}
+
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar',
 			'BB\Services\Registrar'
 		);
-		
-		if ($this->app->isLocal()) {
-			/**
-			 * This was breaking live (:
-			 * 
-			 * TODO: Properly re-install ide-helper as per 2.4.2 instructions (last compatible with Laravel 5.1)
-			 * @see https://github.com/barryvdh/laravel-ide-helper/tree/v2.4.3#install
-			 * 
-			 * Will also need a composer install on live, which hasn't been done in a while. Need to carefully plan.
-			 */
+		if ($this->app->environment() !== 'production') {
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
-
 	}
 }

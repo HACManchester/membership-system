@@ -165,7 +165,7 @@ class EquipmentController extends Controller
         }
 
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::lists('title', 'id');
+        $roleList = \BB\Entities\Role::pluck('title', 'id');
 
         return \View::make('equipment.create')
             ->with('memberList', $memberList)
@@ -244,7 +244,7 @@ class EquipmentController extends Controller
 
         $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::lists('title', 'id');
+        $roleList = \BB\Entities\Role::pluck('title', 'id');
 
         $isTrainerOrAdmin = $this
             ->inductionRepository

@@ -24,6 +24,9 @@ class Handler extends ExceptionHandler {
         MethodNotAllowedHttpException::class,
         FormValidationException::class,
         AuthenticationException::class,         //These are logged separately below
+        AuthorizationException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
 	];    
 
 	/**

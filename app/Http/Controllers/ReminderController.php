@@ -55,14 +55,16 @@ class ReminderController extends Controller
 	 * @param  string  $token
 	 * @return Response
 	 */
-	public function getReset($token = null)
-	{
+    public function getReset(Request $request, $token = null)
+    {
         if (is_null($token))
         {
             throw new NotFoundHttpException;
         }
-
-        return view('password.reset')->with('token', $token);
+     
+        $email = $request->input('email');
+        
+        return view('password.reset')->with(compact('token', 'email'));
 	}
 
     /**
