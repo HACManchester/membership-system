@@ -159,9 +159,11 @@ class GoCardlessWebhookController extends Controller
 
             if ( ! $user) {
 
+                $message = "GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['links']['payment'];
+                \Log::info($message);
                 $this->telegramHelper->notify(
                     TelegramHelper::WARNING, 
-                    "GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['links']['payment']
+                    $message
                 );
 
                 return;
@@ -184,9 +186,11 @@ class GoCardlessWebhookController extends Controller
         if ($existingPayment) {
             $this->paymentRepository->markPaymentPending($existingPayment->id);
         } else {
+            $message = "GoCardless processSubmittedPayment - Webhook received for unknown payment: " . $bill['links']['payment'];
+            \Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
-                "GoCardless processSubmittedPayment - Webhook received for unknown payment: " . $bill['links']['payment']
+                $message
             );
         }
     }
@@ -199,9 +203,11 @@ class GoCardlessWebhookController extends Controller
         if ($existingPayment) {
             $this->paymentRepository->markPaymentPaid($existingPayment->id, Carbon::now());
         } else {
+            $message = "GoCardless processPaidBills - Webhook received for unknown payment: " . $bill['links']['payment'];
+            \Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
-                "GoCardless processPaidBills - Webhook received for unknown payment: " . $bill['links']['payment']
+                $message
             );
         }
     }
@@ -216,9 +222,11 @@ class GoCardlessWebhookController extends Controller
         if ($existingPayment) {
             $this->paymentRepository->recordPaymentFailure($existingPayment->id, $payment->status);
         } else {
+            $message = "GoCardless PaymentFailed - Webhook received for unknown payment: " . $bill['links']['payment'];
+            \Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
-                "GoCardless PaymentFailed - Webhook received for unknown payment: " . $bill['links']['payment']
+                $message
             );
         }
 
@@ -248,9 +256,11 @@ class GoCardlessWebhookController extends Controller
                     //Update the payment record and possible the user record
                 }
             } else {
+                $message = "GoCardless ProcessBills - Webhook received for unknown payment: " . $bill['id'];
+                \Log::warning($message);
                 $this->telegramHelper->notify(
                     TelegramHelper::WARNING,
-                    "GoCardless ProcessBills - Webhook received for unknown payment: " . $bill['id']
+                    $message
                 );
             }
         }

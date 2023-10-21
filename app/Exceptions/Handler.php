@@ -69,12 +69,13 @@ class Handler extends ExceptionHandler {
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
     {
+        $this->log->error($e);
         try {
             $helper = new TelegramErrorHelper();
             $helper->notify(new ErrorNotification($level, $title, $suppress, $e));
-        } catch (Exception $e) {
+        } catch (Exception $telegramE) {
             // Make sure Telegram exceptions don't stop regular exceptions being logged
-            $this->log->error($e);
+            $this->log->error($telegramE);
         }
     }
 

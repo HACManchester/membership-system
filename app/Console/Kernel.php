@@ -43,44 +43,53 @@ class Kernel extends ConsoleKernel
         // $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
         //     ->then( function () { $this->notifyTelegram(''); } );
 
+        // todo: These are currently running via cron, via automate.sh. We should move back to using the Laravel scheduler?
+
         $schedule
             ->command('bb:check-memberships')
             ->dailyAt('06:00')
-            ->then( function () { 
+            ->then( function () use ($telegram) {
+                $message = "✔️ Checked Memberships";
+                \Log::info($message); 
                 $telegram->notify(
                     TelegramHelper::JOB, 
-                    "✔️ Checked Memberships"
+                    $message
                 );
             });
 
         $schedule
             ->command('bb:update-balances')
             ->dailyAt('03:00')
-            ->then( function () {
+            ->then( function () use ($telegram) {
+                $message = "✔️ Updated Balances";
+                \Log::info($message); 
                 $telegram->notify(
                     TelegramHelper::JOB, 
-                    "✔️ Updated Balances"
-                ); 
+                    $message
+                );
             });
 
         $schedule
             ->command('bb:create-todays-sub-charges')
             ->dailyAt('01:00')
-            ->then( function () { 
+            ->then( function () use ($telegram) { 
+                $message = "✔️ Created today's subscription charges";
+                \Log::info($message); 
                 $telegram->notify(
                     TelegramHelper::JOB, 
-                    "✔️ Created today's subscription charges"
+                    $message
                 );
             } );
 
         $schedule
             ->command('bb:bill-members')
             ->dailyAt('01:30')
-            ->then( function ($result) { 
-                $notification = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
+            ->then( function ($result) use ($telegram) { 
+                $message = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
+                \Log::info($message); 
                 $telegram->notify(
                     TelegramHelper::JOB, 
-                    $notification
+                    $message
                 );
             });
 

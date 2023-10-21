@@ -149,7 +149,7 @@ class SubscriptionChargeRepository extends DBRepository
         //If the charge has already been cancelled dont touch it
         if ($subCharge->status != 'cancelled') {
             $subCharge->payment_date = null;
-            $subCharge->status       = 'due';
+            $subCharge->status       = 'cancelled';
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
