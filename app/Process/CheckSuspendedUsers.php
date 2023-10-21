@@ -55,9 +55,11 @@ class CheckSuspendedUsers
             }
         }
 
+        $message = "Suspended members marked as left: " . implode(", ", $members);
+        \Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "Suspended members marked as left: " . implode(", ", $members)
+            $message
         );
 
     }

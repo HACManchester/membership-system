@@ -49,33 +49,41 @@ class BillMembers extends Command
     {
         try{
             //Update the payments status from pending to due
+            $message = "Start billing...";
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
-                "Start billing..."
+                $message
             );
 
             $this->info('Moving sub charges to due');
             $this->subscriptionChargeService->makeChargesDue();
+            $message = "Moved sub charges to due";
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
-                "Moved sub charges to due"
+                $message
             );
 
             
             //Bill the due charges
             $this->info('Billing members');
             $this->subscriptionChargeService->billMembers();
+            $message = "Billed members - job ran.";
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
-                "Billed members - job ran."
+                $message
             );
 
             $this->info('Finished');
 
-        }catch(Exception $e){
+        }catch(\Exception $e){
+            $message = "billMembers encountered an exception";
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::ERROR, 
-                "billMembers encountered an exception"
+                $message
             );
 
             \Log::error($e);

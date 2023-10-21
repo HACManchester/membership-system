@@ -64,9 +64,11 @@ class UserObserver
         $userMailer->sendWelcomeMessage();
 
         $telegramHelper = new TelegramHelper("UserObserver");
+        $message = "New Member! Welcome to " . $user->name;
+        \Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
-            "New Member! Welcome to " . $user->name
+            $message
         );
 
     }
@@ -82,9 +84,11 @@ class UserObserver
         $userMailer->sendPaymentWarningMessage();
 
         $telegramHelper = new TelegramHelper("UserObserver");
+        $message = "User marked with payment warning: " . $user->name;
+        \Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
-            "User marked with payment warning: " . $user->name
+            $message
         );
 
     }
@@ -95,9 +99,11 @@ class UserObserver
         $userMailer->sendSuspendedMessage();
 
         $telegramHelper = new TelegramHelper("UserObserver");
+        $message = "User marked as suspended for non payment: " . $user->name;
+        \Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
-            "User marked as suspended for non payment: " . $user->name
+            $message
         );
     }
 
@@ -107,9 +113,11 @@ class UserObserver
         $userMailer->sendLeftMessage();
 
         $telegramHelper = new TelegramHelper("UserObserver");
+        $message = "User marked as left: " . $user->name;
+        \Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
-            "User marked as left: " . $user->name
+            $message
         );
     }
 } 

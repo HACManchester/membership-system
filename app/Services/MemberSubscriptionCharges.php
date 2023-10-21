@@ -59,15 +59,19 @@ class MemberSubscriptionCharges
                 }
             }
 
+            $message = "Charges ran for " . date_format($targetDate,"Y-m-d");
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
-                "Charges ran for " . date_format($targetDate,"Y-m-d")
+                $message
             );
         }
         catch(Exception $e) {
+            $message = "Exception running" . date_format($targetDate,"Y-m-d");
+            \Log::error($message);
             $this->telegramHelper->notify(
                 TelegramHelper::ERROR, 
-                "Exception running" . date_format($targetDate,"Y-m-d")
+                $message
             );
             \Log::error($e);
         }
@@ -158,15 +162,19 @@ class MemberSubscriptionCharges
             $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id ?? null, $amount, $status, 0, $charge->id);
         };
 
+        $message = "Created bills for: " . implode(", ", $members);
+        \Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB,
-            "Created bills for: " . implode(", ", $members)
+            $message
         );
 
         if (count($membersWeCouldntBill) > 0) {
+            $message = "Could not create bills for: " . implode(", ", $membersWeCouldntBill);
+            \Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB,
-                "Could not create bills for: " . implode(", ", $membersWeCouldntBill)
+                $message
             );
         }
     }

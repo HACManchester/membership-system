@@ -65,9 +65,11 @@ class CheckMemberships
             echo PHP_EOL;
         }
 
+        $message = "Checked Memberships - set suspended: " . implode(", ", $members);
+        \Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
-            "Checked Memberships - set suspended: " . implode(", ", $members)
+            $message
         );
 
     }
