@@ -271,9 +271,9 @@ Route::get('resources/policy/{title}', ['uses' => 'ResourcesController@viewPolic
 # Expenses
 ##########################
 
-Route::group(array('middleware' => 'role:finance'), function () {
-    Route::resource('expenses', 'ExpensesController');
-});
+// Route::group(array('middleware' => 'role:finance'), function () {
+    // Route::resource('expenses', 'ExpensesController');
+// });
 
 
 ##########################
