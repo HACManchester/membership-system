@@ -3,26 +3,6 @@ global.jQuery = global.$ = require('jquery');
 require('bootstrap-datepicker');
 require('bootstrap');
 
-
-
-//Configure a global private pusher channel
-var userId = document.getElementById('userId');
-if (userId != null) {
-    userId = userId.value;
-}
-
-global.privateMemberChannel = null;
-if (typeof Pusher != 'undefined' && userId) {
-    Pusher.log = function (message) {
-        window.console.log(message);
-    };
-    var pusher = new Pusher('76cf385da8c9087f9d68', {authEndpoint: '/session/pusher'});
-    global.privateMemberChannel = pusher.subscribe('private-' + userId);
-}
-
-
-
-
 var SiteInteraction = require('./SiteInteraction');
 new SiteInteraction();
 

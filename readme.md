@@ -66,7 +66,6 @@ Running the membership system relies on a number of third-party services:
 - Telegram: For notifying public & operational group chats about system events (new members, system notifications)
 - ~~Amazon Web Services~~ (unused)
 - ~~Paypal~~ (unused)
-- ~~Pusher~~ (unused)
 
 These can be configured via environmental variables, or by setting up a `.env` file in the root of the project. See [`.env.example`](./.env.example) for reference.
 

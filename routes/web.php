@@ -16,7 +16,6 @@ Route::get('logout', ['as' => 'logout', 'uses' => 'SessionController@destroy']);
 Route::get('gift', ['as' => 'gift', 'uses' => 'GiftController@index']);
 Route::get('admin', ['as' => 'admin', 'uses' => 'AdminController@index', 'middleware' => 'role:admin']);
 Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
-Route::post('session/pusher', ['uses' => 'SessionController@pusherAuth', 'middleware' => 'role:member', 'as' => 'session.pusher']);
 Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
 Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store']);
 Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);

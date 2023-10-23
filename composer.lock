@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b16923d7094b5072cb4ca7d6ff653f53",
+    "content-hash": "794a73fd0eef5d2f5e5ff2b3a2675e2a",
     "packages": [
         {
             "name": "alt-three/bus",
@@ -3896,54 +3896,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/master"
             },
             "time": "2018-04-02T05:41:44+00:00"
-        },
-        {
-            "name": "pusher/pusher-php-server",
-            "version": "2.6.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "2cf2ba85e7ce3250468a1c42ab7c948a7d43839d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/2cf2ba85e7ce3250468a1c42ab7c948a7d43839d",
-                "reference": "2cf2ba85e7ce3250468a1c42ab7c948a7d43839d",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "lib/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Library for interacting with the Pusher REST API",
-            "homepage": "https://github.com/pusher/pusher-php-server",
-            "keywords": [
-                "events",
-                "php-pusher-server",
-                "publish",
-                "pusher",
-                "realtime",
-                "rest",
-                "trigger"
-            ],
-            "support": {
-                "issues": "https://github.com/pusher/pusher-http-php/issues",
-                "source": "https://github.com/pusher/pusher-http-php/tree/master"
-            },
-            "time": "2017-06-06T16:41:17+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
