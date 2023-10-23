@@ -99,6 +99,12 @@ class GoCardlessHelper
             ]);
         } catch (\Exception $e) {
             \Log::error($e);
+
+            // Log these to Sentry too, to increase visibility of them.
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($e);
+            }
+
             throw $e;
         }
     }
