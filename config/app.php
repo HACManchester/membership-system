@@ -178,6 +178,9 @@ return [
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
+
+        // Queueing emails with sync queue doesn't work on 5.3+ without Bus?
+        AltThree\Bus\BusServiceProvider::class,
     ],
 
     /*
