@@ -11,8 +11,9 @@
 // Enable access to Composer dependencies (we'll indirectly have phpdotenv through our Laravel)
 require __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = Dotenv::load(__DIR__ . '/../');
-Dotenv::required([
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
+$dotenv->load();
+$dotenv->required([
     'QUERY2_ACCESS_KEY',
     'DB_HOST',
     'DB_PORT',
@@ -21,7 +22,7 @@ Dotenv::required([
     'DB_PASSWORD'
 ]);
 
-if ($_GET['key'] !== $_ENV['QUERY2_ACCESS_KEY']) die();
+if (!isset($_GET['key']) || $_GET['key'] !== $_ENV['QUERY2_ACCESS_KEY']) die();
 
 //Our MySQL connection details.
 $host = $_ENV['DB_HOST'];
