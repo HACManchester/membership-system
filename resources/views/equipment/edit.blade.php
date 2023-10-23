@@ -51,12 +51,12 @@
 
             {!! Form::open(array('route' => ['equipment.photo.store', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'POST')) !!}
 
-            <div class="form-group {{ Notification::hasErrorDetail('photo', 'has-error has-feedback') }}">
+            <div class="form-group {{ FlashNotification::hasErrorDetail('photo', 'has-error has-feedback') }}">
                 {!! Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) !!}
                 <div class="col-sm-9 col-lg-7">
                     <input name="photo" class="form-control" type="file" accept="image/*" capture="camera" id="inputPhoto">
                     <p class="help-block">Photos will be cropped to a square so please ensure the item is centered appropriately</p>
-                    {!! Notification::getErrorDetail('photo') !!}
+                    {!! FlashNotification::getErrorDetail('photo') !!}
                 </div>
             </div>
 

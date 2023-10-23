@@ -36,7 +36,7 @@ class SubscriptionController extends Controller
         $user = User::findWithPermission($userId);
 
         if(!$user->monthly_subscription) {
-            \Notification::error("Attempt to set up invalid direct debit, blocked.");
+            \FlashNotification::error("Attempt to set up invalid direct debit, blocked.");
             return \Redirect::route('account.show', $user->id);
         }
 
@@ -83,13 +83,13 @@ class SubscriptionController extends Controller
         try {
             $confirmed_resource = $this->goCardless->confirmResource($user, $confirm_params);
         } catch (\Exception $e) {
-            \Notification::error($e->getMessage());
+            \FlashNotification::error($e->getMessage());
             return \Redirect::route('account.show', $user->id);
         }
 
 
         if (!isset($confirmed_resource->links->mandate) || empty($confirmed_resource->links->mandate)) {
-            \Notification::error('Something went wrong, you can try again or get in contact');
+            \FlashNotification::error('Something went wrong, you can try again or get in contact');
             return \Redirect::route('account.show', $user->id);
         }
 
@@ -124,12 +124,12 @@ class SubscriptionController extends Controller
                 $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
                 if ($subscription->status == 'cancelled') {
                     $user->cancelSubscription();
-                    \Notification::success('Your subscription has been cancelled');
+                    \FlashNotification::success('Your subscription has been cancelled');
                     return \Redirect::back();
                 }
             } catch (\Exception $e) {
                 $user->cancelSubscription();
-                \Notification::success('Your subscription has been cancelled');
+                \FlashNotification::success('Your subscription has been cancelled');
                 return \Redirect::back();
             }
         } elseif ($user->payment_method == 'gocardless-variable') {
@@ -143,11 +143,11 @@ class SubscriptionController extends Controller
 
                 $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
 
-                \Notification::success('Your direct debit has been cancelled');
+                \FlashNotification::success('Your direct debit has been cancelled');
                 return \Redirect::back();
             }
         }
-        \Notification::error('Sorry, we were unable to cancel your subscription, please get in contact');
+        \FlashNotification::error('Sorry, we were unable to cancel your subscription, please get in contact');
         return \Redirect::back();
     }
 
@@ -189,7 +189,7 @@ class SubscriptionController extends Controller
             $user->save();
         }
 
-        \Notification::success('Details Updated');
+        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 }

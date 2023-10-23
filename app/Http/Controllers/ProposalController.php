@@ -71,7 +71,7 @@ class ProposalController extends Controller
 
         $this->proposalVoteRepository->castVote($proposalId, \Auth::user()->id, \Request::get('vote'));
 
-        \Notification::success("Vote cast");
+        \FlashNotification::success("Vote cast");
         return \Redirect::back();
     }
 
@@ -90,7 +90,7 @@ class ProposalController extends Controller
         $data['user_id'] = \Auth::user()->id;
         $this->proposalRepository->create($data);
 
-        \Notification::success("Proposal created");
+        \FlashNotification::success("Proposal created");
         return \Redirect::route('proposals.index');
     }
 
@@ -111,7 +111,7 @@ class ProposalController extends Controller
 
         $this->proposalRepository->update($proposalId, $data);
 
-        \Notification::success("Proposal updated");
+        \FlashNotification::success("Proposal updated");
         return \Redirect::route('proposals.index');
     }
 

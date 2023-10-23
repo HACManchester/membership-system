@@ -57,7 +57,7 @@ class BalancePaymentController extends Controller
                 return \Response::json(['error' => 'You don\'t have the money for this'], 400);
             }
 
-            \Notification::error("You don't have the money for this");
+            \FlashNotification::error("You don't have the money for this");
             return \Redirect::to($returnPath);
         }
 
@@ -71,7 +71,7 @@ class BalancePaymentController extends Controller
             return \Response::json(['message' => 'Payment made']);
         }
 
-        \Notification::success("Payment made");
+        \FlashNotification::success("Payment made");
         return \Redirect::to($returnPath);
     }
 

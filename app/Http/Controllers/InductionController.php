@@ -109,7 +109,7 @@ class InductionController extends Controller
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
-        \Notification::success("Induction record has been updated");
+        \FlashNotification::success("Induction record has been updated");
         if($slug){
             return \Redirect::route('equipment.show', $slug);
         }

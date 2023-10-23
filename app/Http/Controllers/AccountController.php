@@ -338,7 +338,7 @@ class AccountController extends Controller
 
         $this->userRepository->updateMember($id, $input, \Auth::user()->hasRole('admin'));
 
-        \Notification::success('Details Updated');
+        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 
@@ -417,7 +417,7 @@ class AccountController extends Controller
         if (\Request::wantsJson()) {
             return \Response::json('Updated', 200);
         } else {
-            \Notification::success('Details Updated');
+            \FlashNotification::success('Details Updated');
             return \Redirect::route('account.show', [$user->id]);
         }
     }
@@ -442,7 +442,7 @@ class AccountController extends Controller
 
         $user->updateSubscription($input['payment_method'], $input['payment_day']);
 
-        \Notification::success('Details Updated');
+        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 
@@ -451,10 +451,10 @@ class AccountController extends Controller
         $user = User::find($id);
         if ($user && $user->hash == $hash) {
             $user->emailConfirmed();
-            \Notification::success('Email address confirmed, thank you');
+            \FlashNotification::success('Email address confirmed, thank you');
             return \Redirect::route('account.show', $user->id);
         }
-        \Notification::error('Error confirming email address');
+        \FlashNotification::error('Error confirming email address');
         return \Redirect::route('home');
     }
 
@@ -466,7 +466,7 @@ class AccountController extends Controller
         if(!$user->email_verified){
             $userMailer = new UserMailer($user);
             $userMailer->sendConfirmationEmail();
-            \Notification::success('An email has been sent to your email address. Please click the link to confirm it.');
+            \FlashNotification::success('An email has been sent to your email address. Please click the link to confirm it.');
         }
         return \Redirect::route('home');
     }
@@ -480,14 +480,14 @@ class AccountController extends Controller
         if ($user->status == 'setting-up') {
             $user->delete();
 
-            \Notification::success('Member deleted');
+            \FlashNotification::success('Member deleted');
             return \Redirect::route('account.index');
         }
 
         //No one will ever leaves the system but we can at least update their status to left.
         $user->setLeaving();
 
-        \Notification::success('Updated status to leaving');
+        \FlashNotification::success('Updated status to leaving');
 
         $userMailer = new UserMailer($user);
         $userMailer->sendLeftMessage();
@@ -500,7 +500,7 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
         $user->rejoin();
-        \Notification::success('Details Updated');
+        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 
@@ -521,7 +521,7 @@ class AccountController extends Controller
 
         $user = User::findWithPermission($id);
         $user->updateSubAmount(\Input::get('monthly_subscription'));
-        \Notification::success('Details Updated');
+        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 }

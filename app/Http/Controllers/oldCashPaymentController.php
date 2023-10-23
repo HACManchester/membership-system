@@ -43,7 +43,7 @@ class CashPaymentController extends Controller
         $sourceId = $sourceId . ':' . time();
         $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
 
-        \Notification::success("Payment recorded");
+        \FlashNotification::success("Payment recorded");
 
         return \Redirect::to($returnPath);
     }
@@ -68,7 +68,7 @@ class CashPaymentController extends Controller
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('withdrawal');
 
         if (($user->cash_balance + ($minimumBalance * 100)) < ($amount * 100)) {
-            \Notification::error("Not enough money");
+            \FlashNotification::error("Not enough money");
             return \Redirect::to($returnPath);
         }
 
@@ -76,7 +76,7 @@ class CashPaymentController extends Controller
 
         $this->bbCredit->recalculate();
 
-        \Notification::success("Payment recorded");
+        \FlashNotification::success("Payment recorded");
 
         return \Redirect::to($returnPath);
     }

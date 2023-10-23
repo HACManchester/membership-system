@@ -99,7 +99,7 @@ class Handler extends ExceptionHandler {
             if ($request->wantsJson()) {
                 return \Response::json($e->getErrors(), 422);
             }
-            \Notification::error("Something wasn't right, please check the form for errors", $e->getErrors());
+            \FlashNotification::error("Something wasn't right, please check the form for errors", $e->getErrors());
             return redirect()->back()->withInput();
         }
 
@@ -107,12 +107,12 @@ class Handler extends ExceptionHandler {
             if ($request->wantsJson()) {
                 return \Response::json($e->getMessage(), 422);
             }
-            \Notification::error($e->getMessage());
+            \FlashNotification::error($e->getMessage());
             return redirect()->back()->withInput();
         }
 
         if ($e instanceof NotImplementedException) {
-            \Notification::error("NotImplementedException: ".$e->getMessage());
+            \FlashNotification::error("NotImplementedException: ".$e->getMessage());
             \Log::warning($e);
             return redirect()->back()->withInput();
         }

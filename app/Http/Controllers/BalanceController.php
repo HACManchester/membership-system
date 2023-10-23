@@ -76,7 +76,7 @@ class BalanceController extends Controller
             $message->to('board@hacman.org.uk', 'BB board')->subject('User requested a withdrawal');
         });
 
-        \Notification::success("Request sent");
+        \FlashNotification::success("Request sent");
         return \Redirect::route('account.balance.index', $user->id);
 
     }
@@ -112,13 +112,13 @@ class BalanceController extends Controller
         //With this payment will the users balance go to low?
         if (($userBalance - $amount) < 0) {
 
-            \Notification::error("You don't have the money for this");
+            \FlashNotification::error("You don't have the money for this");
             return \Redirect::route('account.balance.index', $user->id);
         }
 
         $this->paymentRepository->recordBalanceTransfer($user->id, $targetUser->id, $amount);
 
-        \Notification::success("Transfer made");
+        \FlashNotification::success("Transfer made");
         return \Redirect::route('account.balance.index', $user->id);
     }
 

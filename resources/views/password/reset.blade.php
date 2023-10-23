@@ -20,13 +20,13 @@
             </div>
         </div>
 
-        @if (Notification::hasMessage())
-        <div class="alert alert-{{ Notification::getLevel() }} alert-dismissable">
-            {{ Notification::getMessage() }}
+        @if (FlashNotification::hasMessage())
+        <div class="alert alert-{{ FlashNotification::getLevel() }} alert-dismissable">
+            {{ FlashNotification::getMessage() }}
 
-            @if (Notification::hasDetails())
+            @if (FlashNotification::hasDetails())
             <ul>
-                @foreach(Notification::getDetails()->all() as $error)
+                @foreach(FlashNotification::getDetails()->all() as $error)
                 <li style="list-style-type: none;">{{ $error }}</li>
                 @endforeach
             </ul>
@@ -35,16 +35,16 @@
         @endif
 
         <div class="row">
-            <div class="form-group {{ Notification::hasErrorDetail('email', 'has-error has-feedback') }}">
+            <div class="form-group {{ FlashNotification::hasErrorDetail('email', 'has-error has-feedback') }}">
                 <div class="col-xs-12">
                     {!! Form::text('email', $email, ['class'=>'form-control', 'placeholder'=>'Email']) !!}
-                    {!! Notification::getErrorDetail('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
+                    {!! FlashNotification::getErrorDetail('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
                 </div>
             </div>
-            <div class="form-group {{ Notification::hasErrorDetail('password', 'has-error has-feedback') }}">
+            <div class="form-group {{ FlashNotification::hasErrorDetail('password', 'has-error has-feedback') }}">
                 <div class="col-xs-12">
                     {!! Form::password('password', ['class'=>'form-control', 'placeholder'=>'Password']) !!}
-                    {!! Notification::getErrorDetail('password', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
+                    {!! FlashNotification::getErrorDetail('password', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
                 </div>
             </div>
 

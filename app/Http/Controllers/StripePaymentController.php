@@ -56,7 +56,7 @@ class StripePaymentController extends Controller
                 return \Response::json(['error' => 'There was an error confirming your payment'], 400);
             }
 
-            \Notification::error("There was an error confirming your payment");
+            \FlashNotification::error("There was an error confirming your payment");
             return \Redirect::to($returnPath);
         }
 
@@ -72,7 +72,7 @@ class StripePaymentController extends Controller
             return \Response::json(['message' => 'Payment made']);
         }
 
-        \Notification::success("Payment made");
+        \FlashNotification::success("Payment made");
         return \Redirect::to($returnPath);
     }
 

@@ -56,7 +56,7 @@ class SessionController extends Controller
             }
         }
 
-        \Notification::error("Invalid login details");
+        \FlashNotification::error("Invalid login details");
         return redirect()->back()->withInput();
 	}
 
@@ -174,7 +174,7 @@ class SessionController extends Controller
 	{
         Auth::logout();
 
-        \Notification::success('Logged Out');
+        \FlashNotification::success('Logged Out');
 
         return redirect()->home();
 	}

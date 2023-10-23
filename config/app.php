@@ -225,9 +225,9 @@ return [
         'View'                  => Illuminate\Support\Facades\View::class,
         'Form'                  => Illuminate\Html\FormFacade::class,
         'HTML'                  => Illuminate\Html\HtmlFacade::class,
-        'Notification'          => \ArthurGuy\Notifications\NotificationFacade::class,
+        'FlashNotification'     => \ArthurGuy\Notifications\NotificationFacade::class,
         'Image'                 => Intervention\Image\Facades\Image::class,
         'MembershipPayments'    => BB\Helpers\MembershipPayments::class,
-    'Sentry'                    => Sentry\Laravel\Facade::class,
+        'Sentry'                => Sentry\Laravel\Facade::class,
     ],
 ];

@@ -60,7 +60,7 @@ class GoCardlessPaymentController extends Controller
         if (\Request::wantsJson()) {
             return \Response::json(['error' => 'Please visit the "Your Membership" page and migrate your Direct Debit first, then return and make the payment'], 400);
         }
-        \Notification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
+        \FlashNotification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
         return \Redirect::to($returnPath);
     }
 
@@ -97,7 +97,7 @@ class GoCardlessPaymentController extends Controller
                 return \Response::json(['message' => 'The payment was submitted successfully']);
             }
 
-            \Notification::success("The payment was submitted successfully");
+            \FlashNotification::success("The payment was submitted successfully");
 
             return \Redirect::to($returnPath);
         }
@@ -109,7 +109,7 @@ class GoCardlessPaymentController extends Controller
                 return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
             }
 
-            \Notification::error("We were unable to take payment from your account. Please try again.");
+            \FlashNotification::error("We were unable to take payment from your account. Please try again.");
             return \Redirect::to($returnPath);
         }
         catch (Exception $e) {
@@ -123,7 +123,7 @@ class GoCardlessPaymentController extends Controller
                 return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);
             }
 
-            \Notification::error("We encountered an error taking your payment.");
+            \FlashNotification::error("We encountered an error taking your payment.");
             return \Redirect::to($returnPath);
         }
     }
