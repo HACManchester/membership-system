@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\CheckMembershipStatus::class,
         Commands\RecalculateUserBalances::class,
-        Commands\CalculateProposalVotes::class,
         Commands\CheckFixEquipmentLog::class,
         Commands\CalculateEquipmentFees::class,
         Commands\CreateTodaysSubCharges::class,
@@ -33,9 +32,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $telegram = new TelegramHelper("createSubscriptionCharges");
-
-        // $schedule->command('bb:calculate-proposal-votes')->hourly()
-        //     ->then( function () { $this->notifyTelegram(''); } );
 
         // $schedule->command('bb:fix-equipment-log')->hourly()
         //     ->then( function () { $this->notifyTelegram(''); } );
