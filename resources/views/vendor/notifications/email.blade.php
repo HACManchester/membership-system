@@ -84,10 +84,14 @@ $style = [
                                     <td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
                                         <!-- Greeting -->
                                         <h1 style="{{ $style['header-1'] }}">
-                                            @if ($level == 'error')
-                                                Whoops!
+                                            @if (! empty($greeting))
+                                                {{ $greeting }}
                                             @else
-                                                Hello!
+                                                @if ($level == 'error')
+                                                    Whoops!
+                                                @else
+                                                    Hello!
+                                                @endif
                                             @endif
                                         </h1>
 
@@ -99,33 +103,15 @@ $style = [
                                         @endforeach
 
                                         <!-- Action Button -->
-                                        @foreach ($actionLines as $action)
-                                            <table style="{{ $style['body_action'] }}" align="center" width="100%" cellpadding="0" cellspacing="0">
-                                                <tr>
-                                                    <td align="center">
-                                                        <?php
-                                                            switch ($level) {
-                                                                case 'success':
-                                                                    $actionColor = 'button--green';
-                                                                    break;
-                                                                case 'error':
-                                                                    $actionColor = 'button--red';
-                                                                    break;
-                                                                default:
-                                                                    $actionColor = 'button--blue';
-                                                            }
-                                                        ?>
-
-                                                        <a href="{{ $action->url }}"
-                                                            style="{{ $fontFamily }} {{ $style['button'] }} {{ $style[$actionColor] }}"
-                                                            class="button"
-                                                            target="_blank">
-                                                            {{ $action->text }}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        @endforeach
+                                        @if (isset($actionText))
+                                            @include('vendor.notifications.components.action', compact('actionColor', 'actionText', 'actionUrl', 'fontFamily', 'level', 'style'))
+                                        @endif
+                                        @if (isset($actionLines))
+                                            @foreach ($actionLines as $action)
+                                                @include('vendor.notifications.components.action', array_merge([ 'actionText' => $action->text, 'actionUrl' => $action->url, ], compact('actionColor', 'fontFamily', 'level', 'style')))
+                                            @endforeach
+                                        @endif
+                                            
 
                                         <!-- Outro -->
                                         @foreach ($outroLines as $line)
