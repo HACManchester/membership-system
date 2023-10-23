@@ -262,16 +262,6 @@ Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 
 // Route::get('proposals/{id}/edit', ['uses'=>'ProposalController@edit', 'as'=>'proposals.edit', 'middleware'=>'role:admin']);
 // Route::post('proposals/{id}/update', ['uses'=>'ProposalController@update', 'as'=>'proposals.update', 'middleware'=>'role:admin']);
 
-
-
-##########################
-# Feedback
-##########################
-
-Route::post('feedback', ['uses'=>'FeedbackController@store', 'as'=>'feedback.store', 'middleware'=>'role:member']);
-
-
-
 ##########################
 # Roles
 ##########################

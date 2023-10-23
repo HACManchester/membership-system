@@ -35,12 +35,6 @@ new AdminForms();
 var Snackbar = require('./Snackbar');
 new Snackbar();
 
-var FeedbackWidget = require('./FeedbackWidget');
-new FeedbackWidget();
-
-
-
-
 
 //Site wide notification loading
 if (privateMemberChannel) {
