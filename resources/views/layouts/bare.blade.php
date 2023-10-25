@@ -8,7 +8,7 @@
     <title>@yield('meta-title', 'Member System') | Hackspace Manchester</title>
 
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
-    <link href="/css/main.css" rel="stylesheet">
+    <link href="{{ elixir('/css/main.css') }}" rel="stylesheet">
 
     <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>

@@ -10,6 +10,7 @@ npm-debug.log
 storage/tmp
 database.sqlite
 yarn-error.log
+/public/build
 /public/css/*.css
 /public/fonts
 /public/js
