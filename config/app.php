@@ -172,7 +172,6 @@ return [
 		 * 3rd Party Providers...
 		 */
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-        Jenssegers\Rollbar\RollbarServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         BB\Providers\NotificationServiceProvider::class,
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,

@@ -61,7 +61,7 @@ Running the membership system relies on a number of third-party services:
 - (Email provider?)
 - Discourse: Providing single-sign-on onto a Discourse application
 - GoCardless: For managing subscription payments via direct debit
-- Rollbar: For error monitoring & tracking
+- Sentry: For error monitoring & tracking
 - Stripe: One-off payments (only available via the "Payment problem panel")
 - Telegram: For notifying public & operational group chats about system events (new members, system notifications)
 - ~~Amazon Web Services~~ (unused)

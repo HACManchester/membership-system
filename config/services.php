@@ -35,11 +35,6 @@ return [
 		'secret' => '',
 	],
 
-    'rollbar' => [
-        'access_token' => env('ROLLBAR_TOKEN', 'token'),
-        'level' => 'warning'
-    ],
-	
 	'telegram-bot-api' => [
 		'token' => env('TELEGRAM_BOT_KEY', 'YOUR BOT TOKEN HERE')
 	],
