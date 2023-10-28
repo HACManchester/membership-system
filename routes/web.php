@@ -80,6 +80,8 @@ Route::get('newsletter', ['uses' => 'NewsletterController@index', 'as' => 'newsl
 
 Route::get('account/{account}/subscription/store', ['as' => 'account.subscription.store', 'uses' => 'SubscriptionController@store']);
 Route::resource('account.subscription', 'SubscriptionController', ['except' => ['store', 'update', 'edit', 'show', 'index']]);
+
+// Exempt from CSRF checks in BB\Http\Middleware\VerifyCsrfToken
 Route::post('gocardless/webhook', ['uses' => 'GoCardlessWebhookController@receive']);
 
 Route::post('account/{account}/payment', ['uses' => 'PaymentController@store', 'as' => 'account.payment.store', 'middleware' => 'role:admin']);
