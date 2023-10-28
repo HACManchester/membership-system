@@ -226,13 +226,13 @@ class PaymentController extends Controller
             $memberCreditService->recalculate();
 
             //This needs to be improved
-            \Notification::success('Payment recorded');
+            \FlashNotification::success('Payment recorded');
 
             return \Redirect::route('account.bbcredit.index', $user->id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
-        \Notification::success('Payment recorded');
+        \FlashNotification::success('Payment recorded');
 
         return \Redirect::route('account.show', [$user->id]);
     }
@@ -283,13 +283,13 @@ class PaymentController extends Controller
                 try {
                     $newUser = $this->userRepository->getById($newUserId);
                 } catch (ModelNotFoundException $e) {
-                    \Notification::error('User not found');
+                    \FlashNotification::error('User not found');
                     break;
                 }
 
                 $this->paymentRepository->assignPaymentToUser($paymentId, $newUser->id);
 
-                \Notification::success('Payment updated');
+                \FlashNotification::success('Payment updated');
 
                 break;
 
@@ -301,7 +301,7 @@ class PaymentController extends Controller
 
                 $this->paymentRepository->refundPaymentToBalance($paymentId);
 
-                \Notification::success('Payment updated');
+                \FlashNotification::success('Payment updated');
 
                 break;
 
@@ -335,7 +335,7 @@ class PaymentController extends Controller
         //The delete event will broadcast an event and allow related actions to occur
         $this->paymentRepository->delete($id);
 
-        \Notification::success('Payment deleted');
+        \FlashNotification::success('Payment deleted');
 
         return \Redirect::back();
     }
@@ -355,7 +355,7 @@ class PaymentController extends Controller
         try {
             $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
             if ($subscription->status != 'cancelled') {
-                \Notification::error('Could not cancel the existing subscription');
+                \FlashNotification::error('Could not cancel the existing subscription');
 
                 return \Redirect::back();
             }

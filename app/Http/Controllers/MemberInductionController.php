@@ -81,7 +81,7 @@ class MemberInductionController extends Controller
 
         $this->userRepository->recordInductionCompleted($user->id);
 
-        \Notification::success('Member marked as inducted! They can now set up entry methods on their account.');
+        \FlashNotification::success('Member marked as inducted! They can now set up entry methods on their account.');
         return \Redirect::route('general-induction.show');
     }
 }

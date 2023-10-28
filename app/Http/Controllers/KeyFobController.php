@@ -56,7 +56,7 @@ class KeyFobController extends Controller
             'key_id' => $input['key_id']
         ]);
 
-        \Notification::success("Key fob/Access code has been activated");
+        \FlashNotification::success("Key fob/Access code has been activated");
         return \Redirect::route('account.show', \Auth::user()->id);
     }
 
@@ -88,7 +88,7 @@ class KeyFobController extends Controller
         }
         $fob = $fobQuery->firstOrFail();
         $fob->markLost();
-        \Notification::success("Key Fob marked as lost/broken");
+        \FlashNotification::success("Key Fob marked as lost/broken");
         return \Redirect::route('account.show',$fob->user_id);
     }
 

@@ -24,30 +24,30 @@ Email Members
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
                     {!! Form::label('recipient', 'Recipient') !!}
                     {!! Form::select('recipient', $recipients, null, ['class'=>'form-control']) !!}
-                    {!! Notification::getErrorDetail('recipient') !!}
+                    {!! FlashNotification::getErrorDetail('recipient') !!}
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('subject', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('subject', 'has-error has-feedback') }}">
                     {!! Form::label('subject', 'Subject') !!}
                     {!! Form::text('subject', null, ['class'=>'form-control']) !!}
-                    {!! Notification::getErrorDetail('subject') !!}
+                    {!! FlashNotification::getErrorDetail('subject') !!}
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
-                <div class="form-group {{ Notification::hasErrorDetail('message', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('message', 'has-error has-feedback') }}">
                     {!! Form::label('message', 'Message') !!}
                     {!! Form::textarea('message', null, ['class'=>'form-control']) !!}
-                    {!! Notification::getErrorDetail('message') !!}
+                    {!! FlashNotification::getErrorDetail('message') !!}
                     <p>The email will be addressed to the user and contain the standard signature, the message above will be placed inbetween</p>
                 </div>
             </div>

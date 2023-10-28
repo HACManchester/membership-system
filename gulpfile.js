@@ -71,7 +71,7 @@ gulp.task('version-assets', function () {
     //clear the previous builds
     del.sync('./public/build/*', { force: true });
 
-    return gulp.src(['./public/dist/css/*.css', './public/dist/js/*.js'], {base: './public/dist'})
+    return gulp.src(['./public/css/*.css', './public/js/*.js', './public/fonts/*'], {base: './public'})
         .pipe(gulp.dest('./public/build'))  // copy original assets to build dir
         .pipe(rev())
         .pipe(gulp.dest('./public/build'))  // write rev'd assets to build dir
@@ -86,4 +86,4 @@ gulp.task('version-assets', function () {
 });
 
 
-gulp.task('default', ['less', 'browserify', 'fonts']);
+gulp.task('default', ['less', 'browserify', 'fonts', 'version-assets']);

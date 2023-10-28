@@ -61,7 +61,7 @@ class EquipmentLogController extends Controller
 
         $this->equipmentLogRepository->update($logEntryId, ['reason'=>$reason, 'billed'=>$billedStatus]);
 
-        \Notification::success("Record Updated");
+        \FlashNotification::success("Record Updated");
         return \Redirect::back();
 
     }

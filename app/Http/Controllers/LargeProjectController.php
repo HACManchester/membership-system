@@ -151,7 +151,7 @@ class LargeProjectController extends Controller
             $this->LargeProjectRepository->update($boxId, ['user_id'=>0]);
         }
 
-        \Notification::success("Claimed");
+        \FlashNotification::success("Claimed");
         return \Redirect::route('projects_storage.index');
     }
 

@@ -350,7 +350,7 @@ class EquipmentController extends Controller
             }
         }
 
-        \Notification::success("Image added");
+        \FlashNotification::success("Image added");
         return \Redirect::route('equipment.edit', $equipmentId);
     }
 
@@ -369,7 +369,7 @@ class EquipmentController extends Controller
 
         $equipment->removePhoto($photoId);
 
-        \Notification::success("Image deleted");
+        \FlashNotification::success("Image deleted");
         return \Redirect::route('equipment.edit', $equipmentId);
     }
 } 

@@ -64,7 +64,7 @@ class NotificationEmailController extends Controller
         $equipment = $this->equipmentRepository->findBySlug($tool_id);
 
         if(!$equipment->requiresInduction()){
-            \Notification::error("This tool doesn't require an induction.");
+            \FlashNotification::error("This tool doesn't require an induction.");
             return \Redirect::route('equipment.show', $equipment->slug);
         }
 
@@ -93,7 +93,7 @@ class NotificationEmailController extends Controller
         }
 
         if(!$allowed){
-            \Notification::error("You may not email members, as you aren't a trainer of this tool, or an admin");
+            \FlashNotification::error("You may not email members, as you aren't a trainer of this tool, or an admin");
             return \Redirect::route('equipment.show', $equipment->slug);
         }
 
@@ -197,11 +197,11 @@ class NotificationEmailController extends Controller
         }
         
         if($isToolEmail){
-            \Notification::success("Email Queued to Send to `$equipment->name` equipment users with status of `$status`");
+            \FlashNotification::success("Email Queued to Send to `$equipment->name` equipment users with status of `$status`");
             return \Redirect::route('equipment.show', $equipment->slug);
         }
 
-        \Notification::success('Email Queued to Send');
+        \FlashNotification::success('Email Queued to Send');
         return \Redirect::route('home');
     }
 } 

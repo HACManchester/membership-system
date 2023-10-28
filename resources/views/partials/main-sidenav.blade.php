@@ -199,7 +199,6 @@
 
                 @if (Auth::user()->hasRole('finance') || Auth::user()->isAdmin())
                     {!! HTML::sideNavLink('💰 Payments', 'payments.index') !!}
-                    {!! HTML::sideNavLink('💰 Expenses <span class="badge js-expenses-count"></span>', 'expenses.index') !!}
                 @endif
             @endif
         </ul>

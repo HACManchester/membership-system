@@ -56,7 +56,7 @@ class SessionController extends Controller
             }
         }
 
-        \Notification::error("Invalid login details");
+        \FlashNotification::error("Invalid login details");
         return redirect()->back()->withInput();
 	}
 
@@ -174,31 +174,8 @@ class SessionController extends Controller
 	{
         Auth::logout();
 
-        \Notification::success('Logged Out');
+        \FlashNotification::success('Logged Out');
 
         return redirect()->home();
 	}
-
-    /**
-     * @param Request $request
-     * @return string
-     * @throws AuthenticationException
-     */
-    public function pusherAuth(Request $request)
-    {
-        //Verify the user has permission to connect to the chosen channel
-        if ($request->get('channel_name') !== 'private-' . Auth::id()) {
-            throw new AuthenticationException();
-        }
-
-        $pusher = new \Pusher(
-            config('broadcasting.connections.pusher.key'),
-            config('broadcasting.connections.pusher.secret'),
-            config('broadcasting.connections.pusher.app_id')
-        );
-
-        return $pusher->socket_auth($request->get('channel_name'), $request->get('socket_id'));
-    }
-
-
 }

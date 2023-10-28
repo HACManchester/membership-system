@@ -40,11 +40,11 @@ class ReminderController extends Controller
 
         switch ($response) {
 			case Password::INVALID_USER:
-                \Notification::error(trans($response));
+                \FlashNotification::error(trans($response));
                 return redirect()->back();
 
 			case Password::RESET_LINK_SENT:
-                \Notification::success(trans($response));
+                \FlashNotification::success(trans($response));
                 return redirect()->back();
 		}
 	}
@@ -99,11 +99,11 @@ class ReminderController extends Controller
 
         switch ($response) {
             case Password::PASSWORD_RESET:
-                \Notification::success("Your password has been changed");
+                \FlashNotification::success("Your password has been changed");
                 return redirect()->home();
 
             default:
-                \Notification::error(trans($response));
+                \FlashNotification::error(trans($response));
                 return redirect()->back()->withInput();
         }
     }

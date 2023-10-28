@@ -77,27 +77,27 @@
 
 
             {!! Form::open(array('route' => 'general-induction.update', 'class'=>'form-horizontal', 'method'=>'PUT')) !!}
-                <div class="form-group {{ Notification::hasErrorDetail('induction_code', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('induction_code', 'has-error has-feedback') }}">
                     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
                         <h3>Enter the code for the general induction</h3>
                         {!! Form::text('induction_code', $prefill_induction_code, ["class"=>"form-control", "placeholder" => "XXXX", 'required' => 'required']) !!}
                         {!! Form::label('induction_code', 'Enter the induction code') !!}
-                        {!! Notification::getErrorDetail('induction_code') !!}
+                        {!! FlashNotification::getErrorDetail('induction_code') !!}
                     </div>
                 </div>
-                <div class="form-group {{ Notification::hasErrorDetail('inductee_email', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('inductee_email', 'has-error has-feedback') }}">
                     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
                         <h3>Who should now be marked as inducted?</h3>
                         {!! Form::text('inductee_email', $user ? $user->email : "", ["class"=>"form-control", 'required' => 'required']) !!}
                         {!! Form::label('inductee_email', 'Email address of the person who is to be marked as inducted.') !!}
-                        {!! Notification::getErrorDetail('inductee_email') !!}
+                        {!! FlashNotification::getErrorDetail('inductee_email') !!}
                     </div>
                 </div>
-                <div class="form-group {{ Notification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
                     <div class="col-sm-12 col-lg-8 col-sm-offset-2">
                         {!! Form::checkbox('rules_agreed', true, null, ['class'=>'', 'required' => 'required']) !!}
                         {!! Form::label('rules_agreed', 'The member has been given the full induction') !!}
-                        {!! Notification::getErrorDetail('rules_agreed') !!}
+                        {!! FlashNotification::getErrorDetail('rules_agreed') !!}
                     </div>
                 </div>
                 <div class="row">

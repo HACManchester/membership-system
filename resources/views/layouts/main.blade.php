@@ -8,12 +8,11 @@
     <title>@yield('meta-title', 'Member System') | Hackspace Manchester</title>
 
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
-    <link href="/css/main.css" rel="stylesheet">
+    <link href="{{ elixir('/css/main.css') }}" rel="stylesheet">
 
     <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>
     @if (App::environment() == 'production')
-        @include('partials/rollbar-js')
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -81,8 +80,7 @@
     @include('partials/js-data')
 
 
-    <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
-    <script src="/js/bundle.js"></script>
+    <script src="{{ elixir('/js/bundle.js') }}"></script>
 
     @include('partials/flash-message')
     

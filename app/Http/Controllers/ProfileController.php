@@ -83,12 +83,12 @@ class ProfileController extends Controller
 
                 $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
 
-                \Notification::success("Photo uploaded, it will be checked and appear shortly");
+                \FlashNotification::success("Photo uploaded, it will be checked and appear shortly");
             } catch (\Exception $e) {
                 \Log::error($e);
             }
         } else {
-            \Notification::success("Profile Updated");
+            \FlashNotification::success("Profile Updated");
         }
 
         return \Redirect::route('members.show', $userId);

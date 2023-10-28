@@ -21,17 +21,12 @@ class BalanceController extends Controller
      * @var PaymentRepository
      */
     private $paymentRepository;
-    /**
-     * @var \BB\Validators\WithdrawalValidator
-     */
-    private $withdrawalValidator;
 
-    public function __construct(\BB\Repo\UserRepository $userRepository, \BB\Services\Credit $bbCredit, PaymentRepository $paymentRepository, \BB\Validators\WithdrawalValidator $withdrawalValidator)
+    public function __construct(\BB\Repo\UserRepository $userRepository, \BB\Services\Credit $bbCredit, PaymentRepository $paymentRepository)
     {
         $this->userRepository = $userRepository;
         $this->bbCredit = $bbCredit;
         $this->paymentRepository = $paymentRepository;
-        $this->withdrawalValidator = $withdrawalValidator;
     }
 
     public function index($userId)
@@ -55,30 +50,6 @@ class BalanceController extends Controller
             ->with('userBalanceSign', $userBalanceSign)
             ->with('rawBalance', number_format($user->cash_balance / 100, 2))
             ->with('memberList', $memberList);
-    }
-
-    public function withdrawal(Request $request, $userId)
-    {
-        $this->withdrawalValidator->validate(\Request::only(['amount', 'sort_code', 'account_number']));
-
-        $user          = User::findWithPermission($userId);
-        $amount        = $request->get('amount');
-        $sortCode      = $request->get('sort_code');
-        $accountNumber = $request->get('account_number');
-
-        $memberName = $user->name;
-        \Mail::queue('emails.withdrawal', [
-            'memberName'    => $memberName,
-            'amount'        => $amount,
-            'sortCode'      => $sortCode,
-            'accountNumber' => $accountNumber
-        ], function ($message) {
-            $message->to('board@hacman.org.uk', 'BB board')->subject('User requested a withdrawal');
-        });
-
-        \Notification::success("Request sent");
-        return \Redirect::route('account.balance.index', $user->id);
-
     }
 
     /**
@@ -112,13 +83,13 @@ class BalanceController extends Controller
         //With this payment will the users balance go to low?
         if (($userBalance - $amount) < 0) {
 
-            \Notification::error("You don't have the money for this");
+            \FlashNotification::error("You don't have the money for this");
             return \Redirect::route('account.balance.index', $user->id);
         }
 
         $this->paymentRepository->recordBalanceTransfer($user->id, $targetUser->id, $amount);
 
-        \Notification::success("Transfer made");
+        \FlashNotification::success("Transfer made");
         return \Redirect::route('account.balance.index', $user->id);
     }
 

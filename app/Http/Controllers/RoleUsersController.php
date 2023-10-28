@@ -53,7 +53,7 @@ class RoleUsersController extends Controller
 
         $user = User::findOrFail($userId);
         if ($user->active && $role->name == 'admin') {
-            \Notification::error("You cannot remove a board from the admin group");
+            \FlashNotification::error("You cannot remove a board from the admin group");
             return \Redirect::back();
         }
 

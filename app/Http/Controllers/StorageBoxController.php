@@ -168,7 +168,7 @@ class StorageBoxController extends Controller
             $this->storageBoxRepository->update($boxId, ['user_id'=>0]);
         }
 
-        \Notification::success("Member box updated");
+        \FlashNotification::success("Member box updated");
         return \Redirect::route('storage_boxes.index');
     }
 

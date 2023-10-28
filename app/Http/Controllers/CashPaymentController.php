@@ -52,7 +52,7 @@ class CashPaymentController extends Controller
         
         $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
 
-        \Notification::success("Top Up successful");
+        \FlashNotification::success("Top Up successful");
 
         $returnPath_balance = '/balance?confetti=1';
         $result = $returnPath . $returnPath_balance;
@@ -61,7 +61,7 @@ class CashPaymentController extends Controller
             return \Response::json(['message' => 'Topup Successful']);
         }
 
-        \Notification::error("Success");
+        \FlashNotification::error("Success");
         
         return \Redirect::to($result);
 
@@ -98,7 +98,7 @@ class CashPaymentController extends Controller
 
         $this->bbCredit->recalculate();
 
-        \Notification::success("Payment recorded");
+        \FlashNotification::success("Payment recorded");
         $returnPath_balance = '/balance';
         $result = $returnPath . $returnPath_balance;
 

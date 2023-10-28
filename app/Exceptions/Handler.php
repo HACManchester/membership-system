@@ -1,4 +1,6 @@
-<?php namespace BB\Exceptions;
+<?php
+
+namespace BB\Exceptions;
 
 use BB\Helpers\TelegramErrorHelper;
 use BB\Helpers\TelegramHelper;
@@ -11,13 +13,14 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use GuzzleHttp\Client as HttpClient;
 
-class Handler extends ExceptionHandler {
-	/**
-	 * A list of the exception types that should not be reported.
-	 *
-	 * @var array
-	 */
-	protected $dontReport = [
+class Handler extends ExceptionHandler
+{
+    /**
+     * A list of the exception types that should not be reported.
+     *
+     * @var array
+     */
+    protected $dontReport = [
         HttpException::class,
         NotFoundHttpException::class,
         ModelNotFoundException::class,
@@ -27,33 +30,33 @@ class Handler extends ExceptionHandler {
         AuthorizationException::class,
         ModelNotFoundException::class,
         ValidationException::class,
-	];    
+    ];
 
-	/**
-	 * Report or log an exception.
-	 *
-	 * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-	 *
-	 * @param  \Exception  $e
-	 * @return void
-	 */
-	public function report(Exception $e)
-	{
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param  \Exception  $e
+     * @return void
+     */
+    public function report(Exception $e)
+    {
         if ($this->shouldReport($e) && app()->bound('sentry')) {
             app('sentry')->captureException($e);
         }
-        
-        try{
+
+        try {
             $level = 'error';
             $title = 'Error';
             $suppress = false;
             $ignore = false;
-            
+
             $has_status_code = method_exists($e, 'getStatusCode');
-            if($has_status_code){
+            if ($has_status_code) {
                 $statusCode = $e->getStatusCode();
-                
-                if($statusCode == 404){
+
+                if ($statusCode == 404) {
                     $level = 'warn';
                     $title = 'Not Found - ' . \Request::path();
                     $suppress = true;
@@ -61,45 +64,45 @@ class Handler extends ExceptionHandler {
                 }
             }
 
-            if($e instanceof NotImplementedException){
+            if ($e instanceof NotImplementedException) {
                 $level = 'info';
                 $title = 'Not Implemented';
             }
 
-            if(!$ignore) $this->notifyTelegram($level, $title, $suppress, $e);
+            if (!$ignore) $this->notifyTelegram($level, $title, $suppress, $e);
         } catch (Exception $e) {
         }
 
         //The parent will log exceptions that aren't of the types above
-		parent::report($e);
-	}
+        parent::report($e);
+    }
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
     {
-        $this->log->error($e);
+        \Log::error($e);
         try {
             $helper = new TelegramErrorHelper();
             $helper->notify(new ErrorNotification($level, $title, $suppress, $e));
         } catch (Exception $telegramE) {
             // Make sure Telegram exceptions don't stop regular exceptions being logged
-            $this->log->error($telegramE);
+            \Log::error($telegramE);
         }
     }
 
-	/**
-	 * Render an exception into an HTTP response.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Exception  $e
-	 * @return \Illuminate\Http\Response
-	 */
-	public function render($request, Exception $e)
-	{
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
+     * @return \Illuminate\Http\Response
+     */
+    public function render($request, Exception $e)
+    {
         if ($e instanceof FormValidationException) {
             if ($request->wantsJson()) {
                 return \Response::json($e->getErrors(), 422);
             }
-            \Notification::error("Something wasn't right, please check the form for errors", $e->getErrors());
+            \FlashNotification::error("Something wasn't right, please check the form for errors", $e->getErrors());
             return redirect()->back()->withInput();
         }
 
@@ -107,12 +110,12 @@ class Handler extends ExceptionHandler {
             if ($request->wantsJson()) {
                 return \Response::json($e->getMessage(), 422);
             }
-            \Notification::error($e->getMessage());
+            \FlashNotification::error($e->getMessage());
             return redirect()->back()->withInput();
         }
 
         if ($e instanceof NotImplementedException) {
-            \Notification::error("NotImplementedException: ".$e->getMessage());
+            \FlashNotification::error("NotImplementedException: ".$e->getMessage());
             \Log::warning($e);
             return redirect()->back()->withInput();
         }
@@ -121,8 +124,8 @@ class Handler extends ExceptionHandler {
             if ($request->wantsJson()) {
                 return \Response::json(['error' => $e->getMessage()], 403);
             }
-            $userString = \Auth::guest() ? "A guest": \Auth::user()->name;
-            \Log::warning($userString." tried to access something they weren't supposed to.");
+            $userString = \Auth::guest() ? "A guest" : \Auth::user()->name;
+            \Log::warning($userString . " tried to access something they weren't supposed to.");
 
             return \Response::view('errors.403', [], 403);
         }
@@ -131,8 +134,7 @@ class Handler extends ExceptionHandler {
             $e = new HttpException(404, $e->getMessage());
         }
 
-        if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson())
-        {
+        if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson()) {
             return $this->renderExceptionWithWhoops($e);
         }
 
@@ -141,8 +143,8 @@ class Handler extends ExceptionHandler {
                 return \Response::json(['error' => $e->getMessage()], $e->getStatusCode());
             }
         }
-		return parent::render($request, $e);
-	}
+        return parent::render($request, $e);
+    }
 
     /**
      * Render an exception using Whoops.
@@ -158,4 +160,19 @@ class Handler extends ExceptionHandler {
         return new \Illuminate\Http\Response($whoops->handleException($e), $e->getCode());
     }
 
+    /**
+     * Convert an authentication exception into an unauthenticated response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Illuminate\Http\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
+        return redirect()->guest('login');
+    }
 }

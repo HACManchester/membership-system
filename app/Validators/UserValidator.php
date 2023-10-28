@@ -14,9 +14,9 @@ class UserValidator extends FormValidator
         'given_name'            => 'required',
         'family_name'           => 'required',
         'email'                 => 'required|email|unique:users',
-        'secondary_email'       => 'email|unique:users',
+        'secondary_email'       => 'email|unique:users|nullable',
         'display_name'          => 'required|unique:users',
-        'announce_name'         => 'max:150',
+        'announce_name'         => 'nullable|max:150',
         'pronouns'              => '',
         'online_only'           => 'required|boolean',
         'password'              => 'required|min:8',
@@ -25,8 +25,8 @@ class UserValidator extends FormValidator
         'address.line_2'        => '',
         'address.line_3'        => '',
         'address.line_4'        => '',
-        'address.postcode'      => 'required_if:online_only,0|postcode',
-        'monthly_subscription'  => 'required_if:online_only,0|integer', // Min will be added in getValidationRules
+        'address.postcode'      => 'required_if:online_only,0|postcode|nullable',
+        'monthly_subscription'  => 'required_if:online_only,0|integer|nullable', // Min will be added in getValidationRules
         'emergency_contact'     => 'required_if:online_only,0',
         'rules_agreed'          => 'accepted',
     

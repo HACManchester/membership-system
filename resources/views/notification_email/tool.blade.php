@@ -33,7 +33,7 @@ Email members by training status
 
             <div class="row">
                 <div class="col-xs-12 col-md-9">
-                    <div class="{{ Notification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
+                    <div class="{{ FlashNotification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
                 
                         <h3>Recipients</h3>
                         {!! Form::hidden('recipient', "tool/$equipment->slug/$status", null, ['class'=>'form-control']) !!}
@@ -48,30 +48,30 @@ Email members by training status
                         {!! Form::label('status', 'Training Status') !!}
                         <div class="form-control">{{ $statuses[$status] }}</div>
                          
-                        {!! Notification::getErrorDetail('recipient') !!}
+                        {!! FlashNotification::getErrorDetail('recipient') !!}
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 col-md-9">
-                    <div class="{{ Notification::hasErrorDetail('subject', 'has-error has-feedback') }}">
+                    <div class="{{ FlashNotification::hasErrorDetail('subject', 'has-error has-feedback') }}">
                         <h3>Subject</h3>
                         {!! Form::text('subject', null, ['class'=>'form-control']) !!}
-                        {!! Notification::getErrorDetail('subject') !!}
+                        {!! FlashNotification::getErrorDetail('subject') !!}
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 col-md-9">
-                    <div class="form-group {{ Notification::hasErrorDetail('message', 'has-error has-feedback') }}">
+                    <div class="form-group {{ FlashNotification::hasErrorDetail('message', 'has-error has-feedback') }}">
                         
                         <h3>Message</h3>
                         <p>Do not draft messages here, this form does not save drafts on page refreshes.</p>
                         <p>The email will be addressed to the user (e.g. Hi User), and contain the standard signature, the message above will be placed in between</p>
                         {!! Form::textarea('message', null, ['class'=>'form-control']) !!}
-                        {!! Notification::getErrorDetail('message') !!}
+                        {!! FlashNotification::getErrorDetail('message') !!}
                     </div>
                 </div>
             </div>

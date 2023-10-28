@@ -153,12 +153,14 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
 
         /*
          * Application Service Providers...
          */
         BB\Providers\AppServiceProvider::class,
         BB\Providers\AuthServiceProvider::class,
+        BB\Providers\BroadcastServiceProvider::class,
         BB\Providers\EventServiceProvider::class,
         BB\Providers\RouteServiceProvider::class,
         BB\Providers\StripeServiceProvider::class,
@@ -170,13 +172,14 @@ return [
 		 * 3rd Party Providers...
 		 */
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-        Jenssegers\Rollbar\RollbarServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         BB\Providers\NotificationServiceProvider::class,
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
-        Illuminate\Notifications\NotificationServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
+
+        // Queueing emails with sync queue doesn't work on 5.3+ without Bus?
+        AltThree\Bus\BusServiceProvider::class,
     ],
 
     /*
@@ -225,9 +228,10 @@ return [
         'View'                  => Illuminate\Support\Facades\View::class,
         'Form'                  => Illuminate\Html\FormFacade::class,
         'HTML'                  => Illuminate\Html\HtmlFacade::class,
-        'Notification'          => \ArthurGuy\Notifications\NotificationFacade::class,
+        'FlashNotification'     => \ArthurGuy\Notifications\NotificationFacade::class,
+        'Notification'          => Illuminate\Support\Facades\Notification::class,
         'Image'                 => Intervention\Image\Facades\Image::class,
         'MembershipPayments'    => BB\Helpers\MembershipPayments::class,
-    'Sentry'                    => Sentry\Laravel\Facade::class,
+        'Sentry'                => Sentry\Laravel\Facade::class,
     ],
 ];

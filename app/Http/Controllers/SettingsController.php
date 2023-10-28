@@ -16,7 +16,7 @@ class SettingsController extends Controller
 
         Settings::change($input['key'], $input['value']);
 
-        \Notification::success("Setting updated");
+        \FlashNotification::success("Setting updated");
         return redirect()->back()->withInput();
 	}
 
