@@ -42,10 +42,7 @@ class MemberInductionController extends Controller
      */
     public function show(Request $request)
     { 
-        $user = false;
-        if(!\Auth::guest()){
-            $user = \Auth::user();
-        }
+        $user = \Auth::user();
         $induction_code = Settings::get("general_induction_code");
         $prefill_code = $request->has('code') ? $request->input('code') : '';
 
@@ -64,7 +61,7 @@ class MemberInductionController extends Controller
      */
     public function update(Request $request)
     {
-        $input = $request->only('rules_agreed', 'inductee_email', 'induction_code');
+        $input = $request->only('induction_code');
         
         $this->inductionValidator->validate($input);
 
@@ -74,14 +71,10 @@ class MemberInductionController extends Controller
             throw new \BB\Exceptions\ValidationException("Invalid induction code.");
         }
 
-        $user = User::where('email', '=', $input['inductee_email'])->first();
-        if(!$user){
-            throw new \BB\Exceptions\ValidationException("Cannot find the inductee - check the email is the one used for signing up.");
-        }
-
+        $user = \Auth::user();
         $this->userRepository->recordInductionCompleted($user->id);
 
-        \FlashNotification::success('Member marked as inducted! They can now set up entry methods on their account.');
-        return \Redirect::route('general-induction.show');
+        \FlashNotification::success('General Induction complete!');
+        return redirect()->route('account.show', $user);
     }
 }

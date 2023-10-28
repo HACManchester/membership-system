@@ -30,9 +30,6 @@
                         <li><b>Pronouns:</b> {{ $user->pronouns ?: '(Not set)'}}</li>
                         <li>
                             <b>General induction done?:</b> {{ $user->induction_completed ? "Yes" : "No" }} 
-                            @if($user->inducted_by)
-                                (Inducted by user <a href="{{route("account.show", [$user->inducted_by]) }}">#{{$user->inducted_by}}</a>)
-                            @endif
                         </li>
                         <li>
                             <b>Last Seen:</b> {{ $user->seen_at }}
