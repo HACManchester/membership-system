@@ -9,9 +9,9 @@ Tools and Equipment
 @stop
 
 @section('page-action-buttons')
-    @if (!Auth::guest() && !Auth::user()->online_only)
+    @can('update', $equipment)
         <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
-    @endif
+    @endcan
 @stop
 
 @section('main-tab-bar')

@@ -104,11 +104,9 @@ class EquipmentController extends Controller
             ->with('equipmentByRoom', $equipmentByRoom);
     }
 
-    public function show($equipmentId)
+    public function show(Equipment $equipment)
     {
-        $user = \Auth::user();
-
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
+        $this->authorize('view', $equipment);
 
         $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
 
@@ -160,9 +158,7 @@ class EquipmentController extends Controller
      */
     public function create()
     {
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('create', Equipment::class);
 
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::pluck('title', 'id');
@@ -185,9 +181,7 @@ class EquipmentController extends Controller
      */
     public function store()
     {
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('create', Equipment::class);
 
         $data = \Request::only([
             'name',
@@ -233,16 +227,13 @@ class EquipmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string $equipmentId
+     * @param  \BB\Entities\Equipment $equipment
      * @return Response
      */
-    public function edit($equipmentId)
+    public function edit(Equipment $equipment)
     {
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('update', $equipment);
 
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::pluck('title', 'id');
 
@@ -263,16 +254,12 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  string $equipmentId
+     * @param  \BB\Entities\Equipment $equipment
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($equipmentId)
+    public function update(Equipment $equipment)
     {
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
+        $this->authorize('update', $equipment);
 
         $normalFields = [
             'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
@@ -305,7 +292,7 @@ class EquipmentController extends Controller
 
         $this->equipmentRepository->update($equipment->id, $data);
 
-        return \Redirect::route('equipment.show', $equipmentId);
+        return \Redirect::route('equipment.show', $equipment);
     }
 
 
@@ -320,13 +307,9 @@ class EquipmentController extends Controller
         //
     }
 
-    public function addPhoto($equipmentId)
+    public function addPhoto(Equipment $equipment)
     {
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
+        $this->authorize('update', $equipment);
 
         $data = \Request::only(['photo']);
 
@@ -351,16 +334,17 @@ class EquipmentController extends Controller
         }
 
         \FlashNotification::success("Image added");
-        return \Redirect::route('equipment.edit', $equipmentId);
+        return \Redirect::route('equipment.edit', $equipment);
     }
 
-    public function destroyPhoto($equipmentId, $photoId)
+    public function destroyPhoto(Equipment $equipment, $photoId)
     {
+        $this->authorize('update', $equipment);
+
         if(\Auth::user()->online_only){
             throw new \BB\Exceptions\AuthenticationException();
         }
 
-        $equipment = $this->equipmentRepository->findBySlug($equipmentId);
         $photoPath = $equipment->getPhotoPath($photoId);
 
         if ($this->disk->exists($photoPath)) {
@@ -370,6 +354,6 @@ class EquipmentController extends Controller
         $equipment->removePhoto($photoId);
 
         \FlashNotification::success("Image deleted");
-        return \Redirect::route('equipment.edit', $equipmentId);
+        return \Redirect::route('equipment.edit', $equipment);
     }
 } 

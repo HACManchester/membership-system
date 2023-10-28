@@ -13,14 +13,12 @@ Tools and Equipment
 @stop
 
 @section('page-action-buttons')
-    @if (!Auth::guest() && !Auth::user()->online_only)
+    @can('create', \BB\Entities\Equipment::class)
         <a class="btn btn-secondary" href="{{ route('equipment.create') }}">Record a new item</a>
-    @endif
+    @endcan
 @stop
 
-
 @section('content')
-
     <div class="well">
         <h3>View tools, manuals, and book inductions</h3>
         For changes to the information on the equipment pages please contact someone on
@@ -59,9 +57,9 @@ Tools and Equipment
                     </td>
                     <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
                     <td>
-                        @if (!Auth::guest() && !Auth::user()->online_only)
+                        @can('update', $tool)
                             <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}" class="btn-sm">Edit</a></span>
-                        @endif
+                        @endcan
                     </td>
                 </tr>
             @endforeach

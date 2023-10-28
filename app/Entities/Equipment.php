@@ -78,6 +78,16 @@ class Equipment extends Model
         static::addGlobalScope(new OrderScope('name', 'asc'));
     }
 
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function getDates()
     {
         return array('created_at', 'updated_at', 'obtained_at', 'removed_at');

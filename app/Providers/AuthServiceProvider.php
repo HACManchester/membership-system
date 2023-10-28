@@ -3,6 +3,9 @@
 namespace BB\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use BB\Entities\Equipment;
+use BB\Policies\EquipmentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Equipment::class => EquipmentPolicy::class,
     ];
 
     /**
@@ -21,6 +24,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }
