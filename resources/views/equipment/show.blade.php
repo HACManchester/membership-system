@@ -12,6 +12,9 @@ Tools and Equipment
     @can('update', $equipment)
         <a class="btn btn-secondary" href="{{ route('equipment.edit', $equipment->slug) }}">Edit</a>
     @endcan
+    @can('delete', $equipment)
+        <button class="btn btn-danger" data-toggle="modal" data-target="#equipment-deletion-modal">Delete</button>
+    @endcan
 @stop
 
 @section('main-tab-bar')
@@ -495,6 +498,31 @@ Tools and Equipment
         <?php echo $equipmentLog->render(); ?>
     </div>
     @endif
+    
+    @can('delete', $equipment)
+        <div class="modal fade" tabindex="-1" role="dialog" id="equipment-deletion-modal">
+            <form class="modal-dialog" role="document" action="{{ route('equipment.destroy', $equipment) }}" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('DELETE') }}
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Confirm deletion</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Deleting <em>{{ $equipment->name}}</em> will remove it from the members system entirely.</p>
+                        <p>Are you sure you want to delete this item?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    @endcan
 
 </div>
 

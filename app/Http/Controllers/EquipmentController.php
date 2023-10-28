@@ -302,9 +302,14 @@ class EquipmentController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Equipment $equipment)
     {
-        //
+        $this->authorize('delete', $equipment);
+
+        $equipment->delete();
+
+        \FlashNotification::success("Deleted {$equipment->name}");
+        return redirect()->route('equipment.index');
     }
 
     public function addPhoto(Equipment $equipment)

@@ -5,6 +5,7 @@ namespace BB\Entities;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
 /**
@@ -22,7 +23,7 @@ use Laracasts\Presenter\PresentableTrait;
  */
 class Equipment extends Model
 {
-    use PresentableTrait;
+    use PresentableTrait, SoftDeletes;
 
     protected $presenter = 'BB\Presenters\EquipmentPresenter';
 
@@ -68,6 +69,15 @@ class Equipment extends Model
         'docs',
         'access_code',
         'accepting_inductions'
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'deleted_at'
     ];
 
     protected static function boot()
