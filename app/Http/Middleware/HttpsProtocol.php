@@ -16,7 +16,7 @@ class HttpsProtocol
     public function handle($request, Closure $next)
     {
         // TODO: Ideally this should be server config instead of app code.
-        if (!$this->app->isLocal() && !$request->secure() && App::environment() === 'production') {
+        if (!$this->app->isLocal() && !$request->secure()) {
             return redirect()->secure($request->getRequestUri());
         }
 
