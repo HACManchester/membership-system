@@ -39,4 +39,10 @@ return [
 		'token' => env('TELEGRAM_BOT_KEY', 'YOUR BOT TOKEN HERE')
 	],
 
+	// Would put this in config/sentry.php, but its values are passed to
+	// sentry/sentry-laravel and it errors on unrecognised keys
+	'sentry' => [
+		'browser_dsn' => env('SENTRY_BROWSER_DSN'),
+	],
+
 ];

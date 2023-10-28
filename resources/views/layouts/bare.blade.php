@@ -10,6 +10,9 @@
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
     <link href="{{ elixir('/css/main.css') }}" rel="stylesheet">
 
+    @if (config('services.sentry.browser_dsn'))
+        <script src="https://js.sentry-cdn.com/{{ config('services.sentry.browser_dsn') }}.min.js" crossorigin="anonymous"></script>
+    @endif
     <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>
     @if (App::environment() == 'production')
