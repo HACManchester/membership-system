@@ -34,7 +34,6 @@ class Kernel extends HttpKernel
             \BB\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \BB\Http\Middleware\SSLOnly::class,
-            \BB\Http\Middleware\BrandingHeaders::class,
             \BB\Http\Middleware\HttpsProtocol::class,
             \BB\Http\Middleware\UserSeen::class,
         ],
