@@ -33,7 +33,7 @@ class EquipmentValidator extends FormValidator
         'photo'              => 'image',
         'archive'            => 'boolean',
         'asset_tag_id'       => 'unique:equipment,asset_tag_id',
-        'obtained_at'        => 'date_format:Y-m-d|before:tomorrow|nulalble',
+        'obtained_at'        => 'date_format:Y-m-d|before:tomorrow|nullable',
         'removed_at'         => 'date_format:Y-m-d|before:tomorrow|nullable',
         'induction_instructions'          => '',
         'trainer_instructions'          => '',

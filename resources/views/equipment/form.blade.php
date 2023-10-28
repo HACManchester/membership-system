@@ -294,8 +294,8 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
     {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled"]) !!}
-        <p class="help-block">When did Hackspace Manchester obtain/purchase the item?</p>
+        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled", "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+        <p class="help-block">When did Hackspace Manchester obtain/purchase the item? Formatted as <code>YYYY-MM-DD</code></p>
         {!! FlashNotification::getErrorDetail('obtained_at') !!}
     </div>
 </div>
@@ -305,8 +305,8 @@
     <div class="form-group {{ FlashNotification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled"]) !!}
-            <p class="help-block">When did Hackspace Manchester get rid of it?</p>
+            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled", "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+            <p class="help-block">When did Hackspace Manchester get rid of it? Formatted as <code>YYYY-MM-DD</code></p>
             {!! FlashNotification::getErrorDetail('removed_at') !!}
         </div>
     </div>
