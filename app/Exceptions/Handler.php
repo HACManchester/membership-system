@@ -46,23 +46,21 @@ class Handler extends ExceptionHandler
             app('sentry')->captureException($e);
         }
 
+        if ($this->shouldReport($e)) {
+            $this->telegramException($e);
+        }
+
+        //The parent will log exceptions that aren't of the types above
+        parent::report($e);
+    }
+
+    protected function telegramException(Exception $e)
+    {
         try {
             $level = 'error';
             $title = 'Error';
             $suppress = false;
             $ignore = false;
-
-            $has_status_code = method_exists($e, 'getStatusCode');
-            if ($has_status_code) {
-                $statusCode = $e->getStatusCode();
-
-                if ($statusCode == 404) {
-                    $level = 'warn';
-                    $title = 'Not Found - ' . \Request::path();
-                    $suppress = true;
-                    $ignore = true;
-                }
-            }
 
             if ($e instanceof NotImplementedException) {
                 $level = 'info';
@@ -72,9 +70,6 @@ class Handler extends ExceptionHandler
             if (!$ignore) $this->notifyTelegram($level, $title, $suppress, $e);
         } catch (Exception $e) {
         }
-
-        //The parent will log exceptions that aren't of the types above
-        parent::report($e);
     }
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
@@ -115,7 +110,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotImplementedException) {
-            \FlashNotification::error("NotImplementedException: ".$e->getMessage());
+            \FlashNotification::error("NotImplementedException: " . $e->getMessage());
             \Log::warning($e);
             return redirect()->back()->withInput();
         }
