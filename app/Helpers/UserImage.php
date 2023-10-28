@@ -72,7 +72,7 @@ class UserImage
 
     public static function anonymous()
     {
-        return 'https://members.hacman.org.uk/local/user-photo/d169b05e6c7c9c7933537436d47b4f3d-thumb.png';
+        return asset(sprintf('storage/user-photo/%s-thumb.png', 'd169b05e6c7c9c7933537436d47b4f3d'));
     }
 
 } 
