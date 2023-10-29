@@ -182,7 +182,8 @@ class InductionRepository extends DBRepository
     {
         $baseQuery = $this->model
             ->groupBy('trainer_user_id')
-            ->select('trainer_user_id', DB::raw('count(*) as total'));
+            ->select('trainer_user_id', DB::raw('count(*) as total'))
+            ->where('trainer_user_id', '!=', 0);
 
         switch ($timePeriod) {
             case static::LEADERBOARD_THREE_MONTHS:
@@ -203,6 +204,10 @@ class InductionRepository extends DBRepository
                 break;
         }
 
-        return $baseQuery->orderBy('total', 'desc')->orderBy('trainer_user_id', 'asc')->get();
+        return $baseQuery
+            ->orderBy('total', 'desc')
+            ->orderBy('trainer_user_id', 'asc')
+            ->limit(10)
+            ->get();
     }
 }
