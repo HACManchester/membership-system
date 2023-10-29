@@ -35,7 +35,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <a href="{{ route('account.show', $dodgyInductionRecord->trainerUser) }}">
+                                    <a href="{{ route('members.show', $dodgyInductionRecord->trainerUser) }}">
                                     {{ $dodgyInductionRecord->trainerUser->given_name }}
                                     ({{ $dodgyInductionRecord->trainerUser->display_name }})
                                     </a>
