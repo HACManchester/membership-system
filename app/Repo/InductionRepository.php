@@ -203,6 +203,6 @@ class InductionRepository extends DBRepository
                 break;
         }
 
-        return $baseQuery->orderBy('total', 'desc')->get();
+        return $baseQuery->orderBy('total', 'desc')->orderBy('trainer_user_id', 'asc')->get();
     }
 }
