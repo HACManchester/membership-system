@@ -1,10 +1,18 @@
-<?php namespace BB\Repo;
+<?php
+
+namespace BB\Repo;
 
 use BB\Entities\Induction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class InductionRepository extends DBRepository
 {
+    const LEADERBOARD_THREE_MONTHS = "LEADERBOARD_THREE_MONTHS";
+    const LEADERBOARD_YEAR = "LEADERBOARD_YEAR";
+    const LEADERBOARD_LAST_YEAR = "LEADERBOARD_LAST_YEAR";
+    const LEADERBOARD_ALL_TIME = "LEADERBOARD_ALL_TIME";
 
     /**
      * @var Induction
@@ -48,7 +56,8 @@ class InductionRepository extends DBRepository
      * @param $userID
      * @return bool
      */
-    public function isTrainerForEquipment($deviceId){
+    public function isTrainerForEquipment($deviceId)
+    {
         return $this->model->where('user_id', \Auth::user()->id)
             ->where('key', $deviceId)
             ->where('is_trainer', 1)
@@ -167,5 +176,33 @@ class InductionRepository extends DBRepository
     public function getByPaymentId($paymentId)
     {
         return $this->model->where('payment_id', $paymentId)->first();
+    }
+
+    public function getLeaderboard($timePeriod)
+    {
+        $baseQuery = $this->model
+            ->groupBy('trainer_user_id')
+            ->select('trainer_user_id', DB::raw('count(*) as total'));
+
+        switch ($timePeriod) {
+            case static::LEADERBOARD_THREE_MONTHS:
+                $baseQuery->where('trained', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'));
+                break;
+
+            case static::LEADERBOARD_YEAR:
+                $baseQuery->where(DB::raw('YEAR(trained)'), '>=', Carbon::now()->year);
+                break;
+
+            case static::LEADERBOARD_LAST_YEAR:
+                $baseQuery->where(DB::raw('YEAR(trained)'), '>=', Carbon::now()->year - 1)
+                    ->where(DB::raw('YEAR(trained)'), '<', Carbon::now()->year);
+                break;
+
+            case static::LEADERBOARD_ALL_TIME:
+                // no-op
+                break;
+        }
+
+        return $baseQuery->orderBy('total', 'desc')->get();
     }
 }

@@ -52,11 +52,12 @@ Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email'
 Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'as' => 'account.balance.index', 'middleware' => 'role:member']);
 Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as' => 'account.balance.transfer.create']);
 
-
-
 //Inductions
 Route::get('general_induction', ['uses' => 'MemberInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
 Route::put('general_induction', ['uses' => 'MemberInductionController@update', 'as' => 'general-induction.update', 'middleware' => 'role:member']);
+
+// Leaderboards!
+Route::get('leaderboard', ['uses' => 'LeaderboardController@index', 'as' => 'leaderboard.index', 'middleware' => 'role:member']);
 
 ##########################
 # Public Member List
