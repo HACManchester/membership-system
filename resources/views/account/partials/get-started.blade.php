@@ -1,8 +1,10 @@
 <?php
 $conditions = [
+    $user->email_verified,
     $user->payment_method,
     $user->induction_completed,
-    $user->keyFob()
+    $user->keyFob(),
+    $user->visited_forum,
 ];
 
 $countOfConditions = count($conditions);
@@ -29,6 +31,13 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
                     <ul class="get-started-checklist">
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '1',
+                            'condition' => $user->email_verified,
+                            'title' => 'Verify your email address',
+                            'link' =>  route('account.send-confirmation-email') ,
+                            'description' => 'Please verify your e-mail address to make sure we have up-to-date contact details for you.'
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '2',
                             'condition' => $user->payment_method,
                             'title' => 'Set up your membership payment via Direct Debit',
                             'link' => route('account.subscription.create', $user->id),
@@ -46,19 +55,27 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
 DESC
                         ])
                         @include('account.partials.get-started-checklist-item', [
-                            'number' => '2',
+                            'number' => '3',
                             'condition' => $user->induction_completed,
                             'title' => 'Get a General Induction',
                             'link' => route('general-induction.show', $user->id),
                             'description' => 'Come along to an open evening and get a General Induction which includes a tour and important information about being a member.'
                         ])
                         @include('account.partials.get-started-checklist-item', [
-                            'number' => '3',
+                            'number' => '4',
                             'condition' => $user->keyFob(),
                             'title' => 'Get an access method set up',
                             'link' => route('account.edit', $user->id),
                             'link_target' => '_blank',
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.'
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '5',
+                            'condition' => $user->visited_forum,
+                            'title' => 'Visit our forum & get involved',
+                            'link' => route('links.forum'),
+                            'link_target' => '_blank',
+                            'description' => 'Please visit the forum and get involved with discussions, lend your support to purchase proposals, and find out about upcoming events.'
                         ])
                     </ul>
                 </div>

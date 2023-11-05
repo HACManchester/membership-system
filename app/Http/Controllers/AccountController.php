@@ -468,7 +468,7 @@ class AccountController extends Controller
             $userMailer->sendConfirmationEmail();
             \FlashNotification::success('An email has been sent to your email address. Please click the link to confirm it.');
         }
-        return \Redirect::route('home');
+        return \Redirect::route('account.show', [$user->id]);
     }
 
 

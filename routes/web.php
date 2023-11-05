@@ -59,6 +59,9 @@ Route::put('general_induction', ['uses' => 'MemberInductionController@update', '
 // Leaderboards!
 Route::get('leaderboard', ['uses' => 'LeaderboardController@index', 'as' => 'leaderboard.index', 'middleware' => 'role:member']);
 
+// Tracked links
+Route::get('links/forum', ['uses' => 'LinksController@forum', 'as' => 'links.forum', 'middleware' => 'role:member']);
+
 ##########################
 # Public Member List
 ##########################

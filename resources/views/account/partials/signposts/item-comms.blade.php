@@ -7,10 +7,10 @@
             <p>It&apos;s helpful to keep in touch with other members, and keep up-to-date with news and announcements. To do so, we have a forum and group chats available.</p>
 
             <div class="signpost-grid-item-buttons">
-                <a class="btn btn-primary btn-block" href="https://list.hacman.org.uk" target="_blank" rel="noopener">
+                <a class="btn btn-primary btn-block" href="{{ route('links.forum') }}" target="_blank" rel="noopener">
                     Visit the forum
                 </a>
-                <a class="btn btn-primary btn-block" href="https://docs.hacman.org.uk/Telegram/" target="_blank" rel="noopener">
+                <a class="btn btn-primary btn-block" href="{{ config('links.telegram') }}" target="_blank" rel="noopener">
                     Find the group chats
                 </a>
             </div>

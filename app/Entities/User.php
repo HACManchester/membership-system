@@ -1,4 +1,6 @@
-<?php namespace BB\Entities;
+<?php
+
+namespace BB\Entities;
 
 use BB\Exceptions\AuthenticationException;
 use BB\Traits\UserRoleTrait;
@@ -52,7 +54,8 @@ use Illuminate\Notifications\Notifiable;
  * @property date last_seen
  * @package BB\Entities
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract {
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
+{
 
     use UserRoleTrait, PresentableTrait, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
@@ -81,30 +84,30 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'given_name', 
-        'family_name', 
-        'email', 
-        'secondary_email', 
-        'display_name', 
-        'announce_name', 
-        'online_only', 
-        'password', 
-        'emergency_contact', 
+        'given_name',
+        'family_name',
+        'email',
+        'secondary_email',
+        'display_name',
+        'announce_name',
+        'online_only',
+        'password',
+        'emergency_contact',
         'phone',
-        'monthly_subscription', 
-        'profile_private', 
-        'newsletter', 
-        'hash', 
+        'monthly_subscription',
+        'profile_private',
+        'newsletter',
+        'hash',
         'rules_agreed',
-        'key_holder', 
-        'key_deposit_payment_id', 
-        'trusted', 
-        'induction_completed', 
-        'payment_method', 
-        'active', 
-        'status', 
-        'postFob', 
-        'gift', 
+        'key_holder',
+        'key_deposit_payment_id',
+        'trusted',
+        'induction_completed',
+        'payment_method',
+        'active',
+        'status',
+        'postFob',
+        'gift',
         'seen_at',
         'pronouns'
     ];
@@ -124,10 +127,25 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'cash_balance'          => 0,
     ];
 
+    protected $casts = [
+        'visited_forum' => 'boolean',
+
+        // TODO: Enable these casts one at a time and verify casting will not break references
+        // 'email_verified' => 'boolean',
+        // 'active' => 'boolean',
+        // 'founder' => 'boolean',
+        // 'director' => 'boolean',
+        // 'trusted' => 'boolean',
+        // 'key_holder' => 'boolean',
+        // 'induction_completed' => 'boolean',
+        // 'profile_private' => 'boolean',
+        // 'banned' => 'boolean',
+    ];
+
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed','seen_at');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at');
     }
 
 
@@ -209,7 +227,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getNameAttribute()
     {
-        return $this->attributes['display_name'] ;
+        return $this->attributes['display_name'];
     }
 
     public function setPasswordAttribute($password)
@@ -292,10 +310,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getAlerts()
     {
         $alerts = [];
-        if ( ! $this->email_verified ) {
+        if (!$this->email_verified) {
             $alerts[] = 'email-not-verified';
         }
-        if ( ! $this->profile->profile_photo && ! $this->profile->new_profile_photo) {
+        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
             $alerts[] = 'missing-profile-photo';
         }
         if (empty($this->phone)) {
@@ -456,13 +474,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->email_verified = true;
         $this->save();
     }
-    
+
     public function emailChanging()
     {
         $this->email_verified = false;
     }
 
-    public function markAsSeen(){
+    public function markAsSeen()
+    {
         $this->seen_at = date("Y-m-d H:i:s");
         $this->save();
     }
@@ -508,7 +527,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         if ($paymentMethod) {
             $this->payment_method = $paymentMethod;
         }
-        $this->gift='';
+        $this->gift = '';
         $this->subscription_expires = $expiry;
         $this->save();
     }
@@ -520,6 +539,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->auditFields;
     }
-
-
 }
