@@ -5,7 +5,7 @@
 @stop
 
 @section('meta-title')
-Tools and Equipment
+{{ $equipment->name }}
 @stop
 
 @section('page-action-buttons')
