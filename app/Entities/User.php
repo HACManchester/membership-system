@@ -365,7 +365,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function scopeNotSpecialCase($query)
     {
-        return $query->where('status', '!=', 'honorary');
+        return $query->where('status', '!=', 'honorary')
+            ->where(function ($subquery) {
+                $subquery->whereNull('gift_expires')->orWhere('gift_expires', '<=', Carbon::today());
+            });
     }
 
     public function scopeLeaving($query)

@@ -192,6 +192,12 @@ class UserRepository extends DBRepository
                         date('Y-m-d') . ' + ' . $gift_record->months . ' months'
                     )
                 );
+                $user->gift_expires = date(
+                    'Y-m-d', 
+                    strtotime(
+                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
+                    )
+                );
                 $user->cash_balance = $gift_record->credit * 100;
                 $user->status = 'active';
                 $user->active = '1';
