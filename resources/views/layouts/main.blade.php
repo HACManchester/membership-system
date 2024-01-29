@@ -9,6 +9,12 @@
 
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
     <link href="{{ elixir('/css/main.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('img/favicon/favicon.png') }}">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset("/apple-touch-icon.png") }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset("/favicon-32x32.png") }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset("/favicon-16x16.png") }}">
+    <link rel="manifest" href="{{ asset("/site.webmanifest") }}">
     
     @if (config('services.sentry.browser_dsn'))
         <script src="https://js.sentry-cdn.com/{{ config('services.sentry.browser_dsn') }}.min.js" crossorigin="anonymous"></script>
