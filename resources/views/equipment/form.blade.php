@@ -85,7 +85,7 @@
     <div class="col-md-6">
         <div class="{{ FlashNotification::hasErrorDetail('room', 'has-error has-feedback') }}">
             {!! Form::label('room', 'Room', ['class'=>'']) !!}
-            {!! Form::select('room', ['woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control', 'required']) !!}
+            {!! Form::select('room', ['' => '','welding' => 'Welding','woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control', 'required']) !!}
             {!! FlashNotification::getErrorDetail('room') !!}
         </div>
     </div>
