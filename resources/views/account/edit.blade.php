@@ -303,7 +303,7 @@ Edit your details
                                                                     </span>
                                                                 </h4>
                                                                 <h4>
-                                                                    Code: {{ str_replace('f', '', $fob->key_id) }}
+                                                                    Code: {{ str_replace('f', '', $fob->key_id) }} #
                                                                 </h4>
                                                             @endif
                                                             
