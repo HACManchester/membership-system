@@ -15,6 +15,7 @@ use Carbon\Carbon;
 $factory->define('BB\Entities\User', function ($faker) {
     return [
         'given_name'          => $faker->firstName,
+        'display_name'        => $faker->firstName,
         'family_name'         => $faker->lastName,
         'email'               => $faker->email,
         'password'            => str_random(10),

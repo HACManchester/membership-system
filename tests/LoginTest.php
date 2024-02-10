@@ -22,7 +22,7 @@ class LoginTest extends TestCase
             ->type($password, 'password')
             ->press('Go')
             ->seePageIs('account/'.$user->id)
-            ->see($user->given_name);
+            ->see($user->display_name);
     }
 
     /** @test */

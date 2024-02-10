@@ -32,7 +32,7 @@ class MembersController extends Controller
 
     public function index()
     {
-        $users = $this->userRepository->getActivePublicList(!\Auth::user());
+        $users = $this->userRepository->getActivePublicList();
         return \View::make('members.index')->withUsers($users);
     }
 

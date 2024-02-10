@@ -61,6 +61,8 @@ class AccountTest extends TestCase
         $user2 = factory('BB\Entities\User')->create();
         factory('BB\Entities\ProfileData')->create(['user_id' => $user2->id]);
 
+        $this->actingAs($user);
+
         $this->get('members')
             ->seeStatusCode(200)
             ->see($user->name)
@@ -68,7 +70,7 @@ class AccountTest extends TestCase
     }
 
     /** @test */
-    public function guest_cant_see_private_accounts_on_member_page()
+    public function guests_cant_see_members_list()
     {
         $user = factory('BB\Entities\User')->create();
         factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
@@ -77,13 +79,11 @@ class AccountTest extends TestCase
         factory('BB\Entities\ProfileData')->create(['user_id' => $user2->id]);
 
         $this->get('members')
-            ->seeStatusCode(200)
-            ->see($user->name)
-            ->see($user2->name, true);  //don't see
+            ->seeStatusCode(302);
     }
 
     /** @test */
-    public function member_can_see_private_accounts_on_member_page()
+    public function member_cant_see_private_accounts_on_member_page()
     {
         $user = factory('BB\Entities\User')->create();
         factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
@@ -96,7 +96,7 @@ class AccountTest extends TestCase
         $this->get('members')
             ->seeStatusCode(200)
             ->see($user->name)
-            ->see($user2->name);
+            ->see($user2->name, true);
     }
 
     /** @test */
@@ -111,7 +111,7 @@ class AccountTest extends TestCase
             ->see('Fill in your profile')
             //->select(['skill1', 'skill2'], 'skills[]')
             ->press('Save')
-            ->see($user->given_name)
+            ->see($user->display_name)
             ->dontSee('Fill in your profile');
 
         //$this->seeInDatabase('users', ['email' => $email, 'given_name' => $firstName]);
