@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Role extends Model
 {
-
     /**
      * Fillable fields
      *

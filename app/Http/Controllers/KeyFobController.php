@@ -1,11 +1,12 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Entities\KeyFob;
+use BB\Entities\User;
 
 class KeyFobController extends Controller
 {
-
-
     /**
      * @var \BB\Validators\KeyFob
      */
@@ -22,9 +23,11 @@ class KeyFobController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        $this->authorize('view', [KeyFob::class, $user]);
+
+        return \View::make('keyfobs.index')->with('user', $user);
     }
 
 
@@ -33,9 +36,11 @@ class KeyFobController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(User $user)
     {
-        if(\Auth::user()->online_only || !\Auth::user()->induction_completed){
+        $this->authorize('create', [KeyFob::class, $user]);
+
+        if ($user->online_only || !$user->induction_completed) {
             throw new \BB\Exceptions\AuthenticationException();
         }
 
@@ -43,35 +48,22 @@ class KeyFobController extends Controller
 
         //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
-        if(substr( $input['key_id'], 0, 2 ) === "ff"){
+        if (substr($input['key_id'], 0, 2) === "ff") {
 
             // generate random access code, if there's a collision, it'll fail due to db constraints
-            $input['key_id']="ff".rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
+            $input['key_id'] = "ff" . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
         }
 
         $this->keyFobForm->validate($input);
 
         KeyFob::create([
-            'user_id' => \Auth::user()->id, 
+            'user_id' => $user->id,
             'key_id' => $input['key_id']
         ]);
 
         \FlashNotification::success("Key fob/Access code has been activated");
-        return \Redirect::route('account.show', \Auth::user()->id);
+        return \Redirect::route('keyfobs.index', $user->id);
     }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
-    }
-
 
     /**
      * Remove the specified resource from storage.
@@ -79,18 +71,13 @@ class KeyFobController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(User $user, KeyFob $fob)
     {
-        $fobQuery = KeyFob::where('id', $id);
+        $this->authorize('delete', $fob);
 
-        if(!\Auth::user()->isAdmin()){
-            $fobQuery->where('user_id', \Auth::user()->id);
-        }
-        $fob = $fobQuery->firstOrFail();
         $fob->markLost();
+
         \FlashNotification::success("Key Fob marked as lost/broken");
-        return \Redirect::route('account.show',$fob->user_id);
+        return \Redirect::route('keyfobs.index', $user->id);
     }
-
-
 }

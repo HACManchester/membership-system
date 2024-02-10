@@ -32,11 +32,11 @@
         <div>
             @if ($user->keyFob())
                 
-            <a href="/account/{{ $user->id }}/edit#access">
+            <a href="{{ route('keyfobs.index', $user->id) }}">
                     🔑 {{ $user->keyFobs()->count() }} access {{ str_plural('method', $user->keyFobs()->count() )}}
                 </a>
             @else
-                <a href="/account/{{ $user->id }}/edit#access">
+                <a href="{{ route('keyfobs.index', $user->id) }}">
                     🔑 Set up an access method
                 </a>
             @endif

@@ -98,7 +98,7 @@
                         <h4>Key Fob</h4>
                         <p>This is the ID number associated with their RFID tag. They don't need to be a key holder to get an RFID tag.</p>
                         @foreach ($user->keyFobs()->get() as $fob)
-                        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfob.destroy', $fob->id], 'class'=>'form-horizontal')) !!}
+                        {!! Form::open(array('method'=>'DELETE', 'route' => ['keyfobs.destroy', $user->id, $fob->id], 'class'=>'form-horizontal')) !!}
                             <div class="form-group">
                                 <div class="col-sm-5">
                                     <p class="form-control-static">{{ $fob->key_id }} <small>(added {{ $fob->created_at->toFormattedDateString() }})</small></p>

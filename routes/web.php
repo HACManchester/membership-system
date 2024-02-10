@@ -163,7 +163,7 @@ Route::resource('notifications', 'NotificationController', ['only' => ['index', 
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
-    Route::resource('keyfob', 'KeyFobController', ['only' => ['index', 'store', 'update', 'destroy']]);
+    Route::resource('account/{user}/keyfobs', 'KeyFobController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
 });
 
 # PayPal IPN

@@ -5,7 +5,9 @@ namespace BB\Providers;
 // use Illuminate\Support\Facades\Gate;
 
 use BB\Entities\Equipment;
+use BB\Entities\KeyFob;
 use BB\Policies\EquipmentPolicy;
+use BB\Policies\KeyFobPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Equipment::class => EquipmentPolicy::class,
+        KeyFob::class => KeyFobPolicy::class,
     ];
 
     /**

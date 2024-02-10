@@ -65,8 +65,7 @@ DESC
                             'number' => '4',
                             'condition' => $user->keyFob(),
                             'title' => 'Get an access method set up',
-                            'link' => route('account.edit', $user->id),
-                            'link_target' => '_blank',
+                            'link' => route('keyfobs.index', $user->id),
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.'
                         ])
                         @include('account.partials.get-started-checklist-item', [

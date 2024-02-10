@@ -2,6 +2,8 @@
 
 namespace BB\Providers;
 
+use BB\Entities\KeyFob;
+use BB\Entities\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -24,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+        Route::model('keyfob', KeyFob::class); // think the case sensitivity breaks this from working implicitly
     }
 
     /**
