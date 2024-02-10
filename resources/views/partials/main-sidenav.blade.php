@@ -161,7 +161,8 @@
 
             {!! HTML::sideNavLink('💳 Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
             {!! HTML::sideNavLink('ℹ️ General Induction', 'general-induction.show', [Auth::id()], !Auth::user()->induction_completed) !!}
-           
+
+            <li><a href="https://list.hacman.org.uk" target="_blank">💬 Forum</a></li>
         </ul>
         @endif
 
