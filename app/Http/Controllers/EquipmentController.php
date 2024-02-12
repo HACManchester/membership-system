@@ -1,15 +1,29 @@
 <?php namespace BB\Http\Controllers;
 
+use Auth;
 use BB\Entities\Equipment;
+use BB\Entities\Role;
+use BB\Exceptions\AuthenticationException;
+use BB\Exceptions\FormValidationException;
 use BB\Exceptions\ImageFailedException;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
+use BB\Validators\EquipmentPhotoValidator;
 use BB\Validators\EquipmentValidator;
+use DateTime;
+use Exception;
+use FlashNotification;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Image;
 use Input;
-use Michelf\Markdown;
+use Log;
+use Redirect;
+use Request;
+use View;
 
 class EquipmentController extends Controller
 {
@@ -35,20 +49,20 @@ class EquipmentController extends Controller
      */
     private $equipmentValidator;
     /**
-     * @var \BB\Validators\EquipmentPhotoValidator
+     * @var EquipmentPhotoValidator
      */
     private $equipmentPhotoValidator;
 
-    /** @var \Illuminate\Filesystem\FilesystemAdapter */
+    /** @var FilesystemAdapter */
     protected $disk;
 
     /**
-     * @param InductionRepository                    $inductionRepository
-     * @param EquipmentRepository                    $equipmentRepository
-     * @param EquipmentLogRepository                 $equipmentLogRepository
-     * @param UserRepository                         $userRepository
-     * @param EquipmentValidator                     $equipmentValidator
-     * @param \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
+     * @param InductionRepository     $inductionRepository
+     * @param EquipmentRepository     $equipmentRepository
+     * @param EquipmentLogRepository  $equipmentLogRepository
+     * @param UserRepository          $userRepository
+     * @param EquipmentValidator      $equipmentValidator
+     * @param EquipmentPhotoValidator $equipmentPhotoValidator
      */
     function __construct(
         InductionRepository $inductionRepository,
@@ -56,37 +70,38 @@ class EquipmentController extends Controller
         EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository,
         EquipmentValidator $equipmentValidator,
-        \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
+        EquipmentPhotoValidator $equipmentPhotoValidator
     ) {
-        $this->inductionRepository    = $inductionRepository;
-        $this->equipmentRepository    = $equipmentRepository;
+        $this->inductionRepository = $inductionRepository;
+        $this->equipmentRepository = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
-        $this->userRepository         = $userRepository;
+        $this->userRepository = $userRepository;
         $this->equipmentValidator = $equipmentValidator;
         $this->equipmentPhotoValidator = $equipmentPhotoValidator;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
-      
+
 
         $this->ppeList = [
-            'eye-protection' => 'Eye protection',
-            'gloves'         => 'Gloves',
-            'face-guard'     => 'Full face guard',
-            'face-mask'      => 'Face mask',
-            'welding-mask'   => 'Welding mask',
-            'ear-protection' => 'Ear protection'
+            'ear-protection'      => 'Ear protection',
+            'eye-protection'      => 'Eye protection',
+            'face-mask'           => 'Face mask',
+            'face-guard'          => 'Full face guard',
+            'gloves'              => 'Gloves',
+            'protective-clothing' => 'Protective clothing',
+            'welding-mask'        => 'Welding mask'
         ];
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function index()
     {
-        $user = \Auth::user();
+        $user = Auth::user();
         $allTools = $this->equipmentRepository->getAll();
 
         $equipmentWithTrainingStatus = $allTools->map(function (Equipment $equipment) use ($user) {
@@ -94,13 +109,13 @@ class EquipmentController extends Controller
 
             return [
                 'equipment' => $equipment,
-                'trained' => $equipment->requires_induction && $trained
+                'trained'   => $equipment->requires_induction && $trained
             ];
         });
 
         $equipmentByRoom = $equipmentWithTrainingStatus->groupBy('equipment.room')->sort();
 
-        return \View::make('equipment.index')
+        return View::make('equipment.index')
             ->with('equipmentByRoom', $equipmentByRoom);
     }
 
@@ -108,7 +123,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('view', $equipment);
 
-        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
 
         $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipment->device_key);
 
@@ -118,7 +133,7 @@ class EquipmentController extends Controller
         $usageTimes['training'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'training');
         $usageTimes['testing'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'testing');
 
-        $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
+        $userInduction = $this->inductionRepository->getUserForEquipment(Auth::user()->id, $equipment->induction_category);
 
         $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
 
@@ -127,16 +142,16 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
 
         $isTrainerOrAdmin = $this
-            ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+                ->inductionRepository
+                ->isTrainerForEquipment($equipment->induction_category) || Auth::user()->isAdmin() || $this->authorize('create', Equipment::class);
 
         // Get info from the docs system
         $docs = $equipment->docs || "";
 
-        $now = new \DateTime("");
+        $now = new DateTime("");
 
-        return \View::make('equipment.show')
-            ->with('equipmentId', $equipmentId)
+        return View::make('equipment.show')
+            ->with('equipmentId', $equipment->id)
             ->with('equipment', $equipment)
             ->with('trainers', $trainers)
             ->with('equipmentLog', $equipmentLog)
@@ -144,7 +159,7 @@ class EquipmentController extends Controller
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
-            ->with('user', $user)
+            ->with('user', Auth::user())
             ->with('isTrainerOrAdmin', $isTrainerOrAdmin)
             ->with('memberList', $memberList)
             ->with('docs', $docs)
@@ -154,36 +169,35 @@ class EquipmentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function create()
     {
         $this->authorize('create', Equipment::class);
 
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::pluck('title', 'id');
+        $roleList = Role::pluck('title', 'id');
 
-        return \View::make('equipment.create')
+        return View::make('equipment.create')
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
             ->with('ppeList', $this->ppeList)
             ->with('trusted', true)
-            ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
+            ->with('isTrainerOrAdmin', Auth::user()->isAdmin());
     }
 
 
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws ImageFailedException
-     * @throws \BB\Exceptions\FormValidationException
+     * @return RedirectResponse
+     * @throws FormValidationException
      */
     public function store()
     {
         $this->authorize('create', Equipment::class);
 
-        $data = \Request::only([
+        $data = Request::only([
             'name',
             'manufacturer',
             'model_number',
@@ -209,40 +223,40 @@ class EquipmentController extends Controller
             'induction_category',
             'access_fee',
             'usage_cost',
-             'induction_instructions',
-             'trainer_instructions',
-             'trained_instructions',
-             'docs',
-             'accepting_inductions'
+            'induction_instructions',
+            'trainer_instructions',
+            'trained_instructions',
+            'docs',
+            'accepting_inductions'
         ]);
-        
+
         $this->equipmentValidator->validate($data);
 
         $this->equipmentRepository->create($data);
 
-        return \Redirect::route('equipment.show', $data['slug']);
+        return Redirect::route('equipment.show', $data['slug']);
     }
 
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \BB\Entities\Equipment $equipment
-     * @return Response
+     * @param Equipment $equipment
+     * @return \Illuminate\Contracts\View\View|\Illuminate\View\View
      */
     public function edit(Equipment $equipment)
     {
         $this->authorize('update', $equipment);
 
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::pluck('title', 'id');
+        $roleList = Role::pluck('title', 'id');
 
         $isTrainerOrAdmin = $this
-            ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+                ->inductionRepository
+                ->isTrainerForEquipment($equipment->induction_category) || Auth::user()->isAdmin() || $this->authorize('create', Equipment::class);
 
-        
-        return \View::make('equipment.edit')
+
+        return View::make('equipment.edit')
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
@@ -254,8 +268,9 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \BB\Entities\Equipment $equipment
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Equipment $equipment
+     * @return RedirectResponse
+     * @throws FormValidationException
      */
     public function update(Equipment $equipment)
     {
@@ -268,39 +283,40 @@ class EquipmentController extends Controller
         ];
 
         $isTrainerOrAdmin = $this
-        ->inductionRepository
-        ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
+                ->inductionRepository
+                ->isTrainerForEquipment($equipment->induction_category) || Auth::user()->isAdmin() || $this->authorize('create', Equipment::class);
 
 
         $additionalFields = $isTrainerOrAdmin ?
-        [
-            'dangerous',
-            'requires_induction',
-            'induction_category',
-            'access_fee',
-            'usage_cost',
-            'induction_instructions',
-            'trainer_instructions',
-            'trained_instructions',
-            'ppe',
-            'access_code',
-            'accepting_inductions'
-        ] : [];
+            [
+                'dangerous',
+                'requires_induction',
+                'induction_category',
+                'access_fee',
+                'usage_cost',
+                'induction_instructions',
+                'trainer_instructions',
+                'trained_instructions',
+                'ppe',
+                'access_code',
+                'accepting_inductions'
+            ] : [];
 
-        $data = \Request::only(array_merge($additionalFields, $normalFields));
+        $data = Request::only(array_merge($additionalFields, $normalFields));
         $this->equipmentValidator->validate($data, $equipment->id);
 
         $this->equipmentRepository->update($equipment->id, $data);
 
-        return \Redirect::route('equipment.show', $equipment);
+        return Redirect::route('equipment.show', $equipment->toArray());
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return Response
+     * @param Equipment $equipment
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Equipment $equipment)
     {
@@ -308,15 +324,19 @@ class EquipmentController extends Controller
 
         $equipment->delete();
 
-        \FlashNotification::success("Deleted {$equipment->name}");
+        FlashNotification::success("Deleted {$equipment->name}");
         return redirect()->route('equipment.index');
     }
 
+    /**
+     * @throws FormValidationException
+     * @throws ImageFailedException
+     */
     public function addPhoto(Equipment $equipment)
     {
         $this->authorize('update', $equipment);
 
-        $data = \Request::only(['photo']);
+        $data = Request::only(['photo']);
 
         $this->equipmentPhotoValidator->validate($data);
 
@@ -324,30 +344,30 @@ class EquipmentController extends Controller
         if ($photo) {
             try {
                 $ext = $photo->guessClientExtension() ?: 'png';
-                $stream = \Image::make($photo->getRealPath())->fit(1000)->stream($ext);
-                
+                $stream = Image::make($photo->getRealPath())->fit(1000)->stream($ext);
+
                 $newFilename = sprintf('%s.%s', str_random(), $ext);
 
                 $this->disk->put($equipment->getPhotoBasePath() . $newFilename, $stream);
 
                 $equipment->addPhoto($newFilename);
 
-            } catch(\Exception $e) {
-                \Log::error($e);
+            } catch (Exception $e) {
+                Log::error($e);
                 throw new ImageFailedException($e->getMessage());
             }
         }
 
-        \FlashNotification::success("Image added");
-        return \Redirect::route('equipment.edit', $equipment);
+        FlashNotification::success("Image added");
+        return Redirect::route('equipment.edit', $equipment->toArray());
     }
 
     public function destroyPhoto(Equipment $equipment, $photoId)
     {
         $this->authorize('update', $equipment);
 
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
+        if (Auth::user()->online_only) {
+            throw new AuthenticationException();
         }
 
         $photoPath = $equipment->getPhotoPath($photoId);
@@ -358,7 +378,7 @@ class EquipmentController extends Controller
 
         $equipment->removePhoto($photoId);
 
-        \FlashNotification::success("Image deleted");
-        return \Redirect::route('equipment.edit', $equipment);
+        FlashNotification::success("Image deleted");
+        return Redirect::route('equipment.edit', $equipment->toArray());
     }
 } 

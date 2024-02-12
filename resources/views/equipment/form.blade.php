@@ -155,7 +155,7 @@
 
 <h4>Health & Safety</h4>
 <div class="alert alert-info">
-    To maintain the integrity of H&S and the training system, only admins and trainers can edit this section.<br/>
+    To maintain the integrity of H&S and the training system, only admins, members of the <a href="<?=URL::to('/')?>/groups/equipment">equipment</a> team and trainers can edit this section.<br/>
     <b>{{ $isTrainerOrAdmin ? "✔️ You can read/write the fields in this area" : "🔒 The fields in this area can not be edited at the moment"}}</b>
 </div>
 
