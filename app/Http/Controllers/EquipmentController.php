@@ -127,9 +127,7 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        $isTrainerOrAdmin = $this
-                ->inductionRepository
-                ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin() || \Auth::user()->can('update', $equipment);
+        $isAllowedToEdit = \Auth::user()->isAdmin() || \Auth::user()->can('update', $equipment);
 
         // Get info from the docs system
         $docs = $equipment->docs || "";
@@ -146,7 +144,7 @@ class EquipmentController extends Controller
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
             ->with('user', $user)
-            ->with('isTrainerOrAdmin', $isTrainerOrAdmin)
+            ->with('isAllowedToEdit', $isAllowedToEdit)
             ->with('memberList', $memberList)
             ->with('docs', $docs)
             ->with('now', $now);
@@ -238,17 +236,11 @@ class EquipmentController extends Controller
         $memberList = $this->userRepository->getAllAsDropdown();
         $roleList = \BB\Entities\Role::pluck('title', 'id');
 
-        $isTrainerOrAdmin = $this
-                ->inductionRepository
-                ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin() || \Auth::user()->can('update', $equipment);
-
-
         return \View::make('equipment.edit')
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
             ->with('roleList', $roleList->toArray())
-            ->with('ppeList', $this->ppeList)
-            ->with('isTrainerOrAdmin', $isTrainerOrAdmin);
+            ->with('ppeList', $this->ppeList);
     }
 
 
@@ -268,12 +260,7 @@ class EquipmentController extends Controller
             'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'docs'
         ];
 
-        $isTrainerOrAdmin = $this
-                ->inductionRepository
-                ->isTrainerForEquipment($equipment->induction_category) || Auth::user()->isAdmin() || \Auth::user()->can('update', $equipment);
-
-
-        $additionalFields = $isTrainerOrAdmin ?
+        $additionalFields =
         [
             'dangerous',
             'requires_induction',
@@ -286,7 +273,7 @@ class EquipmentController extends Controller
             'ppe',
             'access_code',
             'accepting_inductions'
-        ] : [];
+        ];
 
         $data = \Request::only(array_merge($additionalFields, $normalFields));
         $this->equipmentValidator->validate($data, $equipment->id);

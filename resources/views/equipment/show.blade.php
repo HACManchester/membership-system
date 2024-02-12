@@ -295,7 +295,7 @@
                                 @endif
                             </div>
                             <div>
-                                @if ($isTrainerOrAdmin)
+                                @if ($isAllowedToEdit)
                                 {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
                                 {!! Form::hidden('not_trainer', '1') !!}
                                 {!! Form::hidden('slug', $equipment->slug) !!}
@@ -307,7 +307,7 @@
                     @endforeach
                 </div>
 
-                @if($isTrainerOrAdmin)
+                @if($isAllowedToEdit)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'trainer']) }}">
                         📧 Email 
                     </a>
@@ -336,7 +336,7 @@
                                 @endif
                             </div>
                             <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
-                            @if ($isTrainerOrAdmin)
+                            @if ($isAllowedToEdit)
                                 <div>
                                     {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                                     {!! Form::hidden('mark_untrained', '1') !!}
@@ -355,7 +355,7 @@
                     @endforeach
                 </div>
 
-                @if($isTrainerOrAdmin)
+                @if($isAllowedToEdit)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'trained']) }}">
                         📧 Email 
                     </a>
@@ -384,7 +384,7 @@
                 <div class="infobox__grid">
 
                     @foreach($usersPendingInduction as $trainedUser)
-                        @if ($isTrainerOrAdmin || $trainedUser->user->id == $user->id)
+                        @if ($isAllowedToEdit || $trainedUser->user->id == $user->id)
                             <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
@@ -396,7 +396,7 @@
                                     @endif
                                     <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
-                                @if ($isTrainerOrAdmin )
+                                @if ($isAllowedToEdit)
                                     <div>
                                         {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
                                         {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
@@ -415,7 +415,7 @@
                         @endif
                     @endforeach
                     
-                    @if ($isTrainerOrAdmin)
+                    @if ($isAllowedToEdit)
                         <div class="infobox__grid-item infobox__grid-item--footer">
                             <p>Add a member</p>
                             {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
@@ -427,7 +427,7 @@
                     @endif
                 </div>
             
-                @if($isTrainerOrAdmin)
+                @if($isAllowedToEdit)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'awaiting_training']) }}">
                         📧 Email 
                     </a>
