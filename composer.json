@@ -16,7 +16,6 @@
         "rap2hpoutre/laravel-log-viewer": "~0.2",
         "nuovo/spreadsheet-reader": "~0.5",
         "intervention/image": "2.*",
-        "paypal/merchant-sdk-php": "3.8.*",
         "laracasts/presenter": "~0.2",
         "stripe/stripe-php": "1.*",
         "michelf/php-markdown": "~1.4",

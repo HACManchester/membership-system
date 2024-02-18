@@ -166,9 +166,6 @@ Route::group(array('middleware' => 'role:member'), function () {
     Route::resource('account/{user}/keyfobs', 'KeyFobController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
 });
 
-# PayPal IPN
-Route::post('paypal-ipn', 'PaypalIPNController@receiveNotification');
-
 
 
 ##########################

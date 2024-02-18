@@ -101,7 +101,6 @@ class AccountController extends Controller
         $paymentMethods = [
             'gocardless'    => 'GoCardless',
             'cash'          => 'Cash',
-            'paypal'        => 'PayPal',
             'bank-transfer' => 'Manual Bank Transfer',
             'other'         => 'Other'
         ];

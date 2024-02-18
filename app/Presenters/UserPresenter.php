@@ -17,9 +17,6 @@ class UserPresenter extends Presenter
             case 'gocardless-variable':
                 return 'Direct Debit';
 
-            case 'paypal':
-                return 'PayPal';
-
             case 'standing-order':
                 return 'Standing Order';
 

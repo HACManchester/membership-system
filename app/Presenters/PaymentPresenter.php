@@ -65,8 +65,6 @@ class PaymentPresenter extends Presenter
                 return 'Direct Debit';
             case 'stripe':
                 return 'Credit/Debit Card';
-            case 'paypal':
-                return 'PayPal';
             case 'standing-order':
                 return 'Standing Order';
             case 'manual':

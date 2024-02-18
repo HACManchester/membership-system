@@ -51,23 +51,6 @@
                     {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
                     {!! Form::close() !!}
                 </p>
-                <p>
-                    You can also setup a PayPal subscription, this costs us a lot more so please only do this if you don't have a UK bank account
-                    {!! Form::open(['method'=>'post', 'url'=>'https://www.paypal.com/cgi-bin/webscr']) !!}
-                    {!! Form::submit('Setup a PayPal Subscription', ['class'=>'btn']) !!}
-                    {!! Form::hidden('cmd', '_xclick-subscriptions') !!}
-                    {!! Form::hidden('business', 'infohacman.org.uk') !!}
-                    {!! Form::hidden('item_name', 'Hackspace Manchester Membership') !!}
-                    {!! Form::hidden('no_note', '1') !!}
-                    {!! Form::hidden('bn', 'PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHostedGuest') !!}
-                    {!! Form::hidden('currency_code', 'GBP') !!}
-                    {!! Form::hidden('a3', "$user->monthly_subscription" ) !!}
-                    {!! Form::hidden('p3', '1') !!}
-                    {!! Form::hidden('t3', 'M') !!}
-                    {!! Form::hidden('lc', 'GB') !!}
-                    {!! Form::hidden('hosted_button_i', '3H4YABLMVW6RC') !!}
-                    {!! Form::close() !!}
-                </p>
                 @endif
 
             </div>

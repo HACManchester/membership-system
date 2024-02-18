@@ -57,7 +57,6 @@ class MembershipPayments
         $refDate->setTime(0, 0, 0);
 
         $standingOrderCutoff      = $refDate->copy()->subMonths(6);
-        $paypalCutoff             = $refDate->copy()->subDays(7);
         $goCardlessCutoff         = $refDate->copy()->subDays(14);
         $goCardlessVariableCutoff = $refDate->copy()->subDays(10);
         $otherCutoff              = $refDate->copy()->subDays(7);
@@ -66,8 +65,6 @@ class MembershipPayments
             return $goCardlessCutoff;
         } elseif ($paymentMethod == 'gocardless-variable') {
             return $goCardlessVariableCutoff;
-        } elseif ($paymentMethod == 'paypal') {
-            return $paypalCutoff;
         } elseif ($paymentMethod == 'standing-order') {
             return $standingOrderCutoff;
         } else {
