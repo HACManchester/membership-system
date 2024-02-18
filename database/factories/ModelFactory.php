@@ -10,6 +10,7 @@
 | database. Just tell the factory how a default model should look.
 |
 */
+
 use Carbon\Carbon;
 
 $factory->define('BB\Entities\User', function ($faker) {
@@ -49,6 +50,7 @@ $factory->define('BB\Entities\ACSNode', function ($faker) {
         'queued_command'    => null,
         'monitor_heartbeat' => false,
         'api_key'           => $faker->word,
+        'entry_device'      => false,
     ];
 });
 
