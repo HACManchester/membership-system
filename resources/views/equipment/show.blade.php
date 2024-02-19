@@ -295,23 +295,23 @@
                                 @endif
                             </div>
                             <div>
-                                @if ($isAllowedToEdit)
-                                {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
-                                {!! Form::hidden('not_trainer', '1') !!}
-                                {!! Form::hidden('slug', $equipment->slug) !!}
-                                {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
-                                {!! Form::close() !!}
-                                @endif
+                                @can('train', $equipment)
+                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
+                                    {!! Form::hidden('not_trainer', '1') !!}
+                                    {!! Form::hidden('slug', $equipment->slug) !!}
+                                    {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
+                                    {!! Form::close() !!}
+                                @endcan
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                @if($isAllowedToEdit)
+                @can('train', $equipment)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'trainer']) }}">
                         📧 Email 
                     </a>
-                @endif
+                @endcan
             </div>
         </div>
         
@@ -336,7 +336,7 @@
                                 @endif
                             </div>
                             <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
-                            @if ($isAllowedToEdit)
+                            @can('train', $equipment)
                                 <div>
                                     {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
                                     {!! Form::hidden('mark_untrained', '1') !!}
@@ -350,16 +350,16 @@
                                     {!! Form::submit('🎓', array('class'=> $trainedUser->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default')) !!}
                                     {!! Form::close() !!}
                                 </div>
-                            @endif
+                            @endcan
                         </div>
                     @endforeach
                 </div>
 
-                @if($isAllowedToEdit)
+                @can('train', $equipment)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'trained']) }}">
                         📧 Email 
                     </a>
-                @endif
+                @endcan
             </div>
         </div>
     </div>
@@ -384,7 +384,7 @@
                 <div class="infobox__grid">
 
                     @foreach($usersPendingInduction as $trainedUser)
-                        @if ($isAllowedToEdit || $trainedUser->user->id == $user->id)
+                        @if (Auth::user()->can('train', $equipment) || $trainedUser->user->id == Auth::user()->id)
                             <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
                                     <a href="{{ route('members.show', $trainedUser->user->id) }}">
@@ -396,7 +396,8 @@
                                     @endif
                                     <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
-                                @if ($isAllowedToEdit)
+                                
+                                @can('train', $equipment)
                                     <div>
                                         {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
                                         {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
@@ -410,12 +411,12 @@
                                         {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
                                         {!! Form::close() !!}
                                     </div>
-                                @endif
+                                @endcan
                             </div>
                         @endif
                     @endforeach
                     
-                    @if ($isAllowedToEdit)
+                    @can('train', $equipment)
                         <div class="infobox__grid-item infobox__grid-item--footer">
                             <p>Add a member</p>
                             {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
@@ -424,14 +425,14 @@
                             {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
                             {!! Form::close() !!}
                         </div>
-                    @endif
+                    @endcan
                 </div>
             
-                @if($isAllowedToEdit)
+                @can('train', $equipment)
                     <a class="btn btn-danger" href="{{ route('notificationemail.equipment', [$equipment->slug, 'awaiting_training']) }}">
                         📧 Email 
                     </a>
-                @endif
+                @endcan
             </div>
         </div>
     </div>
@@ -457,9 +458,9 @@
                 <th>Used for</th>
                 <th>Member</th>
                 <th>Reason</th>
-                @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
-                <th></th>
-                @endif
+                @can('update', $equipment)
+                    <th></th>
+                @endcan
             </tr>
         </thead>
         <tfoot>
@@ -480,7 +481,7 @@
                 <td>{{ $log->present()->timeUsed }}</td>
                 <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
                 <td>{{ $log->present()->reason }}</td>
-                @if (Auth::user()->isAdmin() || Auth::user()->hasRole($equipmentId))
+                @can('update', $equipment)
                 <td>
                     @if (empty($log->reason))
                     {!! Form::open(['method'=>'POST', 'route'=>['equipment_log.update', $log->id], 'name'=>'equipmentLog']) !!}
@@ -489,7 +490,7 @@
                     {!! Form::close() !!}
                     @endif
                 </td>
-                @endif
+                @endcan
             </tr>
         @endforeach
         </tbody>

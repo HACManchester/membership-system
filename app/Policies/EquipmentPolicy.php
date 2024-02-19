@@ -4,11 +4,19 @@ namespace BB\Policies;
 
 use BB\Entities\User;
 use BB\Entities\Equipment;
+use BB\Repo\InductionRepository;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EquipmentPolicy
 {
     use HandlesAuthorization;
+
+    protected $inductionRepository;
+
+    public function __construct(InductionRepository $inductionRepository)
+    {
+        $this->inductionRepository = $inductionRepository;
+    }
 
     public function before($user, $ability)
     {
@@ -65,5 +73,10 @@ class EquipmentPolicy
     public function delete(User $user, Equipment $equipment)
     {
         return $equipment->role ? $user->hasRole($equipment->role->name) : false;
+    }
+
+    public function train(User $user, Equipment $equipment)
+    {
+        return $this->inductionRepository->isTrainerForEquipment($user, $equipment->induction_category);
     }
 }

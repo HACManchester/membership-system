@@ -39,13 +39,7 @@ class InductionController extends Controller
 
         $equipment = $this->equipmentRepository->findBySlug($slug);
 
-        $isTrainerOrAdmin = $this
-            ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
-
-        if(!$isTrainerOrAdmin) {
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('train', $equipment);
 
         $induction = Induction::create([
             'user_id' => $userId,
@@ -73,13 +67,7 @@ class InductionController extends Controller
 
         $equipment = $this->equipmentRepository->findBySlug($slug);
 
-        $isTrainerOrAdmin = $this
-            ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
-
-        if(!$isTrainerOrAdmin) {
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('train', $equipment);
 
         if (\Input::get('mark_trained', false)) {
             $induction->trained = \Carbon\Carbon::now();
@@ -129,13 +117,7 @@ class InductionController extends Controller
         $induction = Induction::findOrFail($id);
         $equipment = $this->equipmentRepository->findBySlug($slug);
 
-        $isTrainerOrAdmin = $this
-            ->inductionRepository
-            ->isTrainerForEquipment($equipment->induction_category) || \Auth::user()->isAdmin();
-
-        if(!$isTrainerOrAdmin) {
-            throw new \BB\Exceptions\AuthenticationException();
-        }
+        $this->authorize('train', $equipment);
 
         $induction->delete();
         

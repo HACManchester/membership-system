@@ -127,15 +127,12 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        $isAllowedToEdit = \Auth::user()->isAdmin() || \Auth::user()->can('update', $equipment);
-
         // Get info from the docs system
         $docs = $equipment->docs || "";
 
         $now = new \DateTime("");
 
         return \View::make('equipment.show')
-            ->with('equipmentId', $equipmentId)
             ->with('equipment', $equipment)
             ->with('trainers', $trainers)
             ->with('equipmentLog', $equipmentLog)
@@ -143,8 +140,6 @@ class EquipmentController extends Controller
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('usageTimes', $usageTimes)
-            ->with('user', $user)
-            ->with('isAllowedToEdit', $isAllowedToEdit)
             ->with('memberList', $memberList)
             ->with('docs', $docs)
             ->with('now', $now);

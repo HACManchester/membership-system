@@ -56,9 +56,9 @@ class InductionRepository extends DBRepository
      * @param $userID
      * @return bool
      */
-    public function isTrainerForEquipment($deviceId)
+    public function isTrainerForEquipment($user, $deviceId)
     {
-        return $this->model->where('user_id', \Auth::user()->id)
+        return $this->model->where('user_id', $user->id)
             ->where('key', $deviceId)
             ->where('is_trainer', 1)
             ->count() > 0;
