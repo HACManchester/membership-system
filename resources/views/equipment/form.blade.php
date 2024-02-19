@@ -155,14 +155,13 @@
 
 <h4>Health & Safety</h4>
 <div class="alert alert-info">
-    To maintain the integrity of H&S and the training system, only admins and trainers can edit this section.<br/>
-    <b>{{ $isTrainerOrAdmin ? "✔️ You can read/write the fields in this area" : "🔒 The fields in this area can not be edited at the moment"}}</b>
+    To maintain the integrity of H&S and the training system, only admins, members of the <a href="<?=URL::to('/')?>/groups/equipment">equipment</a> team and trainers can edit this section.<br/>
 </div>
 
 <div class="form-group {{ FlashNotification::hasErrorDetail('ppe', 'has-error has-feedback') }}">
     {!! Form::label('ppe', 'PPE', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('ppe[]', [''=>'']+$ppeList, null, ['class'=>'form-control js-advanced-dropdown', 'multiple', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::select('ppe[]', [''=>'']+$ppeList, null, ['class'=>'form-control js-advanced-dropdown', 'multiple']) !!}
         {!! FlashNotification::getErrorDetail('ppe') !!}
     </div>
 </div>
@@ -171,7 +170,7 @@
 <div class="form-group alert-danger {{ FlashNotification::hasErrorDetail('dangerous', 'has-error has-feedback') }}">
     {!! Form::label('dangerous', 'Is Bloody Dangerous?', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
         {!! FlashNotification::getErrorDetail('dangerous') !!}
     </div>
 </div>
@@ -182,7 +181,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('requires_induction', 'has-error has-feedback') }}">
     {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
         {!! FlashNotification::getErrorDetail('requires_induction') !!}
     </div>
 </div>
@@ -190,7 +189,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('accepting_inductions', 'has-error has-feedback') }}">
     {!! Form::label('accepting_inductions', 'Accepting Induction Requests', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('accepting_inductions', [null => '', 0=>'No', 1=>'Yes'], null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::select('accepting_inductions', [null => '', 0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
         <div class="help-block">Ability to enable/disable inductions, depending on maintainer/trainer workload.</div>
         {!! FlashNotification::getErrorDetail('accepting_inductions') !!}
     </div>
@@ -199,7 +198,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('induction_category', 'has-error has-feedback') }}">
     {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('induction_category', null, ['class'=>'form-control', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+        {!! Form::text('induction_category', null, ['class'=>'form-control']) !!}
         <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
         {!! FlashNotification::getErrorDetail('induction_category') !!}
     </div>
@@ -208,7 +207,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('induction_instructions', 'has-error has-feedback') }}">
     {!! Form::label('induction_instructions', 'Instructions to those awaiting training', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('induction_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
+        {!! Form::textarea('induction_instructions', null, ['class'=>'form-control']) !!}
         <p class="help-block">Shown to members after they have requested training. Possible uses: Linking to Telegram group to request training, or schedule of frequent training sessions. Uses markdown for formatting.</p>
         <p class="help-block"></p>
         {!! FlashNotification::getErrorDetail('induction_instructions') !!}
@@ -218,7 +217,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('trained_instructions', 'has-error has-feedback') }}">
     {!! Form::label('trained_instructions', 'Instructions for trained users', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trained_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        {!! Form::textarea('trained_instructions', null, ['class'=>'form-control']) !!}
         <p class="help-block">Instructions for those who have been trained. You could use this to remind them of important notes about the equipment, or share access/padlock codes to use the equipment. Use markdown for formatting.</p>
         {!! FlashNotification::getErrorDetail('trained_instructions') !!}
     </div>
@@ -227,7 +226,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('trainer_instructions', 'has-error has-feedback') }}">
     {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::textarea('trainer_instructions', null, ['class'=>'form-control']) : View::getSections()['trustLevel']  !!}
+        {!! Form::textarea('trainer_instructions', null, ['class'=>'form-control']) !!}
         <p class="help-block">Only trainers see this - e.g. documents to risk assessments. Use markdown for formatting.</p>
         {!! FlashNotification::getErrorDetail('trainer_instructions') !!}
     </div>
@@ -241,7 +240,7 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1', $isTrainerOrAdmin ? "" : "disabled"]) !!}
+            {!! Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) !!}
         </div>
         <p class="help-block">Is an access fee being charged?</p>
         {!! FlashNotification::getErrorDetail('access_fee') !!}
@@ -253,9 +252,9 @@
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', $isTrainerOrAdmin ? "" : "disabled", 'required']) !!}
+            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', 'required']) !!}
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'', 'required',$isTrainerOrAdmin ? "" : "disabled"]) !!}
+            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'', 'required']) !!}
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>
@@ -266,7 +265,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('access_code', 'has-error has-feedback') }}">
     {!! Form::label('access_code', 'Access Code (e.g. for padlock)', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! $isTrainerOrAdmin ? Form::text('access_code', null, ['class'=>'form-control']) : View::getSections()['trustLevel'] !!}
+        {!! Form::text('access_code', null, ['class'=>'form-control']) !!}
         <p class="help-block">The access code, if applicable, for this tool to be used.</p>
         {!! FlashNotification::getErrorDetail('access_code') !!}
     </div>
@@ -294,7 +293,7 @@
 <div class="form-group {{ FlashNotification::hasErrorDetail('obtained_at', 'has-error has-feedback') }}">
     {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', !isset($equipment) || $isTrainerOrAdmin ? "" : "disabled", "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
         <p class="help-block">When did Hackspace Manchester obtain/purchase the item? Formatted as <code>YYYY-MM-DD</code></p>
         {!! FlashNotification::getErrorDetail('obtained_at') !!}
     </div>
@@ -305,7 +304,7 @@
     <div class="form-group {{ FlashNotification::hasErrorDetail('removed_at', 'has-error has-feedback') }}">
         {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', $isTrainerOrAdmin ? "" : "disabled", "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
             <p class="help-block">When did Hackspace Manchester get rid of it? Formatted as <code>YYYY-MM-DD</code></p>
             {!! FlashNotification::getErrorDetail('removed_at') !!}
         </div>

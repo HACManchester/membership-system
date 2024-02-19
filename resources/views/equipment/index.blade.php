@@ -22,7 +22,7 @@ Tools and Equipment
     <div class="well">
         <h3>View tools, manuals, and book inductions</h3>
         For changes to the information on the equipment pages please contact someone on
-        the <a href="https://members.hacman.org.uk/groups/equipment">equipment</a> team
+        the <a href="{{ route('groups.show', 'equipment' ) }}">equipment</a> team
     </div>
 
     @foreach($equipmentByRoom as $k => $tools)
