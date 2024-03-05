@@ -7,7 +7,10 @@ use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailboardAboutExpense implements ShouldQueue
+
+// This class was broken, but fixing it could revive code paths that haven't
+// worked in years. Wish to re-evaluate functionality and remove or fix, as needed.
+class EmailTrusteesAboutExpense_do_not_fix implements ShouldQueue
 {
     /**
      * @var Mailer
