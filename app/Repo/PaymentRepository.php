@@ -86,7 +86,7 @@ class PaymentRepository extends DBRepository
      *
      * @param string   $reason What was the reason. subscription, induction, etc...
      * @param int      $userId The users ID
-     * @param string   $source gocardless, paypal
+     * @param string   $source gocardless
      * @param string   $sourceId A reference for the source
      * @param double   $amount Amount received before a fee in pounds
      * @param string   $status paid, pending, cancelled, refunded
@@ -131,7 +131,7 @@ class PaymentRepository extends DBRepository
      * Record a subscription payment
      *
      * @param int    $userId The users ID
-     * @param string $source gocardless, paypal
+     * @param string $source gocardless
      * @param string $sourceId A reference for the source
      * @param double $amount Amount received before a fee in pounds
      * @param string $status paid, pending, cancelled, refunded

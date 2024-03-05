@@ -251,8 +251,6 @@
                                 💳 Flexible Direct Debit - controlled via BBMS
                             @elseif ($user->payment_method == 'balance')
                                 💵 Payments taken from the users balance. Backup: {{ $user->secondary_payment_method }}
-                            @elseif ($user->payment_method == 'paypal')
-                                🏧 PayPal subscription - managed entirely through PayPal
                             @else
                                 🏦 Other: {{ $user->payment_method }}
                             @endif

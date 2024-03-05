@@ -48,7 +48,7 @@
     <td>
         {!! Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) !!}
         {!! Form::hidden('reason', 'subscription') !!}
-        {!! Form::select('source', ['other'=>'Other', 'paypal'=>'PayPal', 'cash'=>'Cash'], null, ['class'=>'form-control']) !!}
+        {!! Form::select('source', ['other'=>'Other', 'cash'=>'Cash'], null, ['class'=>'form-control']) !!}
         {!! Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) !!}
         {!! Form::close() !!}
     </td>

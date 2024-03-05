@@ -5,9 +5,7 @@ use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
 use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
-use BB\Events\UnknownPayPalPaymentReceived;
 use BB\Listeners\AddApprovedExpenseToBalance;
-use BB\Listeners\EmailDonorAboutUnknownPayPalPayment;
 use BB\Listeners\EmailMemberAboutApprovedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
@@ -73,9 +71,6 @@ class EventServiceProvider extends ServiceProvider {
             EmailMemberAboutTrustedStatus::class
         ],
         'BB\Events\NewMemberNotification' => [
-        ],
-        UnknownPayPalPaymentReceived::class => [
-            EmailDonorAboutUnknownPayPalPayment::class
         ],
         MemberBalanceChanged::class => [
             RecalculateMemberBalance::class

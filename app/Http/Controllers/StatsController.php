@@ -88,7 +88,6 @@ class StatsController extends Controller
         $paymentMethodsNumbers = [
             'gocardless'            => 0,
             'gocardless-variable'   => 0,
-            'paypal'                => 0,
             'standing-order'        => 0
         ];
         foreach ($users as $user) {
@@ -109,9 +108,6 @@ class StatsController extends Controller
             ],
             [
                 'Direct Debit', $paymentMethodsNumbers['gocardless'] + $paymentMethodsNumbers['gocardless-variable']
-            ],
-            [
-                'PayPal', $paymentMethodsNumbers['paypal']
             ],
             [
                 'Standing Order', $paymentMethodsNumbers['standing-order']

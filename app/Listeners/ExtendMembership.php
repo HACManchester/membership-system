@@ -4,7 +4,6 @@ namespace BB\Listeners;
 
 use BB\Events\SubscriptionChargePaid;
 use BB\Repo\UserRepository;
-use Codeception\Events;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

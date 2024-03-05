@@ -1,7 +1,9 @@
 <?php namespace BB\Services;
 
 
-class EquipmentCharge
+// This class was broken, but fixing it could revive code paths that haven't
+// worked in years. Wish to re-evaluate functionality and remove or fix, as needed.
+class DeviceChargingCharge_do_not_fix
 {
 
     /**

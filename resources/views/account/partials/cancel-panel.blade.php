@@ -20,13 +20,6 @@
             {!! Form::submit('Cancel Your Direct Debit and Leave', array('class'=>'btn btn-danger')) !!}
             {!! Form::close() !!}
 
-        @elseif ($user->payment_method == 'paypal')
-
-            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
-            {!! Form::submit('Leave Hackspace Manchester :(', array('class'=>'btn btn-danger')) !!}
-            {!! Form::close() !!}
-            <p>This will <strong>NOT</strong> cancel your PayPal subscription, you need to do this yourself though the PayPal site.</p>
-
         @else
 
             {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
