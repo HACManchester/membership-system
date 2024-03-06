@@ -158,6 +158,8 @@ class EquipmentLogRepository extends DBRepository
             $query = $query->where('reason', $reason);
         }
 
+        // todo: will throw exception due to missing orderBy?
+        // todo: unused functionality? Bin off?
         $query->chunk(100, function ($results) use (&$totalTime) {
             /** @var EquipmentLog[] $results */
             foreach ($results as $result) {

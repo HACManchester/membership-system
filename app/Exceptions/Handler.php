@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\ValidationException as IlluminateValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -31,6 +32,7 @@ class Handler extends ExceptionHandler
         AuthorizationException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        IlluminateValidationException::class,
     ];
 
     /**
@@ -102,7 +104,7 @@ class Handler extends ExceptionHandler
             return redirect()->back()->withInput();
         }
 
-        if ($e instanceof ValidationException) {
+        if ($e instanceof ValidationException || $e instanceof IlluminateValidationException) {
             if ($request->wantsJson()) {
                 return \Response::json($e->getMessage(), 422);
             }
@@ -169,6 +171,6 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect()->guest('login');
+        return redirect()->guest(route('login'));
     }
 }

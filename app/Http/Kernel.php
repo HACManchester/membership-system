@@ -17,7 +17,12 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \BB\Http\Middleware\HttpsProtocol::class,
+        
+        // Introduced in 5.4, but affects validation rules (we have rules that we'd need to set nullable on to allow empty strings)
+        // \BB\Http\Middleware\TrimStrings::class,
+        // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
     /**

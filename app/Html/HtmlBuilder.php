@@ -1,8 +1,8 @@
 <?php namespace BB\Html;
 
-use Illuminate\Html\HtmlBuilder as IlluminateHtmlBuilder;
+use Collective\Html\HtmlBuilder as CollectiveHtmlBuilder;
 
-class HtmlBuilder extends IlluminateHtmlBuilder
+class HtmlBuilder extends CollectiveHtmlBuilder
 {
 
     public function statusLabel($status)
