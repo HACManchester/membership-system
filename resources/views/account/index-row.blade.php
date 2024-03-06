@@ -24,11 +24,7 @@
             <i class="material-icons" title="Key Holder">vpn_key</i>
         @endif
         @if($user->keyFobs()->count() < 1) 
-            @if($user->postFob)
-                📮 Fob being posted 
-            @else
-                💁‍♂️ Fob being collected
-            @endif
+            💁‍♂️ Fob being collected
         @else
             🔑 ({{ $user->keyFobs()->count() }})
         @endif
