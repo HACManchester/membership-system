@@ -3,10 +3,11 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BrowserKitTestCase;
 
-class SignupTest extends TestCase {
-
-    //use DatabaseTransactions;
+class SignupTest extends BrowserKitTestCase
+{
+    use DatabaseMigrations;
 
     /** @test */
     public function i_can_visit_the_signup_page()

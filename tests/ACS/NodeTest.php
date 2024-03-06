@@ -3,11 +3,12 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BrowserKitTestCase;
 
-class NodeTest extends TestCase
+class NodeTest extends BrowserKitTestCase
 {
+    use DatabaseMigrations;
     use WithoutMiddleware;
-    //use DatabaseTransactions;
 
     /**
      * @test

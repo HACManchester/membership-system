@@ -11,9 +11,13 @@ use BB\Mail\SuspendedMessage;
 use BB\Mail\WelcomeMember;
 use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mailer\UserMailer;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class UserMailerTest extends TestCase
 {
+    use DatabaseMigrations;
+
     public function testSendWelcomeMessage()
     {
         Mail::fake();
