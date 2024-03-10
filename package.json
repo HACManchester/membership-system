@@ -47,7 +47,7 @@
     "react-validation-mixin": "^4.0.4",
     "reactify": "^1.1.1",
     "select2": "^3.5.2-browserify",
-    "underscore": "^1.8.3"
+    "underscore": "^1.12.1"
   },
   "browser": {
     "select2": "./node_modules/select2/select2.js",
