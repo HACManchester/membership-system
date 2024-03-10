@@ -5,11 +5,11 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 Class SubscriptionChargeTest extends TestCase
 {
-
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function it_works()

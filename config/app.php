@@ -2,7 +2,7 @@
 
 return [
 
-    'name' => 'Hackspace Manchester',
+    'name' => env('APP_NAME', 'Hackspace Manchester'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,8 @@ return [
     |
     */
 
-    'url' => 'https://members.hacman.org.uk',
+    'url' => env('APP_URL', 'https://members.hacman.org.uk'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -112,6 +113,8 @@ return [
 
     'log' => env('APP_LOG', 'single'),
 
+    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+
     // Keep 90d of daily logs
     'log_max_files' => 90,
 
@@ -134,6 +137,7 @@ return [
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
@@ -143,6 +147,7 @@ return [
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
@@ -152,8 +157,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Illuminate\Html\HtmlServiceProvider::class,
-        Illuminate\Notifications\NotificationServiceProvider::class,
+
+        /*
+         * Package Service Providers...
+         */
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -177,6 +185,7 @@ return [
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         // Queueing emails with sync queue doesn't work on 5.3+ without Bus?
         AltThree\Bus\BusServiceProvider::class,
@@ -198,6 +207,7 @@ return [
         'Artisan'               => Illuminate\Support\Facades\Artisan::class,
         'Auth'                  => Illuminate\Support\Facades\Auth::class,
         'Blade'                 => Illuminate\Support\Facades\Blade::class,
+        'Broadcast'             => Illuminate\Support\Facades\Broadcast::class,
         'Bus'                   => Illuminate\Support\Facades\Bus::class,
         'Cache'                 => Illuminate\Support\Facades\Cache::class,
         'Config'                => Illuminate\Support\Facades\Config::class,
@@ -207,9 +217,9 @@ return [
         'Eloquent'              => Illuminate\Database\Eloquent\Model::class,
         'Event'                 => Illuminate\Support\Facades\Event::class,
         'File'                  => Illuminate\Support\Facades\File::class,
+        'Gate'                  => Illuminate\Support\Facades\Gate::class,
         'Hash'                  => Illuminate\Support\Facades\Hash::class,
         'Input'                 => Illuminate\Support\Facades\Input::class,
-        'Inspiring'             => Illuminate\Foundation\Inspiring::class,
         'Lang'                  => Illuminate\Support\Facades\Lang::class,
         'Log'                   => Illuminate\Support\Facades\Log::class,
         'Mail'                  => Illuminate\Support\Facades\Mail::class,
@@ -226,12 +236,14 @@ return [
         'URL'                   => Illuminate\Support\Facades\URL::class,
         'Validator'             => Illuminate\Support\Facades\Validator::class,
         'View'                  => Illuminate\Support\Facades\View::class,
-        'Form'                  => Illuminate\Html\FormFacade::class,
-        'HTML'                  => Illuminate\Html\HtmlFacade::class,
+        'Form'                  => Collective\Html\FormFacade::class,
+        'HTML'                  => Collective\Html\HtmlFacade::class,
         'FlashNotification'     => \ArthurGuy\Notifications\NotificationFacade::class,
         'Notification'          => Illuminate\Support\Facades\Notification::class,
         'Image'                 => Intervention\Image\Facades\Image::class,
         'MembershipPayments'    => BB\Helpers\MembershipPayments::class,
         'Sentry'                => Sentry\Laravel\Facade::class,
+
     ],
+
 ];

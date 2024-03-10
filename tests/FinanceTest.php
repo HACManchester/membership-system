@@ -4,10 +4,11 @@ use BB\Exceptions\AuthenticationException;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BrowserKitTestCase;
 
-class FinanceTest extends TestCase
+class FinanceTest extends BrowserKitTestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function guest_cant_view_payments_page()

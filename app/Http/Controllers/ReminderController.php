@@ -28,25 +28,15 @@ class ReminderController extends Controller
      */
 	public function store(Request $request)
 	{
-        $validator = app('Illuminate\Contracts\Validation\Factory')->make($request->all(), ['email' => 'required|email']);
-        if ($validator->fails()) {
-            throw new FormValidationException('Error', $validator->errors());
-        }
+        $this->validate($request, ['email' => 'required|email']);
 
         $response = Password::sendResetLink($request->only('email'), function(Message $message)
         {
             $message->subject('Reset your password');
         });
 
-        switch ($response) {
-			case Password::INVALID_USER:
-                \FlashNotification::error(trans($response));
-                return redirect()->back();
-
-			case Password::RESET_LINK_SENT:
-                \FlashNotification::success(trans($response));
-                return redirect()->back();
-		}
+        \FlashNotification::success(trans($response));
+        return redirect()->back();
 	}
 
 	/**
@@ -75,18 +65,15 @@ class ReminderController extends Controller
      */
 	public function postReset(Request $request)
 	{
-        $credentials = $request->only(
-            'email', 'password', 'password_confirmation', 'token'
-        );
-
-        $validator = app('Illuminate\Contracts\Validation\Factory')->make($credentials, [
+        $this->validate($request, [
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
-        if ($validator->fails()) {
-            throw new FormValidationException('Error', $validator->errors());
-        }
+
+        $credentials = $request->only(
+            'email', 'password', 'password_confirmation', 'token'
+        );
 
         //We aren't using a confirm password box so this can be faked
         $credentials['password_confirmation'] = $credentials['password'];

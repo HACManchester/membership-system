@@ -4,11 +4,11 @@ use BB\Entities\User;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BrowserKitTestCase;
 
-Class DevicesTest extends TestCase
+Class DevicesTest extends BrowserKitTestCase
 {
-
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function i_can_visit_the_devices_page()

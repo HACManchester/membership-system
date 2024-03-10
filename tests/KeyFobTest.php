@@ -6,10 +6,11 @@ use BB\Entities\User;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BrowserKitTestCase;
 
-class KeyFobTest extends TestCase
+class KeyFobTest extends BrowserKitTestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     // Can register keyfob against self
     // Cannot register keyfob against others

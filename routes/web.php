@@ -18,7 +18,7 @@ Route::get('admin', ['as' => 'admin', 'uses' => 'AdminController@index', 'middle
 Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
 Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
 Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store']);
-Route::get('password/reset/{id}', ['uses' => 'ReminderController@getReset']);
+Route::get('password/reset/{id}', ['as' => 'password.reset', 'uses' => 'ReminderController@getReset']);
 Route::post('password/reset', ['as' => 'password.reset.complete', 'uses' => 'ReminderController@postReset']);
 
 Route::get('sso/login', ['uses' => 'SessionController@sso_login']);

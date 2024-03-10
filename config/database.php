@@ -58,11 +58,12 @@ return [
 			'database'  => env('DB_DATABASE', 'bbms'),
 			'username'  => env('DB_USERNAME', 'root'),
 			'password'  => env('DB_PASSWORD', ''),
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
+			'unix_socket' => env('DB_SOCKET', ''),
+			'charset' => 'utf8mb4',
+			'collation' => 'utf8mb4_unicode_ci',
 			'prefix'    => '',
 			'strict'    => false,
-            'port'      => env('DB_PORT', '13306'),
+			'port'      => env('DB_PORT', '13306'),
 		],
 
 		'pgsql' => [
@@ -112,8 +113,7 @@ return [
 	*/
 
 	'redis' => [
-
-		'cluster' => false,
+		'client' => 'predis',
 
 		'default' => [
 			'host'     => '127.0.0.1',
