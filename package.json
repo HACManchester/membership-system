@@ -46,7 +46,7 @@
     "react-tools": "^0.13.3",
     "react-validation-mixin": "^4.0.4",
     "reactify": "^1.1.1",
-    "select2": "^3.5.2-browserify",
+    "select2": "^4.0.6",
     "underscore": "^1.8.3"
   },
   "browser": {
