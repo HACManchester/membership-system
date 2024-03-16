@@ -49,18 +49,8 @@ class RoleUsersController extends Controller
     {
         $role = Role::findOrFail($roleId);
 
-        //don't let people remove the admin permission if they are a board
-
-        $user = User::findOrFail($userId);
-        if ($user->active && $role->name == 'admin') {
-            \FlashNotification::error("You cannot remove a board from the admin group");
-            return \Redirect::back();
-        }
-
         $role->users()->detach($userId);
 
         return \Redirect::back();
     }
-
-
 }
