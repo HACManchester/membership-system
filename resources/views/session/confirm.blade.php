@@ -14,8 +14,9 @@ Login To Another Service
             'method' => 'GET'
         )) !!}
 
-        {!! Form::hidden('sso', $sso) !!}
-        {!! Form::hidden('sig', $sig) !!}
+        {{-- Do not use Form::Hidden, as that will pull 'sso' and 'sig' from input, which is not appropriate to use here. --}}
+        <input type="hidden" name="sso" value="{{ $sso }}">
+        <input type="hidden" name="sig" value="{{ $sig }}">
 
         <div class="row">
             <div class="col-xs-12">
