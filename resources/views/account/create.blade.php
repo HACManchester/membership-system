@@ -215,6 +215,15 @@ Join Hackspace Manchester
         </div>
     </div>      
 
+    <div class="alert alert-warning">
+        <h4>Pacemaker warning</h4>
+
+        <p>
+            Some of our tools may pose a risk to those that have pacemakers fitted. This risk may be especially high around
+            the welding equipment. Please consult your doctor about the risks of using machinery when wearing a pacemaker.
+            If you do undergo an induction on any tools that carry a risk, please mention this to your trainer.
+        </p>
+    </div>
 
     <h4>Rules</h4>
     <p>
