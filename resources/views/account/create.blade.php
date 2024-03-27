@@ -2,54 +2,45 @@
 
 @section('meta-title')
 Join Hackspace Manchester
-@stop
+@endsection
 
 @section('content')
-
 <div class="register-container col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="page-header">
-                <h1>Join Hackspace Manchester</h1>
-                <p>
-                    Welcome! Hackspace Manchester is a fantastic space and community of like minded people.
-                </p>
-            </div>
-        </div>
+    <div class="page-header">
+        <h1>Join Hackspace Manchester</h1>
+        <p>
+            Welcome! Hackspace Manchester is a fantastic space and community of like minded people.
+        </p>
     </div>
 
     @if($gift)
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="alert {!! $gift_valid ? 'alert-success' : 'alert-danger'!!}">
-                    @if($gift_valid)
-                        <h3>🎁 Gift Code Added!</h3>
-                        <p>
-                            Hey {!! $gift_details['to'] !!}, your gift from {!! $gift_details['from'] !!} has been applied!
-                            Just register below and you'll enjoy 
-                            @if($gift_details['months']) 
-                                <b>{!! $gift_details['months'] !!} months</b> of membership for free 
-                            @endif
-
-                            @if($gift_details['months'] && $gift_details['credit'])
-                                and
-                            @endif
-
-                            @if($gift_details['credit']) 
-                                <b>£{!! $gift_details['credit'] !!} credit</b>!
-                            @endif
-                        </p>
-                    @else
-                        <h3>😔 We couldn't find that gift code...</h3>
-                        <p>
-                            Hmmm, that code wasn't valid.<br/>
-                            You can <a href="/gift">try again</a> or register below without the gift.
-                        </p>
+        <div class="alert {!! $gift_valid ? 'alert-success' : 'alert-danger'!!}">
+            @if($gift_valid)
+                <h3>🎁 Gift Code Added!</h3>
+                <p>
+                    Hey {!! $gift_details['to'] !!}, your gift from {!! $gift_details['from'] !!} has been applied!
+                    Just register below and you'll enjoy 
+                    @if($gift_details['months']) 
+                        <b>{!! $gift_details['months'] !!} months</b> of membership for free 
                     @endif
-            </div>
-            </div>
-        </div>  
+
+                    @if($gift_details['months'] && $gift_details['credit'])
+                        and
+                    @endif
+
+                    @if($gift_details['credit']) 
+                        <b>£{!! $gift_details['credit'] !!} credit</b>!
+                    @endif
+                </p>
+            @else
+                <h3>😔 We couldn't find that gift code...</h3>
+                <p>
+                    Hmmm, that code wasn't valid.<br/>
+                    You can <a href="/gift">try again</a> or register below without the gift.
+                </p>
+            @endif
+    </div>
     @endif
 
     {!! Form::open(array('route' => 'account.store', 'class'=>'form-horizontal', 'files'=>true)) !!}
@@ -60,17 +51,13 @@ Join Hackspace Manchester
         {!! Form::hidden('gift_code', $gift_code) !!}
     @endif
 
-    <div class="row">
-        <div class="col-xs-12">
-            <p>
-                Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
-                <ul>
-                    <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
-                    <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
-                </ul>
-            </p>
-        </div>
-    </div>
+    <p>
+        Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
+        <ul>
+            <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
+            <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
+        </ul>
+    </p>
 
     @if (FlashNotification::hasMessage())
     <div class="alert alert-{{ FlashNotification::getLevel() }} alert-dismissable">
@@ -113,18 +100,6 @@ Join Hackspace Manchester
         </div>
     </div>
 
-    <!--
-    <div class="form-group {{ FlashNotification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">        
-        {!! Form::label('announce_name', 'Announce Name', ['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-9 col-lg-7">
-            {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'announce-name']) !!}
-            {!! FlashNotification::getErrorDetail('announce_name') !!}
-        </div>
-    </div>
-    Make an entrance! Announce name, if set, will be used to announce your entry into the Hackspace both in the space and on the Hackscreen Telegram Channel.<br>
-    <br>
-    -->
-
     <h4>Account information</h4>
 
     <div class="form-group {{ FlashNotification::hasErrorDetail('email', 'has-error has-feedback') }}">
@@ -144,11 +119,9 @@ Join Hackspace Manchester
     </div>
 
     @if($gift_valid)
-    <div>
         <div class="alert alert-success">
             As you have a gift certificate applied, <b>you won't pay for the duration of your free membership</b>. 
         </div>
-    </div>
     @endif
 
     <div class="alert {!! $gift_valid ? 'alert-info' : 'alert-success' !!}">
@@ -242,18 +215,27 @@ Join Hackspace Manchester
         </div>
     </div>      
 
+
+    <h4>Rules</h4>
+    <p>
+        We want Hackspace Manchester to be a welcoming and inclusive environment, where everybody feels comfortable and
+        behaves safely. Please familiarise yourself with
+        <a href="https://hacman.org.uk/rules" target="_blank">our rules and code of conduct</a>.
+    </p>
     <div class="form-group {{ FlashNotification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
-        <div class="col-xs-10 col-sm-8 well col-lg-8 col-xs-offset-1 col-sm-offset-3" style="background:rgba(255,0,0,0.05)">
-            <h4>Rules</h4>
-            <span class="help-block">Please read the <a href="https://hacman.org.uk/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
-            {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
-            {!! Form::label('rules_agreed', 'I agree to the Hackspace Manchester rules', ['class'=>'']) !!}
-            {!! FlashNotification::getErrorDetail('rules_agreed') !!}
+        <div class="col-xs-12">
+            <div class="checkbox">
+                <label>
+                    {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
+                    I agree to the Hackspace Manchester rules and code of conduct
+                </label>
+                {!! FlashNotification::getErrorDetail('rules_agreed') !!}
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+    <div class="form-group">
+        <div class="col-xs-12">
             {!! Form::submit('Join Hackspace Manchester', array('class'=>'btn btn-primary')) !!}
         </div>
     </div>
@@ -303,3 +285,5 @@ Join Hackspace Manchester
         </div>
     </div>
 </div>
+
+@endsection
