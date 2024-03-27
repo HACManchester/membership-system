@@ -15,7 +15,6 @@ Join Hackspace Manchester
                 <p>
                     Welcome! Hackspace Manchester is a fantastic space and community of like minded people.
                 </p>
-                <p>If you just want access to our online services such as the forum, please <a href="/online-only">sign up for online only access</a>.
             </div>
         </div>
     </div>
