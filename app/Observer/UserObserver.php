@@ -49,7 +49,7 @@ class UserObserver
         }
 
         //User left
-        if (($original['status'] != 'left') && ($user->status == 'left')) {
+        if (($original['status'] != 'left') && ($user->status == 'left') && $user->isBanned() == false) {
             $this->userLeft($user);
         }
     }

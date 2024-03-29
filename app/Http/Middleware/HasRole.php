@@ -34,7 +34,6 @@ class HasRole
         } elseif (\Auth::user()->isBanned()) {
 
             throw new AuthenticationException();
-
         }
 
         return $next($request);

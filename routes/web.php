@@ -122,7 +122,6 @@ Route::group(array('middleware' => 'role:finance'), function () {
 Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'middleware' => 'role:member']);
 
 
-
 ##########################
 # Inductions
 ##########################
@@ -259,6 +258,14 @@ Route::group(array('middleware' => 'role:member'), function () {
 });
 
 
+##########################
+# Disciplinary
+##########################
+
+Route::group(array('middleware' => 'role:admin'), function () {
+    Route::post('disciplinary/{user}/ban', ['uses' => 'DisciplinaryController@ban', 'as' => 'disciplinary.ban']);
+    Route::post('disciplinary/{user}/unban', ['uses' => 'DisciplinaryController@unban', 'as' => 'disciplinary.unban']);
+});
 
 ##########################
 # Resources

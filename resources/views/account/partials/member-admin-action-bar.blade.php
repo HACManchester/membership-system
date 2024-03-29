@@ -240,6 +240,35 @@
                         </div>
                     @endif
 
+                    <div class="infobox__grid-item infobox__grid-item--main alert-danger">
+                        <h4>Disciplinary actions</h4>
+                        @if ($user->isBanned())
+                            <p>User was banned on {{ $user->banned_date }} for the reason:</p>
+                            <p style="padding-left: 2em">{{ nl2br($user->banned_reason) }}</p>
+                            
+                            {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['disciplinary.unban', $user->id])) !!}
+                                {!! Form::submit('Unban member', array('class'=>'btn btn-default')) !!}
+                            {!! Form::close() !!}
+                        @else
+                            <div>
+                                <h3>Ban member</h3>
+                                <p>By banning a member, we will:</p>
+                                <ul>
+                                    <li>Immediately mark them as left on the system</li>
+                                    <li>Cancel their GoCardless subscription (if they have one set up)</li>
+                                    <li>Stop them being able to access the members system</li>
+                                </li>
+                                <p>We will not send any automated emails to the member, you should do this yourself from the board email address.</p>
+
+                                {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['disciplinary.ban', $user->id])) !!}
+                                    {!! Form::label('reason', 'Reason for the ban (255 characters)', array('class'=>'control-label')) !!}
+                                    {!! Form::text('reason', null, array('class'=>'form-control')) !!}
+                                    {!! Form::submit('Ban member', array('class'=>'btn btn-default')) !!}
+                                {!! Form::close() !!}
+                            </div>
+                        @endif
+                    </div>
+
                         
                     <div class="infobox__grid-item infobox__grid-item--footer">
                         <h4>Member subscription and DD info</h4>

@@ -109,7 +109,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'postFob',
         'gift',
         'seen_at',
-        'pronouns'
+        'pronouns',
+        'banned',
+        'banned_reason',
+        'banned_date',
     ];
 
 
@@ -139,7 +142,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         // 'key_holder' => 'boolean',
         // 'induction_completed' => 'boolean',
         // 'profile_private' => 'boolean',
-        // 'banned' => 'boolean',
+        'banned' => 'boolean',
     ];
 
 
