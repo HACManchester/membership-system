@@ -18,17 +18,11 @@
         height: 100%;
         text-align: center;
     }
-    img {
-        height: 100vh;
-    }
-    h1 {
-        font-size: 15vh;
-        padding-top: 0;
-    }
     </style>
 </head>
 <body>
     <h1>403 - Not Allowed</h1>
-    <iframe width="960" height="720" src="https://www.youtube.com/embed/otCpCn0l4Wo?start=14&rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
+    <p>You are not allowed to view this page or perform this action.</p>
+    <p>If you think this may be a mistake, please email us at: <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a></p>
 </body>
 </html>
