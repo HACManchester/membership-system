@@ -1,6 +1,7 @@
 <?php namespace BB\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class StorageBox
@@ -9,8 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @package BB\Entities
  */
-class StorageBox extends Model
+class StorageBox extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * The database table used by the model.
