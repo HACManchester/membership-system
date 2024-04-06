@@ -223,8 +223,6 @@ Route::post('activity', ['uses' => 'ActivityController@create', 'as' => 'activit
 Route::get('storage_boxes', ['uses' => 'StorageBoxController@index', 'as' => 'storage_boxes.index', 'middleware' => 'role:member']);
 Route::get('storage_boxes/{id}', ['uses' => 'StorageBoxController@show', 'as' => 'storage_boxes.show', 'middleware' => 'role:member']);
 Route::put('storage_boxes/{id}', ['uses' => 'StorageBoxController@update', 'as' => 'storage_boxes.update', 'middleware' => 'role:member']);
-Route::get('large_project', ['uses' => 'LargeProjectController@index', 'as' => 'projects_storage.index', 'middleware' => 'role:member']);
-Route::put('large_project/{id}', ['uses' => 'LargeProjectController@update', 'as' => 'projects_storage.update', 'middleware' => 'role:member']);
 
 
 ##########################

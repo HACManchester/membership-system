@@ -181,7 +181,6 @@
             
             {!! HTML::sideNavLink('Members', 'members.index') !!}
             {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
-            {!! HTML::sideNavLink('Large Project Storage', 'projects_storage.index') !!}
             {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
             {!! HTML::sideNavLink('Stats', 'stats.index') !!}
             {!! HTML::sideNavLink('Teams', 'groups.index') !!}
