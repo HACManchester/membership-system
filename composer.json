@@ -30,7 +30,7 @@
         "php-http/curl-client": "^2.3",
         "php-http/message": "^1.16",
         "php-http/message-factory": "^1.1",
-        "rap2hpoutre/laravel-log-viewer": "~0.2",
+        "rap2hpoutre/laravel-log-viewer": "^2.3",
         "sentry/sentry-laravel": "^1.5",
         "stripe/stripe-php": "1.*",
         "sybio/gif-creator": "~1.0",
