@@ -72,11 +72,19 @@
             @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif
             @if($box->location == 'Old Members Storage') style="display:none;"@endif
         >
-            <td><a href="/storage_boxes/{{$box->id}}">{{ $box->id }}</a></td>
+            <td><a href="{{ route('storage_boxes.show', $box) }}">{{ $box->id }}</a></td>
             <td>{{ $box->location }}</td>
-            <td>{{ $box->user->name or 'Available' }}</td>
             <td>
-                @if($box->user && !$box->user->active)
+                @if($box->isClaimed())
+                    <a href="{{ route('members.show', $box->user) }}">
+                        {{ $box->user->name }}
+                    </a>
+                @else
+                    Available
+                @endif
+            </td>
+            <td>
+                @if($box->isClaimed() && !$box->user->active)
                     ⚠️ Member left
                 @elseif (($volumeAvailable >= $box->size) && !$box->user)
                     @if ($box->location == "Old Members Storage" || Auth::user()->online_only)
@@ -90,7 +98,7 @@
                 @endif
             </td>
             @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
-                <td><a href="storage_boxes/{{ $box->id }}">Admin</a></td>
+                <td><a href="{{ route('storage_boxes.show', $box) }}">Admin</a></td>
             @endif
         </tr>
     </tbody>

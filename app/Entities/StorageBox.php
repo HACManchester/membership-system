@@ -28,7 +28,7 @@ class StorageBox extends Model
     protected $fillable = [
         'size',
         'active',
-	'location',
+	    'location',
         'user_id'
     ];
 
@@ -53,5 +53,8 @@ class StorageBox extends Model
         return ($this->active && ! $this->user_id);
     }
 
-
+    public function isClaimed()
+    {
+        return $this->user_id > 0;
+    }
 } 

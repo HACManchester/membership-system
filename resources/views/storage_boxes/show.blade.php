@@ -55,23 +55,25 @@
                         <div class="col-sm-6 print-border">
                             <h2>📦 {{ $box->location }} <small>(#{{ $box->id }})</small></h2>
                             <h2>
-                                @if($box->user)
+                                @if($box->isClaimed())
                                     @if($box->user->active)
                                         <span class="no-print">🟡</span> Claimed
                                     @else
                                         <span class="no-print">⚠️</span> Member left
-                                        @endif
+                                    @endif
                                 @else
-                                @if ($box->location == "Old Members Storage")
+                                    @if ($box->location == "Old Members Storage")
                                         <span class="no-print">⛔</span> Not available to be claimed
                                     @else
-                                    <span class="no-print">🟢</span> Available
+                                        <span class="no-print">🟢</span> Available
                                     @endif
-                                    @endif
+                                @endif
                                     
                             </h2>
-                            @if($box->user && $box->user->active)
-                                <h2>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h2>
+                            @if($box->isClaimed())
+                                <a href="{{ route('members.show', $box->user) }}">
+                                    <h2>🙂 {{$box->user->name}} <small>(#{{ $box->user->id }})</small> </h2>
+                                </a>
                             @endif
                         </div>
                         <div class="col-sm-6">
