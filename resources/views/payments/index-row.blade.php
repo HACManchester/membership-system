@@ -42,6 +42,18 @@
                         {!! Form::close() !!}
                     </li>
                 @endif
+                @if ($payment->source == 'gocardless-variable' && $payment->status == \BB\Entities\Payment::STATUS_PENDING)
+                    <li>
+                        {!! Form::open([
+                            'method' => 'POST', 
+                            'route' => ['payment.gocardless.cancel', $payment], 
+                            'class' => 'navbar-form navbar-left'
+                        ]) !!}
+                        {!! Form::hidden('cancel', 'confirm-gocardless-variable') !!}
+                        {!! Form::submit('Cancel payment', array('class'=>'btn btn-link')) !!}
+                        {!! Form::close() !!}
+                    </li>
+                @endif
             </ul>
         </div>
     </td>

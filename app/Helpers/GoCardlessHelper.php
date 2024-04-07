@@ -26,6 +26,11 @@ class GoCardlessHelper
         return $this->client->payments()->get($paymentId);
     }
 
+    public function cancelPayment($paymentId)
+    {
+        return $this->client->payments()->cancel($paymentId);
+    }
+
     public function newPreAuthUrl($user, $paymentDetails)
     {
         $redirectFlow = $this->client->redirectFlows()->create([

@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Entities\Payment;
 use BB\Entities\User;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
@@ -100,8 +101,7 @@ class GoCardlessPaymentController extends Controller
             \FlashNotification::success("The payment was submitted successfully");
 
             return \Redirect::to($returnPath);
-        }
-        catch (InvalidStateException | ValidationFailedException $e) {
+        } catch (InvalidStateException | ValidationFailedException $e) {
             $status = 'failed';
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
@@ -111,8 +111,7 @@ class GoCardlessPaymentController extends Controller
 
             \FlashNotification::error("We were unable to take payment from your account. Please try again.");
             return \Redirect::to($returnPath);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             // Genuine app exception... needs investigation
             \Log::info($e);
 
@@ -172,5 +171,20 @@ class GoCardlessPaymentController extends Controller
             return \Request::get('reference');
         }
         return false;
+    }
+
+    public function cancel(Payment $payment)
+    {
+        if ($payment->status != 'pending') {
+            \FlashNotification::error("The payment could not be cancelled");
+            return \Redirect::to(\Request::get('return_path'));
+        }
+
+        $this->goCardless->cancelPayment($payment->source_id);
+        \FlashNotification::success("Cancellation request sent to GoCardless");
+
+        // The payment log will be updated from a webhook once GoCardless has actioned the cancellation
+
+        return \Redirect::to(\Request::get('return_path'));
     }
 }

@@ -106,6 +106,11 @@ Route::post('account/{account}/payment/stripe', ['as' => 'account.payment.cash.c
 Route::post('account/{account}/payment/gocardless', ['as' => 'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
 Route::post('account/{account}/payment/balance', ['as' => 'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
 Route::post('account/{account}/payment/cash2', ['as' => 'account.payment.cash2.create', 'uses' => 'CashPaymentController@store']);
+Route::post('payment/gocardless/{payment}/cancel', [
+    'as' => 'payment.gocardless.cancel',
+    'uses' => 'GoCardlessPaymentController@cancel',
+    'middleware' => 'role:finance'
+]);
 
 
 //Cash
@@ -280,7 +285,7 @@ Route::get('resources/policy/{title}', ['uses' => 'ResourcesController@viewPolic
 ##########################
 
 // Route::group(array('middleware' => 'role:finance'), function () {
-    // Route::resource('expenses', 'ExpensesController');
+// Route::resource('expenses', 'ExpensesController');
 // });
 
 
