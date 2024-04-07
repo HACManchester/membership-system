@@ -33,16 +33,9 @@ class Kernel extends ConsoleKernel
     {
         $telegram = new TelegramHelper("createSubscriptionCharges");
 
-        // $schedule->command('bb:fix-equipment-log')->hourly()
-        //     ->then( function () { $this->notifyTelegram(''); } );
-
-        // $schedule->command('bb:calculate-equipment-fees')->dailyAt('02:00')
-        //     ->then( function () { $this->notifyTelegram(''); } );
-
-        // todo: These are currently running via cron, via automate.sh. We should move back to using the Laravel scheduler?
 
         $schedule
-            ->command('bb:check-memberships')
+            ->command(Commands\CheckMembershipStatus::class)
             ->dailyAt('06:00')
             ->then( function () use ($telegram) {
                 $message = "✔️ Checked Memberships";
@@ -54,19 +47,7 @@ class Kernel extends ConsoleKernel
             });
 
         $schedule
-            ->command('bb:update-balances')
-            ->dailyAt('03:00')
-            ->then( function () use ($telegram) {
-                $message = "✔️ Updated Balances";
-                \Log::info($message); 
-                $telegram->notify(
-                    TelegramHelper::JOB, 
-                    $message
-                );
-            });
-
-        $schedule
-            ->command('bb:create-todays-sub-charges')
+            ->command(Commands\CreateTodaysSubCharges::class)
             ->dailyAt('01:00')
             ->then( function () use ($telegram) { 
                 $message = "✔️ Created today's subscription charges";
@@ -78,7 +59,7 @@ class Kernel extends ConsoleKernel
             } );
 
         $schedule
-            ->command('bb:bill-members')
+            ->command(Commands\BillMembers::class)
             ->dailyAt('01:30')
             ->then( function ($result) use ($telegram) { 
                 $message = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
@@ -88,10 +69,5 @@ class Kernel extends ConsoleKernel
                     $message
                 );
             });
-
-        $schedule
-            ->command('device:check-online')
-            ->everyTenMinutes()
-            ->then( function () { });
     }
 }
