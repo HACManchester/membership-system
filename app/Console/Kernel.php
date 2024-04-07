@@ -22,7 +22,6 @@ class Kernel extends ConsoleKernel
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
         Commands\CheckDeviceOnlineStatuses::class,
-        Commands\TestScheduledTask::class,
         Commands\Payments\CheckForPossibleDuplicates::class,
     ];
 
@@ -66,18 +65,6 @@ class Kernel extends ConsoleKernel
             ->dailyAt('01:30')
             ->then(function () use ($telegram) {
                 $message = "✅ Billed members.";
-                \Log::info($message);
-                $telegram->notify(
-                    TelegramHelper::JOB,
-                    $message
-                );
-            });
-
-        $schedule
-            ->command(Commands\TestScheduledTask::class)
-            ->hourlyAt(47)
-            ->then(function () use ($telegram) {
-                $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
                 \Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
