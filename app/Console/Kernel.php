@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
         Commands\CheckDeviceOnlineStatuses::class,
+        Commands\TestScheduledTask::class,
     ];
 
     
@@ -32,7 +33,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $telegram = new TelegramHelper("createSubscriptionCharges");
-
 
         $schedule
             ->command(Commands\CheckMembershipStatus::class)
@@ -69,5 +69,16 @@ class Kernel extends ConsoleKernel
                     $message
                 );
             });
+
+        $schedule
+        ->command(Commands\TestScheduledTask::class)
+        ->hourly()
+        ->then(function($result) use ($telegram) {
+            $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
+            $telegram->notify(
+                TelegramHelper::JOB, 
+                $message
+            );
+        });
     }
 }
