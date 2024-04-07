@@ -75,9 +75,10 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\TestScheduledTask::class)
-            ->hourlyAt(37)
-            ->then(function ($result) use ($telegram) {
+            ->hourlyAt(43)
+            ->then(function () use ($telegram) {
                 $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
+                \Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
                     $message
@@ -86,7 +87,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\Payments\CheckForPossibleDuplicates::class)
-            ->dailyAt('14:37')
+            ->dailyAt('15:43')->timezone('Europe/London')
             ->emailOutputTo('board@hacman.org.uk', true);
     }
 }
