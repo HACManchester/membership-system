@@ -177,7 +177,7 @@ class GoCardlessPaymentController extends Controller
     {
         if ($payment->status != 'pending') {
             \FlashNotification::error("The payment could not be cancelled");
-            return \Redirect::to(\Request::get('return_path'));
+            return \Redirect::back();
         }
 
         $this->goCardless->cancelPayment($payment->source_id);
@@ -185,6 +185,6 @@ class GoCardlessPaymentController extends Controller
 
         // The payment log will be updated from a webhook once GoCardless has actioned the cancellation
 
-        return \Redirect::to(\Request::get('return_path'));
+        return \Redirect::back();
     }
 }
