@@ -1,4 +1,6 @@
-<?php namespace BB\Console;
+<?php
+
+namespace BB\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -21,9 +23,10 @@ class Kernel extends ConsoleKernel
         Commands\BillMembers::class,
         Commands\CheckDeviceOnlineStatuses::class,
         Commands\TestScheduledTask::class,
+        Commands\Payments\CheckForPossibleDuplicates::class,
     ];
 
-    
+
     /**
      * Define the application's command schedule.
      *
@@ -37,11 +40,11 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\CheckMembershipStatus::class)
             ->dailyAt('06:00')
-            ->then( function () use ($telegram) {
+            ->then(function () use ($telegram) {
                 $message = "✔️ Checked Memberships";
-                \Log::info($message); 
+                \Log::info($message);
                 $telegram->notify(
-                    TelegramHelper::JOB, 
+                    TelegramHelper::JOB,
                     $message
                 );
             });
@@ -49,36 +52,41 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\CreateTodaysSubCharges::class)
             ->dailyAt('01:00')
-            ->then( function () use ($telegram) { 
+            ->then(function () use ($telegram) {
                 $message = "✔️ Created today's subscription charges";
-                \Log::info($message); 
+                \Log::info($message);
                 $telegram->notify(
-                    TelegramHelper::JOB, 
-                    $message
-                );
-            } );
-
-        $schedule
-            ->command(Commands\BillMembers::class)
-            ->dailyAt('01:30')
-            ->then( function ($result) use ($telegram) { 
-                $message = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
-                \Log::info($message); 
-                $telegram->notify(
-                    TelegramHelper::JOB, 
+                    TelegramHelper::JOB,
                     $message
                 );
             });
 
         $schedule
-        ->command(Commands\TestScheduledTask::class)
-        ->hourly()
-        ->then(function($result) use ($telegram) {
-            $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
-            $telegram->notify(
-                TelegramHelper::JOB, 
-                $message
-            );
-        });
+            ->command(Commands\BillMembers::class)
+            ->dailyAt('01:30')
+            ->then(function ($result) use ($telegram) {
+                $message = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
+                \Log::info($message);
+                $telegram->notify(
+                    TelegramHelper::JOB,
+                    $message
+                );
+            });
+
+        $schedule
+            ->command(Commands\TestScheduledTask::class)
+            ->hourly()
+            ->then(function ($result) use ($telegram) {
+                $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
+                $telegram->notify(
+                    TelegramHelper::JOB,
+                    $message
+                );
+            });
+
+        $schedule
+            ->command(Commands\Payments\CheckForPossibleDuplicates::class)
+            ->dailyAt('16:30')
+            ->emailOutputTo('board@hacman.org.uk', true);
     }
 }

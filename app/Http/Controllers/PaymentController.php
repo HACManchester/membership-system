@@ -1,4 +1,6 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Entities\Induction;
 use BB\Entities\Payment;
@@ -50,7 +52,6 @@ class PaymentController extends Controller
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
 
         $this->middleware('role:member', array('only' => ['create', 'destroy']));
-
     }
 
 
@@ -134,11 +135,11 @@ class PaymentController extends Controller
     {
         $user = User::findWithPermission($userId);
 
-        if ( ! \Auth::user()->hasRole('admin') &&  ! \Auth::user()->hasRole('finance')) {
+        if (!\Auth::user()->hasRole('admin') &&  !\Auth::user()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
 
-        \Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store '.json_encode(\Input::all()));
+        \Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store ' . json_encode(\Input::all()));
 
         $reason = \Input::get('reason');
 
@@ -154,7 +155,6 @@ class PaymentController extends Controller
             $user->payments()->save($payment);
 
             $user->extendMembership(\Input::get('source'), \Carbon\Carbon::now()->addMonth());
-
         } elseif ($reason == 'induction') {
             if (\Input::get('source') == 'manual') {
                 $ref = \Input::get('induction_key');
@@ -191,7 +191,6 @@ class PaymentController extends Controller
 
             $user->key_deposit_payment_id = $payment->id;
             $user->save();
-
         } elseif ($reason == 'storage-box') {
             $payment = new Payment([
                 'reason'           => $reason,
@@ -207,7 +206,7 @@ class PaymentController extends Controller
             $user->save();
         } elseif ($reason == 'balance') {
             $amount = \Input::get('amount') * 1; //convert the users amount into a number
-            if ( ! is_numeric($amount)) {
+            if (!is_numeric($amount)) {
                 $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
                 throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
             }
@@ -237,31 +236,6 @@ class PaymentController extends Controller
         return \Redirect::route('account.show', [$user->id]);
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-
     /**
      * Update a payment
      * Change where the money goes by altering the original record or creating a secondary payment
@@ -277,7 +251,7 @@ class PaymentController extends Controller
     {
         $payment = $this->paymentRepository->getById($paymentId);
 
-        switch($request->get('change')) {
+        switch ($request->get('change')) {
             case 'assign-unknown-to-user':
                 $newUserId = $request->get('user_id');
                 try {
@@ -360,7 +334,6 @@ class PaymentController extends Controller
                 return \Redirect::back();
             }
         } catch (\Exception $e) {
-
         }
 
         $user->payment_method  = '';
@@ -369,8 +342,8 @@ class PaymentController extends Controller
 
         $payment_details = array(
             "description"          => "Hackspace Manchester",
-            'success_redirect_url' => str_replace('http://','https://',route('account.subscription.store', $user->id)),
-            "session_token"        => 'user-token-'.$user->id,
+            'success_redirect_url' => str_replace('http://', 'https://', route('account.subscription.store', $user->id)),
+            "session_token"        => 'user-token-' . $user->id,
             'prefilled_customer'   => [
                 'given_name'    => $user->given_name,
                 'family_name'   => $user->family_name,
@@ -386,4 +359,12 @@ class PaymentController extends Controller
         return \Redirect::to($this->goCardless->newPreAuthUrl($user, $payment_details));
     }
 
+    public function possibleDuplicates()
+    {
+        $possibleDuplicates = $this->paymentRepository->getPossibleDuplicates();
+
+        return view('payments.possible-duplicates', [
+            'possibleDuplicates' => $possibleDuplicates
+        ]);
+    }
 }

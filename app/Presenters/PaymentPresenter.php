@@ -1,5 +1,6 @@
 <?php namespace BB\Presenters;
 
+use BB\Entities\Payment;
 use Laracasts\Presenter\Presenter;
 
 class PaymentPresenter extends Presenter
@@ -38,14 +39,14 @@ class PaymentPresenter extends Presenter
     public function status()
     {
         switch ($this->entity->status) {
-            case 'pending':
+            case Payment::STATUS_PENDING:
                 return 'Pending confirmation';
-            case 'pending_submission':
+            case Payment::STATUS_PENDING_SUBMISSION:
                 return 'Pending submission to members bank';
-            case 'cancelled':
+            case PaymenT::STATUS_CANCELLED:
                 return 'Cancelled';
-            case 'paid':
-            case 'withdrawn':
+            case Payment::STATUS_PAID:
+            case Payment::STATUS_WITHDRAWN:
                 return 'Paid';
             default:
                 return $this->entity->status;

@@ -94,6 +94,7 @@ Route::group(array('middleware' => 'role:finance'), function () {
     Route::resource('payments', 'PaymentController', ['only' => ['index', 'destroy', 'update']]);
     Route::get('payments/overview', ['uses' => 'PaymentOverviewController@index', 'as' => 'payments.overview']);
     Route::get('payments/sub-charges', ['as' => 'payments.sub-charges', 'uses' => 'SubscriptionController@listCharges']);
+    Route::get('payments/possible-duplicates', ['as' => 'payments.possible-duplicates', 'uses' => 'PaymentController@possibleDuplicates']);
 });
 
 Route::post('account/{account}/payment/create', ['as' => 'account.payment.create', 'uses' => 'PaymentController@create']);

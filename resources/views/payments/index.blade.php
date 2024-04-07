@@ -14,19 +14,7 @@ Payments
 @stop
 
 @section('main-tab-bar')
-<nav id="mainTabBar">
-    <ul class="" role="tablist">
-        <li class="active">
-            {!! link_to_route('payments.index', 'All Payments') !!}
-        </li>
-        <li class="">
-            {!! link_to_route('payments.overview', 'Overview') !!}
-        </li>
-        <li class="">
-            {!! link_to_route('payments.sub-charges', 'Subscription Charges') !!}
-        </li>
-    </ul>
-</nav>
+    @include('payments.partials.tabs')
 @stop
 
 @section('content')

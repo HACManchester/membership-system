@@ -6,8 +6,13 @@ use Laracasts\Presenter\PresentableTrait;
 
 class Payment extends Model
 {
-
     use PresentableTrait;
+
+    const STATUS_PENDING = 'pending';
+    const STATUS_PENDING_SUBMISSION = 'pending_submission';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_PAID = 'paid';
+    const STATUS_WITHDRAWN = 'withdrawn';
 
     /**
      * The database table used by the model.

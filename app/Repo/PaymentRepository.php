@@ -1,4 +1,6 @@
-<?php namespace BB\Repo;
+<?php
+
+namespace BB\Repo;
 
 use BB\Entities\Payment;
 use BB\Events\MemberBalanceChanged;
@@ -102,7 +104,7 @@ class PaymentRepository extends DBRepository
         }
         //If we have an existing similer record dont create another, except for when there is no source id
         $existingRecord = $this->model->where('source', $source)->where('source_id', $sourceId)->where('user_id', $userId)->first();
-        if ( ! $existingRecord || empty($sourceId)) {
+        if (!$existingRecord || empty($sourceId)) {
             $record                   = new $this->model;
             $record->user_id          = $userId;
             $record->reason           = $reason;
@@ -292,7 +294,7 @@ class PaymentRepository extends DBRepository
      */
     public function getEquipmentFeePayments($referencePrefix)
     {
-        return $this->model->where('reason', 'equipment-fee')->get()->filter(function($payment) use($referencePrefix) {
+        return $this->model->where('reason', 'equipment-fee')->get()->filter(function ($payment) use ($referencePrefix) {
             return strpos($payment->reference, ':' . $referencePrefix) !== false;
         });
     }
@@ -370,7 +372,7 @@ class PaymentRepository extends DBRepository
 
     private function hasReasonFilter()
     {
-        return ! is_null($this->reason);
+        return !is_null($this->reason);
     }
 
     /**
@@ -385,7 +387,7 @@ class PaymentRepository extends DBRepository
 
     private function hasSourceFilter()
     {
-        return ! is_null($this->source);
+        return !is_null($this->source);
     }
 
     /**
@@ -428,4 +430,14 @@ class PaymentRepository extends DBRepository
         event(new MemberBalanceChanged($sourceUserId));
         event(new MemberBalanceChanged($targetUserId));
     }
-} 
+
+    public function getPossibleDuplicates()
+    {
+        return $this->model
+            ->select('user_id', 'reason', 'amount', \DB::raw('count(*) as count'))
+            ->where('status', Payment::STATUS_PENDING)
+            ->groupBy('user_id', 'reason', 'amount')
+            ->havingRaw('count(*) > 1')
+            ->get();
+    }
+}
