@@ -64,8 +64,8 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\BillMembers::class)
             ->dailyAt('01:30')
-            ->then(function ($result) use ($telegram) {
-                $message = "✅ Billed members: " . $result['gc_users'] . " GC users, " . $result['gc_users_blled'] . " bills created.";
+            ->then(function () use ($telegram) {
+                $message = "✅ Billed members.";
                 \Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
@@ -75,7 +75,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\TestScheduledTask::class)
-            ->hourlyAt(43)
+            ->hourlyAt(47)
             ->then(function () use ($telegram) {
                 $message = "✔️ Test Scheduled Task successfully ran (notification from 'then' hook)";
                 \Log::info($message);
@@ -87,7 +87,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\Payments\CheckForPossibleDuplicates::class)
-            ->dailyAt('15:43')->timezone('Europe/London')
+            ->dailyAt('15:47')->timezone('Europe/London')
             ->emailOutputTo('board@hacman.org.uk', true);
     }
 }
