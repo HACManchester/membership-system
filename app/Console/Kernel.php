@@ -86,7 +86,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\Payments\CheckForPossibleDuplicates::class)
-            ->dailyAt('16:30')
+            ->dailyAt('14:33')
             ->emailOutputTo('board@hacman.org.uk', true);
     }
 }
