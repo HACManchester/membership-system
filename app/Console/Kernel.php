@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command(Commands\Payments\CheckForPossibleDuplicates::class)
-            ->dailyAt('15:47')->timezone('Europe/London')
+            ->dailyAt('07:00')->timezone('Europe/London')
             ->emailOutputTo('board@hacman.org.uk', true);
     }
 }
