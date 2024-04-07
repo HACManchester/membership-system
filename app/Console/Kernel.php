@@ -75,6 +75,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\Payments\CheckForPossibleDuplicates::class)
             ->dailyAt('07:00')->timezone('Europe/London')
+            ->description('Possible duplicate payments') // this becomes email subject
             ->emailOutputTo('board@hacman.org.uk', true);
     }
 }
