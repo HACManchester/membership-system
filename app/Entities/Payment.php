@@ -71,4 +71,21 @@ class Payment extends Model
     {
         return $this->attributes['reference'];
     }
+
+    public static function getPaymentReasons()
+    {
+        return [
+            'subscription'  => 'Subscription',
+            'induction'     => 'Equipment Access Fee',
+            'snackspace'    => 'Snackspace',
+            'snackspace-kiosk'    => 'Snackspace Kiosk (old)',
+            'balance'       => 'Balance',
+            'Laser Materials' => 'Laser Materials',
+            'equipment-fee' => 'Equipment Costs',
+            'Fob' => 'Fob',
+            'Heat Press Items' => 'Heat Press Items',
+            '3D Printer Filament' => '3D Printer Filament',
+            'Misc Materials' => 'Misc Materials',
+        ];
+    }
 }

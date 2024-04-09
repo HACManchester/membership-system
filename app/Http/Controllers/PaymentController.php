@@ -91,14 +91,7 @@ class PaymentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        $reasonList = [
-            'subscription'  => 'Subscription',
-            'induction'     => 'Equipment Access Fee',
-            'balance'       => 'Balance',
-            'door-key'      => 'Key Deposit',
-            'storage-box'   => 'Storage Box Deposit',
-            'equipment-fee' => 'Equipment Costs'
-        ];
+        $reasonList = Payment::getPaymentReasons();
 
         return \View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)
             ->with('memberList', $memberList)->with('reasonList', $reasonList)->with('paymentTotal', $paymentTotal);
