@@ -363,7 +363,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function scopeActive($query)
     {
-        return $query->whereActive(true);
+        return $query->where(['active' => true, 'banned' => false]);
     }
 
     public function scopeNotSpecialCase($query)
@@ -525,6 +525,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function extendMembership($paymentMethod = null, DateTime $expiry = null)
     {
+        if ($this->banned) {
+            return;
+        }
+        
         if (empty($expiry)) {
             $expiry = Carbon::now()->addMonth();
         }
