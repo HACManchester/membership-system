@@ -73,10 +73,10 @@ class StatsController extends Controller
          * MANUAL HARDCODED VALUES HERE
          */
 
-        $otherIncome = 0;
-        $electric = 280;
-        $rent = 1940;
-        $otherOutgoings = 200;
+        $otherIncome = 500;
+        $electric = 1000; // roughly as of Feb/Apr 2023. Need to see how this grows/shrinks through the year
+        $rent = 2344;
+        $otherOutgoings = 500;
         $recommendedPayment = 25;
         // END OF HARDCODED VALUES
 

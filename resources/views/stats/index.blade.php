@@ -45,7 +45,7 @@ Stats
                         </tr>
                         <tr>
                             <td></td>
-                            <td>Other income</td>
+                            <td>Other income (snackspace runs, consumables etc)</td>
                             <td>£{{ $otherIncome }} Ⓜ️</td>
                         </tr>
                         <tr>
@@ -129,26 +129,6 @@ Stats
                 Paying the recommended amount helps keep the space open!
             </p>
 
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-6 col-xl-4">
-        <div class="well">
-            <h3 class="text-center">Active Users</h3>
-
-            <h4 class="text-center">Last 30 days</h4>
-            <p class="text-center">
-                <span class="key-figure">{{ $numActiveUsers }}</span>
-            </p>
-            
-            <h4 class="text-center">Last 90 days</h4>
-            <p class="text-center">
-                <span class="key-figure">{{ $numActiveUsersQuarter }}</span>
-            </p>
-            
-            <p class="text-center">
-                ⚠️Keypad entries only. <br/>This is how many members have scanned into the space.
-            </p>
-            
         </div>
     </div>
 </div>
