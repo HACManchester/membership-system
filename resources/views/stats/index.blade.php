@@ -25,7 +25,7 @@ Stats
                 True understanding of the financial position will require the treasurer to process bank statements, and should ideally be done at AGMs.
             </p>
             <p>Ⓜ️ indicates manual hardcoded value. Dependent figures will also therefore be implied to be manual.</p>
-            <p>🕖 Last updated 01/01/2022</p> 
+            <p>🕖 Last updated April 2024</p> 
         </div>
         @if($user->active)
             <div class="col-sm-12">
