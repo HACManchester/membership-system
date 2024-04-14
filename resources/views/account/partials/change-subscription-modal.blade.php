@@ -14,7 +14,17 @@
                             {!! Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'control-label']) !!}
                             <div class="input-group">
                                 <div class="input-group-addon">&pound;</div>
-                                    {!! Form::input('number', 'monthly_subscription', round($user->monthly_subscription), ['class' => 'form-control', 'placeholder' => MembershipPayments::getRecommendedPrice() / 100, 'min' => MembershipPayments::getMinimumPrice() / 100, 'step' => '1']) !!}
+                                    {!! Form::input(
+                                        'number',
+                                        'monthly_subscription',
+                                        round($user->monthly_subscription),
+                                        [
+                                            'class' => 'form-control',
+                                            'placeholder' => MembershipPayments::getRecommendedPrice() / 100,
+                                            'min' => Auth::user()->isAdmin() ? 0 : MembershipPayments::getMinimumPrice() / 100,
+                                            'step' => '1'
+                                        ]
+                                    ) !!}
                                 </div>
                             </div>
                             <div class="col-sm-6">

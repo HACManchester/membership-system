@@ -56,7 +56,7 @@ class UserValidator extends FormValidator
         $rules = parent::getValidationRules($replacements);
 
         // Set minimum monthly subscription, being careful not to apply to updates
-        if (!empty($rules['monthly_subscription'])) {
+        if (!empty($rules['monthly_subscription']) && !\Auth::user()->isAdmin()) {
             $minPrice = intval(MembershipPayments::getMinimumPrice() / 100);
             $rules['monthly_subscription'] .= '|min:' . $minPrice;
         }

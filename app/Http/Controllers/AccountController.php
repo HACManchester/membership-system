@@ -516,7 +516,7 @@ class AccountController extends Controller
         // TODO: Lift this into some sort of "contact" config?
         $boardEmail = 'board@hacman.org.uk';
 
-        if ($amount < $minAmountPounds) {
+        if ($amount < $minAmountPounds && !\Auth::user()->isAdmin()) {
             throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 
