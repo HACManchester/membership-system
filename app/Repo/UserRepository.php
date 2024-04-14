@@ -129,7 +129,11 @@ class UserRepository extends DBRepository
         $members = $this->getActive();
         $memberDropdown = [];
         foreach ($members as $member) {
-            $memberDropdown[$member->id] = "$member->name ($member->given_name $member->family_name)";
+            $memberDropdown[$member->id] = $member->name;
+
+            if (!$member->suppress_real_name) {
+                $memberDropdown[$member->id] .= " ({$member->given_name} {$member->family_name})";
+            }
         }
         return $memberDropdown;
     }

@@ -28,7 +28,7 @@
 <h3>Tool Properties</h3>
 <div class="row">
     <div class="col-md-6">
-        <div class="{{ FlashNotification::hasErrorDetail('family_name', 'has-error has-feedback') }}">
+        <div class="{{ FlashNotification::hasErrorDetail('manufacturer', 'has-error has-feedback') }}">
             {!! Form::label('manufacturer', 'Manufacturer', ['class'=>'']) !!}
             {!! Form::text('manufacturer', null, ['class'=>'form-control']) !!}
             {!! FlashNotification::getErrorDetail('manufacturer') !!}

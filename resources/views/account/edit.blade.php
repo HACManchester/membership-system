@@ -59,6 +59,28 @@ Edit your details
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
+                <div class="form-group {{ FlashNotification::hasErrorDetail('suppress_real_name', 'has-error has-feedback') }}">
+                    {!! Form::label(null, 'Real name privacy', ['class' => 'control-label']) !!}
+                    <div class="help-block">We understand some members are privacy conscious and may wish to keep their real name private from others in the community.</div>
+                    <div>
+                        <label>
+                            {!! Form::radio('suppress_real_name', '0', true) !!}
+                            Yes, my real name may be shared with others
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            {!! Form::radio('suppress_real_name', '1',  false) !!}
+                            No, I'd like to keep my real name private
+                        </label>
+                    </div>
+                    {!! FlashNotification::getErrorDetail('suppress_real_name') !!}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('announce_name', 'has-error has-feedback') }}">
                     {!! Form::label('announce_name', 'Entry Announcement Name (optional)') !!}
                     {!! Form::text('announce_name', null, ['class'=>'form-control', 'autocomplete'=>'off']) !!}

@@ -53,7 +53,7 @@ Members
     <thead>
         <tr>
             <th></th>
-            <th>{!! HTML::sortUsersBy('family_name', 'Name') !!}</th>
+            <th>{!! HTML::sortUsersBy('name', 'Name') !!}</th>
             <th>{!! HTML::sortUsersBy('status', 'Status') !!}</th>
             <th class="hidden-xs">{!! HTML::sortUsersBy('key_holder', 'Key Holder') !!}</th>
             <th class="hidden-xs">{!! HTML::sortUsersBy('trusted', 'Trusted') !!}</th>

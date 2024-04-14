@@ -18,6 +18,9 @@
                             <b>Name:</b> {{ $user->given_name }} {{ $user->family_name }}
                         </li>
                         <li>
+                            <b>Real name privacy:</b> {{ $user->suppress_real_name ? "Keep private" : "Share with others" }}
+                        </li>
+                        <li>
                             <b>Email:</b> {{ $user->email }} 
                             (
                                 @if($user->email_verified)

@@ -55,7 +55,9 @@ Join Hackspace Manchester
         Please fill out the form below, on the next page you will be asked to setup a direct debit for the monthly payment.<br />
         <ul>
             <li>We need your real name and address, this is <a href="https://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general" target="_blank">required by UK law</a></li>
-            <li>Your address will be kept private but your name will be listed publicly as being a member of our community</li>
+            <li>Your address will be kept private</li>
+            <li>Your username will be visible to other members of our community</li>
+            <li>You may choose whether you'd like to share or hide your real name with others in our community</li>
         </ul>
     </p>
 
@@ -97,6 +99,22 @@ Join Hackspace Manchester
             {!! Form::text('pronouns', null, ['class'=>'form-control']) !!}
             {!! FlashNotification::getErrorDetail('pronouns') !!}
             <span class="help-block">We want everybody to feel welcome at Hackspace Manchester. If you would like to share your pronouns on your profile, you can provide them here.</span>
+        </div>
+    </div>
+
+    <div class="form-group {{ FlashNotification::hasErrorDetail('suppress_real_name', 'has-error has-feedback') }}">
+        {!! Form::label(null, 'Real name privacy', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            <span class="help-block">We understand some members are privacy conscious and may wish to keep their real name private from others in the community.</span>
+            <label>
+                {!! Form::radio('suppress_real_name', '0', true) !!}
+                Yes, my real name may be shared with others
+            </label>
+            <label>
+                {!! Form::radio('suppress_real_name', '1',  false) !!}
+                No, I'd like to keep my real name private
+            </label>
+            {!! FlashNotification::getErrorDetail('suppress_real_name') !!}
         </div>
     </div>
 

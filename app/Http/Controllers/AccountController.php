@@ -215,7 +215,8 @@ class AccountController extends Controller
             'visited_space',
             //'postFob',
             'gift_code',
-            'pronouns'
+            'pronouns',
+            'suppress_real_name'
         );
 
         $this->userForm->validate($input);
@@ -330,7 +331,8 @@ class AccountController extends Controller
             'emergency_contact', 
             'profile_private', 
             'newsletter', 
-            'pronouns'
+            'pronouns',
+            'suppress_real_name'
         );
 
         $this->userForm->validate($input, $user->id);

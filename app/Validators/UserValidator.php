@@ -18,6 +18,7 @@ class UserValidator extends FormValidator
         'display_name'          => 'required|unique:users',
         'announce_name'         => 'nullable|max:150',
         'pronouns'              => '',
+        'suppress_real_name'    => 'required|boolean',
         'online_only'           => 'required|boolean',
         'password'              => 'required|min:8',
         'phone'                 => 'required_if:online_only,0|min:10',

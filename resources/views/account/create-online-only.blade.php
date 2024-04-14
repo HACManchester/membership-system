@@ -58,6 +58,31 @@ Join Hackspace Manchester
         </div>
     </div>
 
+    <div class="form-group {{ FlashNotification::hasErrorDetail('pronouns', 'has-error has-feedback') }}">
+        {!! Form::label('pronouns', 'Pronouns (optional)', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            {!! Form::text('pronouns', null, ['class'=>'form-control']) !!}
+            {!! FlashNotification::getErrorDetail('pronouns') !!}
+            <span class="help-block">We want everybody to feel welcome at Hackspace Manchester. If you would like to share your pronouns on your profile, you can provide them here.</span>
+        </div>
+    </div>
+
+    <div class="form-group {{ FlashNotification::hasErrorDetail('suppress_real_name', 'has-error has-feedback') }}">
+        {!! Form::label(null, 'Real name privacy', ['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 col-lg-7">
+            <span class="help-block">We understand some members are privacy conscious and may wish to keep their real name private from others in the community.</span>
+            <label>
+                {!! Form::radio('suppress_real_name', '0', true) !!}
+                Yes, my real name may be shared with others
+            </label>
+            <label>
+                {!! Form::radio('suppress_real_name', '1',  false) !!}
+                No, I'd like to keep my real name private
+            </label>
+            {!! FlashNotification::getErrorDetail('suppress_real_name') !!}
+        </div>
+    </div>
+
     <div class="form-group {{ FlashNotification::hasErrorDetail('email', 'has-error has-feedback') }}">
         {!! Form::label('email', 'Email', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">

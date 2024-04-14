@@ -104,10 +104,12 @@ class SessionController extends Controller
                 return \View::make('session.error')
                     ->with('code', '2');
             }
+
+            $name = $user->suppress_real_name ? $user->name : ($user->given_name . " " . $user->family_name);
                 
             $userData = base64_encode(http_build_query([
                 'nonce'         => $nonce,
-                'name'          => $user->given_name . " " . $user->family_name,
+                'name'          => $name,
                 'email'         => $user->email,
                 'external_id'   => $user->id,
                 'username'      => $user->name

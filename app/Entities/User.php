@@ -113,6 +113,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'banned',
         'banned_reason',
         'banned_date',
+        'suppress_real_name',
     ];
 
 
@@ -143,6 +144,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         // 'induction_completed' => 'boolean',
         // 'profile_private' => 'boolean',
         'banned' => 'boolean',
+        'suppress_real_name' => 'boolean',
     ];
 
 
