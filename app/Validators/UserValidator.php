@@ -1,5 +1,6 @@
 <?php namespace BB\Validators;
 
+use Auth;
 use BB\Helpers\MembershipPayments;
 
 class UserValidator extends FormValidator
@@ -55,8 +56,14 @@ class UserValidator extends FormValidator
     protected function getValidationRules(array $replacements = []) {
         $rules = parent::getValidationRules($replacements);
 
+
+        // Allow admins to bypass the minimum
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            $minPrice = 0;
+        }
+
         // Set minimum monthly subscription, being careful not to apply to updates
-        if (!empty($rules['monthly_subscription']) && !\Auth::user()->isAdmin()) {
+        if (!empty($rules['monthly_subscription'])) {
             $minPrice = intval(MembershipPayments::getMinimumPrice() / 100);
             $rules['monthly_subscription'] .= '|min:' . $minPrice;
         }
