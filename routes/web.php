@@ -140,8 +140,8 @@ Route::group(array('middleware' => 'role:member'), function () {
 
 Route::group(array('middleware' => 'role:member'), function () {
     Route::resource('equipment', 'EquipmentController');
-    Route::post('equipment/{id}/photo', ['uses' => 'EquipmentController@addPhoto', 'as' => 'equipment.photo.store']);
-    Route::delete('equipment/{id}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
+    Route::post('equipment/{equipment}/photo', ['uses' => 'EquipmentController@addPhoto', 'as' => 'equipment.photo.store']);
+    Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
 });
 
 # Equipment Log
