@@ -10,7 +10,6 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "alt-three/bus": "^3.0",
         "arthurguy/notifications": "~1.0",
         "doctrine/dbal": "^2.5",
         "filp/whoops": "~1.0",

@@ -187,9 +187,6 @@ return [
         Sentry\Laravel\ServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
-
-        // Queueing emails with sync queue doesn't work on 5.3+ without Bus?
-        AltThree\Bus\BusServiceProvider::class,
     ],
 
     /*

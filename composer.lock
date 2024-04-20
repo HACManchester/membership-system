@@ -4,72 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "59742f7fcbafc946b82bead0e64d966d",
+    "content-hash": "a307171ee06dbc212109f5287c208bb9",
     "packages": [
-        {
-            "name": "alt-three/bus",
-            "version": "v3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/AltThree/Bus.git",
-                "reference": "1050ebd83cc81fab0fc699c69ebc2e6c62bbedb5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/AltThree/Bus/zipball/1050ebd83cc81fab0fc699c69ebc2e6c62bbedb5",
-                "reference": "1050ebd83cc81fab0fc699c69ebc2e6c62bbedb5",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/bus": "5.3.*|5.4.*|5.5.*",
-                "illuminate/container": "5.3.*|5.4.*|5.5.*",
-                "illuminate/contracts": "5.3.*|5.4.*|5.5.*",
-                "illuminate/pipeline": "5.3.*|5.4.*|5.5.*",
-                "illuminate/support": "5.3.*|5.4.*|5.5.*",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "graham-campbell/analyzer": "^2.0",
-                "graham-campbell/testbench": "^4.0|^5.0",
-                "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^6.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "AltThree\\Bus\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alt Three",
-                    "email": "support@alt-three.com"
-                }
-            ],
-            "description": "An improved command bus for Laravel 5",
-            "keywords": [
-                "Alt Three",
-                "bus",
-                "command",
-                "command bus",
-                "job"
-            ],
-            "support": {
-                "issues": "https://github.com/AltThree/Bus/issues",
-                "source": "https://github.com/AltThree/Bus/tree/master"
-            },
-            "abandoned": true,
-            "time": "2018-01-02T18:13:11+00:00"
-        },
         {
             "name": "arthurguy/notifications",
             "version": "1.0.0",
