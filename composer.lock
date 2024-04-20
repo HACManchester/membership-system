@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2258532c2bf69bf5a00bc4cc848f2cee",
+    "content-hash": "2c93ec3a420938f9da2d36f34398bbc2",
     "packages": [
         {
             "name": "arthurguy/notifications",
@@ -3933,55 +3933,6 @@
             },
             "abandoned": "symfony/mailer",
             "time": "2018-07-31T09:26:32+00:00"
-        },
-        {
-            "name": "sybio/gif-creator",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Sybio/GifCreator.git",
-                "reference": "250fc2f705181693c6c40b3d569d62353164bcbf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Sybio/GifCreator/zipball/250fc2f705181693c6c40b3d569d62353164bcbf",
-                "reference": "250fc2f705181693c6c40b3d569d62353164bcbf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "GifCreator": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Clément Guillemain",
-                    "homepage": "http://clementguillemain.fr",
-                    "role": "Developer / Freelancer"
-                }
-            ],
-            "description": "PHP class that creates animated GIF from multiple images",
-            "homepage": "https://github.com/Sybio/GifCreator",
-            "keywords": [
-                "animated",
-                "creation",
-                "encode",
-                "gif",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/Sybio/GifCreator/issues",
-                "source": "https://github.com/Sybio/GifCreator/tree/master"
-            },
-            "time": "2012-10-13T09:04:46+00:00"
         },
         {
             "name": "symfony/console",
