@@ -101,7 +101,7 @@ Join Hackspace Manchester
 
     <div class="form-group {{ FlashNotification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
         <div class="col-sm-9 col-lg-7 col-sm-offset-3">
-            <span class="help-block">Please read the <a href="https://members.hacman.org.uk/resources/policy/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
+            <span class="help-block">Please read the <a href="https://hacman.org.uk/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
             {!! Form::checkbox('rules_agreed', true, null, ['class'=>'']) !!}
             {!! Form::label('rules_agreed', 'I agree to the Hackspace Manchester rules', ['class'=>'']) !!}
             {!! FlashNotification::getErrorDetail('rules_agreed') !!}

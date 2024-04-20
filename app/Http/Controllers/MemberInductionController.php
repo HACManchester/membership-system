@@ -2,22 +2,13 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Entities\User;
-use BB\Repo\PolicyRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\InductionValidator;
 use Illuminate\Http\Request;
-use BB\Http\Requests;
-use Michelf\Markdown;
 use BB\Entities\Settings;
 
 class MemberInductionController extends Controller
 {
-
-    /**
-     * @var PolicyRepository
-     */
-    private $policyRepository;
     /**
      * @var UserRepository
      */
@@ -27,9 +18,8 @@ class MemberInductionController extends Controller
      */
     private $inductionValidator;
 
-    function __construct(PolicyRepository $policyRepository, UserRepository $userRepository, InductionValidator $inductionValidator)
+    function __construct(UserRepository $userRepository, InductionValidator $inductionValidator)
     {
-        $this->policyRepository = $policyRepository;
         $this->userRepository = $userRepository;
         $this->inductionValidator = $inductionValidator;
     }

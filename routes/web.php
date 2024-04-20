@@ -271,14 +271,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::post('disciplinary/{user}/unban', ['uses' => 'DisciplinaryController@unban', 'as' => 'disciplinary.unban']);
 });
 
-##########################
-# Resources
-##########################
-
-Route::get('resources', ['uses' => 'ResourcesController@index', 'middleware' => 'role:member', 'as' => 'resources.index']);
-Route::get('resources/policy/{title}', ['uses' => 'ResourcesController@viewPolicy', 'as' => 'resources.policy.view']);
-
-
 
 ##########################
 # Expenses
