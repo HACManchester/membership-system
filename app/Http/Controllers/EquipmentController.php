@@ -9,7 +9,6 @@ use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
 use Illuminate\Support\Facades\Storage;
 use Input;
-use Michelf\Markdown;
 
 class EquipmentController extends Controller
 {

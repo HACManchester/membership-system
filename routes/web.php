@@ -119,11 +119,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::delete('account/{account}/payment/cash', ['as' => 'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 });
 
-# Statements
-Route::group(array('middleware' => 'role:finance'), function () {
-    Route::resource('statement-import', 'StatementImportController', ['except' => ['index', 'show', 'edit', 'update', 'destroy']]);
-});
-
 //DD Migration to variable payments
 Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'middleware' => 'role:member']);
 

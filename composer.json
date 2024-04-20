@@ -25,7 +25,6 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "~1.19",
-        "nuovo/spreadsheet-reader": "~0.5",
         "owen-it/laravel-auditing": "^8.0",
         "php-http/curl-client": "^2.3",
         "php-http/message": "^1.16",
