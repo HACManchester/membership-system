@@ -1,4 +1,3 @@
-<input type="hidden" id="stripePublicKey" value="{{ $stripeKey }}" />
 @if (!Auth::guest())
     <input type="hidden" id="memberEmail" value="{{ Auth::user()->email }}" />
     <input type="hidden" id="userId" value="{{ Auth::user()->id }}" />

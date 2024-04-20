@@ -62,9 +62,7 @@ Running the membership system relies on a number of third-party services:
 - Discourse: Providing single-sign-on onto a Discourse application
 - GoCardless: For managing subscription payments via direct debit
 - Sentry: For error monitoring & tracking
-- Stripe: One-off payments (only available via the "Payment problem panel")
 - Telegram: For notifying public & operational group chats about system events (new members, system notifications)
-- ~~Amazon Web Services~~ (unused)
 
 These can be configured via environmental variables, or by setting up a `.env` file in the root of the project. See [`.env.example`](./.env.example) for reference.
 

@@ -29,12 +29,6 @@ return [
 		'region' => 'us-east-1',
 	],
 
-	'stripe' => [
-		'model'  => 'BB\Entities\User',
-		'key' => '',
-		'secret' => '',
-	],
-
 	'telegram-bot-api' => [
 		'token' => env('TELEGRAM_BOT_KEY', 'YOUR BOT TOKEN HERE')
 	],

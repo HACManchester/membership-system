@@ -64,8 +64,6 @@ class PaymentPresenter extends Presenter
             case 'gocardless':
             case 'gocardless-variable':
                 return 'Direct Debit';
-            case 'stripe':
-                return 'Credit/Debit Card';
             case 'standing-order':
                 return 'Standing Order';
             case 'manual':

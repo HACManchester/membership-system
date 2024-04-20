@@ -1,6 +1,5 @@
 import React from "react";
 
-var StripePayment = require("../services/StripePayment");
 var Select = require("./form/Select");
 var Loader = require("halogen/PulseLoader");
 
@@ -12,7 +11,6 @@ class PaymentModule extends React.Component {
       amount: this.props.amount || '0.00',
       method: "gocardless",
       errorMessage: null,
-      stripeToken: null,
       csrfToken: this.props.csrfToken,
       requestInProgress: false,
       desiredPaymentMethods: this.props.methods.split(","),
@@ -22,23 +20,10 @@ class PaymentModule extends React.Component {
     this.handleAmountChange = this.handleAmountChange.bind(this);
     this.handleMethodChange = this.handleMethodChange.bind(this);
 
-    //Load in the stripe js file and configure our instance
-    StripePayment.loadConfigureStripe(
-      this.props.stripeKey,
-      this.props.name,
-      this.props.email,
-      (token) => {
-        this.setState({ stripeToken: token.id }, () => {
-          this.handleSubmit();
-        }); //set state isn't immediate so wait until its done
-      }
-    );
-
     this.availableMethods = [
       { key: "gocardless", value: "Direct Debit" },
       { key: "balance", value: "Balance" },
       { key: "cash", value: "Cash" },
-      { key: "stripe", value: "Crdit/Debit Card" },
     ];
 
     this.availablePaymentMethods = this.getPaymentMethodArray();
@@ -68,11 +53,6 @@ class PaymentModule extends React.Component {
     var parsedAmount = parseFloat(this.state.amount);
     console.log(parsedAmount, this.state);
 
-    if (this.state.method === "stripe" && parsedAmount < 10) {
-      this.setState({ errorMessage: 'Because of fees the payment must be £10 or over when paying by card'})
-      return;
-    }
-
     if (parsedAmount < 0) {
       this.setState({ errorMessage: 'Amount cannot be negative'})
       return;
@@ -82,15 +62,6 @@ class PaymentModule extends React.Component {
       this.setState({ 
         errorMessage: 'Invalid amount. Please re-enter'
       })
-      return;
-    }
-
-    //The stripe process starts with the dialog box to collect card details
-    if (this.state.method === "stripe" && this.state.stripeToken === null) {
-      StripePayment.collectCardDetails(
-        parsedAmount * 100,
-        this.props.description
-      );
       return;
     }
 
@@ -110,8 +81,7 @@ class PaymentModule extends React.Component {
         //Reset the state
         this.setState({
           requestInProgress: false,
-          amount: 0,
-          stripeToken: null,
+          amount: 0
         });
 
         BB.SnackBar.displayMessage("Your payment has been processed");
@@ -143,7 +113,6 @@ class PaymentModule extends React.Component {
       reason: this.props.reason,
       ref: this.props.reference,
       _token: this.state.csrfToken,
-      stripeToken: this.state.stripeToken,
     });
   }
 
@@ -247,11 +216,10 @@ PaymentModule.defaultProps = {
   amount: null,
   buttonLabel: "Pay Now",
   onSuccess: function () {},
-  methods: "gocardless,stripe,cash,balance",
+  methods: "gocardless,cash,balance",
   reference: null,
   reason: null,
   description: null,
-  stripeKey: "",
 };
 
 export default PaymentModule;

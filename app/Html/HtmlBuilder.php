@@ -99,7 +99,7 @@ class HtmlBuilder extends CollectiveHtmlBuilder
 
     public function paymentFormMethodDropdown($methods = [])
     {
-        $possibleMethods = ['gocardless'=>'Direct Debit', 'stripe'=>'Credit/Debit Card', 'balance'=>'Pay using your Balance'];
+        $possibleMethods = ['gocardless'=>'Direct Debit', 'balance'=>'Pay using your Balance'];
         if ( ! empty($methods)) {
             foreach ($possibleMethods as $method => $methodName) {
                 if ( ! in_array($method, $methods)) {

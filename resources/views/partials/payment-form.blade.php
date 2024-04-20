@@ -1,7 +1,6 @@
 {!! Form::open(['method'=>'POST', 'href' => '', 'class'=>'form-inline js-multiPaymentForm']) !!}
     {!! Form::hidden('reason', $reason) !!}
     {!! Form::hidden('display_reason', $displayReason, ['class'=>'js-paymentDescription']) !!}
-    {!! Form::hidden('stripe_token', '', ['class'=>'js-stripeToken']) !!}
     {!! Form::hidden('return_path', $returnPath) !!}
     {!! Form::hidden('ref', isset($ref)?$ref:null) !!}
 

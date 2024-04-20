@@ -31,12 +31,11 @@ jQuery('.paymentModule').each(function () {
     var ref = jQuery(this).data('ref');
     var memberEmail = document.getElementById('memberEmail').value;
     var userId = document.getElementById('userId').value;
-    var stripeKey = document.getElementById('stripePublicKey').value;
     var csrfToken = document.getElementById('csrfToken').value;
 
     var handleSuccess = () => { document.location.reload(true) };
 
-    React.render(<PaymentModule csrfToken={csrfToken} description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} stripeKey={stripeKey} />, jQuery(this)[0]);
+    React.render(<PaymentModule csrfToken={csrfToken} description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} />, jQuery(this)[0]);
 });
 
 //var Expenses = require('./collections/Expenses');
