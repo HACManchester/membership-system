@@ -22,7 +22,6 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4",
-        "league/flysystem-aws-s3-v3": "^1.0",
         "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "~1.19",
         "owen-it/laravel-auditing": "^8.0",
