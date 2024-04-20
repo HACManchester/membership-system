@@ -2,8 +2,6 @@
 
 namespace BB\Http;
 
-use BB\Http\Middleware\ACSAuthentication;
-use BB\Http\Middleware\BrandingHeaders;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -19,6 +17,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \BB\Http\Middleware\HttpsProtocol::class,
+        \BB\Http\Middleware\TrustProxies::class,
         
         // Introduced in 5.4, but affects validation rules (we have rules that we'd need to set nullable on to allow empty strings)
         // \BB\Http\Middleware\TrimStrings::class,
@@ -33,9 +32,11 @@ class Kernel extends HttpKernel
     protected $middlewareGroups = [
         'web' => [
             \BB\Http\Middleware\ACSSessionControl::class,
-            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+
+            \BB\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \BB\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

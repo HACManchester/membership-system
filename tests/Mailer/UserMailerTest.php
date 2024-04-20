@@ -31,7 +31,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendWelcomeMessage();
 
-        \Mail::assertSent(WelcomeMember::class, function ($mail) use ($user) {
+        \Mail::assertQueued(WelcomeMember::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'Welcome to Hackspace Manchester!';
@@ -51,7 +51,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendWelcomeMessage();
 
-        \Mail::assertSent(WelcomeMemberOnlineOnly::class, function ($mail) use ($user) {
+        \Mail::assertQueued(WelcomeMemberOnlineOnly::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'Welcome to Hackspace Manchester (Online Only)!';
@@ -70,7 +70,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendConfirmationEmail();
 
-        \Mail::assertSent(ConfirmationEmail::class, function ($mail) use ($user) {
+        \Mail::assertQueued(ConfirmationEmail::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'Confirm your email - Hackspace Manchester';
@@ -88,7 +88,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendPaymentWarningMessage();
 
-        \Mail::assertSent(PaymentWarning::class, function ($mail) use ($user) {
+        \Mail::assertQueued(PaymentWarning::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'We have detected a payment problem';
@@ -106,7 +106,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendLeavingMessage();
 
-        \Mail::assertSent(LeavingMessage::class, function ($mail) use ($user) {
+        \Mail::assertQueued(LeavingMessage::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'You are leaving Hackspace Manchester';
@@ -124,7 +124,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendLeftMessage();
 
-        \Mail::assertSent(LeftMessage::class, function ($mail) use ($user) {
+        \Mail::assertQueued(LeftMessage::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'You have left Hackspace Manchester';
@@ -142,7 +142,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendNotificationEmail('Test Subject', 'Test Message');
 
-        \Mail::assertSent(NotificationEmail::class, function ($mail) use ($user) {
+        \Mail::assertQueued(NotificationEmail::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->replyTo[0]['address'] == 'board@hacman.org.uk' &&
@@ -162,7 +162,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendEquipmentNotificationEmail('Test Subject', 'Test Message', 'Equipment Name', 'Training Status');
 
-        \Mail::assertSent(EquipmentNotificationEmail::class, function ($mail) use ($user) {
+        \Mail::assertQueued(EquipmentNotificationEmail::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->replyTo[0]['address'] == 'info@hacman.org.uk' &&
@@ -182,7 +182,7 @@ class UserMailerTest extends TestCase
         $mailer = new UserMailer($user);
         $mailer->sendSuspendedMessage();
 
-        \Mail::assertSent(SuspendedMessage::class, function ($mail) use ($user) {
+        \Mail::assertQueued(SuspendedMessage::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->replyTo[0]['address'] == 'board@hacman.org.uk' &&

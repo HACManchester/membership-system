@@ -126,7 +126,7 @@ class AccountController extends Controller
 
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter', 'include_online_only', 'new_only', 'limit'));
         
-        return \View::make('account.index')->withUsers($users);
+        return \View::make('account.index')->with('users', $users);
     }
 
 

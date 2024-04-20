@@ -23,16 +23,27 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        HttpException::class,
-        NotFoundHttpException::class,
-        ModelNotFoundException::class,
-        MethodNotAllowedHttpException::class,
-        FormValidationException::class,
-        AuthenticationException::class,         //These are logged separately below
-        AuthorizationException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
-        IlluminateValidationException::class,
+        // Laravel 5.5 removed everything in $dontReport... let's see what that does for us.
+        // HttpException::class,
+        // NotFoundHttpException::class,
+        // ModelNotFoundException::class,
+        // MethodNotAllowedHttpException::class,
+        // FormValidationException::class,
+        // AuthenticationException::class,         //These are logged separately below
+        // AuthorizationException::class,
+        // ModelNotFoundException::class,
+        // ValidationException::class,
+        // IlluminateValidationException::class,
+    ];
+
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
     ];
 
     /**
@@ -156,21 +167,5 @@ class Handler extends ExceptionHandler
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
 
         return new \Illuminate\Http\Response($whoops->handleException($e), $e->getCode());
-    }
-
-    /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-
-        return redirect()->guest(route('login'));
     }
 }

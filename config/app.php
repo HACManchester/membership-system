@@ -94,7 +94,7 @@ return [
     |
     */
 
-    'key' => env('ENCRYPTION_KEY'),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -161,7 +161,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -184,7 +183,6 @@ return [
         Clockwork\Support\Laravel\ClockworkServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
     ],
 
