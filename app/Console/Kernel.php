@@ -16,12 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\CheckMembershipStatus::class,
-        Commands\RecalculateUserBalances::class,
-        Commands\CheckFixEquipmentLog::class,
-        Commands\CalculateEquipmentFees::class,
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
-        Commands\CheckDeviceOnlineStatuses::class,
         Commands\Payments\CheckForPossibleDuplicates::class,
     ];
 
