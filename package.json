@@ -1,9 +1,9 @@
 {
-  "name": "BBMS",
+  "name": "@hacmanchester/membership-system",
   "private": true,
   "author": {
-    "name": "Arthur Guy",
-    "email": "arthur@arthurguy.co.uk"
+    "name": "Hackspace Manchester",
+    "email": "board@hacman.org.uk"
   },
   "dependencies": {
     "babel": "^5.4.4",
