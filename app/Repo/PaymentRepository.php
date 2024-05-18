@@ -313,20 +313,6 @@ class PaymentRepository extends DBRepository
             ->simplePaginate($this->perPage);
     }
 
-
-    /**
-     * Return a collection of payments specifically for storage boxes
-     * @param integer $userId
-     * @return mixed
-     */
-    public function getStorageBoxPayments($userId)
-    {
-        return $this->model->where('user_id', $userId)
-            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', ['storage-box', 'paid', 'pending', 'withdrawn'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
     public function dateFilter($startDate, $endDate)
     {
         $this->startDate = $startDate;

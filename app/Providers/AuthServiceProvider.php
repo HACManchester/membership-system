@@ -6,9 +6,11 @@ namespace BB\Providers;
 
 use BB\Entities\Equipment;
 use BB\Entities\KeyFob;
+use BB\Entities\StorageBox;
 use BB\Entities\User;
 use BB\Policies\EquipmentPolicy;
 use BB\Policies\KeyFobPolicy;
+use BB\Policies\StorageBoxPolicy;
 use BB\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
         Equipment::class => EquipmentPolicy::class,
         KeyFob::class => KeyFobPolicy::class,
         User::class => UserPolicy::class,
+        StorageBox::class => StorageBoxPolicy::class,
     ];
 
     /**
