@@ -32,7 +32,10 @@ class StorageBoxRepository
      */
     public function getAll()
     {
-        return StorageBox::where('active', 1)->get();
+        return StorageBox::where('active', 1)->get()->sortBy(function ($box) {
+            [$column, $row] = explode(' ', $box->location);
+            return [$column, $row];
+        });
     }
 
     /**
@@ -41,13 +44,6 @@ class StorageBoxRepository
      */
     public function numAvailableBoxes()
     {
-        $boxes = $this->getAll();
-        $availableBoxes = 0;
-        foreach ($boxes as $box) {
-            if (empty($box->user_id)) {
-                $availableBoxes++;
-            }
-        }
-        return $availableBoxes;
+        return StorageBox::where(['active' => 1,'user_id' => 0])->count();
     }
 } 

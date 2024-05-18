@@ -220,10 +220,16 @@ Route::post('activity', ['uses' => 'ActivityController@create', 'as' => 'activit
 # Storage Boxes
 ##########################
 
-Route::get('storage_boxes', ['uses' => 'StorageBoxController@index', 'as' => 'storage_boxes.index', 'middleware' => 'role:member']);
-Route::get('storage_boxes/{id}', ['uses' => 'StorageBoxController@show', 'as' => 'storage_boxes.show', 'middleware' => 'role:member']);
-Route::put('storage_boxes/{id}', ['uses' => 'StorageBoxController@update', 'as' => 'storage_boxes.update', 'middleware' => 'role:member']);
-
+// Storage Boxes
+// Ordering is important with shared verbs, as the concrete routes must come before catch-alls
+Route::get('storage_boxes/create', ['uses' => 'StorageBoxController@create', 'as' => 'storage_boxes.create', 'middleware' => 'role:admin']);
+Route::get('storage_boxes', ['uses' => 'StorageBoxController@index', 'as' => 'storage_boxes.index', 'role:member']);
+Route::get('storage_boxes/{storage_box}', ['uses' => 'StorageBoxController@show', 'as' => 'storage_boxes.show', 'role:member']);
+Route::post('storage_boxes', ['uses' => 'StorageBoxController@store', 'as' => 'storage_boxes.store', 'middleware' => 'role:admin']);
+Route::post('storage_boxes/{storage_box}/claim', ['uses' => 'StorageBoxClaimController@update', 'as' => 'storage_boxes_claim.update', 'role:member']);
+Route::put('storage_boxes/{storage_box}', ['uses' => 'StorageBoxController@update', 'as' => 'storage_boxes.update', 'middleware' => 'role:admin']);
+Route::delete('storage_boxes/{storage_box}/claim', ['uses' => 'StorageBoxClaimController@destroy', 'as' => 'storage_boxes_claim.destroy', 'role:member']);
+Route::delete('storage_boxes/{storage_box}', ['uses' => 'StorageBoxController@destroy', 'as' => 'storage_boxes.destroy', 'middleware' => 'role:admin']);
 
 ##########################
 # Stats

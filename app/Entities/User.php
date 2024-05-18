@@ -551,4 +551,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->auditFields;
     }
+
+    public function isActive() {
+        return $this->active && !$this->banned;
+    }
 }

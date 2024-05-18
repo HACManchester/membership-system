@@ -1,223 +1,134 @@
-<?php namespace BB\Http\Controllers;
+<?php
 
+namespace BB\Http\Controllers;
+
+use Auth;
+use BB\Entities\StorageBox;
+use BB\Repo\StorageBoxRepository;
+use Illuminate\Http\Request;
 use BB\Repo\UserRepository;
 
 class StorageBoxController extends Controller
 {
+    /** @var StorageBoxRepository */
+    protected $storageBoxRepository;
 
-    /**
-     * @var \BB\Repo\StorageBoxRepository
-     */
-    private $storageBoxRepository;
-    /**
-     * @var \BB\Repo\PaymentRepository
-     */
-    private $paymentRepository;
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-    /**
-     * @var \BB\Services\MemberStorage
-     */
-    private $memberStorage;
+    /** @var UserRepository */
+    protected $userRepository;
 
-    public function __construct(
-        \BB\Repo\StorageBoxRepository $storageBoxRepository, 
-        \BB\Repo\PaymentRepository $paymentRepository, 
-        \BB\Repo\UserRepository $userRepository,
-        \BB\Services\MemberStorage $memberStorage
-    ){
+    public function __construct(StorageBoxRepository $storageBoxRepository, UserRepository $userRepository)
+    {
         $this->storageBoxRepository = $storageBoxRepository;
-        $this->paymentRepository = $paymentRepository;
         $this->userRepository = $userRepository;
-        $this->memberStorage = $memberStorage;
     }
-
 
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $storageBoxes = $this->storageBoxRepository->getAll()->sortBy(
-            function($post){
-                if($post->id < 104) {return 1000 + $post->id;}
-                return $post->id;
-            }
-        );
+        $storageBoxes = $this->storageBoxRepository->getAll();
+        $memberBoxes = $this->storageBoxRepository->getMemberBoxes(Auth::user()->id);
 
-        $availableBoxes = $this->storageBoxRepository->numAvailableBoxes();
-
-        //Setup the member storage object
-        $this->memberStorage->setMember(\Auth::user()->id);
-        
-        $volumeAvailable = $this->memberStorage->volumeAvailable();
-        $memberBoxes = $this->memberStorage->getMemberBoxes();
-
-        //Work out how much the user has paid
-        $boxPayments = $this->memberStorage->getBoxPayments();
-
-
-        $paymentTotal = $this->memberStorage->getPaymentTotal();
-        $boxesTaken = $this->memberStorage->getNumBoxesTaken();
-
-        $memberList = $this->userRepository->getAllAsDropdown();
-
-        return \View::make('storage_boxes.index')
-            ->with('storageBoxes', $storageBoxes)
-            ->with('boxPayments', $boxPayments)
-            ->with('availableBoxes', $availableBoxes)
-            ->with('memberBoxes', $memberBoxes)
-            ->with('volumeAvailable', $volumeAvailable)
-            ->with('paymentTotal', $paymentTotal)
-            ->with('memberList', $memberList)
-            ->with('boxesTaken', $boxesTaken);
+        return view('storage_boxes.index', [
+            'storageBoxes' => $storageBoxes,
+            'memberBoxes' => $memberBoxes,
+        ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
-    }
+        $this->authorize('create', StorageBox::class);
 
+        \FlashNotification::warning('Creating storage boxes has not been implemented yet.');
+        return redirect()->back();
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        //
-    }
+        $this->authorize('create', StorageBox::class);
 
+        \FlashNotification::warning('Creating storage boxes has not been implemented yet.');
+        return redirect()->back();
+    }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param  StorageBox  $storageBox
+     * @return \Illuminate\Http\Response
      */
-    public function show($boxId)
+    public function show(StorageBox $storageBox)
     {
-        $user = \Auth::user();
-        $box = $this->storageBoxRepository->getById($boxId);
+        $this->authorize('view', $storageBox);
 
-        //Setup the member storage object
-        $this->memberStorage->setMember(\Auth::user()->id);
-        $volumeAvailable = $this->memberStorage->volumeAvailable();
         $memberList = $this->userRepository->getAllAsDropdown();
+        $thisURL = urlencode(url('storage_boxes', $storageBox->id));
 
-        $thisURL = urlencode(url('storage_boxes', $boxId));
+        // todo: swap with some library rather than calling out to an external service
         $QRcodeURL = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={$thisURL}&color=00a";
 
-        return \View::make('storage_boxes.show')
-        ->with('user', $user)
-        ->with('volumeAvailable', $volumeAvailable)
-        ->with('box', $box)
-        ->with('memberList', $memberList)
-        ->with('QRcodeURL', $QRcodeURL);
+        return view('storage_boxes.show', [
+            'box' => $storageBox,
+            'memberList' => $memberList,
+            'QRcodeURL' => $QRcodeURL,
+        ]);
     }
-
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param  StorageBox  $storageBox
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(StorageBox $storageBox)
     {
-        //
-    }
+        $this->authorize('update', $storageBox);
 
+        \FlashNotification::warning('Editing storage boxes has not been implemented yet.');
+        return redirect()->back();
+    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param $boxId
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\ValidationException
-     * @internal param int $id
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  StorageBox  $storageBox
+     * @return \Illuminate\Http\Response
      */
-    public function update($boxId)
+    public function update(Request $request, StorageBox $storageBox)
     {
-        $userId = \Request::get('user_id');
+        $this->authorize('update', $storageBox);
 
-        if ($userId) {
-            $this->selfClaimBox($boxId, $userId);
-        } else {
-            $box = $this->storageBoxRepository->getById($boxId);
-            if ($box->user_id == \Auth::user()->id) {
-                //User is returning their own box
-            } else {
-                //No id - reclaiming the box
-                if ( !\Auth::user()->isAdmin() && !\Auth::user()->hasRole('storage')) {
-                    throw new \BB\Exceptions\AuthenticationException();
-                }
-            }
-            $this->storageBoxRepository->update($boxId, ['user_id'=>0]);
-        }
+        $storageBox->update($request->all());
 
-        \FlashNotification::success("Member box updated");
-        return \Redirect::route('storage_boxes.index');
+        return redirect()->back();
     }
-
-    private function selfClaimBox($boxId, $userId)
-    {
-        $adminUser = \Auth::user()->isAdmin() || \Auth::user()->hasRole('storage');
-
-        if ($userId != \Auth::user()->id && !$adminUser) {
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
-        if(\Auth::user()->online_only){
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
-        $box = $this->storageBoxRepository->getById($boxId);
-
-        //Make sure the box is available
-        if ( !$box->available && !$adminUser) {
-            throw new \BB\Exceptions\ValidationException();
-        }
-
-        //Does the user have a box
-       // $this->memberStorage->setMember(\Auth::user()->id);
-
-        //$volumeAvailable = $this->memberStorage->volumeAvailable();
-        //if ($volumeAvailable < $box->size) {
-       //     throw new \BB\Exceptions\ValidationException("You have reached your storage limit");
-       // }
-
-        //Have the paid for a box
-       // if ($this->memberStorage->getRemainingBoxesPaidFor() <= 0) {
-       //     throw new \BB\Exceptions\ValidationException("You need to pay the deposit first");
-       // }
-
-        $this->storageBoxRepository->update($boxId, ['user_id'=>$userId]);
-    }
-
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return Response
+     * @param  StorageBox  $storageBox
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(StorageBox $storageBox)
     {
-        //
+        $this->authorize('delete', $storageBox);
+
+        \FlashNotification::warning('Deleting storage boxes has not been implemented yet.');
+        return redirect()->back();
     }
-
-
 }

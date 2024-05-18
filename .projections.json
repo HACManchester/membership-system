@@ -1,3 +1,4 @@
 {
+  "app/Http/Controllers/**/*Controller.php": { "alternate": "tests/Feature/{dirname}/{basename}Test.php" },
   "app/**/*.php": { "alternate": "tests/unit/{dirname}/{basename}Test.php" }
 }
