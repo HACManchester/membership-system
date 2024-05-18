@@ -2,19 +2,8 @@
 
 use BB\Entities\StorageBox;
 
-class StorageBoxRepository extends DBRepository
+class StorageBoxRepository
 {
-
-    /**
-     * @var StorageBox
-     */
-    protected $model;
-
-    public function __construct(StorageBox $model)
-    {
-        $this->model = $model;
-    }
-
     /**
      * Fetch a members box
      * @param $userId
@@ -22,7 +11,7 @@ class StorageBoxRepository extends DBRepository
      */
     public function getMemberBox($userId)
     {
-        return $this->model->findMember($userId);
+        return StorageBox::findMember($userId);
     }
 
 
@@ -34,7 +23,7 @@ class StorageBoxRepository extends DBRepository
      */
     public function getMemberBoxes($userId)
     {
-        return $this->model->where('user_id', $userId)->where('active', true)->get();
+        return StorageBox::where('user_id', $userId)->where('active', true)->get();
     }
 
     /**
@@ -43,7 +32,7 @@ class StorageBoxRepository extends DBRepository
      */
     public function getAll()
     {
-        return $this->model->where('active', 1)->get();
+        return StorageBox::where('active', 1)->get();
     }
 
     /**
@@ -61,6 +50,4 @@ class StorageBoxRepository extends DBRepository
         }
         return $availableBoxes;
     }
-
-
 } 

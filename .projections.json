@@ -1,0 +1,3 @@
+{
+  "app/**/*.php": { "alternate": "tests/unit/{dirname}/{basename}Test.php" }
+}
