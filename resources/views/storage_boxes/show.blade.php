@@ -140,15 +140,6 @@
                                         <td>{{ $key }}</td>
                                             @if($key == 'user_id')
                                                 <td>
-                                                    @if($new)
-                                                        <a href="{{ route('account.show', $new) }}">
-                                                            {{ $newUser = BB\Entities\User::find($new)->name }}
-                                                        </a>
-                                                    @else
-                                                        <span class="text-muted">(blank)</span>
-                                                    @endif
-                                                </td>
-                                                <td>
                                                     @if($old)
                                                         <a href="{{ route('account.show', $old) }}">
                                                             {{ $oldUser = BB\Entities\User::find($old)->name }}
@@ -157,9 +148,18 @@
                                                         <span class="text-muted">(blank)</span>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    @if($new)
+                                                        <a href="{{ route('account.show', $new) }}">
+                                                            {{ $newUser = BB\Entities\User::find($new)->name }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted">(blank)</span>
+                                                    @endif
+                                                </td>
                                             @else
-                                                <td>{{ $new }}</td>
                                                 <td>{{ $old }}</td>
+                                                <td>{{ $new }}</td>
                                             @endif
                                     </tr>
                                 @endforeach
