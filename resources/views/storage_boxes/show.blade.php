@@ -115,6 +115,59 @@
                     </div>
                 </div>    
             </div>
+
+            <div class="row">
+                <div class="col-md-12 well">
+                    <h3>Audit Logs</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>User</th>
+                                <th>Date</th>
+                                <th>Field changed</th>
+                                <th>Old value</th>
+                                <th>New value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($box->audits as $audit)
+                                @foreach($audit->getModified() as $key => ['old' => $old, 'new' => $new])
+                                    <tr>
+                                        <td>{{ $audit->event }}</td>
+                                        <td>{{ $audit->user->name }}</td>
+                                        <td>{{ $audit->created_at }}</td>
+                                        <td>{{ $key }}</td>
+                                            @if($key == 'user_id')
+                                                <td>
+                                                    @if($new)
+                                                        <a href="{{ route('account.show', $new) }}">
+                                                            {{ $newUser = BB\Entities\User::find($new)->name }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted">(blank)</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($old)
+                                                        <a href="{{ route('account.show', $old) }}">
+                                                            {{ $oldUser = BB\Entities\User::find($old)->name }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted">(blank)</span>
+                                                    @endif
+                                                </td>
+                                            @else
+                                                <td>{{ $new }}</td>
+                                                <td>{{ $old }}</td>
+                                            @endif
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
         </span>
     @endif
 @stop
