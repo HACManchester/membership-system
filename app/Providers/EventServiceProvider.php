@@ -1,4 +1,6 @@
-<?php namespace BB\Providers;
+<?php
+
+namespace BB\Providers;
 
 use BB\Events\Inductions\InductionCompletedEvent;
 use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
@@ -14,16 +16,16 @@ use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\EmailboardAboutExpense;
 use BB\Listeners\ExtendMembership;
+use BB\Listeners\MemberBalanceSubscriber;
 use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
 use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
 use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
 use BB\Listeners\RecalculateMemberBalance;
 use BB\Listeners\RecordMemberActivity;
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
-
+class EventServiceProvider extends ServiceProvider
+{
 	/**
 	 * The event handler mappings for the application.
 	 *
@@ -33,48 +35,44 @@ class EventServiceProvider extends ServiceProvider {
 		'payment.create' => [
 			'BB\Handlers\PaymentEventHandler@onCreate',
 		],
-        'payment.delete' => [
+		'payment.delete' => [
 			'BB\Handlers\PaymentEventHandler@onDelete',
 		],
-        'payment.cancelled' => [
+		'payment.cancelled' => [
 			'BB\Handlers\PaymentEventHandler@onCancel',
 		],
-        'payment.paid' => [
+		'payment.paid' => [
 			'BB\Handlers\PaymentEventHandler@onPaid',
 		],
-        'BB\Events\SubscriptionChargePaid' => [
-            ExtendMembership::class
-        ],
-        'sub-charge.processing' => [
+		'BB\Events\SubscriptionChargePaid' => [
+			ExtendMembership::class
+		],
+		'sub-charge.processing' => [
 			'BB\Handlers\SubChargeEventHandler@onProcessing',
 		],
-        'sub-charge.payment-failed' => [
+		'sub-charge.payment-failed' => [
 			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
 		],
-        'BB\Events\NewExpenseSubmitted' => [
-            EmailboardAboutExpense::class,
-        ],
-        'BB\Events\ExpenseWasApproved' => [
-            EmailMemberAboutApprovedExpense::class,
-            AddApprovedExpenseToBalance::class,
-        ],
-        'BB\Events\ExpenseWasDeclined' => [
-            EmailMemberAboutDeclinedExpense::class,
-        ],
-        'BB\Events\MemberPhotoWasDeclined' => [
-            EmailMemberAboutDeclinedPhoto::class,
-        ],
-        'BB\Events\MemberActivity' => [
-            RecordMemberActivity::class,
-        ],
-        'BB\Events\MemberGivenTrustedStatus' => [
-            EmailMemberAboutTrustedStatus::class
-        ],
-        'BB\Events\NewMemberNotification' => [
-        ],
-        MemberBalanceChanged::class => [
-            RecalculateMemberBalance::class
-        ],
+		'BB\Events\NewExpenseSubmitted' => [
+			EmailboardAboutExpense::class,
+		],
+		'BB\Events\ExpenseWasApproved' => [
+			EmailMemberAboutApprovedExpense::class,
+			AddApprovedExpenseToBalance::class,
+		],
+		'BB\Events\ExpenseWasDeclined' => [
+			EmailMemberAboutDeclinedExpense::class,
+		],
+		'BB\Events\MemberPhotoWasDeclined' => [
+			EmailMemberAboutDeclinedPhoto::class,
+		],
+		'BB\Events\MemberActivity' => [
+			RecordMemberActivity::class,
+		],
+		'BB\Events\MemberGivenTrustedStatus' => [
+			EmailMemberAboutTrustedStatus::class
+		],
+		'BB\Events\NewMemberNotification' => [],
 		SubscriptionPayment\FailedInsufficientFunds::class => [
 			EmailMemberAboutFailedSubscriptionPayment::class
 		],
@@ -92,6 +90,15 @@ class EventServiceProvider extends ServiceProvider {
 		],
 	];
 
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        MemberBalanceSubscriber::class,
+    ];
+
 	/**
 	 * Register any other events for your application.
 	 *
@@ -102,5 +109,4 @@ class EventServiceProvider extends ServiceProvider {
 	{
 		parent::boot();
 	}
-
 }

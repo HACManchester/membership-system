@@ -4,6 +4,7 @@ namespace BB\Repo;
 
 use BB\Entities\Payment;
 use BB\Events\MemberBalanceChanged;
+use BB\Events\PaymentCancelled;
 use BB\Exceptions\NotImplementedException;
 use BB\Exceptions\PaymentException;
 use Carbon\Carbon;
@@ -187,7 +188,9 @@ class PaymentRepository extends DBRepository
 
         $payment = $this->getById($paymentId);
 
+        // TODO: Refactor & migrate to proper event classes eh
         \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
+        PaymentCancelled::dispatch($payment);
     }
 
     /**
