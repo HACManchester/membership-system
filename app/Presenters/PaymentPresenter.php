@@ -85,17 +85,17 @@ class PaymentPresenter extends Presenter
 
     public function amount()
     {
-        return '&pound;' . number_format($this->entity->amount, 2);
+        return '£' . number_format($this->entity->amount, 2);
     }
 
     public function balanceAmount()
     {
         if ($this->entity->source == 'balance') {
-            return '-&pound;' . $this->entity->amount;
+            return '-£' . $this->entity->amount;
         }
 
         if ($this->entity->reason == 'balance') {
-            return '&pound;' . $this->entity->amount;
+            return '£' . $this->entity->amount;
         }
     }
 

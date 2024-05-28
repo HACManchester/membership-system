@@ -32,7 +32,7 @@ class ExpensePresenter extends Presenter
 
     public function amount()
     {
-        return '&pound;' . number_format($this->entity->amount / 100, 2);
+        return '£' . number_format($this->entity->amount / 100, 2);
     }
 
     public function file()

@@ -101,7 +101,7 @@ class Credit
 
     public function getBalanceFormatted()
     {
-        return '&pound;' . number_format(($this->user->cash_balance / 100), 2);
+        return '£' . number_format(($this->user->cash_balance / 100), 2);
     }
 
     public function getBalancePaymentsPaginated()

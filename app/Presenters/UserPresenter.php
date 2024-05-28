@@ -41,12 +41,12 @@ class UserPresenter extends Presenter
 
     public function cashBalance()
     {
-        return '&pound;' . number_format(($this->entity->cash_balance / 100), 2);
+        return '£' . number_format(($this->entity->cash_balance / 100), 2);
     }
 
     public function monthlySubscription()
     {
-        return '&pound;' . number_format(round($this->entity->monthly_subscription), 2);
+        return '£' . number_format(round($this->entity->monthly_subscription), 2);
     }
 
     public function subscriptionDetailLine()
