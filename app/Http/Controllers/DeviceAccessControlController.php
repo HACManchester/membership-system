@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Repo\ActivityRepository;
+use Illuminate\Support\Facades\Log;
 
 class DeviceAccessControlController extends Controller
 {
@@ -47,7 +48,7 @@ class DeviceAccessControlController extends Controller
             $this->deviceSession->decodeDeviceCommand($receivedData);
             $this->deviceSession->validateData();
         } catch (\BB\Exceptions\ValidationException $e) {
-            \Log::debug($e->getMessage());
+            Log::debug($e->getMessage());
             return \Response::make(json_encode(['valid'=>'0']), 200);
         }
 

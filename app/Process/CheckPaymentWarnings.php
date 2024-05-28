@@ -5,6 +5,7 @@ use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CheckPaymentWarnings
 {
@@ -58,7 +59,7 @@ class CheckPaymentWarnings
         }
 
         $message = "Members with payment warning: " . implode(", ", $members);
-        \Log::info($message);
+        Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
             $message

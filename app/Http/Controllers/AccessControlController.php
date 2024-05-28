@@ -2,6 +2,7 @@
 
 use BB\Entities\Activity;
 use BB\Entities\KeyFob;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class AccessControlController extends Controller
@@ -42,7 +43,7 @@ class AccessControlController extends Controller
 
         } catch (\BB\Exceptions\ValidationException $e) {
 
-            \Log::debug("Entry message received - failed: " . $receivedData);
+            Log::debug("Entry message received - failed: " . $receivedData);
 
             //The data was invalid or the user doesnt have access
             $response = \Response::make(json_encode(['valid' => '0', 'msg' => $e->getMessage()]) . PHP_EOL, 200);

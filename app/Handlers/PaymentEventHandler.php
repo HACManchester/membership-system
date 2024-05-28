@@ -7,6 +7,7 @@ use BB\Repo\InductionRepository;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use Illuminate\Support\Facades\Log;
 
 class PaymentEventHandler
 {
@@ -125,7 +126,7 @@ class PaymentEventHandler
     {
         if ($reason == 'subscription') {
             if (empty($ref)) {
-                \Log::warning('Subscription payment failure, no sub charge id. Payment ID: ' . $paymentId);
+                Log::warning('Subscription payment failure, no sub charge id. Payment ID: ' . $paymentId);
                 return;
             }
             $this->subscriptionChargeRepository->paymentFailed($ref);
@@ -163,7 +164,7 @@ class PaymentEventHandler
         $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
 
         if ( ! $subCharge) {
-            \Log::warning('Subscription payment without a sub charge. Payment ID:' . $paymentId);
+            Log::warning('Subscription payment without a sub charge. Payment ID:' . $paymentId);
             return;
         }
 

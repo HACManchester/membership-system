@@ -4,6 +4,7 @@ use BB\Exceptions\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Support\Facades\Log;
 
 class SessionController extends Controller
 {
@@ -89,7 +90,7 @@ class SessionController extends Controller
         $calculatedHash = hash_hmac('sha256', $input['sso'], env('DISCOURSE_SSO_SECRET'), false);
 
         if( $calculatedHash != $input['sig'] ){
-            \Log::error("HMAC: $calculatedHash  !!!!Provided: " . $input['sig']);
+            Log::error("HMAC: $calculatedHash  !!!!Provided: " . $input['sig']);
 
             return \View::make('session.error')
                 ->with('code', '1');

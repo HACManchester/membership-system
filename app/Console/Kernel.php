@@ -5,6 +5,7 @@ namespace BB\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use BB\Helpers\TelegramHelper;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -37,7 +38,7 @@ class Kernel extends ConsoleKernel
             ->dailyAt('06:00')
             ->then(function () use ($telegram) {
                 $message = "✔️ Checked Memberships";
-                \Log::info($message);
+                Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
                     $message
@@ -49,7 +50,7 @@ class Kernel extends ConsoleKernel
             ->dailyAt('01:00')
             ->then(function () use ($telegram) {
                 $message = "✔️ Created today's subscription charges";
-                \Log::info($message);
+                Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
                     $message
@@ -61,7 +62,7 @@ class Kernel extends ConsoleKernel
             ->dailyAt('01:30')
             ->then(function () use ($telegram) {
                 $message = "✅ Billed members.";
-                \Log::info($message);
+                Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
                     $message

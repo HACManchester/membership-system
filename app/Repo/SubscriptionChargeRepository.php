@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionChargeRepository extends DBRepository
 {
@@ -153,7 +154,7 @@ class SubscriptionChargeRepository extends DBRepository
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
-            \Log::debug('Sub charge not updated after payment failure, already cancelled. Charge ID: ' . $chargeId);
+            Log::debug('Sub charge not updated after payment failure, already cancelled. Charge ID: ' . $chargeId);
         }
 
         \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));

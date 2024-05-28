@@ -9,6 +9,7 @@ use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Exceptions\NotImplementedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -132,7 +133,7 @@ class PaymentController extends Controller
             throw new \BB\Exceptions\AuthenticationException;
         }
 
-        \Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store ' . json_encode(\Input::all()));
+        Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store ' . json_encode(\Input::all()));
 
         $reason = \Input::get('reason');
 

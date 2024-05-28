@@ -7,6 +7,7 @@ use BB\Entities\User;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
+use Illuminate\Support\Facades\Log;
 
 class GoCardlessPaymentController extends Controller
 {
@@ -113,7 +114,7 @@ class GoCardlessPaymentController extends Controller
             return \Redirect::to($returnPath);
         } catch (Exception $e) {
             // Genuine app exception... needs investigation
-            \Log::info($e);
+            Log::info($e);
 
             $status = 'error';
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);

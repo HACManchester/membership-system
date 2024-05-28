@@ -4,6 +4,7 @@ use BB\Entities\User;
 use BB\Repo\UserRepository;
 use BB\Helpers\TelegramHelper;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CheckLeavingUsers
 {
@@ -40,13 +41,13 @@ class CheckLeavingUsers
                     //an email will be sent by the user observer
                 }
             }else{
-                \Log::error("User marked as active without an expiry date!");
+                Log::error("User marked as active without an expiry date!");
             }
 
         }
 
         $message = "Members set as left: " . implode(", ", $members);
-        \Log::info($message);
+        Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
             $message

@@ -60,7 +60,7 @@
                 {!! Form::submit('Inducted By', array('class'=>'btn btn-default btn-xs')) !!}
                 {!! Form::close() !!}
                 @elseif ($item->userInduction && $item->userInduction->is_trained)
-                {{ $item->userInduction->trainer_user->name or 'inducted' }}
+                {{ $item->userInduction->trainer_user->name ?? 'inducted' }}
                 @endif
             </td>
             <td>

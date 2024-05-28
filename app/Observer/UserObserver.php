@@ -2,6 +2,7 @@
 
 use BB\Mailer\UserMailer;
 use BB\Helpers\TelegramHelper;
+use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
@@ -65,7 +66,7 @@ class UserObserver
 
         $telegramHelper = new TelegramHelper("UserObserver");
         $message = "New Member! Welcome to " . $user->name;
-        \Log::info($message);
+        Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             $message
@@ -85,7 +86,7 @@ class UserObserver
 
         $telegramHelper = new TelegramHelper("UserObserver");
         $message = "User marked with payment warning: " . $user->name;
-        \Log::info($message);
+        Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             $message
@@ -100,7 +101,7 @@ class UserObserver
 
         $telegramHelper = new TelegramHelper("UserObserver");
         $message = "User marked as suspended for non payment: " . $user->name;
-        \Log::info($message);
+        Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             $message
@@ -114,7 +115,7 @@ class UserObserver
 
         $telegramHelper = new TelegramHelper("UserObserver");
         $message = "User marked as left: " . $user->name;
-        \Log::info($message);
+        Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 
             $message

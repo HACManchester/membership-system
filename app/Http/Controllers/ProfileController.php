@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -85,7 +86,7 @@ class ProfileController extends Controller
 
                 \FlashNotification::success("Photo uploaded, it will be checked and appear shortly");
             } catch (\Exception $e) {
-                \Log::error($e);
+                Log::error($e);
             }
         } else {
             \FlashNotification::success("Profile Updated");
