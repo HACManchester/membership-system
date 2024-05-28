@@ -11,6 +11,7 @@ use BB\Exceptions\ValidationException;
 use BB\Helpers\MembershipPayments;
 use BB\Mailer\UserMailer;
 use BB\Validators\InductionValidator;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -230,7 +231,7 @@ class AccountController extends Controller
 
                 $this->profileRepo->update($user->id, ['new_profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
             } catch (\Exception $e) {
-                \Log::error($e);
+                Log::error($e);
             }
         }
 

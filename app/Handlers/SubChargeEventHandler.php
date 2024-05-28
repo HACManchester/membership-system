@@ -77,7 +77,6 @@ class SubChargeEventHandler
             $user->extendMembership(null, $paidUntil);
         } else {
             $user->extendMembership(null, Carbon::now());
-            //\Log::info('Payment cancelled, expiry date rollback failed as there is no previous payment. User ID:' . $userId);
         }
     }
 

@@ -9,6 +9,7 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GoCardlessWebhookController extends Controller
 {
@@ -89,7 +90,7 @@ class GoCardlessWebhookController extends Controller
                             break;
                         default:
 
-                            \Log::info('GoCardless payment event. Action: ' . $parser->getAction() . '. Data: ' . json_encode($event));
+                            Log::info('GoCardless payment event. Action: ' . $parser->getAction() . '. Data: ' . json_encode($event));
                     }
 
                     break;
@@ -120,7 +121,7 @@ class GoCardlessWebhookController extends Controller
                             break;
                         default:
 
-                            \Log::info('GoCardless subscription event. Action: ' . $parser->getAction() . '. Data: ' . json_encode($event));
+                            Log::info('GoCardless subscription event. Action: ' . $parser->getAction() . '. Data: ' . json_encode($event));
                     }
 
                     break;
@@ -138,7 +139,7 @@ class GoCardlessWebhookController extends Controller
      */
     private function processNewPayment(array $bill)
     {
-        \Log::info('New payment notification. ' . json_encode($bill));
+        Log::info('New payment notification. ' . json_encode($bill));
     }
 
 
@@ -160,7 +161,7 @@ class GoCardlessWebhookController extends Controller
             if ( ! $user) {
 
                 $message = "GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['links']['payment'];
-                \Log::info($message);
+                Log::info($message);
                 $this->telegramHelper->notify(
                     TelegramHelper::WARNING, 
                     $message
@@ -173,7 +174,7 @@ class GoCardlessWebhookController extends Controller
             $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['links']['payment'], $amount, $payment->status);
 
         } catch (\Exception $e) {
-            \Log::error($e);
+            Log::error($e);
         }
     }
 
@@ -187,7 +188,7 @@ class GoCardlessWebhookController extends Controller
             $this->paymentRepository->markPaymentPending($existingPayment->id);
         } else {
             $message = "GoCardless processSubmittedPayment - Webhook received for unknown payment: " . $bill['links']['payment'];
-            \Log::warning($message);
+            Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
                 $message
@@ -204,7 +205,7 @@ class GoCardlessWebhookController extends Controller
             $this->paymentRepository->markPaymentPaid($existingPayment->id, Carbon::now());
         } else {
             $message = "GoCardless processPaidBills - Webhook received for unknown payment: " . $bill['links']['payment'];
-            \Log::warning($message);
+            Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
                 $message
@@ -223,7 +224,7 @@ class GoCardlessWebhookController extends Controller
             $this->paymentRepository->recordPaymentFailure($existingPayment->id, $payment->status);
         } else {
             $message = "GoCardless PaymentFailed - Webhook received for unknown payment: " . $bill['links']['payment'];
-            \Log::warning($message);
+            Log::warning($message);
             $this->telegramHelper->notify(
                 TelegramHelper::WARNING,
                 $message
@@ -248,7 +249,7 @@ class GoCardlessWebhookController extends Controller
                             $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
                         } else {
                             //@TODO: Handle partial payments
-                            \Log::warning("Sub charge handling - gocardless partial payment");
+                            Log::warning("Sub charge handling - gocardless partial payment");
                         }
                     }
                 } elseif ($bill['status'] == 'refunded') {
@@ -257,7 +258,7 @@ class GoCardlessWebhookController extends Controller
                 }
             } else {
                 $message = "GoCardless ProcessBills - Webhook received for unknown payment: " . $bill['id'];
-                \Log::warning($message);
+                Log::warning($message);
                 $this->telegramHelper->notify(
                     TelegramHelper::WARNING,
                     $message

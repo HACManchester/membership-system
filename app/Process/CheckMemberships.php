@@ -4,6 +4,7 @@ use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
 use BB\Services\MemberSubscriptionCharges;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Loop through each member and look at their last subscription payment
@@ -66,7 +67,7 @@ class CheckMemberships
         }
 
         $message = "Checked Memberships - set suspended: " . implode(", ", $members);
-        \Log::info($message);
+        Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
             $message

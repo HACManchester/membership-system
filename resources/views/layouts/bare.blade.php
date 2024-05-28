@@ -33,7 +33,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body class="{{ $body_class or '' }}">
+<body class="{{ $body_class ?? '' }}">
 
 <div id="">
 

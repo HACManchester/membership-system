@@ -3,6 +3,7 @@
 use BB\Events\NewExpenseSubmitted;
 use BB\Exceptions\ImageFailedException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Input;
@@ -95,7 +96,7 @@ class ExpensesController extends Controller {
                 $data['file'] = $newFilename;
 
             } catch(\Exception $e) {
-                \Log::error($e);
+                Log::error($e);
                 throw new ImageFailedException($e->getMessage());
             }
         }

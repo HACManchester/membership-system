@@ -4,6 +4,7 @@ use BB\Events\MemberActivity;
 use BB\Repo\ACSNodeRepository;
 use BB\Repo\PaymentRepository;
 use BB\Services\KeyFobAccess;
+use Illuminate\Support\Facades\Log;
 
 class ACSSparkController extends Controller
 {
@@ -35,7 +36,7 @@ class ACSSparkController extends Controller
         try {
             $keyFob = $this->keyFobAccess->lookupKeyFob($data['tag']);
         } catch (\Exception $e) {
-            \Log::debug(json_encode($data));
+            Log::debug(json_encode($data));
             return \Response::make('Not found', 404);
         }
         $user = $keyFob->user()->first();

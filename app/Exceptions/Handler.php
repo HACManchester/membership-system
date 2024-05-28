@@ -3,17 +3,13 @@
 namespace BB\Exceptions;
 
 use BB\Helpers\TelegramErrorHelper;
-use BB\Helpers\TelegramHelper;
 use BB\Notifications\ErrorNotification;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use GuzzleHttp\Client as HttpClient;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException as IlluminateValidationException;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -88,13 +84,13 @@ class Handler extends ExceptionHandler
 
     protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
     {
-        \Log::error($e);
+        Log::error($e);
         try {
             $helper = new TelegramErrorHelper();
             $helper->notify(new ErrorNotification($level, $title, $suppress, $e));
         } catch (Exception $telegramE) {
             // Make sure Telegram exceptions don't stop regular exceptions being logged
-            \Log::error($telegramE);
+            Log::error($telegramE);
         }
     }
 
@@ -125,7 +121,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof NotImplementedException) {
             \FlashNotification::error("NotImplementedException: " . $e->getMessage());
-            \Log::warning($e);
+            Log::warning($e);
             return redirect()->back()->withInput();
         }
 
@@ -134,7 +130,7 @@ class Handler extends ExceptionHandler
                 return \Response::json(['error' => $e->getMessage()], 403);
             }
             $userString = \Auth::guest() ? "A guest" : \Auth::user()->name;
-            \Log::warning($userString . " tried to access something they weren't supposed to.");
+            Log::warning($userString . " tried to access something they weren't supposed to.");
 
             return \Response::view('errors.403', [], 403);
         }

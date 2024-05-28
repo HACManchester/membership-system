@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
+use Illuminate\Support\Facades\Log;
 
 class MemberSubscriptionCharges
 {
@@ -60,7 +61,7 @@ class MemberSubscriptionCharges
             }
 
             $message = "Charges ran for " . date_format($targetDate,"Y-m-d");
-            \Log::info($message);
+            Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB, 
                 $message
@@ -68,12 +69,12 @@ class MemberSubscriptionCharges
         }
         catch(Exception $e) {
             $message = "Exception running" . date_format($targetDate,"Y-m-d");
-            \Log::error($message);
+            Log::error($message);
             $this->telegramHelper->notify(
                 TelegramHelper::ERROR, 
                 $message
             );
-            \Log::error($e);
+            Log::error($e);
         }
     }
 
@@ -163,7 +164,7 @@ class MemberSubscriptionCharges
         };
 
         $message = "Created bills for: " . implode(", ", $members);
-        \Log::info($message);
+        Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB,
             $message
@@ -171,7 +172,7 @@ class MemberSubscriptionCharges
 
         if (count($membersWeCouldntBill) > 0) {
             $message = "Could not create bills for: " . implode(", ", $membersWeCouldntBill);
-            \Log::info($message);
+            Log::info($message);
             $this->telegramHelper->notify(
                 TelegramHelper::JOB,
                 $message

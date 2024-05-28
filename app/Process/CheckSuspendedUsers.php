@@ -5,6 +5,7 @@ use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CheckSuspendedUsers
 {
@@ -56,7 +57,7 @@ class CheckSuspendedUsers
         }
 
         $message = "Suspended members marked as left: " . implode(", ", $members);
-        \Log::info($message);
+        Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
             $message

@@ -1,5 +1,7 @@
 <?php namespace BB\Helpers;
 
+use Illuminate\Support\Facades\Log;
+
 class GoCardlessHelper
 {
 
@@ -103,7 +105,7 @@ class GoCardlessHelper
                 ]
             ]);
         } catch (\Exception $e) {
-            \Log::error($e);
+            Log::error($e);
 
             // Log these to Sentry too, to increase visibility of them.
             if (app()->bound('sentry')) {
@@ -126,9 +128,9 @@ class GoCardlessHelper
                 return true;
             }
 
-            \Log::error('Canceling pre auth failed: ' . json_encode($mandate));
+            Log::error('Canceling pre auth failed: ' . json_encode($mandate));
         } catch (\Exception $e) {
-            \Log::error($e);
+            Log::error($e);
         }
         return false;
     }

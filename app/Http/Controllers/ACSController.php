@@ -9,6 +9,7 @@ use BB\Repo\ACSNodeRepository;
 use BB\Repo\EquipmentLogRepository;
 use BB\Validators\ACSValidator;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ACSController extends Controller
 {
@@ -76,7 +77,7 @@ class ACSController extends Controller
 
                 break;
             default:
-                \Log::debug(json_encode($data));
+                Log::debug(json_encode($data));
         }
 
     }

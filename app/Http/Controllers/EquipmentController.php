@@ -9,6 +9,7 @@ use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
 use Illuminate\Support\Facades\Storage;
 use Input;
+use Log;
 
 class EquipmentController extends Controller
 {
@@ -315,7 +316,7 @@ class EquipmentController extends Controller
                 $equipment->addPhoto($newFilename);
 
             } catch(\Exception $e) {
-                \Log::error($e);
+                Log::error($e);
                 throw new ImageFailedException($e->getMessage());
             }
         }
