@@ -13,6 +13,7 @@ yarn-error.log
 /public/css/*.css
 /public/fonts
 /public/js
+.phpunit.result.cache
 
 # IDE-helper related
 _ide_helper*
