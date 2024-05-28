@@ -1,8 +1,12 @@
-<?php namespace BB\Providers;
+<?php
 
+namespace BB\Providers;
+
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * Bootstrap any application services.
@@ -29,7 +33,7 @@ class AppServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		// We're running a higher PHP version than Laravel 5.2 supports. Temporarily ignore certain notices.
-		if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
+		if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 			error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 		}
 
