@@ -7,9 +7,9 @@ use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Validators\EquipmentValidator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Input;
-use Log;
 
 class EquipmentController extends Controller
 {
