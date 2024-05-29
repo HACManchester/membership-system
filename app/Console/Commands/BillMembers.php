@@ -1,7 +1,7 @@
 <?php namespace BB\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\FacadesLog;
+use Illuminate\Support\Facades\Log;
 use BB\Helpers\TelegramHelper;
 
 class BillMembers extends Command
