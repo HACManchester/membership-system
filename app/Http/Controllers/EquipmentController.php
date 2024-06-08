@@ -8,7 +8,7 @@ use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
-use BB\Validators\EquipmentValidator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Input;
@@ -35,11 +35,6 @@ class EquipmentController extends Controller
      * @var UserRepository
      */
     private $userRepository;
-    
-    /**
-     * @var \BB\Validators\EquipmentPhotoValidator
-     */
-    private $equipmentPhotoValidator;
 
     /** @var \Illuminate\Filesystem\FilesystemAdapter */
     protected $disk;
@@ -54,20 +49,17 @@ class EquipmentController extends Controller
      * @param EquipmentRepository                    $equipmentRepository
      * @param EquipmentLogRepository                 $equipmentLogRepository
      * @param UserRepository                         $userRepository
-     * @param \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
      */
     function __construct(
         InductionRepository $inductionRepository,
         EquipmentRepository $equipmentRepository,
         EquipmentLogRepository $equipmentLogRepository,
-        UserRepository $userRepository,
-        \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
+        UserRepository $userRepository
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->userRepository         = $userRepository;
-        $this->equipmentPhotoValidator = $equipmentPhotoValidator;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
@@ -238,15 +230,14 @@ class EquipmentController extends Controller
         return redirect()->route('equipment.index');
     }
 
-    public function addPhoto(Equipment $equipment)
+    public function addPhoto(Equipment $equipment, Request $request)
     {
         $this->authorize('update', $equipment);
 
-        $data = \Request::only(['photo']);
+        ['photo' => $photo] = $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png',
+        ]);
 
-        $this->equipmentPhotoValidator->validate($data);
-
-        $photo = Input::file('photo');
         if ($photo) {
             try {
                 $ext = $photo->guessClientExtension() ?: 'png';

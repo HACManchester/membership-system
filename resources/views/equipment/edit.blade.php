@@ -41,7 +41,7 @@
                     <div class="col-xs-12 col-md-4 col-lg-2">
                     <img src="{{ $equipment->getPhotoUrl($i) }}" class="img-thumbnail" width="200" />
                     {!! Form::open(array('route' => ['equipment.photo.destroy', $equipment->slug, $i], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'DELETE')) !!}
-                    {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
+                        {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
                     {!! Form::close() !!}
                     </div>
                 @endfor
@@ -51,19 +51,25 @@
 
             {!! Form::open(array('route' => ['equipment.photo.store', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'POST')) !!}
 
-            <div class="form-group {{ FlashNotification::hasErrorDetail('photo', 'has-error has-feedback') }}">
-                {!! Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) !!}
-                <div class="col-sm-9 col-lg-7">
-                    <input name="photo" class="form-control" type="file" accept="image/*" capture="camera" id="inputPhoto">
-                    <p class="help-block">Photos will be cropped to a square so please ensure the item is centered appropriately</p>
-                    {!! FlashNotification::getErrorDetail('photo') !!}
+                <div class="form-group {{ $errors->has('photo') ? 'has-error' : ''}}">
+                    {!! Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-9 col-lg-7">
+                        <input name="photo" class="form-control" type="file" accept="image/*" capture="camera" id="inputPhoto">
+                        <p class="help-block">Photos will be cropped to a square so please ensure the item is centered appropriately</p>
+                        @if($errors->has('photo'))
+                            <span class="help-block">
+                                @foreach($errors->get('photo') as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </span>
+                        @endif
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                    {!! Form::submit('Upload', array('class'=>'btn btn-primary')) !!}
-                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                        {!! Form::submit('Upload', array('class'=>'btn btn-primary')) !!}
+                    </div>
             </div>
 
             {!! Form::close() !!}
