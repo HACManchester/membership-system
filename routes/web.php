@@ -273,15 +273,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
 
 
 ##########################
-# Expenses
-##########################
-
-// Route::group(array('middleware' => 'role:finance'), function () {
-// Route::resource('expenses', 'ExpensesController');
-// });
-
-
-##########################
 # Settings
 ##########################
 
