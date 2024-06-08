@@ -105,9 +105,6 @@ class PaymentController extends Controller
      *
      * @depreciated
      * @param $userId
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\FormValidationException
-     * @throws \BB\Exceptions\NotImplementedException
      */
     public function create($userId)
     {
@@ -119,14 +116,12 @@ class PaymentController extends Controller
      * Store a manual payment
      *
      * @param $userId
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\FormValidationException
-     * @throws \BB\Exceptions\NotImplementedException
      * @return Illuminate\Http\RedirectResponse
      * @deprecated
      */
-    public function store($userId)
+    public function store($userId, Request $request)
     {
+        // TODO: Review this method. Should have no active use?
         $user = User::findWithPermission($userId);
 
         if (!\Auth::user()->hasRole('admin') &&  !\Auth::user()->hasRole('finance')) {
@@ -199,11 +194,9 @@ class PaymentController extends Controller
             $user->storage_box_payment_id = $payment->id;
             $user->save();
         } elseif ($reason == 'balance') {
-            $amount = \Input::get('amount') * 1; //convert the users amount into a number
-            if (!is_numeric($amount)) {
-                $exceptionErrors = new \Illuminate\Support\MessageBag(['amount' => 'Invalid amount']);
-                throw new \BB\Exceptions\FormValidationException('Not a valid amount', $exceptionErrors);
-            }
+            $amount = $request->validate([
+                'amount' => 'required|numeric'
+            ]);
             $payment = new Payment([
                 'reason'           => 'balance',
                 'source'           => \Input::get('source'),
