@@ -1,6 +1,5 @@
 <?php namespace BB\Http\Controllers;
 
-use BB\Exceptions\FormValidationException;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Http\Request;

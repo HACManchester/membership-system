@@ -28,9 +28,6 @@ class BalancePaymentController extends Controller
      * Start the creation of a new balance payment
      *   Details get posted into this method
      * @param $userId
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\FormValidationException
-     * @throws \BB\Exceptions\NotImplementedException
      */
     public function store($userId)
     {
