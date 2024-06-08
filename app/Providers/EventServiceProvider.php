@@ -5,22 +5,16 @@ namespace BB\Providers;
 use BB\Events\Inductions\InductionCompletedEvent;
 use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
 use BB\Events\Inductions\InductionRequestedEvent;
-use BB\Events\MemberBalanceChanged;
 use BB\Events\SubscriptionPayment;
-use BB\Listeners\AddApprovedExpenseToBalance;
-use BB\Listeners\EmailMemberAboutApprovedExpense;
-use BB\Listeners\EmailMemberAboutDeclinedExpense;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutFailedSubscriptionPayment;
 use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
-use BB\Listeners\EmailboardAboutExpense;
 use BB\Listeners\ExtendMembership;
 use BB\Listeners\MemberBalanceSubscriber;
 use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
 use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
 use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
-use BB\Listeners\RecalculateMemberBalance;
 use BB\Listeners\RecordMemberActivity;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -52,16 +46,6 @@ class EventServiceProvider extends ServiceProvider
 		],
 		'sub-charge.payment-failed' => [
 			'BB\Handlers\SubChargeEventHandler@onPaymentFailure',
-		],
-		'BB\Events\NewExpenseSubmitted' => [
-			EmailboardAboutExpense::class,
-		],
-		'BB\Events\ExpenseWasApproved' => [
-			EmailMemberAboutApprovedExpense::class,
-			AddApprovedExpenseToBalance::class,
-		],
-		'BB\Events\ExpenseWasDeclined' => [
-			EmailMemberAboutDeclinedExpense::class,
 		],
 		'BB\Events\MemberPhotoWasDeclined' => [
 			EmailMemberAboutDeclinedPhoto::class,

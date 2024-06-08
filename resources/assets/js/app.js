@@ -37,24 +37,3 @@ jQuery('.paymentModule').each(function () {
 
     React.render(<PaymentModule csrfToken={csrfToken} description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} />, jQuery(this)[0]);
 });
-
-//var Expenses = require('./collections/Expenses');
-//var expenses = new Expenses();
-//expenses.fetch();
-
-var memberExpensesPanel = jQuery('#memberExpenses');
-if (memberExpensesPanel.length) {
-
-    var MemberExpenses = require('./components/expenses/MemberExpenses');
-    var Expenses = require('./collections/Expenses');
-    var expenses = new Expenses();
-
-    var userId = memberExpensesPanel.data('userId');
-    React.render(<MemberExpenses expenses={expenses} userId={userId} />, memberExpensesPanel[0]);
-
-    jQuery('.js-expenses-count').each(function () {
-        var ExpensesCount = require('./components/expenses/ExpensesCount');
-        React.render(<ExpensesCount expenses={expenses} />, jQuery(this)[0]);
-    });
-}
-
