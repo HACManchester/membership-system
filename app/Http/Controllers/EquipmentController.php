@@ -2,6 +2,8 @@
 
 use BB\Entities\Equipment;
 use BB\Exceptions\ImageFailedException;
+use BB\Http\Requests\Equipment\StoreEquipmentRequest;
+use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
 use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
@@ -18,22 +20,22 @@ class EquipmentController extends Controller
      * @var InductionRepository
      */
     private $inductionRepository;
+
     /**
      * @var EquipmentRepository
      */
     private $equipmentRepository;
+    
     /**
      * @var EquipmentLogRepository
      */
     private $equipmentLogRepository;
+    
     /**
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var EquipmentValidator
-     */
-    private $equipmentValidator;
+    
     /**
      * @var \BB\Validators\EquipmentPhotoValidator
      */
@@ -43,11 +45,15 @@ class EquipmentController extends Controller
     protected $disk;
 
     /**
+     * @var array
+     */
+    protected $ppeList;
+
+    /**
      * @param InductionRepository                    $inductionRepository
      * @param EquipmentRepository                    $equipmentRepository
      * @param EquipmentLogRepository                 $equipmentLogRepository
      * @param UserRepository                         $userRepository
-     * @param EquipmentValidator                     $equipmentValidator
      * @param \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
      */
     function __construct(
@@ -55,19 +61,16 @@ class EquipmentController extends Controller
         EquipmentRepository $equipmentRepository,
         EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository,
-        EquipmentValidator $equipmentValidator,
         \BB\Validators\EquipmentPhotoValidator $equipmentPhotoValidator
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
         $this->equipmentLogRepository = $equipmentLogRepository;
         $this->userRepository         = $userRepository;
-        $this->equipmentValidator = $equipmentValidator;
         $this->equipmentPhotoValidator = $equipmentPhotoValidator;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
-
 
         $this->ppeList = [
             'ear-protection'      => 'Ear protection',
@@ -171,50 +174,14 @@ class EquipmentController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      * @throws ImageFailedException
-     * @throws \BB\Exceptions\FormValidationException
      */
-    public function store()
+    public function store(StoreEquipmentRequest $request)
     {
         $this->authorize('create', Equipment::class);
 
-        $data = \Request::only([
-            'name',
-            'manufacturer',
-            'model_number',
-            'serial_number',
-            'colour',
-            'room',
-            'detail',
-            'slug',
-            'device_key',
-            'description',
-            'help_text',
-            'managing_role_id',
-            'working',
-            'usage_cost_per',
-            'permaloan',
-            'permaloan_user_id',
-            'obtained_at',
-            'removed_at',
-            'asset_tag_id',
-            'ppe',
-            'dangerous',
-            'requires_induction',
-            'induction_category',
-            'access_fee',
-            'usage_cost',
-             'induction_instructions',
-             'trainer_instructions',
-             'trained_instructions',
-             'docs',
-             'accepting_inductions'
-        ]);
+        $this->equipmentRepository->create($request->validated());
 
-        $this->equipmentValidator->validate($data);
-
-        $this->equipmentRepository->create($data);
-
-        return \Redirect::route('equipment.show', $data['slug']);
+        return \Redirect::route('equipment.show', $request->get('slug'));
     }
 
 
@@ -245,35 +212,11 @@ class EquipmentController extends Controller
      * @param  \BB\Entities\Equipment $equipment
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Equipment $equipment)
+    public function update(Equipment $equipment, UpdateEquipmentRequest $request)
     {
         $this->authorize('update', $equipment);
 
-        $normalFields = [
-            'name', 'manufacturer', 'model_number', 'serial_number', 'colour', 'room', 'detail', 'slug',
-            'device_key', 'description', 'help_text', 'managing_role_id', 'working', 'usage_cost_per',
-            'permaloan', 'permaloan_user_id', 'obtained_at', 'removed_at', 'asset_tag_id', 'docs'
-        ];
-
-        $additionalFields =
-        [
-            'dangerous',
-            'requires_induction',
-            'induction_category',
-            'access_fee',
-            'usage_cost',
-            'induction_instructions',
-            'trainer_instructions',
-            'trained_instructions',
-            'ppe',
-            'access_code',
-            'accepting_inductions'
-        ];
-
-        $data = \Request::only(array_merge($additionalFields, $normalFields));
-        $this->equipmentValidator->validate($data, $equipment->id);
-
-        $this->equipmentRepository->update($equipment->id, $data);
+        $this->equipmentRepository->update($equipment->id, $request->validated());
 
         return \Redirect::route('equipment.show', $equipment);
     }
