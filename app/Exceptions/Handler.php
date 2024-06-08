@@ -111,7 +111,7 @@ class Handler extends ExceptionHandler
             return redirect()->back()->withInput();
         }
 
-        if ($e instanceof ValidationException || $e instanceof IlluminateValidationException) {
+        if ($e instanceof ValidationException) {
             if ($request->wantsJson()) {
                 return \Response::json($e->getMessage(), 422);
             }
@@ -163,5 +163,12 @@ class Handler extends ExceptionHandler
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
 
         return new \Illuminate\Http\Response($whoops->handleException($e), $e->getCode());
+    }
+
+    protected function invalid($request, IlluminateValidationException $exception)
+    {
+        \FlashNotification::error($exception->getMessage());
+
+        return parent::invalid($request, $exception);
     }
 }

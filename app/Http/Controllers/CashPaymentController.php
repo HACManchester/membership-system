@@ -28,9 +28,6 @@ class CashPaymentController extends Controller
      *   Details get posted into this method and the redirected to gocardless
      *
      * @param $userId
-     * @throws \BB\Exceptions\AuthenticationException
-     * @throws \BB\Exceptions\FormValidationException
-     * @throws \BB\Exceptions\NotImplementedException
      */
     public function store($userId, Request $request)
     {
