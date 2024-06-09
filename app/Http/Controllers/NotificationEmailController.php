@@ -2,49 +2,42 @@
 
 use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\NotImplementedException;
+use BB\Http\Requests\StoreNotificationEmailRequest;
 use BB\Mailer\UserMailer;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
 use BB\Repo\EquipmentRepository;
-use BB\Validators\EmailNotificationValidator;
-
 
 class NotificationEmailController extends Controller
 {
-
-
     /**
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var EmailNotificationValidator
-     */
-    private $emailNotificationValidator;
+    
     /**
      * @var InductionRepository
      */
+
     private $inductionRepository;
-        /**
+    /**
+     * 
      * @var EquipmentRepository
      */
     private $equipmentRepository;
 
     /**
      * @param UserRepository               $userRepository
-     * @param EmailNotificationValidator   $emailNotificationValidator
      * @param InductionRepository $inductionRepository
      * @throws AuthenticationException
      */
     public function __construct(
         UserRepository $userRepository,
         EquipmentRepository $equipmentRepository,
-        EmailNotificationValidator $emailNotificationValidator,
         InductionRepository $inductionRepository
     ) {
         $this->userRepository             = $userRepository;
         $this->equipmentRepository        = $equipmentRepository;
-        $this->emailNotificationValidator = $emailNotificationValidator;
         $this->inductionRepository        = $inductionRepository;
     }
 
@@ -103,11 +96,9 @@ class NotificationEmailController extends Controller
             ->with("status", $status);
     }
 
-    public function store()
+    public function store(StoreNotificationEmailRequest $request)
     {
-        $input = \Input::only('subject', 'message', 'send_to_all', 'recipient');
-
-        $this->emailNotificationValidator->validate($input);
+        $input = $request->validated();
 
         $parts = explode('/', $input['recipient']);
         $isToolEmail = false;
