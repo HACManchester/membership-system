@@ -10,7 +10,6 @@ use BB\Events\MemberPhotoWasDeclined;
 use BB\Exceptions\ValidationException;
 use BB\Helpers\MembershipPayments;
 use BB\Mailer\UserMailer;
-use BB\Validators\InductionValidator;
 use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller

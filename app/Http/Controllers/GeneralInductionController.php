@@ -3,25 +3,20 @@
 namespace BB\Http\Controllers;
 
 use BB\Repo\UserRepository;
-use BB\Validators\InductionValidator;
 use Illuminate\Http\Request;
 use BB\Entities\Settings;
+use BB\Rules\GeneralInductionCodeRule;
 
-class MemberInductionController extends Controller
+class GeneralInductionController extends Controller
 {
     /**
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var InductionValidator
-     */
-    private $inductionValidator;
 
-    function __construct(UserRepository $userRepository, InductionValidator $inductionValidator)
+    function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->inductionValidator = $inductionValidator;
     }
 
     /**
@@ -31,7 +26,7 @@ class MemberInductionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
-    { 
+    {
         $user = \Auth::user();
         $induction_code = Settings::get("general_induction_code");
         $prefill_code = $request->has('code') ? $request->input('code') : '';
@@ -43,23 +38,13 @@ class MemberInductionController extends Controller
     }
 
     /**
-     * Set a peer induction.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        $input = $request->only('induction_code');
-        
-        $this->inductionValidator->validate($input);
-
-        $induction_code = Settings::get("general_induction_code");
-
-        if(trim(strtolower($input['induction_code'])) != strtolower($induction_code)){
-            throw new \BB\Exceptions\ValidationException("Invalid induction code.");
-        }
+        $request->validate([
+            'induction_code' => ['required', new GeneralInductionCodeRule]
+        ]);
 
         $user = \Auth::user();
         $this->userRepository->recordInductionCompleted($user->id);

@@ -53,8 +53,8 @@ Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'a
 Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as' => 'account.balance.transfer.create']);
 
 //Inductions
-Route::get('general_induction', ['uses' => 'MemberInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
-Route::put('general_induction', ['uses' => 'MemberInductionController@update', 'as' => 'general-induction.update', 'middleware' => 'role:member']);
+Route::get('general_induction', ['uses' => 'GeneralInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
+Route::put('general_induction', ['uses' => 'GeneralInductionController@update', 'as' => 'general-induction.update', 'middleware' => 'role:member']);
 
 // Leaderboards!
 Route::get('leaderboard', ['uses' => 'LeaderboardController@index', 'as' => 'leaderboard.index', 'middleware' => 'role:member']);

@@ -52,11 +52,17 @@
                     {!! Form::open(['route' => 'general-induction.update', 'class' => 'form-horizontal', 'method' => 'PUT']) !!}
 
                     <div
-                        class="form-group {{ FlashNotification::hasErrorDetail('induction_code', 'has-error has-feedback') }}">
+                        class="form-group {{ $errors->has('induction_code') ? 'has-error' : '' }} }}">
                         {!! Form::label('induction_code', 'Induction Code', ['class' => 'col-sm-3 control-label']) !!}
                         <div class="col-sm-9 col-lg-7">
                             {!! Form::text('induction_code', null, ['class' => 'form-control', 'required' => 'required']) !!}
-                            {!! FlashNotification::getErrorDetail('induction_code') !!}
+                             @if($errors->has('induction_code'))
+                                <span class="help-block">
+                                    @foreach($errors->get('induction_code') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </span>
+                            @endif
                         </div>
                     </div>
 
