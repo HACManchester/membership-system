@@ -58,16 +58,6 @@ class EquipmentRepository extends DBRepository
     }
 
     /**
-     * Return a device by its slug
-     * @param $slug
-     * @return Equipment
-     */
-    public function findByDeviceKey($device)
-    {
-        return $this->model->where('device_key', $device)->firstOrFail();
-    }
-
-    /**
      * @param $induction_category
      * @return Collection
      */

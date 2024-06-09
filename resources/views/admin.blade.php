@@ -38,13 +38,6 @@
                     <li><a href="/payments/sub-charges">Subscription Charges</a></li>
                 </ul>
             </div>
-            <div class="col-md-6 well">
-                <h4>Activity</h4>
-                <ul>
-                    <li><a href="/activity">All Activity</a></li>
-                    <li><a href="/activity/realtime">Realtime</a></li>
-                </ul>
-            </div>
         </div>
 	</div>
 @stop

@@ -48,23 +48,4 @@ class KeyFob extends Model
     {
         return $query->whereActive(true);
     }
-
-    public static function lookup($fobId)
-    {
-        $record = self::where('key_id', '=', strtoupper($fobId))->active()->first();
-        if ( ! $record) {
-            throw new ModelNotFoundException;
-        }
-        return $record;
-    }
-
-    public static function lookupPartialTag($fobId)
-    {
-        $record = self::where('key_id', 'LIKE', '%' . strtoupper($fobId) . '%')->active()->first();
-        if ( ! $record) {
-            throw new ModelNotFoundException;
-        }
-        return $record;
-    }
-
 } 

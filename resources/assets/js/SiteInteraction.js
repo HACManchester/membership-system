@@ -55,23 +55,6 @@ class SiteInteraction {
             jQuery(this).hide();
         });
 
-
-        //Input date picker
-        /*
-        jQuery('.js-date-select').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true,
-            todayHighlight: true
-        });
-
-
-        //Activity page - Date picker, auto form submit
-        jQuery('#activityDatePicker').find('.js-date-select').datepicker()
-            .on('changeDate', function(e) {
-                jQuery('#activityDatePicker').submit();
-            });
-         */
-
         console.log("Site Interaction Loaded");
 
     }

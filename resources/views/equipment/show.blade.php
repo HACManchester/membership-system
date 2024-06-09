@@ -448,57 +448,6 @@
         </div>
     </div>
 </div>
-
-    @if ($equipment->hasActivity())
-    <h3>Activity Log</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Used for</th>
-                <th>Member</th>
-                <th>Reason</th>
-                @can('update', $equipment)
-                    <th></th>
-                @endcan
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td colspan="5">
-                    <strong>Total times in minutes:</strong>
-                    Billed: {{ number_format($usageTimes['billed']) }} |
-                    Unbilled: {{ number_format($usageTimes['unbilled']) }} |
-                    Training: {{ number_format($usageTimes['training']) }} |
-                    Testing: {{ number_format($usageTimes['testing']) }}
-                </td>
-            </tr>
-        </tfoot>
-        <tbody>
-        @foreach($equipmentLog as $log)
-            <tr>
-                <td>{{ $log->present()->started }}</td>
-                <td>{{ $log->present()->timeUsed }}</td>
-                <td><a href="{{ route('members.show', $log->user->id) }}">{{ $log->user->name }}</a></td>
-                <td>{{ $log->present()->reason }}</td>
-                @can('update', $equipment)
-                <td>
-                    @if (empty($log->reason))
-                    {!! Form::open(['method'=>'POST', 'route'=>['equipment_log.update', $log->id], 'name'=>'equipmentLog']) !!}
-                    {!! Form::select('reason', ['testing'=>'Testing', 'training'=>'Training'], $log->reason, ['class'=>'']) !!}
-                    {!! Form::submit('Update', ['class'=>'btn btn-primary btn-xs']) !!}
-                    {!! Form::close() !!}
-                    @endif
-                </td>
-                @endcan
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="panel-footer">
-        <?php echo $equipmentLog->render(); ?>
-    </div>
-    @endif
     
     @can('delete', $equipment)
         <div class="modal fade" tabindex="-1" role="dialog" id="equipment-deletion-modal">

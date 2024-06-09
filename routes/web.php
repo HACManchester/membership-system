@@ -166,25 +166,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 });
 
 
-
-##########################
-# Access Control & Devices
-##########################
-
-Route::post('acs/activity', ['uses' => 'ACS\ActivityController@store', 'middleware' => 'acs']);
-Route::put('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@update', 'middleware' => 'acs']);
-Route::delete('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@destroy', 'middleware' => 'acs']);
-
-##########################
-# Activity Page
-##########################
-
-Route::get('activity', ['uses' => 'ActivityController@index', 'as' => 'activity.index', 'middleware' => 'role:member']);
-Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as' => 'activity.realtime', 'middleware' => 'role:member']);
-Route::post('activity', ['uses' => 'ActivityController@create', 'as' => 'activity.create', 'middleware' => 'role:member']);
-
-
-
 ##########################
 # Storage Boxes
 ##########################

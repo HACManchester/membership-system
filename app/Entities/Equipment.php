@@ -109,16 +109,6 @@ class Equipment extends Model
     }
 
     /**
-     * Does the equipment have activity recorded against it
-     *
-     * @return bool
-     */
-    public function hasActivity()
-    {
-        return !empty($this->device_key);
-    }
-
-    /**
      * Does the equipment need an induction to use it
      *
      * @return bool

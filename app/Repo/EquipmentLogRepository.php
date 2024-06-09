@@ -21,117 +21,6 @@ class EquipmentLogRepository extends DBRepository
     }
 
     /**
-     * Record the start of device activity
-     * @param integer $userId
-     * @param integer $keyFobId
-     * @param string  $deviceKey
-     * @param string  $notes
-     * @return integer
-     */
-    public function recordStart($userId, $keyFobId, $deviceKey, $notes = '')
-    {
-        $session             = new $this->model;
-        $session->user_id    = $userId;
-        $session->key_fob_id = $keyFobId;
-        $session->device     = $deviceKey;
-        $session->active     = 1;
-        $session->started    = Carbon::now();
-        $session->notes      = $notes;
-        $session->save();
-        return $session->id;
-    }
-
-
-    /**
-     * Record a device start but close any existing user sessions first
-     * @param integer $userId
-     * @param integer $keyFobId
-     * @param string  $deviceKey
-     * @param string  $notes
-     * @return integer
-     */
-    public function recordStartCloseExisting($userId, $keyFobId, $deviceKey, $notes = '')
-    {
-        $existingSessionId = $this->findActiveDeviceSession($deviceKey);
-        if ($existingSessionId !== false) {
-            $this->endSession($existingSessionId);
-        }
-        return $this->recordStart($userId, $keyFobId, $deviceKey, $notes);
-    }
-
-    /**
-     * Locate a users active session
-     * @param integer $userId
-     * @param string $deviceKey
-     * @return integer|false
-     */
-    public function findActiveUserSession($userId, $deviceKey)
-    {
-        $existingSession = $this->model->where('user_id', $userId)->where('device', $deviceKey)->where('active', 1)->orderBy('created_at', 'DESC')->first();
-        if ($existingSession) {
-            return $existingSession->id;
-        }
-        return false;
-    }
-
-
-    /**
-     * Return an existing active session for the device, if any
-     * @param $deviceKey
-     * @return integer|false
-     */
-    public function findActiveDeviceSession($deviceKey)
-    {
-        $existingSession = $this->model->where('device', $deviceKey)->where('active', 1)->orderBy('created_at', 'DESC')->first();
-        if ($existingSession) {
-            return $existingSession->id;
-        }
-        return false;
-    }
-
-    /**
-     * Record some activity on an existing session
-     * @param integer $sessionId
-     */
-    public function recordActivity($sessionId)
-    {
-        $existingSession = $this->model->findOrFail($sessionId);
-        if ($existingSession->finished) {
-            throw new DeviceException(400, "Session already finished");
-        }
-        $existingSession->last_update = Carbon::now();
-        $existingSession->save();
-    }
-
-    /**
-     * Record the end of a session
-     * @param integer $sessionId
-     * @param \DateTime    $finishedDate
-     */
-    public function endSession($sessionId, $finishedDate = null)
-    {
-        $existingSession = $this->model->findOrFail($sessionId);
-        if ($finishedDate === null) {
-            $finishedDate = Carbon::now();
-        }
-        if ($existingSession->finished) {
-            throw new DeviceException(400, "Session already finished");
-        }
-        $existingSession->finished = $finishedDate;
-        $existingSession->active = 0;
-        $existingSession->save();
-    }
-
-    /**
-     * @param $deviceKey
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllForEquipment($deviceKey)
-    {
-        return $this->model->where('device', $deviceKey)->orderBy('created_at', 'DESC')->get();
-    }
-
-    /**
      * Return records that have been checked over
      * @param $deviceKey
      * @return mixed
@@ -171,15 +60,6 @@ class EquipmentLogRepository extends DBRepository
         });
 
         return (int) ($totalTime / 60);
-    }
-
-    /**
-     * Return all records that are currently listed as active
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getActiveRecords()
-    {
-        return $this->model->where('active', true)->orderBy('created_at', 'DESC')->get();
     }
 
     /**

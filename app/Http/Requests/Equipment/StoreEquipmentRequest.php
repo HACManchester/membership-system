@@ -32,7 +32,7 @@ class StoreEquipmentRequest extends FormRequest
             'room'                      => 'required',
             'detail'                    => '',
             'slug'                      => 'required|alpha_dash|unique:equipment,slug',
-            'device_key'                => 'exists:acs_nodes,device_id',
+            'device_key'                => '',
             'description'               => '',
             'help_text'                 => '',
             'managing_role_id'          => 'exists:roles,id',

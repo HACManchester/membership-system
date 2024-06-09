@@ -4,8 +4,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Activity
- *
  * @property integer $id
  * @property integer $key_fob_id
  * @property integer $user_id

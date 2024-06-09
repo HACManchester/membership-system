@@ -31,8 +31,6 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \BB\Http\Middleware\ACSSessionControl::class,
-
             \BB\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -65,7 +63,6 @@ class Kernel extends HttpKernel
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'role'          => \BB\Http\Middleware\HasRole::class,
         'trusted'       => \BB\Http\Middleware\IsTrusted::class,
-        'acs'           => \BB\Http\Middleware\ACSAuthentication::class,
     ];
 
     /**
