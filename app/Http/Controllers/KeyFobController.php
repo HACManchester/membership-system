@@ -30,6 +30,16 @@ class KeyFobController extends Controller
     {
         $this->authorize('create', [KeyFob::class, $user]);
 
+        if ($user->online_only) {
+            \FlashNotification::error("Online only accounts cannot have access methods configured.");
+            return \Redirect::route('keyfobs.index', $user->id);
+        }
+        
+        if (!$user->induction_completed) {
+            \FlashNotification::error("General induction must be completed before adding access methods.");
+            return \Redirect::route('keyfobs.index', $user->id);
+        }
+
         $keyId = $request->input('key_id');
 
         //If the fob begins with ff it's a request for an access code

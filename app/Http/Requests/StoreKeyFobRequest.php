@@ -14,15 +14,7 @@ class StoreKeyFobRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!$this->user()->can('create', [KeyFob::class, $this->user])) {
-            return false;
-        }
-
-        if ($this->user()->online_only || !$this->user()->induction_completed) {
-            return false;
-        }
-
-        return true;
+        return $this->user()->can('create', [KeyFob::class, $this->user]);
     }
 
     /**
