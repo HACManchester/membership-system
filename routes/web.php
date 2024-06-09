@@ -171,10 +171,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Access Control & Devices
 ##########################
 
-//New ACS System
-Route::post('acs', ['uses' => 'ACSController@store']);
-//Route::get('acs', ['uses' => 'ACSController@get']);
-
 //spark core - printer charges
 Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);
 
