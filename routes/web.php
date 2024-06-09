@@ -144,11 +144,6 @@ Route::group(array('middleware' => 'role:member'), function () {
     Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
 });
 
-# Equipment Log
-Route::post('equipment/log/{logId}', ['uses' => 'EquipmentLogController@update', 'middleware' => 'role:member', 'as' => 'equipment_log.update']);
-
-
-
 ##########################
 # Notifications
 ##########################
