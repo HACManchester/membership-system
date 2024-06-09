@@ -193,10 +193,6 @@
                     {!! HTML::sideNavLink('💌 Newsletter', 'newsletter') !!}
                 @endif
 
-                @if (Auth::user()->hasRole('acs') || Auth::user()->isAdmin())
-                    {!! HTML::sideNavLink('🔑 Devices', 'devices.index') !!}
-                @endif
-
                 @if (Auth::user()->hasRole('finance') || Auth::user()->isAdmin())
                     {!! HTML::sideNavLink('💰 Payments', 'payments.index') !!}
                 @endif

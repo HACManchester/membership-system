@@ -17,7 +17,6 @@ use Laracasts\Presenter\PresentableTrait;
  * @property Carbon  $obtained_at
  * @property Carbon  $removed_at
  * @property integer $usageCost
- * @property string  $device_key
  * @property string  $induction_category
  * @package BB\Entities
  */
@@ -44,7 +43,6 @@ class Equipment extends Model
         'room',
         'detail',
         'slug',
-        'device_key',
         'description',
         'help_text',
         'managing_role_id',
@@ -106,16 +104,6 @@ class Equipment extends Model
     public function role()
     {
         return $this->belongsTo('\BB\Entities\Role', 'managing_role_id');
-    }
-
-    /**
-     * Does the equipment have activity recorded against it
-     *
-     * @return bool
-     */
-    public function hasActivity()
-    {
-        return !empty($this->device_key);
     }
 
     /**

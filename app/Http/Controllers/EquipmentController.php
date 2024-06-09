@@ -4,7 +4,6 @@ use BB\Entities\Equipment;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
-use BB\Repo\EquipmentLogRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
@@ -27,11 +26,6 @@ class EquipmentController extends Controller
     private $equipmentRepository;
     
     /**
-     * @var EquipmentLogRepository
-     */
-    private $equipmentLogRepository;
-    
-    /**
      * @var UserRepository
      */
     private $userRepository;
@@ -47,18 +41,15 @@ class EquipmentController extends Controller
     /**
      * @param InductionRepository                    $inductionRepository
      * @param EquipmentRepository                    $equipmentRepository
-     * @param EquipmentLogRepository                 $equipmentLogRepository
      * @param UserRepository                         $userRepository
      */
     function __construct(
         InductionRepository $inductionRepository,
         EquipmentRepository $equipmentRepository,
-        EquipmentLogRepository $equipmentLogRepository,
         UserRepository $userRepository
     ) {
         $this->inductionRepository    = $inductionRepository;
         $this->equipmentRepository    = $equipmentRepository;
-        $this->equipmentLogRepository = $equipmentLogRepository;
         $this->userRepository         = $userRepository;
         $this->disk = Storage::disk('public');
 
@@ -106,14 +97,6 @@ class EquipmentController extends Controller
 
         $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
 
-        $equipmentLog = $this->equipmentLogRepository->getFinishedForEquipment($equipment->device_key);
-
-        $usageTimes = [];
-        $usageTimes['billed'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, true, '');
-        $usageTimes['unbilled'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, false, '');
-        $usageTimes['training'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'training');
-        $usageTimes['testing'] = $this->equipmentLogRepository->getTotalTime($equipment->device_key, null, 'testing');
-
         $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
 
         $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
@@ -130,11 +113,9 @@ class EquipmentController extends Controller
         return \View::make('equipment.show')
             ->with('equipment', $equipment)
             ->with('trainers', $trainers)
-            ->with('equipmentLog', $equipmentLog)
             ->with('userInduction', $userInduction)
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
-            ->with('usageTimes', $usageTimes)
             ->with('memberList', $memberList)
             ->with('docs', $docs)
             ->with('now', $now);

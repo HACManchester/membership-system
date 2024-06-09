@@ -15,7 +15,6 @@ use BB\Listeners\MemberBalanceSubscriber;
 use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
 use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
 use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
-use BB\Listeners\RecordMemberActivity;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -49,9 +48,6 @@ class EventServiceProvider extends ServiceProvider
 		],
 		'BB\Events\MemberPhotoWasDeclined' => [
 			EmailMemberAboutDeclinedPhoto::class,
-		],
-		'BB\Events\MemberActivity' => [
-			RecordMemberActivity::class,
 		],
 		'BB\Events\MemberGivenTrustedStatus' => [
 			EmailMemberAboutTrustedStatus::class

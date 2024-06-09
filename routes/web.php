@@ -144,11 +144,6 @@ Route::group(array('middleware' => 'role:member'), function () {
     Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
 });
 
-# Equipment Log
-Route::post('equipment/log/{logId}', ['uses' => 'EquipmentLogController@update', 'middleware' => 'role:member', 'as' => 'equipment_log.update']);
-
-
-
 ##########################
 # Notifications
 ##########################
@@ -164,56 +159,6 @@ Route::resource('notifications', 'NotificationController', ['only' => ['index', 
 Route::group(array('middleware' => 'role:member'), function () {
     Route::resource('account/{user}/keyfobs', 'KeyFobController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
 });
-
-
-
-##########################
-# Access Control & Devices
-##########################
-
-//Main Door
-Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
-
-//Status endpoint - testing - not in production
-Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
-Route::get('access-control/status', ['uses' => 'AccessControlController@status']);
-
-//Device control
-Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
-
-//New ACS System
-Route::post('acs', ['uses' => 'ACSController@store']);
-//Route::get('acs', ['uses' => 'ACSController@get']);
-
-//spark core - printer charges
-Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);
-
-Route::group(array('middleware' => 'role:admin'), function () {
-    Route::resource('detected_devices', 'DetectedDevicesController');
-});
-
-Route::group(array('middleware' => 'role:acs'), function () {
-    Route::resource('devices', 'DeviceController');
-});
-
-//New ACES Endpoint
-Route::get('acs/test', ['uses' => 'ACS\TestController@index', 'middleware' => 'acs']);
-Route::get('acs/status/{tagId}', ['uses' => 'ACS\StatusController@show', 'middleware' => 'acs']);
-Route::post('acs/node/boot', ['uses' => 'ACS\NodeController@boot', 'middleware' => 'acs']);
-Route::post('acs/node/heartbeat', ['uses' => 'ACS\NodeController@heartbeat', 'middleware' => 'acs']);
-
-Route::post('acs/activity', ['uses' => 'ACS\ActivityController@store', 'middleware' => 'acs']);
-Route::put('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@update', 'middleware' => 'acs']);
-Route::delete('acs/activity/{sessionId}', ['uses' => 'ACS\ActivityController@destroy', 'middleware' => 'acs']);
-
-##########################
-# Activity Page
-##########################
-
-Route::get('activity', ['uses' => 'ActivityController@index', 'as' => 'activity.index', 'middleware' => 'role:member']);
-Route::get('activity/realtime', ['uses' => 'ActivityController@realtime', 'as' => 'activity.realtime', 'middleware' => 'role:member']);
-Route::post('activity', ['uses' => 'ActivityController@create', 'as' => 'activity.create', 'middleware' => 'role:member']);
-
 
 
 ##########################
@@ -289,78 +234,3 @@ Route::post('settings', 'SettingsController@update')->name('settings.update');
 ##########################
 
 Route::get('logs', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware' => 'role:admin'])->name('logs');
-
-
-
-
-
-
-Route::any('api-docs.json', function () {
-    $filePath = Config::get('swagger.doc-dir') . "/api-docs.json";
-
-    if (!File::Exists($filePath)) {
-        App::abort(404, "Cannot find {$filePath}");
-    }
-
-    $content = File::get($filePath);
-    return Response::make($content, 200, array(
-        'Content-Type' => 'application/json'
-    ));
-});
-
-Route::get('api-docs', function () {
-    if (Config::get('swagger.generateAlways')) {
-        $appDir = base_path() . "/" . Config::get('swagger.app-dir');
-        $docDir = Config::get('swagger.doc-dir');
-
-
-        if (!File::exists($docDir) || is_writable($docDir)) {
-            // delete all existing documentation
-            if (File::exists($docDir)) {
-                File::deleteDirectory($docDir);
-            }
-
-            File::makeDirectory($docDir);
-
-            $excludeDirs = Config::get('swagger.excludes');
-
-            $swagger =  \Swagger\scan($appDir, [
-                'exclude' => $excludeDirs
-            ]);
-
-            $filename = $docDir . '/api-docs.json';
-            file_put_contents($filename, $swagger);
-        }
-    }
-
-    if (Config::get('swagger.behind-reverse-proxy')) {
-        $proxy = Request::server('REMOTE_ADDR');
-        Request::setTrustedProxies(array($proxy));
-    }
-
-    //need the / at the end to avoid CORS errors on Homestead systems.
-    $response = response()->view(
-        'swagger.index',
-        array(
-            'secure'         => Request::secure(),
-            'urlToDocs'      => url('api-docs.json'),
-            'requestHeaders' => Config::get('swagger.requestHeaders'),
-            'clientId'       => Input::get("client_id"),
-            'clientSecret'   => Input::get("client_secret"),
-            'realm'          => Input::get("realm"),
-            'appName'        => Input::get("appName"),
-        )
-    );
-
-    //need the / at the end to avoid CORS errors on Homestead systems.
-    /*$response = Response::make(
-        View::make('swaggervel::index', array(
-                'secure'         => Request::secure(),
-                'urlToDocs'      => url('api-docs.json'),
-                'requestHeaders' => Config::get('swaggervel.requestHeaders') )
-        ),
-        200
-    );*/
-
-    return $response;
-});

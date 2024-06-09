@@ -9,17 +9,14 @@ class StatsController extends Controller
     protected $layout = 'layouts.main';
 
     private $userRepository;
-    private $activityRepository;
     private $statRepository;
 
     function __construct(
         \BB\Repo\UserRepository $userRepository, 
-        \BB\Repo\ActivityRepository $activityRepository,
         \BB\Repo\StatRepository $statRepository
         )
     {
         $this->userRepository = $userRepository;
-        $this->activityRepository = $activityRepository;
         $this->statRepository = $statRepository;
     }
 
@@ -152,22 +149,6 @@ class StatsController extends Controller
         //Number of Users
         $numMembers = count($users);
 
-
-        //door access logs
-        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonth(), \Carbon\Carbon::now());
-        $userArray = [];
-        foreach ($logEntrys as $entry) {
-            $userArray[] = $entry->user_id;
-        }
-        $numActiveUsers = count(array_unique($userArray));
-
-        $logEntrys = $this->activityRepository->activeUsersForPeriod(\Carbon\Carbon::now()->subMonths(3), \Carbon\Carbon::now());
-        $userArray = [];
-        foreach ($logEntrys as $entry) {
-            $userArray[] = $entry->user_id;
-        }
-        $numActiveUsersQuarter = count(array_unique($userArray));
-
         return \View::make('stats.index')
             ->with('user', $user)
             ->with('expectedIncome', $expectedIncome)
@@ -181,8 +162,6 @@ class StatsController extends Controller
             ->with('numMembers', $numMembers)
             ->with('recommendedPayment', $recommendedPayment)
             ->with('payingRecommendedOrAbove', $payingRecommendedOrAbove)
-            ->with('numActiveUsers', $numActiveUsers)
-            ->with('numActiveUsersQuarter', $numActiveUsersQuarter)
             ->with('paymentMethods', $paymentMethods)
             ->with('monthlyAmountsData', $monthlyAmountsData);
     }
