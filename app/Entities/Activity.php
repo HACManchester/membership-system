@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Activity extends Model
 {
+    // TODO: Remove this, not used since 2022
 
     /**
      * The database table used by the model.

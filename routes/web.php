@@ -171,9 +171,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Access Control & Devices
 ##########################
 
-//Device control
-Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
-
 //New ACS System
 Route::post('acs', ['uses' => 'ACSController@store']);
 //Route::get('acs', ['uses' => 'ACSController@get']);

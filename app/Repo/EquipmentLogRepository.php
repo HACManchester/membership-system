@@ -7,6 +7,7 @@ use Carbon\Carbon;
 
 class EquipmentLogRepository extends DBRepository
 {
+    // TODO: Remove this, no usages in production.
 
     /**
      * @var EquipmentLog
