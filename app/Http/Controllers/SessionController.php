@@ -1,71 +1,71 @@
-<?php namespace BB\Http\Controllers;
+<?php
 
-use BB\Exceptions\AuthenticationException;
-use Illuminate\Http\Request;
+namespace BB\Http\Controllers;
+
+use BB\Http\Requests\StoreSessionRequest;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class SessionController extends Controller
 {
 
-    protected $loginForm;
-
-    function __construct(\BB\Validators\Login $loginForm)
+    function __construct()
     {
-        $this->loginForm = $loginForm;
         \View::share('body_class', 'register_login');
     }
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-        if ( ! Auth::guest()) {
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        if (!Auth::guest()) {
             return redirect()->to('account/' . \Auth::id());
         }
         return \View::make('session.create')
             ->with('sso', false);
-	}
+    }
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function store()
-	{
-        $input = \Input::only('email', 'password');
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'     => 'required|email',
+            'password'  => 'required',
+        ]);
 
-        $this->loginForm->validate($input);
+        if (Auth::attempt($credentials, true)) {
 
-        if (Auth::attempt($input, true)) {
-
-            if(\Input::get('sso')){
+            if (\Input::get('sso')) {
                 return redirect(
-                    "sso/login" . 
-                    "?sso=" . \Input::get('sso') . 
-                    "&sig=" . \Input::get('sig')
+                    "sso/login" .
+                        "?sso=" . \Input::get('sso') .
+                        "&sig=" . \Input::get('sig')
                 );
-            }else{
+            } else {
                 return redirect()->intended('account/' . \Auth::id());
             }
         }
 
         \FlashNotification::error("Invalid login details");
         return redirect()->back()->withInput();
-	}
+    }
 
     public function sso_login()
-	{
+    {
         $input = \Input::only('sso', 'sig');
 
-        if(empty($input['sso']) || empty($input['sig'])){
+        if (empty($input['sso']) || empty($input['sig'])) {
             return \View::make('session.error')
                 ->with('code', '0');
         }
@@ -74,7 +74,7 @@ class SessionController extends Controller
         parse_str(base64_decode($input['sso']), $decoded);
 
 
-        if(empty($decoded['nonce']) || empty($decoded['return_sso_url'])){
+        if (empty($decoded['nonce']) || empty($decoded['return_sso_url'])) {
             return \View::make('session.error')
                 ->with('code', '3');
         }
@@ -82,32 +82,32 @@ class SessionController extends Controller
         $nonce = $decoded['nonce'];
         $return_sso_url = $decoded['return_sso_url'];
 
-         /**
+        /**
          * The sso input is signed with sig
          * So to verify the signature, we hash with our shared key
          * and check it matches.
          */
         $calculatedHash = hash_hmac('sha256', $input['sso'], env('DISCOURSE_SSO_SECRET'), false);
 
-        if( $calculatedHash != $input['sig'] ){
+        if ($calculatedHash != $input['sig']) {
             Log::error("HMAC: $calculatedHash  !!!!Provided: " . $input['sig']);
 
             return \View::make('session.error')
                 ->with('code', '1');
-        } 
+        }
 
 
-        if ( ! Auth::guest()) {
+        if (!Auth::guest()) {
 
             $user = Auth::user();
 
-            if(!$user->email_verified){  
+            if (!$user->email_verified) {
                 return \View::make('session.error')
                     ->with('code', '2');
             }
 
             $name = $user->suppress_real_name ? $user->name : ($user->given_name . " " . $user->family_name);
-                
+
             $userData = base64_encode(http_build_query([
                 'nonce'         => $nonce,
                 'name'          => $name,
@@ -126,7 +126,7 @@ class SessionController extends Controller
         return \View::make('session.create')
             ->with('sso', $input['sso'])
             ->with('sig', $input['sig']);
-	}
+    }
 
     /**
      * Say a user has a different email on the forum
@@ -135,7 +135,8 @@ class SessionController extends Controller
      * This external ID is the ID in the membership system
      * That way, they can log in with different emails in the future.
      */
-    public function sso_sync($memberID, $forumUsername){
+    public function sso_sync($memberID, $forumUsername)
+    {
 
         // Create an array of SSO parameters.
         $sso_params = array(
@@ -144,8 +145,8 @@ class SessionController extends Controller
         );
 
         // Convert the SSO parameters into the SSO payload and generate the SSO signature.
-        $sso_payload = base64_encode( http_build_query( $sso_params ) );
-        $sig = hash_hmac( 'sha256', $sso_payload, env('DISCOURSE_SSO_SECRET') );
+        $sso_payload = base64_encode(http_build_query($sso_params));
+        $sig = hash_hmac('sha256', $sso_payload, env('DISCOURSE_SSO_SECRET'));
 
         $url = 'http://list.hacman.org.uk/admin/users/sync_sso';
         $post_fields = array(
@@ -161,24 +162,22 @@ class SessionController extends Controller
                 'Api-Username' => env('DISCOURSE_API_USERNAME'),
             ]
         ]);
-        
-        die(var_dump($res));
-        
 
+        die(var_dump($res));
     }
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function destroy($id = null)
-	{
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id = null)
+    {
         Auth::logout();
 
         \FlashNotification::success('Logged Out');
 
         return redirect()->home();
-	}
+    }
 }

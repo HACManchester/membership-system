@@ -28,30 +28,50 @@ Login
         </div>
 
         @if (FlashNotification::hasMessage())
-        <div class="alert alert-{{ FlashNotification::getLevel() }} alert-dismissable">
-            {{ FlashNotification::getMessage() }}
+            <div class="alert alert-{{ FlashNotification::getLevel() }} alert-dismissable">
+                {{ FlashNotification::getMessage() }}
 
-            @if (FlashNotification::hasDetails())
-            <ul>
-                @foreach(FlashNotification::getDetails()->all() as $error)
-                <li style="list-style-type: none;">{{ $error }}</li>
-                @endforeach
-            </ul>
-            @endif
-        </div>
+                @if (FlashNotification::hasDetails())
+                    <ul>
+                        @foreach(FlashNotification::getDetails()->all() as $error)
+                        <li style="list-style-type: none;">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+                            
+                @if($errors->any())
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
         @endif
 
         <div class="row">
-            <div class="form-group {{ FlashNotification::hasErrorDetail('email', 'has-error has-feedback') }}">
+            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                 <div class="col-xs-12">
                     {!! Form::text('email', null, ['class'=>'form-control', 'placeholder'=>'Email']) !!}
-                    {!! FlashNotification::getErrorDetail('email', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
+                    @if($errors->has('email'))
+                        <span class="help-block">
+                            @foreach($errors->get('email') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </span>
+                    @endif
                 </div>
             </div>
-            <div class="form-group {{ FlashNotification::hasErrorDetail('password', 'has-error has-feedback') }}">
+            <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                 <div class="col-xs-12">
                     {!! Form::password('password', ['class'=>'form-control', 'placeholder'=>'Password']) !!}
-                    {!! FlashNotification::getErrorDetail('password', '<span class="glyphicon glyphicon-remove form-control-feedback"></span>') !!}
+                    @if($errors->has('password'))
+                        <span class="help-block">
+                            @foreach($errors->get('password') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </span>
+                    @endif
                 </div>
             </div>
 
