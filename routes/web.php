@@ -171,13 +171,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Access Control & Devices
 ##########################
 
-//Main Door
-Route::post('access-control/main-door', ['uses' => 'AccessControlController@mainDoor']);
-
-//Status endpoint - testing - not in production
-Route::post('access-control/status', ['uses' => 'AccessControlController@status']);
-Route::get('access-control/status', ['uses' => 'AccessControlController@status']);
-
 //Device control
 Route::post('access-control/device', ['uses' => 'DeviceAccessControlController@device']);
 
