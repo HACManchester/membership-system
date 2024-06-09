@@ -171,9 +171,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Access Control & Devices
 ##########################
 
-//spark core - printer charges
-Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);
-
 Route::group(array('middleware' => 'role:acs'), function () {
     Route::resource('devices', 'DeviceController');
 });
