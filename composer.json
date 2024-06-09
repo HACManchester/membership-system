@@ -26,7 +26,6 @@
         "owen-it/laravel-auditing": "^8.0",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
         "sentry/sentry-laravel": "^2.0",
-        "zircote/swagger-php": "^2.0",
         "fideloper/proxy": "^4.0"
     },
     "require-dev": {

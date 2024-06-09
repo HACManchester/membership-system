@@ -10,7 +10,6 @@ use BB\Services\KeyFobAccess;
 use Illuminate\Http\Request;
 use BB\Http\Requests;
 use BB\Http\Controllers\Controller;
-use Swagger\Annotations as SWG;
 
 class ActivityController extends Controller
 {

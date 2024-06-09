@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Requests\ACS;
 
 use Symfony\Component\HttpFoundation\Request;
-use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Definition(@SWG\Xml(name="Activity"))
