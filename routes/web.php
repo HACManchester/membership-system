@@ -171,10 +171,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Access Control & Devices
 ##########################
 
-Route::group(array('middleware' => 'role:acs'), function () {
-    Route::resource('devices', 'DeviceController');
-});
-
 //New ACES Endpoint
 Route::get('acs/test', ['uses' => 'ACS\TestController@index', 'middleware' => 'acs']);
 Route::get('acs/status/{tagId}', ['uses' => 'ACS\StatusController@show', 'middleware' => 'acs']);
