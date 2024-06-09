@@ -451,21 +451,6 @@
     </div>
 </div>
 
-<div class="form-group {{ $errors->has('device_key') ? 'has-error' : '' }}">
-    {!! Form::label('device_key', 'Device Key', ['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-9 col-lg-7">
-        {!! Form::text('device_key', null, ['class'=>'form-control']) !!}
-        <p class="help-block">The id of a ACS device already setup in the database</p>
-        @if($errors->has('device_key'))
-            <span class="help-block">
-                @foreach($errors->get('device_key') as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </span>
-        @endif
-    </div>
-</div>
-
 {{-- Allow anybody to set on creation, but only admins/trainers to edit --}}
 <div class="form-group {{ $errors->has('obtained_at') ? 'has-error' : '' }}">
     {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
