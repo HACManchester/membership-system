@@ -128,15 +128,22 @@
                                     then scan your fob with the reader. The ID will be typed in.</p>
 
                                 {!! Form::open(['method' => 'POST', 'route' => ['keyfobs.store', $user->id], 'class' => 'form-horizontal']) !!}
-                                <div class="form-group">
-                                    <div class="col-sm-5">
-                                        {!! Form::text('key_id', '', ['class' => 'form-control']) !!}
-                                        Characters A-F and numbers 0-9 only.
+                                    <div class="form-group {{ $errors->has('key_id') ? 'has-error' : '' }}">
+                                        <div class="col-sm-5">
+                                            {!! Form::text('key_id', '', ['class' => 'form-control']) !!}
+                                            Characters A-F and numbers 0-9 only.
+                                            @if($errors->has('key_id'))
+                                                <span class="help-block">
+                                                    @foreach($errors->get('key_id') as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-3">
+                                            {!! Form::submit('Add a new fob', ['class' => 'btn btn-primary']) !!}
+                                        </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        {!! Form::submit('Add a new fob', ['class' => 'btn btn-primary']) !!}
-                                    </div>
-                                </div>
                                 {!! Form::close() !!}
                             </div>
                             <div class="col-md-6">

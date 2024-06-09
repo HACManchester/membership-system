@@ -4,20 +4,10 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\KeyFob;
 use BB\Entities\User;
+use BB\Http\Requests\StoreKeyFobRequest;
 
 class KeyFobController extends Controller
 {
-    /**
-     * @var \BB\Validators\KeyFob
-     */
-    private $keyFobForm;
-
-    public function __construct(\BB\Validators\KeyFob $keyFobForm)
-    {
-
-        $this->keyFobForm = $keyFobForm;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -36,29 +26,23 @@ class KeyFobController extends Controller
      *
      * @return Response
      */
-    public function store(User $user)
+    public function store(User $user, StoreKeyFobRequest $request)
     {
         $this->authorize('create', [KeyFob::class, $user]);
 
-        if ($user->online_only || !$user->induction_completed) {
-            throw new \BB\Exceptions\AuthenticationException();
-        }
-
-        $input = \Input::only('key_id');
+        $keyId = $request->input('key_id');
 
         //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
-        if (substr($input['key_id'], 0, 2) === "ff") {
+        if (substr($keyId, 0, 2) === "ff") {
 
             // generate random access code, if there's a collision, it'll fail due to db constraints
-            $input['key_id'] = "ff" . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+            $keyId = "ff" . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
         }
-
-        $this->keyFobForm->validate($input);
 
         KeyFob::create([
             'user_id' => $user->id,
-            'key_id' => $input['key_id']
+            'key_id' => $keyId
         ]);
 
         \FlashNotification::success("Key fob/Access code has been activated");
