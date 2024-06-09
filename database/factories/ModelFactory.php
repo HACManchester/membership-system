@@ -43,17 +43,6 @@ $factory->define('BB\Entities\ProfileData', function ($faker) {
     ];
 });
 
-$factory->define('BB\Entities\ACSNode', function ($faker) {
-    return [
-        'name'              => $faker->word,
-        'device_id'         => $faker->word,
-        'queued_command'    => null,
-        'monitor_heartbeat' => false,
-        'api_key'           => $faker->word,
-        'entry_device'      => false,
-    ];
-});
-
 $factory->define('BB\Entities\Role', function ($faker) {
     return [
         'name'        => $faker->word,
