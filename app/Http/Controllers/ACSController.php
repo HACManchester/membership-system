@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\ACSNode;
-use BB\Entities\DetectedDevice;
 use BB\Entities\User;
 use BB\Events\MemberActivity;
 use BB\Exceptions\ValidationException;

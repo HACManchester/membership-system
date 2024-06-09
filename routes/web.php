@@ -188,10 +188,6 @@ Route::post('acs', ['uses' => 'ACSController@store']);
 //spark core - printer charges
 Route::post('acs/spark', ['uses' => 'ACSSparkController@handle']);
 
-Route::group(array('middleware' => 'role:admin'), function () {
-    Route::resource('detected_devices', 'DetectedDevicesController');
-});
-
 Route::group(array('middleware' => 'role:acs'), function () {
     Route::resource('devices', 'DeviceController');
 });
