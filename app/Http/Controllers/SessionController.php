@@ -2,9 +2,7 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Http\Requests\StoreSessionRequest;
 use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client as HttpClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -126,44 +124,6 @@ class SessionController extends Controller
         return \View::make('session.create')
             ->with('sso', $input['sso'])
             ->with('sig', $input['sig']);
-    }
-
-    /**
-     * Say a user has a different email on the forum
-     * Sync will tell forum that user `forumUsername` belong to `membershipSysUsername`
-     * It does this by adding external_id to the forum user's account
-     * This external ID is the ID in the membership system
-     * That way, they can log in with different emails in the future.
-     */
-    public function sso_sync($memberID, $forumUsername)
-    {
-
-        // Create an array of SSO parameters.
-        $sso_params = array(
-            'external_id' => $memberID,
-            'username' => $forumUsername,
-        );
-
-        // Convert the SSO parameters into the SSO payload and generate the SSO signature.
-        $sso_payload = base64_encode(http_build_query($sso_params));
-        $sig = hash_hmac('sha256', $sso_payload, env('DISCOURSE_SSO_SECRET'));
-
-        $url = 'http://list.hacman.org.uk/admin/users/sync_sso';
-        $post_fields = array(
-            'sso' => $sso_payload,
-            'sig' => $sig,
-        );
-
-        $client = new HttpClient;
-        $res = $client->request('POST', $url, [
-            'query' => $post_fields,
-            'headers' => [
-                'Api-Key' => env('DISCOURSE_API_KEY'),
-                'Api-Username' => env('DISCOURSE_API_USERNAME'),
-            ]
-        ]);
-
-        die(var_dump($res));
     }
 
     /**
