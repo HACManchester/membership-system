@@ -394,6 +394,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function scopeRecentlyLapsed($query)
     {
         return $query->whereActive(false)
+            ->where('banned', false)
             ->where('subscription_expires', '>=', Carbon::today()->subMonths(6));
     }
 
