@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8aa5726fda1e47af9fa0221f076c567e",
+    "content-hash": "993c7faa59e863d4168a1234cff9dbbf",
     "packages": [
         {
             "name": "arthurguy/notifications",

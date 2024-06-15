@@ -85,7 +85,7 @@ class SessionController extends Controller
          * So to verify the signature, we hash with our shared key
          * and check it matches.
          */
-        $calculatedHash = hash_hmac('sha256', $input['sso'], env('DISCOURSE_SSO_SECRET'), false);
+        $calculatedHash = hash_hmac('sha256', $input['sso'], config('discourse.secret'), false);
 
         if ($calculatedHash != $input['sig']) {
             Log::error("HMAC: $calculatedHash  !!!!Provided: " . $input['sig']);
@@ -116,7 +116,7 @@ class SessionController extends Controller
 
             return \View::make('session.confirm')
                 ->with('sso', $userData)
-                ->with('sig', hash_hmac('sha256', $userData, env('DISCOURSE_SSO_SECRET'), false))
+                ->with('sig', hash_hmac('sha256', $userData, config('discourse.secret'), false))
                 ->with('user', $user)
                 ->with('return_sso_url', $return_sso_url);
         }
