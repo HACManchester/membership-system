@@ -26,14 +26,22 @@ class DiscourseSync implements ShouldQueue
         $params = $this->sso_params();
         ['sso' => $sso, 'sig' => $sig] = $this->sign_payload($params);
 
-        $client->post('admin/users/sync_sso', [
-            'base_uri' => config('discourse.url'),
-            'query' => compact('sso', 'sig'),
-            'headers' => [
-                'Api-Key' => config('discourse.api_key'),
-                'Api-Username' => config('discourse.api_username'),
-            ]
-        ]);
+        try {
+            $client->post('admin/users/sync_sso', [
+                'base_uri' => config('discourse.url'),
+                'query' => compact('sso', 'sig'),
+                'headers' => [
+                    'Api-Key' => config('discourse.api_key'),
+                    'Api-Username' => config('discourse.api_username'),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Failed to sync user {$this->user->id} to Discourse: {$e->getMessage()}");
+
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($e);
+            }
+        }
     }
 
     protected function sso_params()
