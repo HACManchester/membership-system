@@ -6,6 +6,7 @@ use BB\Events\Inductions\InductionCompletedEvent;
 use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
 use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Events\SubscriptionPayment;
+use BB\Listeners\DiscourseSyncSubscriber;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutFailedSubscriptionPayment;
 use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
@@ -67,17 +68,18 @@ class EventServiceProvider extends ServiceProvider
 		],
 		InductionMarkedAsTrainerEvent::class => [
 			InductionMarkedAsTrainerListener::class
-		],
+		]
 	];
 
-    /**
-     * The subscriber classes to register.
-     *
-     * @var array
-     */
-    protected $subscribe = [
-        MemberBalanceSubscriber::class,
-    ];
+	/**
+	 * The subscriber classes to register.
+	 *
+	 * @var array
+	 */
+	protected $subscribe = [
+		MemberBalanceSubscriber::class,
+		DiscourseSyncSubscriber::class,
+	];
 
 	/**
 	 * Register any other events for your application.
