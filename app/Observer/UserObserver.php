@@ -1,5 +1,7 @@
 <?php namespace BB\Observer;
 
+use BB\Events\MemberBecameActive;
+use BB\Events\MemberBecameInactive;
 use BB\Mailer\UserMailer;
 use BB\Helpers\TelegramHelper;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +54,13 @@ class UserObserver
         //User left
         if (($original['status'] != 'left') && ($user->status == 'left') && $user->isBanned() == false) {
             $this->userLeft($user);
+        }
+
+        if ($original['active'] === false && $user->active === true) {
+            event(new MemberBecameActive($user));
+        }
+        if ($original['active'] === true && $user->active === false) {
+            event(new MemberBecameInactive($user));
         }
     }
 
