@@ -40,12 +40,14 @@ class MembersController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // TODO: Is this privacy check necessary? This route is not accessible by guests
         if (\Auth::guest() && $user->profile_private) {
-            return \Response::make('', 404);
+            return abort(404);
         }
 
-        if (!$user->active) {
-            return \Response::make('', 404);
+        if (!\Auth::user()->isAdmin() && !$user->active) {
+            \FlashNotification::error("This user's profile is no longer available as they are not an active member.");
+            return \Redirect::route('members.index');
         }
 
         $profileData = $this->profileRepo->getUserProfile($id);
