@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Testing\Assert;
 use Tests\TestCase;
 
 class DiscourseSyncTest extends TestCase
@@ -22,7 +23,7 @@ class DiscourseSyncTest extends TestCase
     /** @var Client */
     protected $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,7 +52,7 @@ class DiscourseSyncTest extends TestCase
 
         $this->assertEquals('/admin/users/sync_sso', $request->getUri()->getPath());
 
-        $this->assertArraySubset([
+        Assert::assertArraySubset([
             'external_id' => $user->id,
             'email' => $user->email,
             'username' => 'JDoe',
@@ -72,7 +73,7 @@ class DiscourseSyncTest extends TestCase
 
         (new DiscourseSync($user))->handle($this->client);
 
-        $this->assertArraySubset([
+        Assert::assertArraySubset([
             'external_id' => $user->id,
             'email' => $user->email,
             'username' => 'JDoe',
@@ -92,7 +93,7 @@ class DiscourseSyncTest extends TestCase
 
         (new DiscourseSync($user))->handle($this->client);
 
-        $this->assertArraySubset([
+        Assert::assertArraySubset([
             'add_groups' => 'active_members',
             'remove_groups' => 'previous_members',
         ], $this->last_sent_payload());
@@ -109,7 +110,7 @@ class DiscourseSyncTest extends TestCase
 
         (new DiscourseSync($user))->handle($this->client);
 
-        $this->assertArraySubset([
+        Assert::assertArraySubset([
             'add_groups' => 'previous_members',
             'remove_groups' => 'active_members',
         ], $this->last_sent_payload());

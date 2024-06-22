@@ -136,7 +136,7 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge->status = 'processing';
         $subCharge->save();
 
-        \Event::fire('sub-charge.processing', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
+        \Event::dispatch('sub-charge.processing', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
 
     /**
@@ -157,7 +157,7 @@ class SubscriptionChargeRepository extends DBRepository
             Log::debug('Sub charge not updated after payment failure, already cancelled. Charge ID: ' . $chargeId);
         }
 
-        \Event::fire('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
+        \Event::dispatch('sub-charge.payment-failed', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
     }
 
     /**

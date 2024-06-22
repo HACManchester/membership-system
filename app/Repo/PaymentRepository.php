@@ -125,7 +125,7 @@ class PaymentRepository extends DBRepository
         }
 
         //Emit an event so that things like the balance updater can run
-        \Event::fire('payment.create', array($userId, $reason, $ref, $record->id, $status));
+        \Event::dispatch('payment.create', array($userId, $reason, $ref, $record->id, $status));
 
         return $record->id;
     }
@@ -161,7 +161,7 @@ class PaymentRepository extends DBRepository
         $payment->paid_at = $paidDate;
         $payment->save();
 
-        \Event::fire('payment.paid', array($payment->user_id, $paymentId, $payment->reason, $payment->reference, $paidDate));
+        \Event::dispatch('payment.paid', array($payment->user_id, $paymentId, $payment->reason, $payment->reference, $paidDate));
     }
 
     /**
@@ -189,7 +189,7 @@ class PaymentRepository extends DBRepository
         $payment = $this->getById($paymentId);
 
         // TODO: Refactor & migrate to proper event classes eh
-        \Event::fire('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
+        \Event::dispatch('payment.cancelled', array($paymentId, $payment->user_id, $payment->reason, $payment->reference, $status));
         PaymentCancelled::dispatch($payment);
     }
 
@@ -340,7 +340,7 @@ class PaymentRepository extends DBRepository
         $state = $payment->delete();
 
         //Fire an event, allows the balance to get updated
-        \Event::fire('payment.delete', array($payment->user_id, $payment->source, $payment->reason, $payment->id));
+        \Event::dispatch('payment.delete', array($payment->user_id, $payment->source, $payment->reason, $payment->id));
 
         return $state;
     }

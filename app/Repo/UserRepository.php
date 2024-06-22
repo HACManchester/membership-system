@@ -1,9 +1,12 @@
-<?php namespace BB\Repo;
+<?php
+
+namespace BB\Repo;
 
 use BB\Entities\Gift;
 use BB\Entities\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class UserRepository extends DBRepository
 {
@@ -53,21 +56,21 @@ class UserRepository extends DBRepository
     {
         $model = $this->model->with('roles')->with('profile');
 
-        if($params['filter']) {
+        if ($params['filter']) {
             $model = $model
-            ->where('email', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
-            ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
-            ->orWhereHas('keyfobs', function(Builder $q) use ($params){
-                $q->where('key_id', 'like', $params['filter']);
-            })
-            ->take($params['limit']);
+                ->where('email', 'like', '%' . $params['filter'] . '%')
+                ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
+                ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
+                ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
+                ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
+                ->orWhereHas('keyfobs', function (Builder $q) use ($params) {
+                    $q->where('key_id', 'like', $params['filter']);
+                })
+                ->take($params['limit']);
         }
 
-        if(!$params['include_online_only']) {
-            $model = $model->where(function($query){
+        if (!$params['include_online_only']) {
+            $model = $model->where(function ($query) {
                 $query->where('online_only', '!=', '1')
                     ->orWhereNull('online_only');
             });
@@ -151,10 +154,10 @@ class UserRepository extends DBRepository
     {
         return $this->model
             ->NewsletterOptIns()
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->active();
             })
-            ->orWhere(function($query) {
+            ->orWhere(function ($query) {
                 $query->recentlyLapsed();
             })
             ->get();
@@ -166,7 +169,7 @@ class UserRepository extends DBRepository
      * @return User
      */
     public function registerMember(array $memberData, $isAdminCreating)
-    {   
+    {
         if (empty($memberData['profile_photo_private'])) {
             $memberData['profile_photo_private'] = false;
         }
@@ -175,9 +178,9 @@ class UserRepository extends DBRepository
             unset($memberData['password']);
         }
 
-        $memberData['hash'] = str_random(30);
+        $memberData['hash'] = Str::random(30);
 
-        $memberData['rules_agreed'] = $memberData['rules_agreed']? Carbon::now(): null;
+        $memberData['rules_agreed'] = $memberData['rules_agreed'] ? Carbon::now() : null;
 
         // Sign up to newsletter by default (legitimate interest comms to members)
         $memberData['newsletter'] = true;
@@ -186,18 +189,18 @@ class UserRepository extends DBRepository
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
-        if($memberData['gift_code']){
+        if ($memberData['gift_code']) {
             $gift_record = Gift::where('code', $memberData['gift_code'])->first();
 
-            if($gift_record){
+            if ($gift_record) {
                 $user->subscription_expires = date(
-                    'Y-m-d', 
+                    'Y-m-d',
                     strtotime(
                         date('Y-m-d') . ' + ' . $gift_record->months . ' months'
                     )
                 );
                 $user->gift_expires = date(
-                    'Y-m-d', 
+                    'Y-m-d',
                     strtotime(
                         date('Y-m-d') . ' + ' . $gift_record->months . ' months'
                     )
@@ -209,7 +212,7 @@ class UserRepository extends DBRepository
                 $user->save();
 
                 // log cash payment
-                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, 5.00, 'paid', 0, $memberData['gift_code'] );
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, 5.00, 'paid', 0, $memberData['gift_code']);
 
                 $gift_record->delete();
             }
@@ -238,7 +241,7 @@ class UserRepository extends DBRepository
         $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
 
         //If the user doesn't have any charges currently processing or they dont have an expiry date or are past their expiry data create a charge
-        if ( ! $outstandingCharges && ( ! $user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
+        if (!$outstandingCharges && (!$user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
             //create a charge
 
             $chargeDate = Carbon::now();
@@ -338,7 +341,7 @@ class UserRepository extends DBRepository
         $user->induction_completed = true;
         $user->inducted_by = \Auth::user()->id;
 
-        $user->rules_agreed = $user->rules_agreed? $user->rules_agreed: Carbon::now();
+        $user->rules_agreed = $user->rules_agreed ? $user->rules_agreed : Carbon::now();
 
         $user->save();
     }
@@ -351,5 +354,4 @@ class UserRepository extends DBRepository
             ->where('inducted_by', null)
             ->get();
     }
-
 }

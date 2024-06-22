@@ -198,7 +198,7 @@ class PaymentEventHandler
             'paid' => true,
             'payment_id' => $paymentId
         ]);
-        \Event::fire(new InductionRequestedEvent($induction));
+        \Event::dispatch(new InductionRequestedEvent($induction));
     }
 
     private function recordDoorKeyPaymentId($userId, $paymentId)

@@ -14,10 +14,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \BB\Http\Middleware\TrustProxies::class,
         \BB\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \BB\Http\Middleware\HttpsProtocol::class,
-        \BB\Http\Middleware\TrustProxies::class,
         
         // Introduced in 5.4, but affects validation rules (we have rules that we'd need to set nullable on to allow empty strings)
         // \BB\Http\Middleware\TrimStrings::class,

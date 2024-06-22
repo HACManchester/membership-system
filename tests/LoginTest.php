@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Str;
 use Tests\BrowserKitTestCase;
-
 class LoginTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
@@ -12,7 +10,7 @@ class LoginTest extends BrowserKitTestCase
     /** @test */
     public function i_can_login()
     {
-        $password = str_random(10);
+        $password = Str::random(10);
         $user = factory('BB\Entities\User')->create(['password' => $password]);
         factory('BB\Entities\ProfileData')->create(['user_id' => $user->id]);
 
