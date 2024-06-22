@@ -40,14 +40,13 @@ class KeyFobController extends Controller
             return \Redirect::route('keyfobs.index', $user->id);
         }
 
-        $keyId = $request->input('key_id');
-
+        
         //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
-        if (substr($keyId, 0, 2) === "ff") {
-
-            // generate random access code, if there's a collision, it'll fail due to db constraints
+        if ($request->input('type') == 'access_code') {
             $keyId = "ff" . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+        } else {
+            $keyId = $request->input('key_id');
         }
 
         KeyFob::create([

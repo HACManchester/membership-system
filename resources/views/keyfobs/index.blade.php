@@ -141,6 +141,7 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-3">
+                                            {!! Form::hidden('type', 'keyfob') !!}
                                             {!! Form::submit('Add a new fob', ['class' => 'btn btn-primary']) !!}
                                         </div>
                                     </div>
@@ -152,7 +153,8 @@
                                 {!! Form::open(['method' => 'POST', 'route' => ['keyfobs.store', $user->id], 'class' => 'form-horizontal']) !!}
                                 <div class="form-group">
                                     <div class="col-sm-3">
-                                        {!! Form::hidden('key_id', 'ff00000000') !!}
+                                        {{-- Do not use Form::Hidden as that might pull 'type' from previous form submissions. --}}
+                                        <input type="hidden" name="type" value="access_code" />
                                         {!! Form::submit('Request access code', ['class' => 'btn btn-info']) !!}
                                     </div>
                                 </div>

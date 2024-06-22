@@ -25,7 +25,20 @@ class StoreKeyFobRequest extends FormRequest
     public function rules()
     {
         return [
-            'key_id' => ['required', 'unique:key_fobs', 'min:8', 'max:12', 'regex:/^([a-fA-F0-9]+)$/i'],
+            'type' => ['required', 'in:keyfob,access_code'],
+            'key_id' => ['required_unless:type,access_code', 'unique:key_fobs', 'min:8', 'max:12', 'regex:/^([a-fA-F0-9]+)$/i'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'key_id.required_unless' => 'Please enter the serial number of a key fob.',
         ];
     }
 }

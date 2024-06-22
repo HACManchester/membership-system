@@ -92,6 +92,7 @@ class KeyFobTest extends BrowserKitTestCase
         $this->actingAs($user);
 
         $this->post("/account/{$user->id}/keyfobs", [
+            'type' => 'keyfob',
             'key_id' => sprintf('%08X', mt_rand(0, 0xFFFFFFFF)),
         ])
             ->assertRedirectedTo("/account/{$user->id}/keyfobs")
@@ -122,6 +123,7 @@ class KeyFobTest extends BrowserKitTestCase
         $this->actingAs($adminUser);
 
         $this->post("/account/{$otherUser->id}/keyfobs", [
+            'type' => 'keyfob',
             'key_id' => sprintf('%08X', mt_rand(0, 0xFFFFFFFF)),
         ])
             ->assertRedirectedTo("/account/{$otherUser->id}/keyfobs")
