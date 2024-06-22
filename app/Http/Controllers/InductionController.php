@@ -47,7 +47,7 @@ class InductionController extends Controller
             'paid' => true,
             'payment_id' => 0
         ]);
-        \Event::fire(new InductionRequestedEvent($induction));
+        \Event::dispatch(new InductionRequestedEvent($induction));
         
         return \Redirect::route('equipment.show', $slug);
     }
@@ -74,12 +74,12 @@ class InductionController extends Controller
             $induction->trainer_user_id = \Input::get('trainer_user_id', false);
             $induction->save();
             
-            \Event::fire(new InductionCompletedEvent($induction));
+            \Event::dispatch(new InductionCompletedEvent($induction));
         } elseif (\Input::get('is_trainer', false)) {
             $induction->is_trainer = true;
             $induction->save();
             
-            \Event::fire(new InductionMarkedAsTrainerEvent($induction));
+            \Event::dispatch(new InductionMarkedAsTrainerEvent($induction));
         } elseif (\Input::get('not_trainer', false)) {
             $induction->is_trainer = false;
             $induction->save();

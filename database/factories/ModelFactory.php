@@ -11,7 +11,7 @@
 |
 */
 
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 $factory->define('BB\Entities\User', function ($faker) {
     return [
@@ -19,9 +19,9 @@ $factory->define('BB\Entities\User', function ($faker) {
         'display_name'        => $faker->firstName,
         'family_name'         => $faker->lastName,
         'email'               => $faker->email,
-        'password'            => str_random(10),
-        'remember_token'      => str_random(10),
-        'hash'                => str_random(32),
+        'password'            => Str::random(10),
+        'remember_token'      => Str::random(10),
+        'hash'                => Str::random(32),
         'status'              => 'active',
         'active'              => true,
         'induction_completed' => false,

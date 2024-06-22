@@ -1,4 +1,6 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Entities\Equipment;
 use BB\Exceptions\ImageFailedException;
@@ -10,6 +12,7 @@ use BB\Repo\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Input;
 
 class EquipmentController extends Controller
@@ -24,7 +27,7 @@ class EquipmentController extends Controller
      * @var EquipmentRepository
      */
     private $equipmentRepository;
-    
+
     /**
      * @var UserRepository
      */
@@ -224,13 +227,12 @@ class EquipmentController extends Controller
                 $ext = $photo->guessClientExtension() ?: 'png';
                 $stream = \Image::make($photo->getRealPath())->fit(1000)->stream($ext);
 
-                $newFilename = sprintf('%s.%s', str_random(), $ext);
+                $newFilename = sprintf('%s.%s', Str::random(), $ext);
 
                 $this->disk->put($equipment->getPhotoBasePath() . $newFilename, $stream);
 
                 $equipment->addPhoto($newFilename);
-
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 Log::error($e);
                 throw new ImageFailedException($e->getMessage());
             }
@@ -244,7 +246,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        if(\Auth::user()->online_only){
+        if (\Auth::user()->online_only) {
             throw new \BB\Exceptions\AuthenticationException();
         }
 
@@ -259,4 +261,4 @@ class EquipmentController extends Controller
         \FlashNotification::success("Image deleted");
         return \Redirect::route('equipment.edit', $equipment);
     }
-} 
+}

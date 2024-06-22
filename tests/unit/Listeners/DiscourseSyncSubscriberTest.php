@@ -4,9 +4,7 @@ use BB\Entities\User;
 use BB\Events\MemberBecameInactive;
 use BB\Events\MemberBecameActive;
 use BB\Jobs\DiscourseSync;
-use BB\Listeners\DiscourseSyncSubscriber;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Bus;
 use Tests\TestCase;
 

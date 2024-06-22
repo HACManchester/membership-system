@@ -163,7 +163,7 @@ class PaymentController extends Controller
                     'paid'       => true,
                     'payment_id' => $payment->id
                 ]);
-                \Event::fire(new InductionRequestedEvent($induction));
+                \Event::dispatch(new InductionRequestedEvent($induction));
             } else {
                 throw new \BB\Exceptions\NotImplementedException();
             }

@@ -33,7 +33,7 @@
             @if ($user->keyFob())
                 
             <a href="{{ route('keyfobs.index', $user->id) }}">
-                    🔑 {{ $user->keyFobs()->count() }} access {{ str_plural('method', $user->keyFobs()->count() )}}
+                    🔑 {{ $user->keyFobs()->count() }} access {{ \Illuminate\Support\Str::plural('method', $user->keyFobs()->count() )}}
                 </a>
             @else
                 <a href="{{ route('keyfobs.index', $user->id) }}">
