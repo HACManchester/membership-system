@@ -43,7 +43,7 @@ return [
 
 		'api' => [
 			'driver' => 'token',
-			'provider' => 'users',
+			'provider' => 'api_keys',
             'hash' => false,
 		],
 	],
@@ -71,10 +71,10 @@ return [
 			'model' => BB\Entities\User::class,
 		],
 
-		// 'users' => [
-		//     'driver' => 'database',
-		//     'table' => 'users',
-		// ],
+		'api_keys' => [
+			'driver' => 'eloquent',
+			'model' => BB\Entities\ApiKey::class,
+		],
 	],
 
 	/*

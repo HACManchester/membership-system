@@ -18,6 +18,7 @@ $factory->define('BB\Entities\User', function ($faker) {
         'given_name'          => $faker->firstName,
         'display_name'        => $faker->firstName,
         'family_name'         => $faker->lastName,
+        'announce_name'       => $faker->lastName,
         'email'               => $faker->email,
         'password'            => Str::random(10),
         'remember_token'      => Str::random(10),

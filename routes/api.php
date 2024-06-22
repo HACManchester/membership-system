@@ -12,3 +12,5 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::middleware('auth:api')->get('/keyfobs/csv', 'KeyFobCsvController');
