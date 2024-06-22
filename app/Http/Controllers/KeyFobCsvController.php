@@ -29,6 +29,13 @@ class KeyFobCsvController extends Controller
                 ];
             });
 
+
+        $filename = 'keyfobs_' . time() . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}.csv\"",
+        ];
+
         return response()->streamDownload(function () use ($keyfobs) {
             $out = fopen('php://output', 'w');
             fputcsv($out, array_keys($keyfobs[0]));
@@ -36,6 +43,6 @@ class KeyFobCsvController extends Controller
                 fputcsv($out, $line);
             }
             fclose($out);
-        }, 'keyfobs_' . time() . '.csv');
+        }, $filename, $headers);
     }
 }
