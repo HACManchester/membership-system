@@ -3,16 +3,10 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
-use BB\Helpers\GoCardlessHelper;
 use Illuminate\Http\Request;
 
 class DisciplinaryController extends Controller
 {
-    protected $goCardlessHelper;
-    public function __construct(GoCardlessHelper $goCardlessHelper) {
-        $this->goCardlessHelper = $goCardlessHelper;
-    }
-
     public function ban(User $user, Request $request)
     {
         $this->authorize('ban', $user);
@@ -29,11 +23,6 @@ class DisciplinaryController extends Controller
             'banned_reason' => $request->get('reason'),
             'banned_date' => \Carbon\Carbon::now(),
         ]);
-
-        // Cancel the user's subscription (if they have one)
-        if ($user->subscription_id) {
-            $this->goCardlessHelper->cancelSubscription($user->subscription_id);
-        }
 
         return redirect()->back();
     }
