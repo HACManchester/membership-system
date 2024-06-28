@@ -136,7 +136,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
         // TODO: Enable these casts one at a time and verify casting will not break references
         // 'email_verified' => 'boolean',
-        // 'active' => 'boolean',
+        'active' => 'boolean',
         // 'founder' => 'boolean',
         // 'director' => 'boolean',
         // 'trusted' => 'boolean',
@@ -332,7 +332,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function isBanned()
     {
-        return $this->banned;
+        return !!$this->banned;
     }
 
     /**

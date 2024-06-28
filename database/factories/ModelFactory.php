@@ -11,9 +11,13 @@
 |
 */
 
+use Faker\Generator;
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Str;
 
-$factory->define('BB\Entities\User', function ($faker) {
+/** @var Factory $factory */
+
+$factory->define('BB\Entities\User', function (Generator $faker) {
     return [
         'given_name'          => $faker->firstName,
         'display_name'        => $faker->firstName,
@@ -33,7 +37,12 @@ $factory->define('BB\Entities\User', function ($faker) {
     ];
 });
 
-$factory->define('BB\Entities\ProfileData', function ($faker) {
+$factory->afterCreatingState(\BB\Entities\User::class, 'admin',  function (\BB\Entities\User $user, Generator $faker) {
+    $admin = \BB\Entities\Role::where('name', 'admin')->first();
+    $user->assignRole($admin);   
+});
+
+$factory->define('BB\Entities\ProfileData', function (Generator $faker) {
     return [
         'user_id'               => null,
         'profile_photo'         => false,
@@ -44,7 +53,7 @@ $factory->define('BB\Entities\ProfileData', function ($faker) {
     ];
 });
 
-$factory->define('BB\Entities\Role', function ($faker) {
+$factory->define('BB\Entities\Role', function (Generator $faker) {
     return [
         'name'        => $faker->word,
         'title'       => $faker->word,
@@ -52,7 +61,7 @@ $factory->define('BB\Entities\Role', function ($faker) {
     ];
 });
 
-$factory->define('BB\Entities\KeyFob', function ($faker) {
+$factory->define('BB\Entities\KeyFob', function (Generator $faker) {
     return [
         'user_id' => 0,
         'key_id'  => str_random(12),
