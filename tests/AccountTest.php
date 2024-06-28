@@ -17,7 +17,7 @@ class AccountTest extends BrowserKitTestCase
 
         $this->actingAs($user);
 
-        $this->get('/account/'.$user->id)
+        $this->get('/account/' . $user->id)
             ->seeStatusCode(200)
             ->see($user->name)
             ->see($user->email);
@@ -34,8 +34,13 @@ class AccountTest extends BrowserKitTestCase
 
         $this->actingAs($user);
 
-        $this->get('/members/'.$user2->id)
-            ->seeStatusCode(404);
+        $this->get('/members/' . $user2->id)
+            ->assertRedirectedToRoute('members.index')
+            ->assertSessionHas('flash_notification', [
+                "message" => "This user's profile is no longer available as they are not an active member.",
+                "details" => null,
+                "level" => "danger"
+            ]);
     }
 
     /** @test */
@@ -49,7 +54,7 @@ class AccountTest extends BrowserKitTestCase
 
         $this->actingAs($user);
 
-        $this->get('/account/'.$user2->id)
+        $this->get('/account/' . $user2->id)
             ->assertResponseStatus(403);
     }
 
@@ -117,5 +122,4 @@ class AccountTest extends BrowserKitTestCase
 
         //$this->seeInDatabase('users', ['email' => $email, 'given_name' => $firstName]);
     }
-
 }
