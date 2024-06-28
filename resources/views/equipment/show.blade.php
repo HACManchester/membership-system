@@ -74,7 +74,7 @@
                                 
                                 @if ($equipment->accepting_inductions)
                                     @if(Auth::user()->online_only)
-                                        <h4>Online Only users may not use tools or request inductions.</h4>
+                                        <h4>Online Only members may not use tools or request inductions.</h4>
                                     @else
                                         <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
                                     @endif
@@ -281,7 +281,7 @@
             <div class="well">
                 <h3>🎓 Trainers</h3>
 
-                <p>These people can train others and maintain the tool - if there's any issues with the tool speak to them.</p>
+                <p>These members are permitted to induct other members on this tool.</p>
                 <div class="infobox__grid">
                     @foreach($trainers as $trainer)
                         <div class="infobox__grid-item infobox__grid-item--user">
@@ -321,7 +321,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="well">
-                <h3>Trained Users</h3>
+                <h3>Trained Members</h3>
                 <p>There are currently <strong>{{ count($trainedUsers) }}</strong> members who are trained to use this tool.</p>
                 <div class="infobox__grid">
                     @foreach($trainedUsers as $trainedUser)
