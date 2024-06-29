@@ -258,9 +258,9 @@
                                 <p>By banning a member, we will:</p>
                                 <ul>
                                     <li>Immediately mark them as left on the system</li>
-                                    <li>Cancel their GoCardless subscription (if they have one set up)</li>
                                     <li>Stop them being able to access the members system</li>
                                 </li>
+
                                 <p>We will not send any automated emails to the member, you should do this yourself from the board email address.</p>
 
                                 {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['disciplinary.ban', $user->id])) !!}
