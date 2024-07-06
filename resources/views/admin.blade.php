@@ -23,6 +23,7 @@
                 <h4>Manage Roles & Teams</h4>
                 <ul>
                     <li><a href="/roles">Move people in and out of roles.</a></li>
+                    <li><a href="/groups">Old groups page (before we move it all under "roles")></li>
                 </ul>
             </div>
             <div class="col-md-6 well">

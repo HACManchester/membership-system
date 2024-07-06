@@ -183,7 +183,7 @@
             {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
             {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
             {!! HTML::sideNavLink('Stats', 'stats.index') !!}
-            {!! HTML::sideNavLink('Teams', 'groups.index') !!}
+            {!! HTML::sideNavLink('Area Coordinators', 'equipment_area.index') !!}
             
             @if(!Auth::guest())
                 @if (Auth::user()->isAdmin())

@@ -142,6 +142,14 @@ Route::group(array('middleware' => 'role:member'), function () {
     Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
 });
 
+
+
+##########################
+# Equipment areas
+##########################
+
+Route::resource('equipment_area', 'EquipmentAreaController');
+
 ##########################
 # Notifications
 ##########################
