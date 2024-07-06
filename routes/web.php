@@ -208,9 +208,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::resource('roles', 'RolesController', []);
     Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
 });
-Route::group(array('middleware' => 'role:member'), function () {
-    Route::resource('groups', 'GroupsController', ['only' => ['index', 'show']]);
-});
 
 
 ##########################
