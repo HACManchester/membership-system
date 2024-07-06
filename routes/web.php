@@ -142,6 +142,14 @@ Route::group(array('middleware' => 'role:member'), function () {
     Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
 });
 
+
+
+##########################
+# Equipment areas
+##########################
+
+Route::resource('equipment_area', 'EquipmentAreaController');
+
 ##########################
 # Notifications
 ##########################
@@ -199,9 +207,6 @@ Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 
 Route::group(array('middleware' => 'role:admin'), function () {
     Route::resource('roles', 'RolesController', []);
     Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
-});
-Route::group(array('middleware' => 'role:member'), function () {
-    Route::resource('groups', 'GroupsController', ['only' => ['index', 'show']]);
 });
 
 

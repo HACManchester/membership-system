@@ -136,17 +136,6 @@
                                 </div>
                             </div>
                         @endif
-
-                        @if ($equipment->isManagedByGroup())
-                            <div class="tool-info__detail">
-                                <div class="tool-info__key">
-                                    Managed by
-                                </div>
-                                <div class="tool-info__value">
-                                    🤗 <a href="{{ route('groups.show', $equipment->role->name) }}">{{ $equipment->role->title }}</a>
-                                </div>
-                            </div>
-                        @endif
                         
                         <div class="tool-info__detail">
                             <div class="tool-info__key">
