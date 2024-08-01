@@ -24,7 +24,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.8",
         "michelf/php-markdown": "~1.4",
-        "nesbot/carbon": "~1.19",
+        "nesbot/carbon": "^2.0.0",
         "owen-it/laravel-auditing": "^9.0",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
         "sentry/sentry-laravel": "^2.0"
@@ -37,7 +37,7 @@
         "symfony/css-selector": "~4.0",
         "symfony/dom-crawler": "~4.0",
         "laravel/browser-kit-testing": "^5.1.0",
-        "filp/whoops": "~2.0",        
+        "filp/whoops": "~2.0",
         "doctrine/dbal": "~2.6",
         "nunomaduro/collision": "^2.0",
         "beyondcode/laravel-dump-server": "^1.0"
@@ -53,13 +53,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-       }
+        }
     },
     "scripts": {
-        "post-install-cmd": [
-        ],
-        "pre-update-cmd": [
-        ],
+        "post-install-cmd": [],
+        "pre-update-cmd": [],
         "post-update-cmd": [
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta"
@@ -71,7 +69,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-        ]        
+        ]
     },
     "config": {
         "preferred-install": "dist",
