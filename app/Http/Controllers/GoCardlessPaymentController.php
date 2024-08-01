@@ -135,7 +135,7 @@ class GoCardlessPaymentController extends Controller
         if ($reason == 'subscription') {
             return "Monthly Subscription Fee - Manual";
         } elseif ($reason == 'induction') {
-            return strtoupper(\Input::get('induction_key')) . " Induction Fee";
+            return strtoupper(\Request::input('induction_key')) . " Induction Fee";
         } elseif ($reason == 'door-key') {
             return "Door Key Deposit";
         } elseif ($reason == 'storage-box') {

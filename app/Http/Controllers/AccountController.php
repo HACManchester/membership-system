@@ -61,6 +61,11 @@ class AccountController extends Controller
      */
     private $goCardless;
 
+    /** @var \BB\Validators\UpdateSubscription */
+    private $updateSubscriptionAdminForm;
+
+    /** @var \BB\Services\Credit */
+    private $bbCredit;
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
@@ -192,7 +197,7 @@ class AccountController extends Controller
      */
     public function store()
     {
-        $input = \Input::only(
+        $input = \Request::only(
             'given_name',
             'family_name',
             'email',
@@ -224,9 +229,9 @@ class AccountController extends Controller
 
         $user = $this->userRepository->registerMember($input, ! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
-        if (\Input::file('new_profile_photo')) {
+        if (\Request::file('new_profile_photo')) {
             try {
-                $this->userImage->uploadPhoto($user->hash, \Input::file('new_profile_photo')->getRealPath(), true);
+                $this->userImage->uploadPhoto($user->hash, \Request::file('new_profile_photo')->getRealPath(), true);
 
                 $this->profileRepo->update($user->id, ['new_profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
             } catch (\Exception $e) {
@@ -313,7 +318,7 @@ class AccountController extends Controller
     public function update($id)
     {
         $user = User::findWithPermission($id);
-        $input = \Input::only(
+        $input = \Request::only(
             'given_name', 
             'family_name', 
             'email', 
@@ -352,32 +357,32 @@ class AccountController extends Controller
         $madeTrusted = false;
 
 
-        if (\Input::has('trusted')) {
-            if ( ! $user->trusted && \Input::get('trusted')) {
+        if (\Request::has('trusted')) {
+            if ( ! $user->trusted && \Request::input('trusted')) {
                 //User has been made a trusted member
                 $madeTrusted = true;
             }
-            $user->trusted = \Input::get('trusted');
+            $user->trusted = \Request::input('trusted');
         }
 
-        if (\Input::has('key_holder')) {
-            $user->key_holder = \Input::get('key_holder');
+        if (\Request::has('key_holder')) {
+            $user->key_holder = \Request::input('key_holder');
         }
 
-        if (\Input::has('induction_completed')) {
-            $user->induction_completed = \Input::get('induction_completed');
+        if (\Request::has('induction_completed')) {
+            $user->induction_completed = \Request::input('induction_completed');
         }
 
-        if (\Input::has('profile_photo_on_wall')) {
+        if (\Request::has('profile_photo_on_wall')) {
             $profileData = $user->profile()->first();
-            $profileData->profile_photo_on_wall = \Input::get('profile_photo_on_wall');
+            $profileData->profile_photo_on_wall = \Request::input('profile_photo_on_wall');
             $profileData->save();
         }
 
-        if (\Input::has('photo_approved')) {
+        if (\Request::has('photo_approved')) {
             $profile = $user->profile()->first();
 
-            if (\Input::get('photo_approved')) {
+            if (\Request::input('photo_approved')) {
                 $this->userImage->approveNewImage($user->hash);
                 $profile->update(['new_profile_photo' => false, 'profile_photo' => true]);
             } else {
@@ -388,10 +393,10 @@ class AccountController extends Controller
 
         $user->save();
 
-        if (\Input::has('approve_new_address')) {
-            if (\Input::get('approve_new_address') == 'Approve') {
+        if (\Request::has('approve_new_address')) {
+            if (\Request::input('approve_new_address') == 'Approve') {
                 $this->addressRepository->approvePendingMemberAddress($id);
-            } elseif (\Input::get('approve_new_address') == 'Decline') {
+            } elseif (\Request::input('approve_new_address') == 'Decline') {
                 $this->addressRepository->declinePendingMemberAddress($id);
             }
         }
@@ -403,12 +408,12 @@ class AccountController extends Controller
             event(new MemberGivenTrustedStatus($user));
         }
 
-        if (\Input::has('experimental_dd_subscription')) {
+        if (\Request::has('experimental_dd_subscription')) {
             $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
 
             $this->userRepository->recordGoCardlessSubscription($user->id,  $subscription->id);
         }
-        if (\Input::has('cancel_experimental_dd_subscription')) {
+        if (\Request::has('cancel_experimental_dd_subscription')) {
             $this->goCardless->cancelSubscription($user->subscription_id);
 
             $this->userRepository->recordGoCardlessSubscription($user->id,  null);
@@ -429,7 +434,7 @@ class AccountController extends Controller
         // I don't think this is used any more
 
         $user = User::findWithPermission($id);
-        $input = \Input::all();
+        $input = \Request::all();
 
         $this->updateSubscriptionAdminForm->validate($input, $user->id);
 
@@ -507,7 +512,7 @@ class AccountController extends Controller
 
     public function updateSubscriptionAmount($id)
     {
-        $amount = \Input::get('monthly_subscription');
+        $amount = \Request::input('monthly_subscription');
 
         $minAmountPence = MembershipPayments::getMinimumPrice();
         $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
@@ -521,7 +526,7 @@ class AccountController extends Controller
         }
 
         $user = User::findWithPermission($id);
-        $user->updateSubAmount(\Input::get('monthly_subscription'));
+        $user->updateSubAmount(\Request::input('monthly_subscription'));
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
