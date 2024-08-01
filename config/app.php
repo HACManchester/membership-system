@@ -228,7 +228,7 @@ return [
         'View'                  => Illuminate\Support\Facades\View::class,
         'Form'                  => Collective\Html\FormFacade::class,
         'HTML'                  => Collective\Html\HtmlFacade::class,
-        'FlashNotification'     => \ArthurGuy\Notifications\NotificationFacade::class,
+        'FlashNotification'     => BB\FlashNotification\FlashNotificationFacade::class,
         'Notification'          => Illuminate\Support\Facades\Notification::class,
         'Image'                 => Intervention\Image\Facades\Image::class,
         'MembershipPayments'    => BB\Helpers\MembershipPayments::class,

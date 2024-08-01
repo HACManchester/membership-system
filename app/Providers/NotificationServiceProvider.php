@@ -2,12 +2,11 @@
 
 namespace BB\Providers;
 
+use BB\FlashNotification\FlashNotificationManager;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Adapted version of ArthurGuy\Notifications\NotificationServiceProvider
- *
- * Replaces 'bindShared' with 'singleton' for compatibility with newer Laravel versions
+ * Inline and simplify 'arthurguy/notifications' functionality for Laravel 6+ support
  */
 class NotificationServiceProvider extends ServiceProvider
 {
@@ -18,13 +17,8 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(
-            'ArthurGuy\Notifications\SessionStore',
-            'ArthurGuy\Notifications\LaravelSessionStore'
-        );
-
-        $this->app->singleton('notification', function () {
-            return $this->app->make('ArthurGuy\Notifications\Notifier');
+        $this->app->singleton('flash_notification_manager', function () {
+            return $this->app->make(FlashNotificationManager::class);
         });
     }
 }

@@ -4,48 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64ed638ee14632c7ad09385d696caa7c",
+    "content-hash": "12b51509e660f06a2eef1c375b5b4c84",
     "packages": [
-        {
-            "name": "arthurguy/notifications",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ArthurGuy/Notifications.git",
-                "reference": "fe84bba74c82908664eebe21a7219587ec5926f9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ArthurGuy/Notifications/zipball/fe84bba74c82908664eebe21a7219587ec5926f9",
-                "reference": "fe84bba74c82908664eebe21a7219587ec5926f9",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/ArthurGuy/Notifications/functions.php"
-                ],
-                "psr-0": {
-                    "ArthurGuy\\Notifications": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Notifications",
-            "support": {
-                "source": "https://github.com/ArthurGuy/Notifications/tree/master"
-            },
-            "time": "2015-06-16T22:19:10+00:00"
-        },
         {
             "name": "carbonphp/carbon-doctrine-types",
             "version": "1.0.0",
