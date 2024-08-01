@@ -12,7 +12,7 @@ class SettingsController extends Controller
 	 */
 	public function update()
 	{
-        $input = \Input::only('key', 'value');
+        $input = \Request::only('key', 'value');
 
         Settings::change($input['key'], $input['value']);
 

@@ -1,4 +1,6 @@
-<?php namespace BB\Entities;
+<?php
+
+namespace BB\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +28,8 @@ class Settings extends Model
 
     protected $primaryKey = 'key';
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     public $timestamps = false;
@@ -49,6 +53,4 @@ class Settings extends Model
         $setting->value = $value;
         $setting->save();
     }
-
-
 }

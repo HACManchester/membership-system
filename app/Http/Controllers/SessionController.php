@@ -44,11 +44,11 @@ class SessionController extends Controller
 
         if (Auth::attempt($credentials, true)) {
 
-            if (\Input::get('sso')) {
+            if (\Request::input('sso')) {
                 return redirect(
                     "sso/login" .
-                        "?sso=" . \Input::get('sso') .
-                        "&sig=" . \Input::get('sig')
+                        "?sso=" . \Request::input('sso') .
+                        "&sig=" . \Request::input('sig')
                 );
             } else {
                 return redirect()->intended('account/' . \Auth::id());
@@ -61,7 +61,7 @@ class SessionController extends Controller
 
     public function sso_login()
     {
-        $input = \Input::only('sso', 'sig');
+        $input = \Request::only('sso', 'sig');
 
         if (empty($input['sso']) || empty($input['sig'])) {
             return \View::make('session.error')

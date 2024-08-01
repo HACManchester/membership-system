@@ -26,8 +26,6 @@ class EquipmentAreaController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', EquipmentArea::class);
-
         $areas = EquipmentArea::with('areaCoordinators')->orderBy('name', 'ASC')->get();
         return view('equipment_areas.index', compact('areas'));
     }

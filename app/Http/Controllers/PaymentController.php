@@ -128,14 +128,14 @@ class PaymentController extends Controller
             throw new \BB\Exceptions\AuthenticationException;
         }
 
-        Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store ' . json_encode(\Input::all()));
+        Log::debug('Manual payment endpoint getting hit. account/{id}/payment. paymentController@store ' . json_encode(\Request::all()));
 
-        $reason = \Input::get('reason');
+        $reason = \Request::input('reason');
 
         if ($reason == 'subscription') {
             $payment = new Payment([
                 'reason'           => $reason,
-                'source'           => \Input::get('source'),
+                'source'           => \Request::input('source'),
                 'source_id'        => '',
                 'amount'           => $user->monthly_subscription,
                 'amount_minus_fee' => $user->monthly_subscription,
@@ -143,10 +143,10 @@ class PaymentController extends Controller
             ]);
             $user->payments()->save($payment);
 
-            $user->extendMembership(\Input::get('source'), \Carbon\Carbon::now()->addMonth());
+            $user->extendMembership(\Request::input('source'), \Carbon\Carbon::now()->addMonth());
         } elseif ($reason == 'induction') {
-            if (\Input::get('source') == 'manual') {
-                $ref = \Input::get('induction_key');
+            if (\Request::input('source') == 'manual') {
+                $ref = \Request::input('induction_key');
                 ($item = $this->equipmentRepository->findBySlug($ref)) || App::abort(404);
                 $payment = new Payment([
                     'reason'           => $reason,
@@ -170,7 +170,7 @@ class PaymentController extends Controller
         } elseif ($reason == 'door-key') {
             $payment = new Payment([
                 'reason'           => $reason,
-                'source'           => \Input::get('source'),
+                'source'           => \Request::input('source'),
                 'source_id'        => '',
                 'amount'           => 10,
                 'amount_minus_fee' => 10,
@@ -183,7 +183,7 @@ class PaymentController extends Controller
         } elseif ($reason == 'storage-box') {
             $payment = new Payment([
                 'reason'           => $reason,
-                'source'           => \Input::get('source'),
+                'source'           => \Request::input('source'),
                 'source_id'        => '',
                 'amount'           => 5,
                 'amount_minus_fee' => 5,
@@ -199,7 +199,7 @@ class PaymentController extends Controller
             ]);
             $payment = new Payment([
                 'reason'           => 'balance',
-                'source'           => \Input::get('source'),
+                'source'           => \Request::input('source'),
                 'source_id'        => '',
                 'amount'           => $amount,
                 'amount_minus_fee' => $amount,

@@ -34,8 +34,8 @@ class InductionController extends Controller
     }
 
     public function create(){
-        $slug = \Input::get('slug', false);
-        $userId = \Input::get('user_id');
+        $slug = \Request::input('slug', false);
+        $userId = \Request::input('user_id');
 
         $equipment = $this->equipmentRepository->findBySlug($slug);
 
@@ -62,32 +62,32 @@ class InductionController extends Controller
      */
     public function update($userId, $id)
     {
-        $slug = \Input::get('slug', false);
+        $slug = \Request::input('slug', false);
         $induction = Induction::findOrFail($id);
 
         $equipment = $this->equipmentRepository->findBySlug($slug);
 
         $this->authorize('train', $equipment);
 
-        if (\Input::get('mark_trained', false)) {
+        if (\Request::input('mark_trained', false)) {
             $induction->trained = \Carbon\Carbon::now();
-            $induction->trainer_user_id = \Input::get('trainer_user_id', false);
+            $induction->trainer_user_id = \Request::input('trainer_user_id', false);
             $induction->save();
             
             \Event::dispatch(new InductionCompletedEvent($induction));
-        } elseif (\Input::get('is_trainer', false)) {
+        } elseif (\Request::input('is_trainer', false)) {
             $induction->is_trainer = true;
             $induction->save();
             
             \Event::dispatch(new InductionMarkedAsTrainerEvent($induction));
-        } elseif (\Input::get('not_trainer', false)) {
+        } elseif (\Request::input('not_trainer', false)) {
             $induction->is_trainer = false;
             $induction->save();
-        } elseif (\Input::get('mark_untrained', false)) {
+        } elseif (\Request::input('mark_untrained', false)) {
             $induction->trained = null;
             $induction->trainer_user_id = 0;
             $induction->save();
-        } elseif (\Input::get('cancel_payment', false)) {
+        } elseif (\Request::input('cancel_payment', false)) {
             if ($induction->trained) {
                 throw new \BB\Exceptions\NotImplementedException();
             }
@@ -113,7 +113,7 @@ class InductionController extends Controller
      */
     public function destroy($uid, $id)
     {
-        $slug = \Input::get('slug', false);
+        $slug = \Request::input('slug', false);
         $induction = Induction::findOrFail($id);
         $equipment = $this->equipmentRepository->findBySlug($slug);
 

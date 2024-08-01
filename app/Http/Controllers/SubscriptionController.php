@@ -161,7 +161,7 @@ class SubscriptionController extends Controller
     public function updatePaymentMethod($id)
     {
         $user = User::findWithPermission($id);
-        $paymentMethod = \Input::get('payment_method');
+        $paymentMethod = \Request::input('payment_method');
 
         if ($paymentMethod === 'balance' && empty($user->payment_method) && in_array($user->status, ['setting-up', 'left', 'leaving'])) {
             // Activate a users membership with a payment method of balance

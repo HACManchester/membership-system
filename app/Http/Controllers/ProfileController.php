@@ -59,7 +59,7 @@ class ProfileController extends Controller
         //Verify the user can access this user record - we don't need the record just the auth check
         $user = User::findWithPermission($userId);
 
-        $input = \Input::all();
+        $input = \Request::all();
         //Clear the profile photo field as this is handled separately below.
         unset($input['new_profile_photo']);
 
@@ -78,9 +78,9 @@ class ProfileController extends Controller
 
         $this->profileRepo->update($userId, $input);
 
-        if (\Input::file('new_profile_photo')) {
+        if (\Request::file('new_profile_photo')) {
             try {
-                $this->userImage->uploadPhoto($user->hash, \Input::file('new_profile_photo')->getRealPath(), true);
+                $this->userImage->uploadPhoto($user->hash, \Request::file('new_profile_photo')->getRealPath(), true);
 
                 $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
 
