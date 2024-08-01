@@ -53,5 +53,8 @@ jobs:
       - name: Clear Config
         run: php artisan config:clear
 
+      - name: phpstan
+        run: vendor/bin/phpstan analyse
+
       - name: phpunit
         run: vendor/bin/phpunit --coverage-text

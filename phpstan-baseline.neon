@@ -1,0 +1,1421 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addDays\\(\\) expects int, array\\|string\\|null given\\.$#"
+			count: 1
+			path: app/Console/Commands/CreateTodaysSubCharges.php
+
+		-
+			message: "#^Method BB\\\\Entities\\\\Address\\:\\:user\\(\\) should return BB\\\\Entities\\\\User but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasOne\\<BB\\\\Entities\\\\User\\>\\.$#"
+			count: 1
+			path: app/Entities/Address.php
+
+		-
+			message: "#^Method BB\\\\Entities\\\\Notification\\:\\:logNew\\(\\) should return BB\\\\Entities\\\\Notification but returns Illuminate\\\\Database\\\\Eloquent\\\\Model\\.$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(User     user\\)\\: Unexpected token \"user\", expected variable at offset 26$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(boolean  unread\\)\\: Unexpected token \"unread\", expected variable at offset 167$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(integer  user_id\\)\\: Unexpected token \"user_id\", expected variable at offset 53$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string   hash\\)\\: Unexpected token \"hash\", expected variable at offset 140$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string   message\\)\\: Unexpected token \"message\", expected variable at offset 83$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string   type\\)\\: Unexpected token \"type\", expected variable at offset 113$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^Parameter \\#1 \\$notification of class BB\\\\Events\\\\NewMemberNotification constructor expects BB\\\\Entities\\\\Notification, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
+			count: 1
+			path: app/Entities/Notification.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^Method BB\\\\Entities\\\\User\\:\\:findWithPermission\\(\\) should return BB\\\\Entities\\\\User but returns Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\.$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(bool   postFob \\(false\\=collect, true\\=post\\)\\)\\: Unexpected token \"postFob\", expected variable at offset 1021$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(date last_seen\\)\\: Unexpected token \"last_seen\", expected variable at offset 1074$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(int         monthly_subscription\\)\\: Unexpected token \"monthly_subscription\", expected variable at offset 935$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string      gocardless_setup_id\\)\\: Unexpected token \"gocardless_setup_id\", expected variable at offset 981$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string      mandate_id\\)\\: Unexpected token \"mandate_id\", expected variable at offset 899$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string\\|null secondary_payment_method\\)\\: Unexpected token \"secondary_payment_method\", expected variable at offset 849$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$payment_day \\(int\\) does not accept string\\.$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$subscription_expires \\(Carbon\\\\Carbon\\) does not accept DateTime\\.$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^Result of method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<BB\\\\Entities\\\\Role\\>\\:\\:attach\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: app/Entities/User.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
+			count: 1
+			path: app/Events/MemberBalanceChanged.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: "#^Call to an undefined method Exception\\:\\:getStatusCode\\(\\)\\.$#"
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: "#^Return type \\(Illuminate\\\\Http\\\\Response\\) of method BB\\\\Exceptions\\\\Handler\\:\\:renderExceptionWithWhoops\\(\\) should be compatible with return type \\(string\\) of method Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\\:\\:renderExceptionWithWhoops\\(\\)$#"
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: "#^Method BB\\\\FlashNotification\\\\FlashNotificationManager\\:\\:hasErrorDetail\\(\\) should return bool\\|null but returns string\\.$#"
+			count: 1
+			path: app/FlashNotification/FlashNotificationManager.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
+			count: 2
+			path: app/Handlers/PaymentEventHandler.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Handlers/PaymentEventHandler.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$key_deposit_payment_id\\.$#"
+			count: 1
+			path: app/Handlers/PaymentEventHandler.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reference\\.$#"
+			count: 1
+			path: app/Handlers/PaymentEventHandler.php
+
+		-
+			message: "#^Property BB\\\\Handlers\\\\PaymentEventHandler\\:\\:\\$inductionRepository is never read, only written\\.$#"
+			count: 1
+			path: app/Handlers/PaymentEventHandler.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:extendMembership\\(\\)\\.$#"
+			count: 4
+			path: app/Handlers/SubChargeEventHandler.php
+
+		-
+			message: "#^Property BB\\\\Handlers\\\\SubChargeEventHandler\\:\\:\\$subscriptionChargeRepository is never read, only written\\.$#"
+			count: 1
+			path: app/Handlers/SubChargeEventHandler.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Mandate\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\RedirectFlow\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\RedirectFlow\\:\\:\\$redirect_url\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\PaymentsService\\:\\:create\\(\\) expects string, array\\<string, array\\<string, mixed\\>\\> given\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\RedirectFlowsService\\:\\:create\\(\\) expects string, array\\<string, mixed\\> given\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\SubscriptionsService\\:\\:create\\(\\) expects string, array\\<string, array\\<string, mixed\\>\\> given\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^Parameter \\#2 \\$params of method GoCardlessPro\\\\Services\\\\RedirectFlowsService\\:\\:complete\\(\\) expects string, array\\<string, array\\<string, string\\>\\> given\\.$#"
+			count: 1
+			path: app/Helpers/GoCardlessHelper.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$subscriptionChargeRepository \\\\BB\\\\Repo\\\\SubscriptionChargeRepository\\)\\: Unexpected token \"\\$subscriptionChargeRepository\", expected type at offset 9$#"
+			count: 1
+			path: app/Helpers/MembershipPayments.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$address\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$email_verified\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Expression \"\\$user\\-\\>address\" on a separate line does not do anything\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:createOnlineOnly\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:createOnlineOnly\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:edit\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:edit\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:show\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:show\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of class BB\\\\Mailer\\\\UserMailer constructor expects BB\\\\Entities\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Parameter \\#2 \\$id of method BB\\\\Validators\\\\FormValidator\\:\\:validate\\(\\) expects null, int given\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Property BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:\\$inductionRepository is never read, only written\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Property BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:\\$userDetailsForm is never read, only written\\.$#"
+			count: 1
+			path: app/Http/Controllers/AccountController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/BalanceController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Http/Controllers/CashPaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:destroy\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:edit\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:index\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:store\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:update\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$equipmentArea with type BB\\\\EquipmentArea is not subtype of native type BB\\\\Entities\\\\EquipmentArea\\.$#"
+			count: 4
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$request with type Illuminate\\\\Http\\\\Request is not subtype of native type BB\\\\Http\\\\Requests\\\\StoreEquipmentAreaRequest\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$request with type Illuminate\\\\Http\\\\Request is not subtype of native type BB\\\\Http\\\\Requests\\\\UpdateEquipmentAreaRequest\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:destroy\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:edit\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:show\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:update\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$online_only\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:edit\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:edit\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/GeneralInductionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\GeneralInductionController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/GeneralInductionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\GeneralInductionController\\:\\:update\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/GeneralInductionController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
+			count: 1
+			path: app/Http/Controllers/GeneralInductionController.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$amount\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessPaymentController.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessPaymentController.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessPaymentController.php
+
+		-
+			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, null given\\.$#"
+			count: 2
+			path: app/Http/Controllers/GoCardlessPaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessWebhookController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessWebhookController.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 7
+			path: app/Http/Controllers/GoCardlessWebhookController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\GoCardlessWebhookController\\:\\:processBills\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Http/Controllers/GoCardlessWebhookController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/InductionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\InductionController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/InductionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\InductionController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/InductionController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
+			count: 1
+			path: app/Http/Controllers/InductionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 3
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\KeyFobCsvController\\:\\:__invoke\\(\\) should return Illuminate\\\\Http\\\\Response but returns Symfony\\\\Component\\\\HttpFoundation\\\\StreamedResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobCsvController.php
+
+		-
+			message: "#^Relation 'user' is not found in BB\\\\Entities\\\\KeyFob model\\.$#"
+			count: 1
+			path: app/Http/Controllers/KeyFobCsvController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\LeaderboardController\\:\\:index\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/LeaderboardController.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
+			count: 1
+			path: app/Http/Controllers/MembersController.php
+
+		-
+			message: "#^Result of function abort \\(void\\) is used\\.$#"
+			count: 1
+			path: app/Http/Controllers/MembersController.php
+
+		-
+			message: "#^Instantiated class Illuminate\\\\Contracts\\\\Validation\\\\UnauthorizedException not found\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:edit\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:edit\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<BB\\\\Entities\\\\Notification\\>\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:show\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:show\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:update\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\NotificationController\\:\\:update\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns BB\\\\Entities\\\\Notification\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Throwing object of an unknown class Illuminate\\\\Contracts\\\\Validation\\\\UnauthorizedException\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Called 'count' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of class BB\\\\Mailer\\\\UserMailer constructor expects BB\\\\Entities\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Variable \\$equipment might not be defined\\.$#"
+			count: 8
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Variable \\$status might not be defined\\.$#"
+			count: 5
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Variable \\$users might not be defined\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$goCardless\\.$#"
+			count: 3
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$address\\.$#"
+			count: 4
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$family_name\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$given_name\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$payment_method\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$subscription_id\\.$#"
+			count: 2
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
+			count: 2
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$source\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:migrateDD\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:migrateDD\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 2
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 2
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:update\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:update\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$equipmentRepository is never read, only written\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$subscriptionChargeRepository is never read, only written\\.$#"
+			count: 1
+			path: app/Http/Controllers/PaymentController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\ReminderController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/ReminderController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\ReminderController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/ReminderController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\ReminderController\\:\\:getReset\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/ReminderController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\ReminderController\\:\\:getReset\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/ReminderController.php
+
+		-
+			message: "#^Static method Illuminate\\\\Support\\\\Facades\\\\Password\\:\\:sendResetLink\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: app/Http/Controllers/ReminderController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RoleUsersController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RoleUsersController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RoleUsersController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/RoleUsersController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RoleUsersController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RoleUsersController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RoleUsersController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/RoleUsersController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:edit\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:edit\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:show\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:show\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:update\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\RolesController\\:\\:update\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/RolesController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\SessionController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/SessionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\SessionController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/SessionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\SessionController\\:\\:create\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/SessionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StatsController\\:\\:index\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
+			count: 1
+			path: app/Http/Controllers/StatsController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StatsController\\:\\:index\\(\\) should return BB\\\\Http\\\\Controllers\\\\Response but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/StatsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(mixed, mixed\\)\\: int, Closure\\(mixed, mixed\\)\\: bool given\\.$#"
+			count: 1
+			path: app/Http/Controllers/StatsController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxClaimController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:destroy\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:edit\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:index\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:store\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\StorageBoxController\\:\\:update\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/StorageBoxController.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$address\\.$#"
+			count: 4
+			path: app/Http/Controllers/SubscriptionController.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Http\\\\Controllers\\\\SubscriptionController\\:\\:\\$goCardless\\.$#"
+			count: 5
+			path: app/Http/Controllers/SubscriptionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\SubscriptionController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/SubscriptionController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\SubscriptionController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 4
+			path: app/Http/Controllers/SubscriptionController.php
+
+		-
+			message: "#^Class Bb\\\\Http\\\\Middleware\\\\TrustProxies referenced with incorrect case\\: BB\\\\Http\\\\Middleware\\\\TrustProxies\\.$#"
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Middleware\\\\Authenticate\\:\\:redirectTo\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$trusted\\.$#"
+			count: 1
+			path: app/Http/Middleware/IsTrusted.php
+
+		-
+			message: "#^PHPDoc type array of property Bb\\\\Http\\\\Middleware\\\\TrustProxies\\:\\:\\$headers is not covariant with PHPDoc type int\\|string\\|null of overridden property Fideloper\\\\Proxy\\\\TrustProxies\\:\\:\\$headers\\.$#"
+			count: 1
+			path: app/Http/Middleware/TrustProxies.php
+
+		-
+			message: "#^Property Bb\\\\Http\\\\Middleware\\\\TrustProxies\\:\\:\\$headers \\(array\\) does not accept default value of type int\\.$#"
+			count: 1
+			path: app/Http/Middleware/TrustProxies.php
+
+		-
+			message: "#^Cannot access property \\$id on object\\|string\\.$#"
+			count: 2
+			path: app/Http/Requests/Equipment/UpdateEquipmentRequest.php
+
+		-
+			message: "#^Cannot access property \\$id on object\\|string\\.$#"
+			count: 2
+			path: app/Http/Requests/UpdateEquipmentAreaRequest.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of job class BB\\\\Jobs\\\\DiscourseSync constructor expects BB\\\\Entities\\\\User in BB\\\\Jobs\\\\DiscourseSync\\:\\:dispatch\\(\\), Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable given\\.$#"
+			count: 1
+			path: app/Listeners/DiscourseSyncSubscriber.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Listeners\\\\EmailMemberAboutDeclinedPhoto\\:\\:\\$mailer\\.$#"
+			count: 2
+			path: app/Listeners/EmailMemberAboutDeclinedPhoto.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:extendMembership\\(\\)\\.$#"
+			count: 1
+			path: app/Listeners/ExtendMembership.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$user \\\\BB\\\\Entities\\\\User\\)\\: Unexpected token \"\\$user\", expected type at offset 9$#"
+			count: 1
+			path: app/Listeners/ExtendMembership.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
+			count: 1
+			path: app/Listeners/Notifications/Inductions/InductionCompletedListener.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
+			count: 1
+			path: app/Listeners/Notifications/Inductions/InductionMarkedAsTrainerListener.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
+			count: 2
+			path: app/Listeners/Notifications/Inductions/InductionRequestedListener.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Notifications/ErrorNotification.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Notifications/ErrorNotification.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
+			count: 1
+			path: app/Notifications/Inductions/Trainers/InductionRequestedNotification.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Observer/UserAuditObserver.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$equipmentArea with type BB\\\\EquipmentArea is not subtype of native type BB\\\\Entities\\\\EquipmentArea\\.$#"
+			count: 5
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:delete\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:forceDelete\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:restore\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:update\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:view\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
+			count: 1
+			path: app/Policies/EquipmentAreaPolicy.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
+			count: 2
+			path: app/Policies/EquipmentPolicy.php
+
+		-
+			message: "#^Class BB\\\\Entities\\\\Induction referenced with incorrect case\\: BB\\\\Entities\\\\induction\\.$#"
+			count: 12
+			path: app/Policies/InductionPolicy.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$Equipment$#"
+			count: 1
+			path: app/Policies/InductionPolicy.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$keyFob$#"
+			count: 2
+			path: app/Policies/KeyFobPolicy.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$user$#"
+			count: 3
+			path: app/Policies/KeyFobPolicy.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$storageBoxes\\.$#"
+			count: 1
+			path: app/Policies/StorageBoxPolicy.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Presenters\\\\UserPresenter\\:\\:\\$monthlySubscription\\.$#"
+			count: 1
+			path: app/Presenters/UserPresenter.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Presenters\\\\UserPresenter\\:\\:\\$paymentMethod\\.$#"
+			count: 1
+			path: app/Presenters/UserPresenter.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string monthlySubscription\\)\\: Unexpected token \"monthlySubscription\", expected variable at offset 24$#"
+			count: 1
+			path: app/Presenters/UserPresenter.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string paymentMethod\\)\\: Unexpected token \"paymentMethod\", expected variable at offset 64$#"
+			count: 1
+			path: app/Presenters/UserPresenter.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: app/Process/CheckLeavingUsers.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: app/Process/CheckMemberships.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: app/Process/CheckMemberships.php
+
+		-
+			message: "#^Property BB\\\\Process\\\\CheckMemberships\\:\\:\\$memberSubscriptionCharges is never read, only written\\.$#"
+			count: 1
+			path: app/Process/CheckMemberships.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 2
+			path: app/Process/CheckSuspendedUsers.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$events$#"
+			count: 1
+			path: app/Providers/EventServiceProvider.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$paid_at\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
+			count: 4
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reference\\.$#"
+			count: 2
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$source\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
+			count: 2
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user_id\\.$#"
+			count: 5
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Method BB\\\\Repo\\\\PaymentRepository\\:\\:getBalancePaymentsPaginated\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Collection but returns Illuminate\\\\Contracts\\\\Pagination\\\\Paginator\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$payment of event class BB\\\\Events\\\\PaymentCancelled constructor expects BB\\\\Entities\\\\Payment in BB\\\\Events\\\\PaymentCancelled\\:\\:dispatch\\(\\), Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Parameter \\#8 \\$ref of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
+			count: 2
+			path: app/Repo/PaymentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
+			count: 5
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$charge_date\\.$#"
+			count: 2
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$payment_date\\.$#"
+			count: 2
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
+			count: 5
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user_id\\.$#"
+			count: 2
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$subscriptionCharge of class BB\\\\Events\\\\SubscriptionChargePaid constructor expects BB\\\\Entities\\\\SubscriptionCharge, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
+			count: 1
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Parameter \\#7 \\$ref of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordSubscriptionPayment\\(\\) expects string\\|null, int given\\.$#"
+			count: 1
+			path: app/Repo/SubscriptionChargeRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$active\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$inducted_by\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$induction_completed\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$payment_day\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$rules_agreed\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Method BB\\\\Repo\\\\UserRepository\\:\\:getWantNewsletter\\(\\) should return array\\<BB\\\\Entities\\\\User\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<BB\\\\Entities\\\\User\\>\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$active \\(bool\\) does not accept string\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$cash_balance \\(int\\) does not accept float\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$subscription_expires \\(Carbon\\\\Carbon\\) does not accept string\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Relation 'keyfobs' is not found in BB\\\\Entities\\\\User model\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: "#^Property Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:\\$orders \\(array\\) does not accept null\\.$#"
+			count: 1
+			path: app/Scopes/OrderScope.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$charge_date\\.$#"
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: "#^Method BB\\\\Services\\\\Payment\\\\GoCardlessWebhookParser\\:\\:getAction\\(\\) should return null but returns string\\.$#"
+			count: 1
+			path: app/Services/Payment/GoCardlessWebhookParser.php
+
+		-
+			message: "#^Method BB\\\\Services\\\\Payment\\\\GoCardlessWebhookParser\\:\\:getResourceType\\(\\) should return null but returns string\\.$#"
+			count: 1
+			path: app/Services/Payment/GoCardlessWebhookParser.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Validators\\\\FormValidator\\:\\:\\$rules\\.$#"
+			count: 1
+			path: app/Validators/FormValidator.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
+			count: 1
+			path: app/Validators/FormValidator.php
