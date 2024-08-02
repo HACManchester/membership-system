@@ -9,8 +9,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class MemberBalanceChanged extends Event
 {
     use SerializesModels;
+
     /**
-     * @var
+     * @var int
      */
     public $userId;
 

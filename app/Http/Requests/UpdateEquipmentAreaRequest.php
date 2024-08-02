@@ -15,6 +15,7 @@ class UpdateEquipmentAreaRequest extends StoreEquipmentAreaRequest
      */
     public function authorize()
     {
+        /** @var EquipmentArea */
         $equipmentArea = $this->route('equipment_area');
         return $this->user()->can('update', $equipmentArea);
     }
@@ -27,6 +28,7 @@ class UpdateEquipmentAreaRequest extends StoreEquipmentAreaRequest
      */
     public function rules()
     {
+        /** @var EquipmentArea */
         $equipmentArea = $this->route('equipment_area');
 
         return array_merge(

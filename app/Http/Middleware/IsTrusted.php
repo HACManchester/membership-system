@@ -1,5 +1,6 @@
 <?php namespace BB\Http\Middleware;
 
+use BB\Entities\User;
 use BB\Exceptions\AuthenticationException;
 use Closure;
 
@@ -23,11 +24,15 @@ class IsTrusted
             } else {
                 return \Redirect::guest('login');
             }
+        }
 
-        } elseif (\Auth::user()->isBanned()) {
+        /** @var User */
+        $user = \Auth::user();
+        
+        if ($user->isBanned()) {
             throw new AuthenticationException();
             
-        } elseif(!\Auth::user()->isAdmin() && !\Auth::user()->trusted) {
+        } elseif(!$user->isAdmin() && !$user->trusted) {
             throw new AuthenticationException();
         }
 

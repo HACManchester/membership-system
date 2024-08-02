@@ -90,8 +90,8 @@ class FlashNotificationManager
 
     /**
      * @param string      $detail
-     * @param null|string $response
-     * @return bool|null
+     * @param string|null $response
+     * @return bool|string|null
      */
     public function hasErrorDetail($detail, $response = null)
     {
