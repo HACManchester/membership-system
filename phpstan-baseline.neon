@@ -1,216 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addDays\\(\\) expects int, array\\|string\\|null given\\.$#"
-			count: 1
-			path: app/Console/Commands/CreateTodaysSubCharges.php
-
-		-
-			message: "#^Method BB\\\\Entities\\\\Address\\:\\:user\\(\\) should return BB\\\\Entities\\\\User but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasOne\\<BB\\\\Entities\\\\User\\>\\.$#"
-			count: 1
-			path: app/Entities/Address.php
-
-		-
-			message: "#^Method BB\\\\Entities\\\\Notification\\:\\:logNew\\(\\) should return BB\\\\Entities\\\\Notification but returns Illuminate\\\\Database\\\\Eloquent\\\\Model\\.$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(User     user\\)\\: Unexpected token \"user\", expected variable at offset 26$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(boolean  unread\\)\\: Unexpected token \"unread\", expected variable at offset 167$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(integer  user_id\\)\\: Unexpected token \"user_id\", expected variable at offset 53$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string   hash\\)\\: Unexpected token \"hash\", expected variable at offset 140$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string   message\\)\\: Unexpected token \"message\", expected variable at offset 83$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string   type\\)\\: Unexpected token \"type\", expected variable at offset 113$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^Parameter \\#1 \\$notification of class BB\\\\Events\\\\NewMemberNotification constructor expects BB\\\\Entities\\\\Notification, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
-			count: 1
-			path: app/Entities/Notification.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^Method BB\\\\Entities\\\\User\\:\\:findWithPermission\\(\\) should return BB\\\\Entities\\\\User but returns Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\.$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(bool   postFob \\(false\\=collect, true\\=post\\)\\)\\: Unexpected token \"postFob\", expected variable at offset 1021$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(date last_seen\\)\\: Unexpected token \"last_seen\", expected variable at offset 1074$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(int         monthly_subscription\\)\\: Unexpected token \"monthly_subscription\", expected variable at offset 935$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string      gocardless_setup_id\\)\\: Unexpected token \"gocardless_setup_id\", expected variable at offset 981$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string      mandate_id\\)\\: Unexpected token \"mandate_id\", expected variable at offset 899$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string\\|null secondary_payment_method\\)\\: Unexpected token \"secondary_payment_method\", expected variable at offset 849$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$payment_day \\(int\\) does not accept string\\.$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$subscription_expires \\(Carbon\\\\Carbon\\) does not accept DateTime\\.$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^Result of method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<BB\\\\Entities\\\\Role\\>\\:\\:attach\\(\\) \\(void\\) is used\\.$#"
-			count: 1
-			path: app/Entities/User.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
-			count: 1
-			path: app/Events/MemberBalanceChanged.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$name\\.$#"
-			count: 1
-			path: app/Exceptions/Handler.php
-
-		-
-			message: "#^Call to an undefined method Exception\\:\\:getStatusCode\\(\\)\\.$#"
-			count: 1
-			path: app/Exceptions/Handler.php
-
-		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 1
-			path: app/Exceptions/Handler.php
-
-		-
-			message: "#^Return type \\(Illuminate\\\\Http\\\\Response\\) of method BB\\\\Exceptions\\\\Handler\\:\\:renderExceptionWithWhoops\\(\\) should be compatible with return type \\(string\\) of method Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\\:\\:renderExceptionWithWhoops\\(\\)$#"
-			count: 1
-			path: app/Exceptions/Handler.php
-
-		-
-			message: "#^Method BB\\\\FlashNotification\\\\FlashNotificationManager\\:\\:hasErrorDetail\\(\\) should return bool\\|null but returns string\\.$#"
-			count: 1
-			path: app/FlashNotification/FlashNotificationManager.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
-			count: 2
-			path: app/Handlers/PaymentEventHandler.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Handlers/PaymentEventHandler.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$key_deposit_payment_id\\.$#"
-			count: 1
-			path: app/Handlers/PaymentEventHandler.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reference\\.$#"
-			count: 1
-			path: app/Handlers/PaymentEventHandler.php
-
-		-
-			message: "#^Property BB\\\\Handlers\\\\PaymentEventHandler\\:\\:\\$inductionRepository is never read, only written\\.$#"
-			count: 1
-			path: app/Handlers/PaymentEventHandler.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:extendMembership\\(\\)\\.$#"
-			count: 4
-			path: app/Handlers/SubChargeEventHandler.php
-
-		-
-			message: "#^Property BB\\\\Handlers\\\\SubChargeEventHandler\\:\\:\\$subscriptionChargeRepository is never read, only written\\.$#"
-			count: 1
-			path: app/Handlers/SubChargeEventHandler.php
-
-		-
-			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Mandate\\:\\:\\$status\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\RedirectFlow\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\RedirectFlow\\:\\:\\$redirect_url\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\PaymentsService\\:\\:create\\(\\) expects string, array\\<string, array\\<string, mixed\\>\\> given\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\RedirectFlowsService\\:\\:create\\(\\) expects string, array\\<string, mixed\\> given\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$params of method GoCardlessPro\\\\Services\\\\SubscriptionsService\\:\\:create\\(\\) expects string, array\\<string, array\\<string, mixed\\>\\> given\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^Parameter \\#2 \\$params of method GoCardlessPro\\\\Services\\\\RedirectFlowsService\\:\\:complete\\(\\) expects string, array\\<string, array\\<string, string\\>\\> given\\.$#"
-			count: 1
-			path: app/Helpers/GoCardlessHelper.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$subscriptionChargeRepository \\\\BB\\\\Repo\\\\SubscriptionChargeRepository\\)\\: Unexpected token \"\\$subscriptionChargeRepository\", expected type at offset 9$#"
-			count: 1
-			path: app/Helpers/MembershipPayments.php
-
-		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$address\\.$#"
 			count: 1
 			path: app/Http/Controllers/AccountController.php
@@ -309,16 +99,6 @@ parameters:
 			message: "#^Property BB\\\\Http\\\\Controllers\\\\AccountController\\:\\:\\$userDetailsForm is never read, only written\\.$#"
 			count: 1
 			path: app/Http/Controllers/AccountController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/BalanceController.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: app/Http/Controllers/CashPaymentController.php
 
 		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
@@ -746,11 +526,6 @@ parameters:
 			path: app/Http/Controllers/PaymentController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
 			count: 2
 			path: app/Http/Controllers/PaymentController.php
@@ -1021,41 +796,6 @@ parameters:
 			path: app/Http/Controllers/SubscriptionController.php
 
 		-
-			message: "#^Class Bb\\\\Http\\\\Middleware\\\\TrustProxies referenced with incorrect case\\: BB\\\\Http\\\\Middleware\\\\TrustProxies\\.$#"
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Middleware\\\\Authenticate\\:\\:redirectTo\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: app/Http/Middleware/Authenticate.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$trusted\\.$#"
-			count: 1
-			path: app/Http/Middleware/IsTrusted.php
-
-		-
-			message: "#^PHPDoc type array of property Bb\\\\Http\\\\Middleware\\\\TrustProxies\\:\\:\\$headers is not covariant with PHPDoc type int\\|string\\|null of overridden property Fideloper\\\\Proxy\\\\TrustProxies\\:\\:\\$headers\\.$#"
-			count: 1
-			path: app/Http/Middleware/TrustProxies.php
-
-		-
-			message: "#^Property Bb\\\\Http\\\\Middleware\\\\TrustProxies\\:\\:\\$headers \\(array\\) does not accept default value of type int\\.$#"
-			count: 1
-			path: app/Http/Middleware/TrustProxies.php
-
-		-
-			message: "#^Cannot access property \\$id on object\\|string\\.$#"
-			count: 2
-			path: app/Http/Requests/Equipment/UpdateEquipmentRequest.php
-
-		-
-			message: "#^Cannot access property \\$id on object\\|string\\.$#"
-			count: 2
-			path: app/Http/Requests/UpdateEquipmentAreaRequest.php
-
-		-
 			message: "#^Parameter \\#1 \\$user of job class BB\\\\Jobs\\\\DiscourseSync constructor expects BB\\\\Entities\\\\User in BB\\\\Jobs\\\\DiscourseSync\\:\\:dispatch\\(\\), Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable given\\.$#"
 			count: 1
 			path: app/Listeners/DiscourseSyncSubscriber.php
@@ -1064,11 +804,6 @@ parameters:
 			message: "#^Access to an undefined property BB\\\\Listeners\\\\EmailMemberAboutDeclinedPhoto\\:\\:\\$mailer\\.$#"
 			count: 2
 			path: app/Listeners/EmailMemberAboutDeclinedPhoto.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:extendMembership\\(\\)\\.$#"
-			count: 1
-			path: app/Listeners/ExtendMembership.php
 
 		-
 			message: "#^PHPDoc tag @var has invalid value \\(\\$user \\\\BB\\\\Entities\\\\User\\)\\: Unexpected token \"\\$user\", expected type at offset 9$#"
@@ -1317,36 +1052,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$active\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$inducted_by\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$induction_completed\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$payment_day\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$rules_agreed\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php
 

@@ -6,12 +6,12 @@ use BB\Events\NewMemberNotification;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property User     user
- * @property integer  user_id
- * @property string   message
- * @property string   type
- * @property string   hash
- * @property boolean  unread
+ * @property User     $user
+ * @property integer  $user_id
+ * @property string   $message
+ * @property string   $type
+ * @property string   $hash
+ * @property boolean  $unread
  */
 class Notification extends Model
 {
@@ -41,7 +41,7 @@ class Notification extends Model
             return $existingNotifications;
         }
 
-        $newNotification = parent::create([
+        $newNotification = static::create([
             'user_id' => $userId,
             'message' => $message,
             'type'    => $type,
