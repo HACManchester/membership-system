@@ -4,8 +4,6 @@ use Carbon\Carbon;
 
 class MembershipPayments
 {
-
-
     /**
      * Fetch the date of the users last subscription payment
      *
@@ -14,9 +12,10 @@ class MembershipPayments
      */
     public static function lastUserPaymentDate($userId)
     {
+        /** @var \BB\Repo\SubscriptionChargeRepository */
         $subscriptionChargeRepository = \App::make('BB\Repo\SubscriptionChargeRepository');
-        /** @var $subscriptionChargeRepository \BB\Repo\SubscriptionChargeRepository */
         $latestCharge = $subscriptionChargeRepository->getMembersLatestPaidCharge($userId);
+        
         if ($latestCharge) {
             return $latestCharge->charge_date;
         }

@@ -1,5 +1,6 @@
 <?php namespace BB\Repo;
 
+// Refactor all this away so types aren't dumb
 abstract class DBRepository
 {
 

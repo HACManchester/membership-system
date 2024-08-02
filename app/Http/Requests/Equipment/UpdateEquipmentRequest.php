@@ -2,6 +2,7 @@
 
 namespace BB\Http\Requests\Equipment;
 
+use BB\Entities\Equipment;
 use Illuminate\Validation\Rule;
 
 class UpdateEquipmentRequest extends StoreEquipmentRequest
@@ -24,6 +25,7 @@ class UpdateEquipmentRequest extends StoreEquipmentRequest
      */
     public function rules()
     {
+        /** @var Equipment */
         $equipment = $this->route('equipment');
 
         return array_merge(
