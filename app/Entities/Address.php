@@ -39,12 +39,8 @@ class Address extends Model
         'approved' => 0,
     ];
 
-    /**
-     * @return User
-     */
     public function user()
     {
         return $this->hasOne('\BB\Entities\User');
     }
-
 } 

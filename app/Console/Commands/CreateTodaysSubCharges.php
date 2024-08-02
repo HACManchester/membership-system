@@ -43,7 +43,7 @@ class CreateTodaysSubCharges extends Command
      */
     public function handle()
     {
-        $dayOffset = $this->argument('dayOffset');
+        $dayOffset = intval($this->argument('dayOffset'));
 
         $targetDate = Carbon::now()->addDays($dayOffset);
 

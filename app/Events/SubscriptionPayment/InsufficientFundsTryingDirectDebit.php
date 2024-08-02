@@ -11,23 +11,23 @@ class InsufficientFundsTryingDirectDebit extends Event
     use SerializesModels;
 
     /**
-     * @var
+     * @var int
      */
     public $userId;
 
     /**
-     * @var
+     * @var int
      */
-    public $ubChargeId;
+    public $subChargeId;
 
     /**
      * @param $userId
-     * @param $ubChargeId
+     * @param $subChargeId
      */
-    public function __construct($userId, $ubChargeId)
+    public function __construct($userId, $subChargeId)
     {
         $this->userId = $userId;
-        $this->ubChargeId = $ubChargeId;
+        $this->subChargeId = $subChargeId;
     }
 
     /**
