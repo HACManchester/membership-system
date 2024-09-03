@@ -46,7 +46,7 @@ class TelegramHelper
         }
 
         $id = $this->identifier ? " [" . $this->identifier . "] " : "";
-        return urlencode("$emoji $id ");
+        return "$emoji $id";
     }
 
     public function notify($level, $message)
