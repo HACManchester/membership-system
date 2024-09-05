@@ -340,6 +340,11 @@ class AccountController extends Controller
             'suppress_real_name'
         );
 
+        // TODO: Move to proper validators and 'validated' output?
+        if (!\Auth::user()->can('changeUsername', $user)) {
+            unset($input['display_name']);
+        }
+
         $this->userForm->validate($input, $user->id);
 
         $this->userRepository->updateMember($id, $input, \Auth::user()->hasRole('admin'));

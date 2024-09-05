@@ -25,4 +25,9 @@ class UserPolicy
         // Admins can ban others
         return $authedUser->isAdmin();
     }
+
+    public function changeUsername(User $authedUser, User $user)
+    {
+        return $authedUser->isAdmin();
+    }
 }

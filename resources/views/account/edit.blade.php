@@ -39,7 +39,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('display_name', 'has-error has-feedback') }}">
                     {!! Form::label('display_name', 'Username') !!}
-                    {!! Form::text('display_name', null, ['class'=>'form-control', 'autocomplete'=>'off', 'readonly'=>'readonly']) !!}
+                    {!! Form::text('display_name', null, ['class'=>'form-control', 'autocomplete'=>'off', 'readonly'=> !Auth::user()->can('changeUsername', $user) ]) !!}
                     <span class="help-block">Your Username will be used for display purposes on the members system, it cannot be changed once set without contacting the board </span>
                     {!! FlashNotification::getErrorDetail('display_name') !!}
                 </div>

@@ -40,7 +40,7 @@ class UserValidator extends FormValidator
         'email'                => 'required|email|unique:users,email,{id}',
         'secondary_email'      => 'email|unique:users,secondary_email,{id}',
         'password'             => 'min:8',
-        'display_name'          => '',
+        'display_name'          => 'unique:users,display_name,{id}',
         'monthly_subscription' => '',
         'rules_agreed'         => '',
     ];
