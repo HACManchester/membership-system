@@ -1,6 +1,8 @@
-<?php namespace BB\Helpers;
+<?php
 
-use GuzzleHttp\Client as HttpClient;
+namespace BB\Helpers;
+
+use GuzzleHttp\Client;
 
 class TelegramHelper
 {
@@ -12,34 +14,39 @@ class TelegramHelper
 
     private $identifier = '';
 
-    public function __construct($id)
+    /** @var Client */
+    protected $client;
+
+    public function __construct($id, Client $client = null)
     {
         $this->identifier = $id;
+        $this->client = $client ?? new Client();
     }
 
-    private function getId($level){
+    private function getId($level)
+    {
         $emoji = "ℹ️";
 
-        switch ($level) { 
-            case(self::JOB):
+        switch ($level) {
+            case (self::JOB):
                 $emoji = "⏰";
                 break;
-            case(self::LOG):
+            case (self::LOG):
                 $emoji = "📜";
                 break;
-            case(self::RENDER):
+            case (self::RENDER):
                 $emoji = "👀";
                 break;
-            case(self::ERROR):
+            case (self::ERROR):
                 $emoji = "🛑";
                 break;
-            case(self::WARNING):
+            case (self::WARNING):
                 $emoji = "⚠️";
                 break;
         }
 
         $id = $this->identifier ? " [" . $this->identifier . "] " : "";
-        return urlencode("$emoji $id ");
+        return "$emoji $id";
     }
 
     public function notify($level, $message)
@@ -50,13 +57,20 @@ class TelegramHelper
         if (empty($botKey) || empty($botChat)) {
             return;
         }
-        
-        // TODO: Replace with Notifications pushing to a Telegram notification channel?
-        (new HttpClient)->get(
-            "https://api.telegram.org/bot{$botKey}/sendMessage" .
-            "?parse_mode=HTML&chat_id=${botChat}". 
-            "&text=" . $this->getId($level) . urlencode($message)
-        );
-    }
 
-} 
+        $formattedMessage = $this->getId($level) . $message;
+
+        \Log::info("Telegram message: {$formattedMessage}");
+
+        // TODO: Replace with Notifications pushing to a Telegram notification channel?
+        try {
+            $this->client->get(
+                "https://api.telegram.org/bot{$botKey}/sendMessage" .
+                    "?parse_mode=HTML&chat_id=${botChat}" .
+                    "&text=" . urlencode($formattedMessage)
+            );
+        } catch (\Exception $e) {
+            \Log::error("Failed to send Telegram message: {$e->getMessage()}");
+        }
+    }
+}
