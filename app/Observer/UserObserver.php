@@ -2,6 +2,7 @@
 
 use BB\Events\MemberBecameActive;
 use BB\Events\MemberBecameInactive;
+use BB\Events\MemberDiscourseParamsChanged;
 use BB\Mailer\UserMailer;
 use BB\Helpers\TelegramHelper;
 use Illuminate\Support\Facades\Log;
@@ -62,6 +63,20 @@ class UserObserver
         if ($original['active'] === true && $user->active === false) {
             event(new MemberBecameInactive($user));
         }
+
+        // Make sure this list is in sync with the fields DiscourseSyncSubscriber uses
+        // TODO: Flip dependency here to pull these from one centralised list on user? Or some intermediary class?
+        $discourseFields = [
+            'email',
+            'name',
+            'suppress_real_name',
+            'given_name',
+            'family_name',
+            'banned',
+        ];        
+        if (!empty(array_intersect($discourseFields, array_keys($user->getDirty())))) {
+            event(new MemberDiscourseParamsChanged($user));
+        };
     }
 
     /**

@@ -3,6 +3,7 @@
 use BB\Entities\User;
 use BB\Events\MemberBecameInactive;
 use BB\Events\MemberBecameActive;
+use BB\Events\MemberDiscourseParamsChanged;
 use BB\Jobs\DiscourseSync;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Bus;
@@ -58,6 +59,23 @@ class DiscourseSyncSubscriberTest extends TestCase
 
         Bus::assertDispatched(DiscourseSync::class, function ($job) {
             return $job->user->display_name === 'Inactive Ivan';
+        });
+    }
+    
+    public function testsMemberDiscourseParamsChanged()
+    {
+        Bus::fake();
+
+        $user = factory(User::class)->create([
+            'display_name' => 'Updated Ulysses'
+        ]);
+
+        Event::dispatch(
+            (new MemberDiscourseParamsChanged($user))
+        );
+
+        Bus::assertDispatched(DiscourseSync::class, function ($job) {
+            return $job->user->display_name === 'Updated Ulysses';
         });
     }
 }

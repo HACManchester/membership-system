@@ -46,11 +46,11 @@ class DiscourseSync implements ShouldQueue
 
     protected function sso_params()
     {
-        $this->user->isActive();
-
         return [
             'external_id' => $this->user->id,
 
+            // Make sure UserObserver@saved triggers MemberDiscourseParamsChanged for any field that are used here
+            // TODO: Flip dependency here to pull these from one centralised list on user? Or some intermediary class?
             'email' => $this->user->email,
             'username' => $this->user->name,
             'name' => $this->user->suppress_real_name ? $this->user->name : ($this->user->given_name . " " . $this->user->family_name),
