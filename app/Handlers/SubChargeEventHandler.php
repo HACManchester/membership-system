@@ -1,4 +1,6 @@
-<?php namespace BB\Handlers;
+<?php
+
+namespace BB\Handlers;
 
 use BB\Helpers\MembershipPayments;
 use BB\Repo\SubscriptionChargeRepository;
@@ -12,19 +14,13 @@ class SubChargeEventHandler
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var SubscriptionChargeRepository
-     */
-    private $subscriptionChargeRepository;
 
     /**
      * @param UserRepository               $userRepository
-     * @param SubscriptionChargeRepository $subscriptionChargeRepository
      */
-    public function __construct(UserRepository $userRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
 
 
@@ -39,8 +35,7 @@ class SubChargeEventHandler
     public function onPaid($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $user = $this->userRepository->getById($userId);
-        /** @var $user \BB\Entities\User */
-
+        
         $user->extendMembership(null, $paymentDate->addMonth());
     }
 
@@ -55,7 +50,6 @@ class SubChargeEventHandler
     public function onProcessing($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $user = $this->userRepository->getById($userId);
-        /** @var $user \BB\Entities\User */
 
         $user->extendMembership(null, $paymentDate->addMonth());
     }
@@ -71,13 +65,13 @@ class SubChargeEventHandler
     public function onPaymentFailure($chargeId, $userId, Carbon $paymentDate, $amount)
     {
         $paidUntil = MembershipPayments::lastUserPaymentExpires($userId);
+
         $user = $this->userRepository->getById($userId);
-        /** @var $user \BB\Entities\User */
+
         if ($paidUntil) {
             $user->extendMembership(null, $paidUntil);
         } else {
             $user->extendMembership(null, Carbon::now());
         }
     }
-
-} 
+}

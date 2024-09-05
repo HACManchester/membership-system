@@ -42,6 +42,15 @@ class UserRepository extends DBRepository
         $this->paymentRepository = \App::make('\BB\Repo\PaymentRepository');
     }
 
+    /**
+     * @param integer $id
+     * @return User
+     */
+    public function getById($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function getActive()
     {
         return $this->model->active()->get();
@@ -292,7 +301,7 @@ class UserRepository extends DBRepository
         $user = $this->getById($userId);
         $user->active       = false;
         $user->status       = 'left';
-        $user->payment_day  = '';
+        $user->payment_day  = 0;
         $user->save();
 
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
