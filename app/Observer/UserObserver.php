@@ -68,7 +68,7 @@ class UserObserver
         // TODO: Flip dependency here to pull these from one centralised list on user? Or some intermediary class?
         $discourseFields = [
             'email',
-            'name',
+            'display_name',
             'suppress_real_name',
             'given_name',
             'family_name',
