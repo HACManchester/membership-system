@@ -182,6 +182,7 @@
             {!! HTML::sideNavLink('Members', 'members.index') !!}
             {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
             {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
+            {!! HTML::sideNavLink('Induction courses', 'courses.index') !!}
             {!! HTML::sideNavLink('Stats', 'stats.index') !!}
             {!! HTML::sideNavLink('Area Coordinators', 'equipment_area.index') !!}
             
