@@ -260,6 +260,7 @@ class AccountController extends Controller
 
         $inductions = $this->equipmentRepository->getRequiresInduction();
 
+        // todo: make these variable names make sense
         $userInductions = $user->inductions()->get();
         foreach ($inductions as $i=>$induction) {
             $inductions[$i]->userInduction = false;

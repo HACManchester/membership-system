@@ -15,18 +15,12 @@
             <th>Cost</th>
             <th>Induction</th>
             <th>Access Code</th>
-            <th>
-                @if (Auth::user()->isAdmin())
-                Inducted Status
-                <span class="label label-danger">Admin</span>
-                @endif
-            </th>
-            <th>
-                @if (Auth::user()->isAdmin())
-                Can Induct Members
-                <span class="label label-danger">Admin</span>
-                @endif
-            </th>
+            @if (Auth::user()->isAdmin())
+                <th>
+                    Inducted Status
+                    <span class="label label-danger">Admin</span>
+                </th>
+            @endif
         </tr>
         </thead>
         <tbody>
@@ -52,27 +46,15 @@
                     @endif
                 @endif
             </td>
-            <td>
-                @if (Auth::user()->isAdmin() && $item->userInduction && !$item->userInduction->is_trained)
-                {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
-                {!! Form::text('trainer_user_id', '', ['class'=>'form-control']) !!}
-                {!! Form::hidden('mark_trained', '1') !!}
-                {!! Form::submit('Inducted By', array('class'=>'btn btn-default btn-xs')) !!}
-                {!! Form::close() !!}
-                @elseif ($item->userInduction && $item->userInduction->is_trained)
-                {{ $item->userInduction->trainer_user->name ?? 'inducted' }}
-                @endif
-            </td>
-            <td>
-                @if (Auth::user()->isAdmin() && $item->userInduction && $item->userInduction->is_trained && !$item->userInduction->is_trainer)
-                {!! Form::open(array('method'=>'PUT', 'route' => ['account.induction.update', $user->id, $item->userInduction->id])) !!}
-                {!! Form::hidden('is_trainer', '1') !!}
-                {!! Form::submit('Make a Trainer', array('class'=>'btn btn-default btn-xs')) !!}
-                {!! Form::close() !!}
-                @elseif ($item->userInduction && $item->userInduction->is_trained && $item->userInduction->is_trainer)
-                Yes
-                @endif
-            </td>
+            @if (Auth::user()->isAdmin())
+                <td>
+                    @if ($item->userInduction && !$item->userInduction->is_trained)
+                        Awaiting training
+                    @elseif ($item->userInduction && $item->userInduction->is_trained)
+                        {{ $item->userInduction->trainer_user->name ?? 'Inducted' }}
+                    @endif
+                </td>
+            @endif
         </tr>
         @endforeach
         </tbody>
