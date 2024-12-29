@@ -111,8 +111,6 @@
                                     <p>
                                         Make a payment for your usage of this equipment below.
                                     </p>
-
-                                    <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="access_fee" data-ref="{{ $equipment->slug }}"></div>
                                 </div>
                             @endif
                         @else

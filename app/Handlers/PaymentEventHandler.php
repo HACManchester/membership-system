@@ -67,13 +67,6 @@ class PaymentEventHandler
 
             $this->recordDoorKeyPaymentId($userId, $paymentId);
 
-        } elseif ($reason == 'storage-box') {
-
-
-        } elseif ($reason == 'equipment-fee') {
-
-            $this->updateBalance($userId);
-
         } elseif ($reason == 'costs') {
 
             $this->updateBalance($userId);

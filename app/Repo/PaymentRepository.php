@@ -292,18 +292,6 @@ class PaymentRepository extends DBRepository
     }
 
     /**
-     * @param string $referencePrefix
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getEquipmentFeePayments($referencePrefix)
-    {
-        return $this->model->where('reason', 'equipment-fee')->get()->filter(function ($payment) use ($referencePrefix) {
-            return strpos($payment->reference, ':' . $referencePrefix) !== false;
-        });
-    }
-
-
-    /**
      * Return a paginated list of balance affecting payment for a user
      * @param $userId
      * @return \Illuminate\Database\Eloquent\Collection
