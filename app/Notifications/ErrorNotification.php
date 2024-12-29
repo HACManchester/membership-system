@@ -46,11 +46,16 @@ class ErrorNotification extends Notification
      */
     public function via($notifiable)
     {
+        if (!config('services.telegram-bot-api.enabled')) {
+            return [];
+        }
+
         return [TelegramChannel::class];
     }
 
     public function toTelegram($notifiable)
     {
+
         $icon = array(
             'error' => '🛑',
             'warn' => '⚠️',
