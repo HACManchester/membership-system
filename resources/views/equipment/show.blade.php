@@ -68,15 +68,15 @@
                                 <ul>
                                     <li>An induction is required before you may use this tool.</li>
                                     <li>Inductions are given by other members, request an induction for details on next steps.</li>
-                                    <li>The access fee, if any, goes towards equipment maintenance.</li>
-                                    <li><strong>Equipment access fee: {{ $equipment->present()->accessFee }}</strong></li>
                                 </ul>
                                 
                                 @if ($equipment->accepting_inductions)
                                     @if(Auth::user()->online_only)
                                         <h4>Online Only members may not use tools or request inductions.</h4>
                                     @else
-                                        <div class="paymentModule" data-reason="induction" data-display-reason="Equipment Access Fee" data-button-label="{{ $equipment->access_fee == 0 ? 'Request Free Induction' : 'Pay Induction Fee' }}" data-methods="balance" data-amount="{{ $equipment->access_fee }}" data-ref="{{ $equipment->induction_category }}"></div>
+                                        {!! Form::open(['method'=>'POST', 'route' => ['equipment_training.create', 'equipment' => $equipment]]) !!}
+                                            {!! Form::submit('Request induction', array('class'=>'btn btn-primary')) !!}
+                                        {!! Form::close() !!}
                                     @endif
                                 @else
                                     <div class="alert alert-warning">
@@ -112,12 +112,12 @@
                                         Make a payment for your usage of this equipment below.
                                     </p>
 
-                                    <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="balance" data-ref="{{ $equipment->slug }}"></div>
+                                    <div class="paymentModule" data-reason="equipment-fee" data-display-reason="Usage Fee" data-button-label="Pay Now" data-methods="access_fee" data-ref="{{ $equipment->slug }}"></div>
                                 </div>
                             @endif
                         @else
                             @if ($equipment->induction_instructions)
-                            <div class="alert alert-info">
+                                <div class="alert alert-info">
                                     <h3>🔴 Training Next Steps</h3>
                                     {!! $equipment->present()->induction_instructions !!}
                                 </div>
@@ -284,10 +284,8 @@
                                 @endif
                             </div>
                             <div>
-                                @can('train', $equipment)
-                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainer->user->id, $trainer->id])) !!}
-                                    {!! Form::hidden('not_trainer', '1') !!}
-                                    {!! Form::hidden('slug', $equipment->slug) !!}
+                                @can('demote', $trainer)
+                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.demote', 'equipment' => $equipment, 'induction' => $trainer])) !!}
                                     {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
                                     {!! Form::close() !!}
                                 @endcan
@@ -313,33 +311,31 @@
                 <h3>Trained Members</h3>
                 <p>There are currently <strong>{{ count($trainedUsers) }}</strong> members who are trained to use this tool.</p>
                 <div class="infobox__grid">
-                    @foreach($trainedUsers as $trainedUser)
+                    @foreach($trainedUsers as $inductionRecord)
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <div>
-                                <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                    {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                    {{ $trainedUser->user->name }}
+                                <a href="{{ route('members.show', $inductionRecord->user->id) }}">
+                                    {!! HTML::memberPhoto($inductionRecord->user->profile, $inductionRecord->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    {{ $inductionRecord->user->name }}
                                 </a>
-                                @if ($trainedUser->user->pronouns)
-                                    <span>({{ $trainedUser->user->pronouns }})</span>
+                                @if ($inductionRecord->user->pronouns)
+                                    <span>({{ $inductionRecord->user->pronouns }})</span>
                                 @endif
                             </div>
-                            <p><strong>Trained:</strong> <span>{{ $trainedUser->trained->toFormattedDateString() }}</span></p>
-                            @can('train', $equipment)
-                                <div>
-                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                                    {!! Form::hidden('mark_untrained', '1') !!}
-                                    {!! Form::hidden('slug', $equipment->slug) !!}
+                            <p><strong>Trained:</strong> <span>{{ $inductionRecord->trained->toFormattedDateString() }}</span></p>
+                            <div>
+                                @can('untrain', $inductionRecord)
+                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.untrain', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
                                     {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
                                     {!! Form::close() !!}
+                                @endcan
 
-                                    {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
-                                    {!! Form::hidden('is_trainer', '1') !!}
-                                    {!! Form::hidden('slug', $equipment->slug) !!}
-                                    {!! Form::submit('🎓', array('class'=> $trainedUser->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default')) !!}
+                                @can('promote', $inductionRecord)
+                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.promote', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
+                                    {!! Form::submit('🎓', array('class'=> $inductionRecord->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default')) !!}
                                     {!! Form::close() !!}
-                                </div>
-                            @endcan
+                                @endcan
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -372,35 +368,35 @@
                 @endif
                 <div class="infobox__grid">
 
-                    @foreach($usersPendingInduction as $trainedUser)
-                        @if (Auth::user()->can('train', $equipment) || $trainedUser->user->id == Auth::user()->id)
+                    @foreach($usersPendingInduction as $inductionRecord)
+                        @if (Auth::user()->can('view', $inductionRecord) || $inductionRecord->user->id == Auth::user()->id)
                             <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
-                                    <a href="{{ route('members.show', $trainedUser->user->id) }}">
-                                        {!! HTML::memberPhoto($trainedUser->user->profile, $trainedUser->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                        {{ $trainedUser->user->name }}
+                                    <a href="{{ route('members.show', $inductionRecord->user->id) }}">
+                                        {!! HTML::memberPhoto($inductionRecord->user->profile, $inductionRecord->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                        {{ $inductionRecord->user->name }}
                                     </a>
-                                    @if ($trainedUser->user->pronouns)
-                                        <span>({{ $trainedUser->user->pronouns }})</span>
+                                    @if ($inductionRecord->user->pronouns)
+                                        <span>({{ $inductionRecord->user->pronouns }})</span>
                                     @endif
-                                    <p><strong>Requested:</strong> <span>{{ $trainedUser->created_at->toFormattedDateString() }} ({{ $trainedUser->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
+                                    <p><strong>Requested:</strong> <span>{{ $inductionRecord->created_at->toFormattedDateString() }} ({{ $inductionRecord->created_at->diff($now)->format("%yy, %mm, %dd") }})</span></p>
                                 </div>
                                 
-                                @can('train', $equipment)
-                                    <div>
-                                        {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.destroy', $trainedUser->user->id, $trainedUser->id])) !!}
-                                        {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
-                                        {!! Form::hidden('slug', $equipment->slug) !!}
+                                <div>
+                                    @can('delete', $inductionRecord)
+                                        {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.destroy', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
                                         {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
                                         {!! Form::close() !!}
-                                        {!! Form::open(array('method'=>'PUT', 'style'=>'display:inline;float:right;', 'route' => ['account.induction.update', $trainedUser->user->id, $trainedUser->id])) !!}
+                                    @endcan
+
+                                    @can('train', $inductionRecord)
+                                        {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.train', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
                                         {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
                                         {!! Form::hidden('mark_trained', '1') !!}
-                                        {!! Form::hidden('slug', $equipment->slug) !!}
                                         {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
                                         {!! Form::close() !!}
-                                    </div>
-                                @endcan
+                                    @endcan
+                                </div>
                             </div>
                         @endif
                     @endforeach
@@ -408,9 +404,8 @@
                     @can('train', $equipment)
                         <div class="infobox__grid-item infobox__grid-item--footer">
                             <p>Add a member</p>
-                            {!! Form::open(array('method'=>'POST', 'route' => ['equipment_training.create'])) !!}
+                            {!! Form::open(['method'=>'POST', 'route' => ['equipment_training.create', 'equipment' => $equipment]]) !!}
                             {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                            {!! Form::hidden('slug', $equipment->slug) !!}
                             {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
                             {!! Form::close() !!}
                         </div>
@@ -425,9 +420,8 @@
             </div>
         </div>
     </div>
-
-
 @endif
+
 <br/>
 <div class="row">
     <div class="col col-sm-12">

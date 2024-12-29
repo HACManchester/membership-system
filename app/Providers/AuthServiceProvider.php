@@ -6,11 +6,13 @@ namespace BB\Providers;
 
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
+use BB\Entities\Induction;
 use BB\Entities\KeyFob;
 use BB\Entities\StorageBox;
 use BB\Entities\User;
 use BB\Policies\EquipmentAreaPolicy;
 use BB\Policies\EquipmentPolicy;
+use BB\Policies\InductionPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\StorageBoxPolicy;
 use BB\Policies\UserPolicy;
@@ -29,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         StorageBox::class => StorageBoxPolicy::class,
         EquipmentArea::class => EquipmentAreaPolicy::class,
+        Induction::class => InductionPolicy::class,
     ];
 
     /**

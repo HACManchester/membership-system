@@ -1,45 +1,21 @@
-<?php namespace BB\Http\Controllers;
+<?php
 
+namespace BB\Http\Controllers;
+
+use BB\Entities\Equipment;
 use BB\Entities\Induction;
+use BB\Entities\User;
 use BB\Events\Inductions\InductionCompletedEvent;
 use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
 use BB\Events\Inductions\InductionRequestedEvent;
-use BB\Exceptions\PaymentException;
-use BB\Repo\PaymentRepository;
+use BB\Http\Requests\StoreInductionRequest;
+use BB\Http\Requests\TrainInductionRequest;
 
 class InductionController extends Controller
 {
-
-    /**
-     * @var \BB\Repo\InductionRepository
-     */
-    private $inductionRepository;
-    /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
-    /**
-     * @var PaymentRepository
-     */
-    private $paymentRepository;
-
-    /**
-     * @param \BB\Repo\InductionRepository $inductionRepository
-     */
-    function __construct(\BB\Repo\InductionRepository $inductionRepository, \BB\Repo\EquipmentRepository $equipmentRepository, PaymentRepository $paymentRepository)
+    public function store(Equipment $equipment, StoreInductionRequest $request)
     {
-        $this->inductionRepository = $inductionRepository;
-        $this->equipmentRepository = $equipmentRepository;
-        $this->paymentRepository = $paymentRepository;
-    }
-
-    public function create(){
-        $slug = \Request::input('slug', false);
-        $userId = \Request::input('user_id');
-
-        $equipment = $this->equipmentRepository->findBySlug($slug);
-
-        $this->authorize('train', $equipment);
+        $userId = $request->input('user_id', \Auth::user()->id);
 
         $induction = Induction::create([
             'user_id' => $userId,
@@ -47,63 +23,61 @@ class InductionController extends Controller
             'paid' => true,
             'payment_id' => 0
         ]);
+
         \Event::dispatch(new InductionRequestedEvent($induction));
-        
-        return \Redirect::route('equipment.show', $slug);
+
+        return \Redirect::route('equipment.show', $equipment);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param      $userId
-     * @param  int $id
-     * @throws \BB\Exceptions\NotImplementedException
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update($userId, $id)
+    public function train(Equipment $equipment, Induction $induction, TrainInductionRequest $request)
     {
-        $slug = \Request::input('slug', false);
-        $induction = Induction::findOrFail($id);
+        $trainer = User::find($request->input('trainer_user_id'));
 
-        $equipment = $this->equipmentRepository->findBySlug($slug);
+        $induction->update([
+            'trained' => \Carbon\Carbon::now(),
+            'trainer_user_id' => $trainer,
+        ]);
 
-        $this->authorize('train', $equipment);
+        \Event::dispatch(new InductionCompletedEvent($induction));
 
-        if (\Request::input('mark_trained', false)) {
-            $induction->trained = \Carbon\Carbon::now();
-            $induction->trainer_user_id = \Request::input('trainer_user_id', false);
-            $induction->save();
-            
-            \Event::dispatch(new InductionCompletedEvent($induction));
-        } elseif (\Request::input('is_trainer', false)) {
-            $induction->is_trainer = true;
-            $induction->save();
-            
-            \Event::dispatch(new InductionMarkedAsTrainerEvent($induction));
-        } elseif (\Request::input('not_trainer', false)) {
-            $induction->is_trainer = false;
-            $induction->save();
-        } elseif (\Request::input('mark_untrained', false)) {
-            $induction->trained = null;
-            $induction->trainer_user_id = 0;
-            $induction->save();
-        } elseif (\Request::input('cancel_payment', false)) {
-            if ($induction->trained) {
-                throw new \BB\Exceptions\NotImplementedException();
-            }
-            //$payment = $this->paymentRepository->getById($induction->payment_id);
-            $this->paymentRepository->refundPaymentToBalance($induction->payment_id);
-            $this->inductionRepository->delete($id);
-        } else {
-            throw new \BB\Exceptions\NotImplementedException();
-        }
-        \FlashNotification::success("Induction record has been updated");
-        if($slug){
-            return \Redirect::route('equipment.show', $slug);
-        }
-        return \Redirect::route('account.show', $userId);
+        return \Redirect::route('equipment.show', $equipment);
     }
 
+    public function untrain(Equipment $equipment, Induction $induction)
+    {
+        $this->authorize('untrain', $induction);
+
+        $induction->update([
+            'trained' => null,
+            'trainer_user_id' => 0
+        ]);
+
+        return \Redirect::route('equipment.show', $equipment);
+    }
+
+    public function promote(Equipment $equipment, Induction $induction)
+    {
+        $this->authorize('promote', $induction);
+
+        $induction->update([
+            'is_trainer' => true
+        ]);
+
+        \Event::dispatch(new InductionMarkedAsTrainerEvent($induction));
+
+        return \Redirect::route('equipment.show', $equipment);
+    }
+
+    public function demote(Equipment $equipment, Induction $induction)
+    {
+        $this->authorize('demote', $induction);
+
+        $induction->update([
+            'is_trainer' => false
+        ]);
+
+        return \Redirect::route('equipment.show', $equipment);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -111,18 +85,12 @@ class InductionController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function destroy($uid, $id)
+    public function destroy(Equipment $equipment, Induction $induction)
     {
-        $slug = \Request::input('slug', false);
-        $induction = Induction::findOrFail($id);
-        $equipment = $this->equipmentRepository->findBySlug($slug);
-
-        $this->authorize('train', $equipment);
+        $this->authorize('delete', $induction);
 
         $induction->delete();
-        
-        return \Redirect::route('equipment.show', $slug);
+
+        return \Redirect::route('equipment.show', $equipment);
     }
-
-
 }

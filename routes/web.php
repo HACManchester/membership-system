@@ -125,12 +125,13 @@ Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.go
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
-    Route::post('equipment_training/create', ['uses' => 'InductionController@create', 'as' => 'equipment_training.create']);
-    Route::post('equipment_training/update', ['uses' => 'InductionController@update', 'as' => 'equipment_training.update']);
-    Route::resource('account.induction', 'InductionController', ['only' => ['update', 'destroy', 'create']]);
+    Route::post('equipment/{equipment}/induction', ['uses' => 'InductionController@store', 'as' => 'equipment_training.create']);
+    Route::post('equipment/{equipment}/induction/{induction}/train', ['uses' => 'InductionController@train', 'as' => 'equipment_training.train']);
+    Route::post('equipment/{equipment}/induction/{induction}/untrain', ['uses' => 'InductionController@untrain', 'as' => 'equipment_training.untrain']);
+    Route::post('equipment/{equipment}/induction/{induction}/promote', ['uses' => 'InductionController@promote', 'as' => 'equipment_training.promote']);
+    Route::post('equipment/{equipment}/induction/{induction}/demote', ['uses' => 'InductionController@demote', 'as' => 'equipment_training.demote']);
+    Route::delete('equipment/{equipment}/induction/{induction}', ['uses' => 'InductionController@destroy', 'as' => 'equipment_training.destroy']);
 });
-
-
 
 ##########################
 # Equipment

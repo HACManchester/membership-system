@@ -1,4 +1,6 @@
-<?php namespace BB\Entities;
+<?php
+
+namespace BB\Entities;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -26,19 +28,36 @@ class Induction extends Model
      */
     protected $hidden = array();
 
-
     /**
      * Fillable fields
      *
      * @var array
      */
     protected $fillable = [
-        'key', 'user_id', 'paid', 'payment_id', 'trained', 'active'
+        'key',
+        'user_id',
+        'paid',
+        'payment_id',
+        'trained',
+        'active',
+        'is_trainer',
+        'trainer_user_id'
     ];
 
-
     protected $attributes = [
+        'active' => false,
+        'paid' => false,
+        'is_trainer' => false,
 
+        // TODO: Make these nullable?
+        'payment_id' => 0,
+        'trainer_user_id' => 0,
+    ];
+
+    protected $casts = [
+        'paid' => 'boolean',
+        'active' => 'boolean',
+        'is_trainer' => 'boolean',
     ];
 
     public function getDates()
@@ -49,7 +68,7 @@ class Induction extends Model
 
     public function getIsTrainedAttribute()
     {
-        return ( ! empty($this->trained));
+        return (! empty($this->trained));
     }
 
 
@@ -81,7 +100,7 @@ class Induction extends Model
     public static function trainersForDropdown($key)
     {
         $trainers = self::trainersFor($key);
-        $trainersArray = [null=>'Unknown'];
+        $trainersArray = [null => 'Unknown'];
 
         foreach ($trainers as $trainer) {
             $trainersArray[$trainer->user->id] = $trainer->user->name;
