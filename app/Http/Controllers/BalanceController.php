@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class BalanceController extends Controller
 {
-
     /**
      * @var \BB\Repo\UserRepository
      */

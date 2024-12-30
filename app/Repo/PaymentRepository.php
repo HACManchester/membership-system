@@ -3,7 +3,6 @@
 namespace BB\Repo;
 
 use BB\Entities\Payment;
-use BB\Events\MemberBalanceChanged;
 use BB\Events\PaymentCancelled;
 use BB\Exceptions\NotImplementedException;
 use BB\Exceptions\PaymentException;

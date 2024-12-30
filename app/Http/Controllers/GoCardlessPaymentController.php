@@ -43,11 +43,10 @@ class GoCardlessPaymentController extends Controller
         $reason = $requestData['reason'];
         $amount = ($requestData['amount'] * 1) / 100;
         $returnPath = $requestData['return_path'];
-        $ref = $this->getReference($reason);
 
         if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
-            return $this->handleBill($amount, $reason, $user, $ref, $returnPath);
+            return $this->handleBill($amount, $reason, $user, $returnPath);
         } elseif ($user->payment_method == 'gocardless') {
 
             return $this->ddMigratePrompt($returnPath);
@@ -76,11 +75,10 @@ class GoCardlessPaymentController extends Controller
      * @param $returnPath
      * @return mixed
      */
-    private function handleBill($amount, $reason, $user, $ref, $returnPath)
+    private function handleBill($amount, $reason, $user, $returnPath)
     {
-        if (is_null($ref)) {
-            $ref = '';
-        }
+        $ref = '';
+
         try {
             $bill = $this->goCardless->newBill($user->mandate_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
             //Store the payment
@@ -126,14 +124,6 @@ class GoCardlessPaymentController extends Controller
             \FlashNotification::error("We encountered an error taking your payment.");
             return \Redirect::to($returnPath);
         }
-    }
-
-    private function getReference($reason)
-    {
-        if ($reason == 'balance') {
-            return \Request::get('reference');
-        }
-        return false;
     }
 
     public function cancel(Payment $payment)

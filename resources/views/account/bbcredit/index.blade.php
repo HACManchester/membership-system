@@ -28,30 +28,18 @@ Hackspace Manchester Balance
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
-
                 <h4>
-                    Manage your Hackspace Balance, you can use it for paying for laser time, paying for materials that you use in the space, or paying for replacement access fobs.
+                    Balances have been removed from the Hackspace Manchester membership system.
                 </h4>
                 <br>
                 <p>
-                    You can top up either by direct debit, or by putting cash in the pot in the space.
+                    Now that we are able to take card payments at the Hackspace we have removed the online balance features.
+                    Paying via card is much more cost effective for us, and makes it easier to maintain our digital systems.
                 </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h3>💰 Add Credit</h3>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Top up with card or cash</h3>
-            </div>
-            <div class="panel-body">
-                <p>Top Up Using Cash Topup or Direct Debit - select which you'd like from the dropdown.</p> <br>
-                <p>Note: if you don't have a direct debit set up you should pay with cash</p>
-                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Add Credit" data-methods="gocardless"></div>
+                <p>
+                  If you need to make a payment but are unable to visit the Hackspace in person, please contact the board
+                  on <a href="board@hacman.org.uk">board@hacman.org.uk</a>.
+                </p>
             </div>
         </div>
     </div>

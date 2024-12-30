@@ -170,28 +170,6 @@ class PaymentController extends Controller
 
             $user->storage_box_payment_id = $payment->id;
             $user->save();
-        } elseif ($reason == 'balance') {
-            $amount = $request->validate([
-                'amount' => 'required|numeric'
-            ]);
-            $payment = new Payment([
-                'reason'           => 'balance',
-                'source'           => \Request::input('source'),
-                'source_id'        => '',
-                'amount'           => $amount,
-                'amount_minus_fee' => $amount,
-                'status'           => 'paid'
-            ]);
-            $user->payments()->save($payment);
-
-            $memberCreditService = \App::make('\BB\Services\Credit');
-            $memberCreditService->setUserId($user->id);
-            $memberCreditService->recalculate();
-
-            //This needs to be improved
-            \FlashNotification::success('Payment recorded');
-
-            return \Redirect::route('account.bbcredit.index', $user->id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
@@ -253,9 +231,6 @@ class PaymentController extends Controller
         //we can only allow some records to get deleted, only cash payments can be removed, everything else must be refunded off
         if ($payment->source != 'cash') {
             throw new \BB\Exceptions\ValidationException('Only cash payments can be deleted');
-        }
-        if ($payment->reason != 'balance') {
-            throw new \BB\Exceptions\ValidationException('Currently only payments to the members balance can be deleted');
         }
 
         //The delete event will broadcast an event and allow related actions to occur

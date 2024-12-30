@@ -27,8 +27,7 @@
 <p>Please note that payments will be taken monthly with reference Manchester Makers Ltd which is the legal name of Hackspace Manchester.</p>
 
 <h2>🤸 Manage your Membership</h2>
-<p>You can manage your membership on our Members Portal - which you can access using your email address and password you set when you joined. This can be accessed at <a href="https://members.hacman.org.uk"> members.hacman.org.uk</a> and allows you to amend your direct debit and top up your Hacman Balance for paying for any fees related to equipment induction or usage.</p>
-<p>You can also use this system if you need to claim short term project storage shelf/cube.</p>
+<p>You can manage your membership on our Members Portal - which you can access using your email address and password you set when you joined. This can be accessed at <a href="https://members.hacman.org.uk"> members.hacman.org.uk</a> and allows you to amend your direct debit, or request inductions on pieces of equipment.</p>
 
 <h2>👋 Chat with us</h2>
 <p>We have two main channels of communication online, our forum and Telegram.</p>

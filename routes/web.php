@@ -48,7 +48,6 @@ Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email'
 
 //Balance
 Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'as' => 'account.balance.index', 'middleware' => 'role:member']);
-Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as' => 'account.balance.transfer.create']);
 
 //Inductions
 Route::get('general_induction', ['uses' => 'GeneralInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
@@ -113,7 +112,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::delete('account/{account}/payment/cash', ['as' => 'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 });
 
-//DD Migration to variable payments
 Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'middleware' => 'role:member']);
 
 

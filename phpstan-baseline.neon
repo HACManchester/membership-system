@@ -526,11 +526,6 @@ parameters:
 			path: app/Http/Controllers/PaymentController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$source\\.$#"
 			count: 1
 			path: app/Http/Controllers/PaymentController.php
@@ -562,7 +557,7 @@ parameters:
 
 		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/PaymentController.php
 
 		-
