@@ -41,6 +41,10 @@ class BalancePaymentController extends Controller
         $returnPath  = $requestData['return_path'];
         $ref         = $requestData['ref'] ?: '';
 
+        if ($reason === 'subscription') {
+            throw new \RuntimeException("Subscription payments cannot be taken via balance.");
+        }
+
         //Can the users balance go below 0
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance($reason);
 

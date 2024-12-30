@@ -157,39 +157,4 @@ class SubscriptionController extends Controller
         $charges = $this->subscriptionChargeRepository->getChargesPaginated();
         return \View::make('payments.sub-charges')->with('charges', $charges);
     }
-
-    public function updatePaymentMethod($id)
-    {
-        $user = User::findWithPermission($id);
-        $paymentMethod = \Request::input('payment_method');
-
-        if ($paymentMethod === 'balance' && empty($user->payment_method) && in_array($user->status, ['setting-up', 'left', 'leaving'])) {
-            // Activate a users membership with a payment method of balance
-            $user->payment_method  = 'balance';
-            $user->secondary_payment_method = null;
-            $user->payment_day = Carbon::now()->day;
-            $user->save();
-
-            $this->userRepository->ensureMembershipActive($user->id);
-        }
-
-        if ($paymentMethod === 'balance' && $user->payment_method == 'gocardless-variable') {
-            $user->payment_method  = 'balance';
-            $user->secondary_payment_method = 'gocardless-variable';
-            $user->save();
-        }
-
-        if ($paymentMethod === 'gocardless-variable' && $user->payment_method == 'balance') {
-            if (empty($user->mandate_id)) {
-                $user->payment_method = null;
-            } else {
-                $user->payment_method = 'gocardless-variable';
-            }
-            $user->secondary_payment_method = null;
-            $user->save();
-        }
-
-        \FlashNotification::success('Details Updated');
-        return \Redirect::route('account.show', [$user->id]);
-    }
 }

@@ -70,8 +70,6 @@ class Credit
         switch ($reason) {
             case 'storage-box':
                 return 20;
-            case 'subscription':
-                return 20;
             case 'equipment-fee':
                 return 20;
             default:

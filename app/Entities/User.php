@@ -279,7 +279,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function canMemberChangeSubAmount()
     {
-        return in_array($this->attributes['payment_method'], ['gocardless-variable', 'balance']);
+        // TODO: Invert and pull from payment domain? Or drop it? Do we need to handle different payment methods?
+        return in_array($this->attributes['payment_method'], ['gocardless-variable']);
     }
 
     /**
@@ -290,26 +291,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function isAdmin()
     {
         return Auth::user()->hasRole('admin');
-    }
-
-    /**
-     * Should GoCardless be promoted to the user
-     *
-     * @return bool
-     */
-    public function promoteGoCardless()
-    {
-        return (($this->payment_method != 'balance' && $this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
-    }
-
-    /**
-     * Should we be promoting the new variable gocardless to users?
-     *
-     * @return bool
-     */
-    public function promoteVariableGoCardless()
-    {
-        return (($this->status == 'active') && ($this->payment_method == 'gocardless'));
     }
 
     /**

@@ -8,8 +8,6 @@ use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Events\SubscriptionPayment;
 use BB\Listeners\DiscourseSyncSubscriber;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
-use BB\Listeners\EmailMemberAboutFailedSubscriptionPayment;
-use BB\Listeners\EmailMemberAboutFailedSubscriptionPaymentGoingToBackup;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\ExtendMembership;
 use BB\Listeners\MemberBalanceSubscriber;
@@ -54,12 +52,6 @@ class EventServiceProvider extends ServiceProvider
 			EmailMemberAboutTrustedStatus::class
 		],
 		'BB\Events\NewMemberNotification' => [],
-		SubscriptionPayment\FailedInsufficientFunds::class => [
-			EmailMemberAboutFailedSubscriptionPayment::class
-		],
-		SubscriptionPayment\InsufficientFundsTryingDirectDebit::class => [
-			EmailMemberAboutFailedSubscriptionPaymentGoingToBackup::class
-		],
 		InductionRequestedEvent::class => [
 			InductionRequestedListener::class
 		],
