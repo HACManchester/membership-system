@@ -24,22 +24,6 @@ class InductionRepository extends DBRepository
         $this->model = $model;
     }
 
-
-    /**
-     * @return array
-     */
-    public function getTrainersByEquipment()
-    {
-        $trainersRaw = $this->model->with('user', 'user.profile')->where('is_trainer', true)->get();
-        $trainers = [];
-        foreach ($trainersRaw as $trainer) {
-            if (isset($trainer->user->name) && $trainer->user->active) {
-                $trainers[$trainer->key][] = $trainer->user;
-            }
-        }
-        return $trainers;
-    }
-
     /**
      * @param $deviceId
      * @return Collection
@@ -64,55 +48,6 @@ class InductionRepository extends DBRepository
             ->count() > 0;
     }
 
-    /**
-     * Get all the users who have been trained on a piece of equipment
-     * @param string $deviceId
-     * @return Collection
-     */
-    public function getUsersForEquipment($deviceId)
-    {
-        $users = new Collection();
-        $inductionUsers = $this->model->with('user')->whereHas('user', function ($q) {
-            $q->where('active', '=', true);
-        })->where('trained', '!=', '')->where('key', $deviceId)->get();
-
-        //Extract the users from the inductions and place into a new collection
-        foreach ($inductionUsers as $inductedUser) {
-            $users->add($inductedUser->user);
-        }
-        return $users;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getUsersPendingInduction()
-    {
-        $usersRaw = $this->model->with('user', 'user.profile')->whereNull('trained')->get();
-        $users = [];
-        foreach ($usersRaw as $induction) {
-            if (isset($induction->user->name) && $induction->user->active) {
-                $users[$induction->key][] = $induction->user;
-            }
-        }
-        return $users;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTrainedUsers()
-    {
-        $usersRaw = $this->model->with('user', 'user.profile')->whereNotNull('trained')->get();
-        $users = [];
-        foreach ($usersRaw as $induction) {
-            if (isset($induction->user->name) && $induction->user->active) {
-                $users[$induction->key][] = $induction->user;
-            }
-        }
-        return $users;
-    }
 
     /**
      * @param string $device

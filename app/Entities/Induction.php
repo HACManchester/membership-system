@@ -45,9 +45,6 @@ class Induction extends Model
     protected $attributes = [
         'active' => false,
         'is_trainer' => false,
-
-        // TODO: Make these nullable?
-        'trainer_user_id' => 0,
     ];
 
     protected $casts = [
@@ -72,25 +69,8 @@ class Induction extends Model
         return $this->belongsTo('\BB\Entities\User');
     }
 
-    public static function findExisting($userId, $key)
-    {
-        return self::where('user_id', $userId)->where('key', $key)->first();
-    }
-
     public static function trainersFor($key)
     {
         return self::where('key', $key)->where('is_trainer', 1)->get();
-    }
-
-    public static function trainersForDropdown($key)
-    {
-        $trainers = self::trainersFor($key);
-        $trainersArray = [null => 'Unknown'];
-
-        foreach ($trainers as $trainer) {
-            $trainersArray[$trainer->user->id] = $trainer->user->name;
-        }
-
-        return $trainersArray;
     }
 }
