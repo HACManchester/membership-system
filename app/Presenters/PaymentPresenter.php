@@ -27,8 +27,6 @@ class PaymentPresenter extends Presenter
                 return 'Withdrawal';
             case 'consumables':
                 return 'Consumables (' . $this->entity->reference . ')';
-            case 'transfer':
-                return 'Transfer (to user:' . $this->entity->reference . ')';
             case 'donation':
                 return 'Donation';
             default:
@@ -76,8 +74,6 @@ class PaymentPresenter extends Presenter
                 return 'BB Balance';
             case 'reimbursement':
                 return 'Reimbursement';
-            case 'transfer':
-                return 'Transfer (from user:' . $this->entity->reference . ')';
             default:
                 return $this->entity->source;
         }

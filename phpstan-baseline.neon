@@ -1001,16 +1001,6 @@ parameters:
 			path: app/Repo/PaymentRepository.php
 
 		-
-			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Parameter \\#8 \\$ref of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: app/Repo/PaymentRepository.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
 			count: 5
 			path: app/Repo/SubscriptionChargeRepository.php
