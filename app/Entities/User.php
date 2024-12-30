@@ -294,26 +294,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Should GoCardless be promoted to the user
-     *
-     * @return bool
-     */
-    public function promoteGoCardless()
-    {
-        return (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
-    }
-
-    /**
-     * Should we be promoting the new variable gocardless to users?
-     *
-     * @return bool
-     */
-    public function promoteVariableGoCardless()
-    {
-        return (($this->status == 'active') && ($this->payment_method == 'gocardless'));
-    }
-
-    /**
      * Get an array of alerts for the user
      *
      * @return array

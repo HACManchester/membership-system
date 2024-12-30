@@ -32,10 +32,6 @@
 @include('account.partials.get-started')
 @include('account.partials.online-only-upsell')
 
-{{-- Payment provider migrations. TODO: Check rollout progress and remove if no longer needed --}}
-@include('account.partials.switch-to-gocardless-panel')
-@include('account.partials.gocardless-variable-switch')
-
 @if ($user->status == 'left')
     @include('account.partials.rejoin')
 @endif
