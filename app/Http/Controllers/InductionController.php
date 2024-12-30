@@ -20,8 +20,6 @@ class InductionController extends Controller
         $induction = Induction::create([
             'user_id' => $userId,
             'key' => $equipment->induction_category,
-            'paid' => true,
-            'payment_id' => 0
         ]);
 
         \Event::dispatch(new InductionRequestedEvent($induction));

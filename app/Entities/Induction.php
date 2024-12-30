@@ -36,8 +36,6 @@ class Induction extends Model
     protected $fillable = [
         'key',
         'user_id',
-        'paid',
-        'payment_id',
         'trained',
         'active',
         'is_trainer',
@@ -46,11 +44,9 @@ class Induction extends Model
 
     protected $attributes = [
         'active' => false,
-        'paid' => false,
         'is_trainer' => false,
 
         // TODO: Make these nullable?
-        'payment_id' => 0,
         'trainer_user_id' => 0,
     ];
 
@@ -66,12 +62,6 @@ class Induction extends Model
     }
 
 
-    public function getIsTrainedAttribute()
-    {
-        return (! empty($this->trained));
-    }
-
-
     public function user()
     {
         return $this->belongsTo('\BB\Entities\User');
@@ -80,11 +70,6 @@ class Induction extends Model
     public function trainerUser()
     {
         return $this->belongsTo('\BB\Entities\User');
-    }
-
-    public function payment()
-    {
-        return $this->belongsTo('\BB\Entities\Payment');
     }
 
     public static function findExisting($userId, $key)
