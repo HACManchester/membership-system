@@ -31,6 +31,7 @@ return [
     ],
 
 	'telegram-bot-api' => [
+		'enabled' => !env('TELEGRAM_NOTIFICATIONS_DISABLED', false),
 		'token' => env('TELEGRAM_BOT_KEY', 'YOUR BOT TOKEN HERE')
 	],
 

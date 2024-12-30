@@ -63,20 +63,9 @@ class PaymentEventHandler
 
             $this->updateSubPayment($paymentId, $userId, $status);
 
-        } elseif ($reason == 'induction') {
-
-            $this->createInductionRecord($userId, $ref, $paymentId);
-
         } elseif ($reason == 'door-key') {
 
             $this->recordDoorKeyPaymentId($userId, $paymentId);
-
-        } elseif ($reason == 'storage-box') {
-
-
-        } elseif ($reason == 'equipment-fee') {
-
-            $this->updateBalance($userId);
 
         } elseif ($reason == 'costs') {
 
@@ -99,9 +88,6 @@ class PaymentEventHandler
     {
         if (($source == 'balance') || ($reason == 'balance')) {
             $this->updateBalance($userId);
-        }
-        if ($reason == 'induction') {
-
         }
 
         if ($reason == 'storage-box') {
@@ -186,19 +172,6 @@ class PaymentEventHandler
         if ($payment->amount != $subCharge->amount) {
             $this->subscriptionChargeRepository->updateAmount($subCharge->id, $payment->amount);
         }
-    }
-
-    private function createInductionRecord($userId, $ref, $paymentId)
-    {
-        /* @TODO: Replace with a repo */
-        /* @TODO: Verify payment amount is valid - this could have been changed */
-        $induction = Induction::create([
-            'user_id' => $userId,
-            'key' => $ref,
-            'paid' => true,
-            'payment_id' => $paymentId
-        ]);
-        \Event::dispatch(new InductionRequestedEvent($induction));
     }
 
     private function recordDoorKeyPaymentId($userId, $paymentId)

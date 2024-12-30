@@ -144,29 +144,6 @@ class PaymentController extends Controller
             $user->payments()->save($payment);
 
             $user->extendMembership(\Request::input('source'), \Carbon\Carbon::now()->addMonth());
-        } elseif ($reason == 'induction') {
-            if (\Request::input('source') == 'manual') {
-                $ref = \Request::input('induction_key');
-                ($item = $this->equipmentRepository->findBySlug($ref)) || App::abort(404);
-                $payment = new Payment([
-                    'reason'           => $reason,
-                    'source'           => 'manual',
-                    'source_id'        => '',
-                    'amount'           => $item->cost,
-                    'amount_minus_fee' => $item->cost,
-                    'status'           => 'paid'
-                ]);
-                $payment = $user->payments()->save($payment);
-                $induction = Induction::create([
-                    'user_id'    => $user->id,
-                    'key'        => $ref,
-                    'paid'       => true,
-                    'payment_id' => $payment->id
-                ]);
-                \Event::dispatch(new InductionRequestedEvent($induction));
-            } else {
-                throw new \BB\Exceptions\NotImplementedException();
-            }
         } elseif ($reason == 'door-key') {
             $payment = new Payment([
                 'reason'           => $reason,

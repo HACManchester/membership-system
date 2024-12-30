@@ -72,8 +72,6 @@ class Credit
                 return 20;
             case 'subscription':
                 return 20;
-            case 'induction':
-                return 20;
             case 'equipment-fee':
                 return 20;
             default:

@@ -128,47 +128,9 @@ class GoCardlessPaymentController extends Controller
         }
     }
 
-
-
-    private function getDescription($reason)
-    {
-        if ($reason == 'subscription') {
-            return "Monthly Subscription Fee - Manual";
-        } elseif ($reason == 'induction') {
-            return strtoupper(\Request::input('induction_key')) . " Induction Fee";
-        } elseif ($reason == 'door-key') {
-            return "Door Key Deposit";
-        } elseif ($reason == 'storage-box') {
-            return "Storage Box Deposit";
-        } elseif ($reason == 'balance') {
-            return "BB Credit Payment";
-        } else {
-            throw new \BB\Exceptions\NotImplementedException();
-        }
-    }
-
-    private function getName($reason, $userId)
-    {
-        if ($reason == 'subscription') {
-            return strtoupper("BBSUB" . $userId . ":MANUAL");
-        } elseif ($reason == 'induction') {
-            return strtoupper("BBINDUCTION" . $userId . ":" . \Request::get('induction_key'));
-        } elseif ($reason == 'door-key') {
-            return strtoupper("BBDOORKEY" . $userId);
-        } elseif ($reason == 'storage-box') {
-            return strtoupper("BBSTORAGEBOX" . $userId);
-        } elseif ($reason == 'balance') {
-            return strtoupper("BBBALANCE" . $userId);
-        } else {
-            throw new \BB\Exceptions\NotImplementedException();
-        }
-    }
-
     private function getReference($reason)
     {
-        if ($reason == 'induction') {
-            return \Request::get('ref');
-        } elseif ($reason == 'balance') {
+        if ($reason == 'balance') {
             return \Request::get('reference');
         }
         return false;

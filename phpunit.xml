@@ -28,5 +28,6 @@
         <server name="DB_DATABASE" value=":memory:"/>
         <server name="MAIL_DRIVER" value="log"/>
         <server name="FORCE_SECURE" value="false"/>
+        <server name="TELEGRAM_NOTIFICATIONS_DISABLED" value="true"/>
     </php>
 </phpunit>

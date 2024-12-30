@@ -1,4 +1,6 @@
-<?php namespace BB\Entities;
+<?php
+
+namespace BB\Entities;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -26,30 +28,34 @@ class Induction extends Model
      */
     protected $hidden = array();
 
-
     /**
      * Fillable fields
      *
      * @var array
      */
     protected $fillable = [
-        'key', 'user_id', 'paid', 'payment_id', 'trained', 'active'
+        'key',
+        'user_id',
+        'trained',
+        'active',
+        'is_trainer',
+        'trainer_user_id'
     ];
 
-
     protected $attributes = [
+        'active' => false,
+        'is_trainer' => false,
+    ];
 
+    protected $casts = [
+        'paid' => 'boolean',
+        'active' => 'boolean',
+        'is_trainer' => 'boolean',
     ];
 
     public function getDates()
     {
         return array('created_at', 'updated_at', 'trained');
-    }
-
-
-    public function getIsTrainedAttribute()
-    {
-        return ( ! empty($this->trained));
     }
 
 
@@ -63,30 +69,8 @@ class Induction extends Model
         return $this->belongsTo('\BB\Entities\User');
     }
 
-    public function payment()
-    {
-        return $this->belongsTo('\BB\Entities\Payment');
-    }
-
-    public static function findExisting($userId, $key)
-    {
-        return self::where('user_id', $userId)->where('key', $key)->first();
-    }
-
     public static function trainersFor($key)
     {
         return self::where('key', $key)->where('is_trainer', 1)->get();
-    }
-
-    public static function trainersForDropdown($key)
-    {
-        $trainers = self::trainersFor($key);
-        $trainersArray = [null=>'Unknown'];
-
-        foreach ($trainers as $trainer) {
-            $trainersArray[$trainer->user->id] = $trainer->user->name;
-        }
-
-        return $trainersArray;
     }
 }
