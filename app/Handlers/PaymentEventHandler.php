@@ -79,7 +79,7 @@ class PaymentEventHandler
      */
     public function onDelete($userId, $source, $reason, $paymentId)
     {
-        if (($source == 'balance') || ($reason == 'balance')) {
+        if ($reason == 'balance') {
             $this->updateBalance($userId);
         }
 

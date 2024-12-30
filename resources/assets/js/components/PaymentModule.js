@@ -22,8 +22,6 @@ class PaymentModule extends React.Component {
 
     this.availableMethods = [
       { key: "gocardless", value: "Direct Debit" },
-      { key: "balance", value: "Balance" },
-      { key: "cash", value: "Cash" },
     ];
 
     this.availablePaymentMethods = this.getPaymentMethodArray();
@@ -216,7 +214,7 @@ PaymentModule.defaultProps = {
   amount: null,
   buttonLabel: "Pay Now",
   onSuccess: function () {},
-  methods: "gocardless,cash,balance",
+  methods: "gocardless",
   reference: null,
   reason: null,
   description: null,

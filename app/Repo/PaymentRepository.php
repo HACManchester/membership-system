@@ -213,34 +213,6 @@ class PaymentRepository extends DBRepository
     }
 
     /**
-     * Take a payment that has been used for something and reassign it to the balance
-     * @param $paymentId
-     *
-     * @throws NotImplementedException
-     */
-    public function refundPaymentToBalance($paymentId)
-    {
-        $payment = $this->getById($paymentId);
-
-        if ($payment->reason === 'donation') {
-            $this->update($paymentId, ['reason' => 'balance']);
-            event(new MemberBalanceChanged($payment->user_id));
-            return;
-        }
-
-        if ($payment->reason === 'induction') {
-            //This method must only be used if the induction record has been cancelled first
-            // otherwise an orphned record will be left behind
-            $this->update($paymentId, ['reason' => 'balance']);
-            event(new MemberBalanceChanged($payment->user_id));
-            return;
-        }
-
-        throw new NotImplementedException('This hasn\'t been built yet');
-    }
-
-
-    /**
      * Fetch the users latest payment of a particular type
      * @param integer $userId
      * @param string  $reason

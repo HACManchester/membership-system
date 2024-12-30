@@ -51,45 +51,7 @@ Hackspace Manchester Balance
             <div class="panel-body">
                 <p>Top Up Using Cash Topup or Direct Debit - select which you'd like from the dropdown.</p> <br>
                 <p>Note: if you don't have a direct debit set up you should pay with cash</p>
-                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Add Credit" data-methods="gocardless,cash2"></div>
-                <br>
-                <p>
-                    
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h3>💸 Log Expenditure</h3>
-<div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Materials</h3>
-            </div>
-            <div class="panel-body">
-                <p>Log purchases of materials such as laser materials, 3D printing filament, etc. </p>
-                <hr/><p>Laser materials</p>
-                <div class="paymentModule" data-reason="Laser Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="laser-materials"></div>
-                <hr/><p>3D printer filament</p>
-                <div class="paymentModule" data-reason="3D Printer Filament" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="3d-printer-filament"></div>
-                <hr/><p>Heat Press Items</p>
-                <div class="paymentModule" data-reason="Heat Press Items" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="heat-press-items"></div>
-                <hr/><p>Other material purchases</p>
-                <div class="paymentModule" data-reason="Misc Materials" data-display-reason="Materials" data-button-label="Buy Now" data-methods="balance" data-ref="misc-materials"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Fob Purchase</h3>
-            </div>
-            <div class="panel-body">
-                <p>Only do this if you need another fob - the first one is on the house</p>
-                <p>Suggested donation is £2</p>
-                <div class="paymentModule" data-reason="Fob" data-display-reason="Usage Fee" data-button-label="Buy Now" data-methods="balance" data-ref="fob"></div>
+                <div class="paymentModule" data-reason="balance" data-display-reason="Balance Payment" data-button-label="Add Credit" data-methods="gocardless"></div>
             </div>
         </div>
     </div>

@@ -527,7 +527,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/PaymentController.php
 
 		-
@@ -967,7 +967,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
-			count: 4
+			count: 3
 			path: app/Repo/PaymentRepository.php
 
 		-
@@ -987,7 +987,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user_id\\.$#"
-			count: 5
+			count: 3
 			path: app/Repo/PaymentRepository.php
 
 		-
