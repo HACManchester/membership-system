@@ -227,14 +227,15 @@ Route::group(array('middleware' => 'role:admin'), function () {
 
 Route::post('settings', 'SettingsController@update')->name('settings.update');
 
-#### 
-## shop
-#####
-
-
-
 ##########################
 # Logviewer
 ##########################
 
 Route::get('logs', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware' => 'role:admin'])->name('logs');
+
+
+##########################
+# Induction courses
+##########################
+
+Route::resource('courses', 'CourseController');
