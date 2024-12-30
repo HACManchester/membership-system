@@ -97,7 +97,6 @@ Route::group(array('middleware' => 'role:finance'), function () {
 
 Route::post('account/{account}/payment/create', ['as' => 'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountController@updateSubscriptionAmount']);
-Route::post('account/{account}/update-sub-method', ['as' => 'account.update-sub-method', 'uses' => 'SubscriptionController@updatePaymentMethod']);
 
 # Payment provider specific urls
 Route::post('account/{account}/payment/gocardless', ['as' => 'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);

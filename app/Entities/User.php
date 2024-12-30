@@ -279,7 +279,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function canMemberChangeSubAmount()
     {
-        return in_array($this->attributes['payment_method'], ['gocardless-variable', 'balance']);
+        // TODO: Invert and pull from payment domain? Or drop it? Do we need to handle different payment methods?
+        return in_array($this->attributes['payment_method'], ['gocardless-variable']);
     }
 
     /**
@@ -299,7 +300,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function promoteGoCardless()
     {
-        return (($this->payment_method != 'balance' && $this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
+        return (($this->payment_method != 'gocardless' && $this->payment_method != 'gocardless-variable') && ($this->status == 'active'));
     }
 
     /**

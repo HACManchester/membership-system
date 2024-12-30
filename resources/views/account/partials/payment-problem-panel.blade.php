@@ -27,7 +27,7 @@
                         Your latest subscription payment has failed and your account has been temporarily suspended.<br />
                         You can retry your payment now.
 
-                        <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless,balance" data-amount="{{ $user->monthly_subscription }}"></div>
+                        <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless" data-amount="{{ $user->monthly_subscription }}"></div>
 
                         @if (Auth::user()->isAdmin())
                             <small>Admins: You cannot do this process on behalf of the member, it will just charge your account.</small>

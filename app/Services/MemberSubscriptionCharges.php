@@ -1,8 +1,6 @@
 <?php namespace BB\Services;
 
 use BB\Entities\User;
-use BB\Events\MemberBalanceChanged;
-use BB\Events\SubscriptionPayment;
 use BB\Helpers\GoCardlessHelper;
 use BB\Helpers\TelegramHelper;
 use BB\Repo\PaymentRepository;
@@ -108,34 +106,6 @@ class MemberSubscriptionCharges
         $goCardlessUsers = $subCharges->filter(function ($charge) {
             return $charge->user->payment_method == 'gocardless-variable';
         });
-
-        $balanceUsers = $subCharges->filter(function ($charge) {
-            return $charge->user->payment_method == 'balance';
-        });
-
-
-        //Charge the balance users
-        foreach ($balanceUsers as $charge) {
-            if (($charge->user->monthly_subscription * 100) > $charge->user->cash_balance) {
-                //user doesn't have enough money
-
-                //If they have a secondary payment method of gocardless try that
-                if ($charge->user->secondary_payment_method == 'gocardless-variable') {
-
-                    //Add the charge to the gocardless list for processing
-                    $goCardlessUsers->push($charge);
-
-                    event(new SubscriptionPayment\InsufficientFundsTryingDirectDebit($charge->user->id, $charge->id));
-                } else {
-                    event(new SubscriptionPayment\FailedInsufficientFunds($charge->user->id, $charge->id));
-                }
-                continue;
-            }
-
-            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'balance', '', $charge->user->monthly_subscription, 'paid', 0, $charge->id);
-
-            event(new MemberBalanceChanged($charge->user->id));
-        }
 
         //Charge the gocardless users
         $members = [];

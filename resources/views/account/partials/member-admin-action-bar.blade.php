@@ -214,25 +214,6 @@
                         </div>
                     @endif
 
-                    @if (in_array($user->status, ['setting-up', 'left', 'leaving']))
-                        <div class="infobox__grid-item infobox__grid-item--main">
-                            <h4>Setup</h4>
-                            <p>Activate this members subscription but have them pay using their balance</p>
-                            {!! Form::open(array('method'=>'POST', 'class'=>'form-horizontal', 'route' => ['account.update-sub-method', $user->id])) !!}
-                            <div class="form-group">
-                                <div class="col-sm-5">
-                                    @if ($user->cash_balance > ($user->monthly_subscription * 100))
-                                    {!! Form::hidden('payment_method', 'balance') !!}
-                                    {!! Form::submit('Activate & pay by balance', array('class'=>'btn btn-default')) !!}
-                                    @else
-                                        <p>The user doesn't have enough money in their balance</p>
-                                    @endif
-                                </div>
-                            </div>
-                            {!! Form::close() !!}
-                        </div>
-                    @endif
-
                     @if ($user->status == 'setting-up' || $user->online_only)
                         <div class="infobox__grid-item infobox__grid-item--main alert-danger">
                             <h4>Delete</h4>
