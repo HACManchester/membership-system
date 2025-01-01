@@ -38,7 +38,7 @@ class InductionPolicy
      */
     public function view(User $user, Induction $induction)
     {
-        return $this->inductionRepository->isTrainerForEquipment($user, $equipment->induction_category);
+        return $this->inductionRepository->isTrainerForEquipment($user, $induction->key);
     }
 
     /**
