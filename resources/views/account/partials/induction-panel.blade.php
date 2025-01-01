@@ -29,7 +29,7 @@
             <td><a href="{{ route('equipment.index') }}/{{ $item->slug }}">{{ $item->name }}</a></td>
             <td>&pound;{{ $item->access_fee }}</td>
             <td>
-                @if ($item->userInduction && ($item->userInduction->is_trained))
+                @if ($item->userInduction && ($item->userInduction->trained))
                 ✔️ {{ $item->userInduction->trained->toFormattedDateString() }}
                 @elseif ($item->userInduction && $item->userInduction->paid)
                 🕑 Pending
@@ -39,7 +39,7 @@
             </td>
             <td>
                 @if ($item->access_code)
-                    @if ($item->userInduction && ($item->userInduction->is_trained))
+                    @if ($item->userInduction && ($item->userInduction->trained))
                         <code>{{ $item->access_code }}</code>
                     @else
                         <span>🔒</span>
@@ -48,9 +48,9 @@
             </td>
             @if (Auth::user()->isAdmin())
                 <td>
-                    @if ($item->userInduction && !$item->userInduction->is_trained)
+                    @if ($item->userInduction && !$item->userInduction->trained)
                         Awaiting training
-                    @elseif ($item->userInduction && $item->userInduction->is_trained)
+                    @elseif ($item->userInduction && $item->userInduction->trained)
                         {{ $item->userInduction->trainer_user->name ?? 'Inducted' }}
                     @endif
                 </td>

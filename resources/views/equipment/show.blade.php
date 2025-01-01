@@ -36,7 +36,7 @@
             @if($equipment->requiresInduction())
                 @if (!$userInduction)
                     <h4><span class="label label-danger">Training is required</span></h4>
-                @elseif ($userInduction->is_trained)
+                @elseif ($userInduction->trained)
                     <h4><span class="label label-success">You have been inducted and can use this equipment</span></h4>
                     @if ($equipment->access_code)
                         <h4><span class="label label-info">Access code: {{$equipment->access_code}}</span></h4>
@@ -88,7 +88,7 @@
                     @endif
                     
                     @if ($userInduction)
-                        @if ($userInduction->is_trained)
+                        @if ($userInduction->trained)
                             @if ($userInduction->is_trainer && $equipment->trainer_instructions)
                                 <h3>Trainer Instructions</h3>
                                 <div class="infobox well">
@@ -354,7 +354,7 @@
                
                 <p>There are currently <strong>{{ count($usersPendingInduction) }}</strong> member(s) who are awaiting training for this tool.</p>
                 
-                @if ($userInduction && !$userInduction->is_trained)
+                @if ($userInduction && !$userInduction->trained)
                     <div class="alert alert-info">
                         <h3>🔴 Training Next Steps</h3>
                         @if ($equipment->induction_instructions)
