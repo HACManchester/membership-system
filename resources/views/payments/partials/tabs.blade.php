@@ -12,5 +12,8 @@
         <li class="{{ request()->routeIs('payments.possible-duplicates') ? 'active' : '' }}">
             {!! link_to_route('payments.possible-duplicates', 'Possible Duplicates') !!}
         </li>
+        <li class="{{ request()->routeIs('payments.balances') ? 'active' : '' }}">
+            {!! link_to_route('payments.balances', 'Balances') !!}
+        </li>
     </ul>
 </nav>
