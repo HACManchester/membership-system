@@ -1,4 +1,6 @@
-<?php namespace BB\Entities;
+<?php
+
+namespace BB\Entities;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +36,17 @@ class Payment extends Model
      * @var array
      */
     protected $fillable = [
-        'source', 'source_id', 'user_id', 'amount', 'fee', 'amount_minus_fee', 'status', 'reason', 'created_at', 'reference'
+        'source',
+        'source_id',
+        'user_id',
+        'amount',
+        'fee',
+        'amount_minus_fee',
+        'status',
+        'reason',
+        'created_at',
+        'reference',
+        'paid_at',
     ];
 
 
