@@ -2,10 +2,8 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Entities\Induction;
 use BB\Entities\Payment;
 use BB\Entities\User;
-use BB\Events\Inductions\InductionRequestedEvent;
 use BB\Exceptions\NotImplementedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -13,44 +11,33 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-
-
     /**
-     *
      * @TODO: Workout exactly what this is used for - I think most of the functionality has been moved elsewhere
-     *
      */
-
 
     /**
-     * @var \BB\Repo\EquipmentRepository
+     * @var \BB\Helpers\GoCardlessHelper
      */
-    private $equipmentRepository;
+    private $goCardless;
+
     /**
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
+
     /**
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
-    /**
-     * @var \BB\Repo\SubscriptionChargeRepository
-     */
-    private $subscriptionChargeRepository;
 
     function __construct(
         \BB\Helpers\GoCardlessHelper $goCardless,
-        \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\PaymentRepository $paymentRepository,
-        \BB\Repo\UserRepository $userRepository,
-        \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository
+        \BB\Repo\UserRepository $userRepository
     ) {
-        $this->goCardless                   = $goCardless;
-        $this->equipmentRepository          = $equipmentRepository;
-        $this->paymentRepository            = $paymentRepository;
-        $this->userRepository               = $userRepository;
-        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
+        $this->goCardless        = $goCardless;
+        $this->paymentRepository = $paymentRepository;
+        $this->userRepository    = $userRepository;
 
         $this->middleware('role:member', array('only' => ['create', 'destroy']));
     }
@@ -116,7 +103,7 @@ class PaymentController extends Controller
      * Store a manual payment
      *
      * @param $userId
-     * @return Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      * @deprecated
      */
     public function store($userId, Request $request)
@@ -170,28 +157,6 @@ class PaymentController extends Controller
 
             $user->storage_box_payment_id = $payment->id;
             $user->save();
-        } elseif ($reason == 'balance') {
-            $amount = $request->validate([
-                'amount' => 'required|numeric'
-            ]);
-            $payment = new Payment([
-                'reason'           => 'balance',
-                'source'           => \Request::input('source'),
-                'source_id'        => '',
-                'amount'           => $amount,
-                'amount_minus_fee' => $amount,
-                'status'           => 'paid'
-            ]);
-            $user->payments()->save($payment);
-
-            $memberCreditService = \App::make('\BB\Services\Credit');
-            $memberCreditService->setUserId($user->id);
-            $memberCreditService->recalculate();
-
-            //This needs to be improved
-            \FlashNotification::success('Payment recorded');
-
-            return \Redirect::route('account.bbcredit.index', $user->id);
         } else {
             throw new \BB\Exceptions\NotImplementedException();
         }
@@ -207,7 +172,7 @@ class PaymentController extends Controller
      * @param Request $request
      * @param  int    $paymentId
      *
-     * @return Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      * @throws NotImplementedException
      * @throws \BB\Exceptions\PaymentException
      */
@@ -231,18 +196,6 @@ class PaymentController extends Controller
 
                 break;
 
-            case 'refund-to-balance':
-
-                if ($payment->reason === 'induction') {
-                    throw new NotImplementedException('Please refund via the member induction list');
-                }
-
-                $this->paymentRepository->refundPaymentToBalance($paymentId);
-
-                \FlashNotification::success('Payment updated');
-
-                break;
-
             default:
                 throw new NotImplementedException('This hasn\'t been built yet');
         }
@@ -255,19 +208,17 @@ class PaymentController extends Controller
      * Remove the specified payment
      *
      * @param  int $id
-     * @return Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \BB\Exceptions\ValidationException
      */
     public function destroy($id)
     {
+        /** @var Payment */
         $payment = $this->paymentRepository->getById($id);
 
         //we can only allow some records to get deleted, only cash payments can be removed, everything else must be refunded off
         if ($payment->source != 'cash') {
             throw new \BB\Exceptions\ValidationException('Only cash payments can be deleted');
-        }
-        if ($payment->reason != 'balance') {
-            throw new \BB\Exceptions\ValidationException('Currently only payments to the members balance can be deleted');
         }
 
         //The delete event will broadcast an event and allow related actions to occur
@@ -283,10 +234,11 @@ class PaymentController extends Controller
      * This is a method for migrating user to the variable gocardless subscription
      * It will cancel the existing direct debit and direct the user to setup a pre auth
      *
-     * @return Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function migrateDD()
     {
+        /** @var User */
         $user = \Auth::user();
 
         //cancel the existing dd

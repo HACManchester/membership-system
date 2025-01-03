@@ -14,10 +14,6 @@
     </div>
 
     @if (!$user->online_only)
-        <a href="/account/{{ $user->id }}/balance">
-            💰 Balance: {{ $memberBalance }}
-        </a>
-
         @if($user->payment_method)
             <div>
                 💳 Subscription: {{ $user->present()->subscriptionDetailLine }}

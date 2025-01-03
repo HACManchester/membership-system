@@ -25,14 +25,6 @@
                     {!! Form::close() !!}
                     </li>
                 @endif
-                @if ($payment->user && $payment->reason != 'balance')
-                    <li>
-                        {!! Form::open(array('method'=>'PUT', 'route' => ['payments.update', $payment->id], 'class'=>'navbar-form navbar-left')) !!}
-                        {!! Form::hidden('change', 'refund-to-balance') !!}
-                        {!! Form::submit('Refund to Balance', array('class'=>'btn btn-link')) !!}
-                        {!! Form::close() !!}
-                    </li>
-                @endif
                 @if (!$payment->user)
                     <li>
                         {!! Form::open(array('method'=>'PUT', 'route' => ['payments.update', $payment->id], 'class'=>'navbar-form navbar-left')) !!}

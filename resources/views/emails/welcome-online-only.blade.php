@@ -14,7 +14,7 @@
 <hr/>
 
 <h2>🤸 Manage your Membership</h2>
-<p>You can manage your membership on our Management System where you signed up - which you can access using your email address and password you set when you joined. This can be accessed at <a href="https://members.hacman.org.uk">https://members.hacman.org.uk</a> and allows you to set up a direct debit if you'd like to become a full time member, top up your Hacman Balance for paying for things including the laser, printing and any fees related to equipment induction or usage. You can also use this system to claim your members storage shelf/cube.</p>
+<p>You can manage your membership on our Management System where you signed up - which you can access using your email address and password you set when you joined. This can be accessed at <a href="https://members.hacman.org.uk">https://members.hacman.org.uk</a> and allows you to set up a direct debit if you'd like to become a full time member.</p>
 <h2>👋 Chat with us</h2>
 We have two main channels of communication online, our forum and Telegram.
 <h4>Our forum</h4>

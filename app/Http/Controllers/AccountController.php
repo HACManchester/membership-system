@@ -1,5 +1,6 @@
-<?php namespace BB\Http\Controllers;
+<?php 
 
+namespace BB\Http\Controllers;
 
 use BB\Entities\Gift;
 use BB\Entities\Notification;

@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$address\\.$#"
-			count: 1
-			path: app/Http/Controllers/AccountController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$email_verified\\.$#"
 			count: 1
 			path: app/Http/Controllers/AccountController.php
@@ -266,31 +261,6 @@ parameters:
 			path: app/Http/Controllers/GoCardlessPaymentController.php
 
 		-
-			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: app/Http/Controllers/GoCardlessPaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
-			count: 1
-			path: app/Http/Controllers/GoCardlessWebhookController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/GoCardlessWebhookController.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 7
-			path: app/Http/Controllers/GoCardlessWebhookController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\GoCardlessWebhookController\\:\\:processBills\\(\\) is unused\\.$#"
-			count: 1
-			path: app/Http/Controllers/GoCardlessWebhookController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Http/Controllers/InductionController.php
@@ -486,106 +456,6 @@ parameters:
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
-			message: "#^Access to an undefined property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$goCardless\\.$#"
-			count: 3
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$address\\.$#"
-			count: 4
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$email\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$family_name\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$given_name\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 2
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$payment_method\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$subscription_id\\.$#"
-			count: 2
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
-			count: 2
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$source\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:destroy\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:migrateDD\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:migrateDD\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 2
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:store\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:store\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 2
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:update\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Method BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:update\\(\\) should return BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$equipmentRepository is never read, only written\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: "#^Property BB\\\\Http\\\\Controllers\\\\PaymentController\\:\\:\\$subscriptionChargeRepository is never read, only written\\.$#"
-			count: 1
-			path: app/Http/Controllers/PaymentController.php
-
-		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\ReminderController\\:\\:create\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Response\\.$#"
 			count: 1
 			path: app/Http/Controllers/ReminderController.php
@@ -776,16 +646,6 @@ parameters:
 			path: app/Http/Controllers/StorageBoxController.php
 
 		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\User\\:\\:\\$address\\.$#"
-			count: 4
-			path: app/Http/Controllers/SubscriptionController.php
-
-		-
-			message: "#^Access to an undefined property BB\\\\Http\\\\Controllers\\\\SubscriptionController\\:\\:\\$goCardless\\.$#"
-			count: 5
-			path: app/Http/Controllers/SubscriptionController.php
-
-		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\SubscriptionController\\:\\:destroy\\(\\) has invalid return type BB\\\\Http\\\\Controllers\\\\Illuminate\\\\Http\\\\RedirectResponse\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubscriptionController.php
@@ -804,11 +664,6 @@ parameters:
 			message: "#^Access to an undefined property BB\\\\Listeners\\\\EmailMemberAboutDeclinedPhoto\\:\\:\\$mailer\\.$#"
 			count: 2
 			path: app/Listeners/EmailMemberAboutDeclinedPhoto.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$user \\\\BB\\\\Entities\\\\User\\)\\: Unexpected token \"\\$user\", expected type at offset 9$#"
-			count: 1
-			path: app/Listeners/ExtendMembership.php
 
 		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
@@ -906,26 +761,6 @@ parameters:
 			path: app/Policies/StorageBoxPolicy.php
 
 		-
-			message: "#^Access to an undefined property BB\\\\Presenters\\\\UserPresenter\\:\\:\\$monthlySubscription\\.$#"
-			count: 1
-			path: app/Presenters/UserPresenter.php
-
-		-
-			message: "#^Access to an undefined property BB\\\\Presenters\\\\UserPresenter\\:\\:\\$paymentMethod\\.$#"
-			count: 1
-			path: app/Presenters/UserPresenter.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string monthlySubscription\\)\\: Unexpected token \"monthlySubscription\", expected variable at offset 24$#"
-			count: 1
-			path: app/Presenters/UserPresenter.php
-
-		-
-			message: "#^PHPDoc tag @property has invalid value \\(string paymentMethod\\)\\: Unexpected token \"paymentMethod\", expected variable at offset 64$#"
-			count: 1
-			path: app/Presenters/UserPresenter.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: app/Process/CheckLeavingUsers.php
@@ -956,97 +791,7 @@ parameters:
 			path: app/Providers/EventServiceProvider.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$paid_at\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reason\\.$#"
-			count: 4
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$reference\\.$#"
-			count: 2
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$source\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
-			count: 2
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user_id\\.$#"
-			count: 5
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Method BB\\\\Repo\\\\PaymentRepository\\:\\:getBalancePaymentsPaginated\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Collection but returns Illuminate\\\\Contracts\\\\Pagination\\\\Paginator\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$payment of event class BB\\\\Events\\\\PaymentCancelled constructor expects BB\\\\Entities\\\\Payment in BB\\\\Events\\\\PaymentCancelled\\:\\:dispatch\\(\\), Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Parameter \\#8 \\$ref of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: app/Repo/PaymentRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$amount\\.$#"
-			count: 5
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$charge_date\\.$#"
-			count: 2
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$payment_date\\.$#"
-			count: 2
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$status\\.$#"
-			count: 5
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user_id\\.$#"
-			count: 2
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
 			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
-			count: 1
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$subscriptionCharge of class BB\\\\Events\\\\SubscriptionChargePaid constructor expects BB\\\\Entities\\\\SubscriptionCharge, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
-			count: 1
-			path: app/Repo/SubscriptionChargeRepository.php
-
-		-
-			message: "#^Parameter \\#7 \\$ref of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordSubscriptionPayment\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: app/Repo/SubscriptionChargeRepository.php
 
@@ -1062,11 +807,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Parameter \\#4 \\$sourceId of method BB\\\\Repo\\\\PaymentRepository\\:\\:recordPayment\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php
 
@@ -1104,16 +844,6 @@ parameters:
 			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Services/MemberSubscriptionCharges.php
-
-		-
-			message: "#^Method BB\\\\Services\\\\Payment\\\\GoCardlessWebhookParser\\:\\:getAction\\(\\) should return null but returns string\\.$#"
-			count: 1
-			path: app/Services/Payment/GoCardlessWebhookParser.php
-
-		-
-			message: "#^Method BB\\\\Services\\\\Payment\\\\GoCardlessWebhookParser\\:\\:getResourceType\\(\\) should return null but returns string\\.$#"
-			count: 1
-			path: app/Services/Payment/GoCardlessWebhookParser.php
 
 		-
 			message: "#^Access to an undefined property BB\\\\Validators\\\\FormValidator\\:\\:\\$rules\\.$#"

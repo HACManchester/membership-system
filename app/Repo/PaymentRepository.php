@@ -3,7 +3,6 @@
 namespace BB\Repo;
 
 use BB\Entities\Payment;
-use BB\Events\MemberBalanceChanged;
 use BB\Events\PaymentCancelled;
 use BB\Exceptions\NotImplementedException;
 use BB\Exceptions\PaymentException;
@@ -87,18 +86,19 @@ class PaymentRepository extends DBRepository
     /**
      * Record a payment against a user record
      *
-     * @param string   $reason What was the reason. subscription, induction, etc...
-     * @param int      $userId The users ID
-     * @param string   $source gocardless
-     * @param string   $sourceId A reference for the source
-     * @param double   $amount Amount received before a fee in pounds
-     * @param string   $status paid, pending, cancelled, refunded
-     * @param double   $fee The fee charged by the payment provider
-     * @param string   $ref
-     * @param Carbon $paidDate
+     * @param string        $reason What was the reason. subscription, induction, etc...
+     * @param int           $userId The users ID
+     * @param string|null   $source gocardless
+     * @param string        $sourceId A reference for the source
+     * @param double        $amount Amount received before a fee in pounds
+     * @param string        $status paid, pending, cancelled, refunded
+     * @param double        $fee The fee charged by the payment provider
+     * @param string        $ref
+     * @param Carbon        $paidDate
+     * 
      * @return int The ID of the payment record
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
+    public function recordPayment($reason, $userId, $source, $sourceId = null, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
     {
         if ($paidDate == null) {
             $paidDate = new Carbon();
@@ -156,7 +156,9 @@ class PaymentRepository extends DBRepository
      */
     public function markPaymentPaid($paymentId, $paidDate)
     {
+        /** @var Payment */
         $payment = $this->getById($paymentId);
+
         $payment->status = 'paid';
         $payment->paid_at = $paidDate;
         $payment->save();
@@ -171,7 +173,9 @@ class PaymentRepository extends DBRepository
      */
     public function markPaymentPending($paymentId)
     {
+        /** @var Payment */
         $payment = $this->getById($paymentId);
+
         $payment->status = 'pending';
         $payment->save();
     }
@@ -186,6 +190,7 @@ class PaymentRepository extends DBRepository
     {
         $this->update($paymentId, ['status' => $status]);
 
+        /** @var Payment */
         $payment = $this->getById($paymentId);
 
         // TODO: Refactor & migrate to proper event classes eh
@@ -211,34 +216,6 @@ class PaymentRepository extends DBRepository
 
         $this->update($paymentId, ['user_id' => $userId]);
     }
-
-    /**
-     * Take a payment that has been used for something and reassign it to the balance
-     * @param $paymentId
-     *
-     * @throws NotImplementedException
-     */
-    public function refundPaymentToBalance($paymentId)
-    {
-        $payment = $this->getById($paymentId);
-
-        if ($payment->reason === 'donation') {
-            $this->update($paymentId, ['reason' => 'balance']);
-            event(new MemberBalanceChanged($payment->user_id));
-            return;
-        }
-
-        if ($payment->reason === 'induction') {
-            //This method must only be used if the induction record has been cancelled first
-            // otherwise an orphned record will be left behind
-            $this->update($paymentId, ['reason' => 'balance']);
-            event(new MemberBalanceChanged($payment->user_id));
-            return;
-        }
-
-        throw new NotImplementedException('This hasn\'t been built yet');
-    }
-
 
     /**
      * Fetch the users latest payment of a particular type
@@ -294,7 +271,7 @@ class PaymentRepository extends DBRepository
     /**
      * Return a paginated list of balance affecting payment for a user
      * @param $userId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\Pagination\Paginator
      */
     public function getBalancePaymentsPaginated($userId)
     {
@@ -323,11 +300,12 @@ class PaymentRepository extends DBRepository
      */
     public function delete($recordId)
     {
+        /** @var Payment */
         $payment = $this->getById($recordId);
 
         $state = $payment->delete();
 
-        //Fire an event, allows the balance to get updated
+        // Fire an event, allows the balance to get updated
         \Event::dispatch('payment.delete', array($payment->user_id, $payment->source, $payment->reason, $payment->id));
 
         return $state;
@@ -383,29 +361,11 @@ class PaymentRepository extends DBRepository
      * Fetch a payment record using the id provided by the payment provider
      *
      * @param $sourceId
-     * @return Payment
+     * @return Payment|null
      */
     public function getPaymentBySourceId($sourceId)
     {
         return $this->model->where('source_id', $sourceId)->first();
-    }
-
-    /**
-     * Record a balance payment transfer between two users
-     * 
-     * @param integer $sourceUserId
-     * @param integer $targetUserId
-     * @param double $amount
-     */
-    public function recordBalanceTransfer($sourceUserId, $targetUserId, $amount)
-    {
-        $paymentId = $this->recordPayment('transfer', $sourceUserId, 'balance', '', $amount, 'paid', 0, $targetUserId);
-        $this->recordPayment('balance', $targetUserId, 'transfer', $paymentId, $amount, 'paid', 0, $sourceUserId);
-
-        //Both of these events aren't needed adn the balance payment fires its own
-        // but for the sake of neatness they are here
-        event(new MemberBalanceChanged($sourceUserId));
-        event(new MemberBalanceChanged($targetUserId));
     }
 
     public function getPossibleDuplicates()

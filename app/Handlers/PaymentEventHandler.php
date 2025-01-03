@@ -5,16 +5,10 @@ use BB\Entities\User;
 use BB\Exceptions\PaymentException;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
-use BB\Repo\UserRepository;
 use Illuminate\Support\Facades\Log;
 
 class PaymentEventHandler
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-    
     /**
      * @var PaymentRepository
      */
@@ -26,13 +20,11 @@ class PaymentEventHandler
     private $subscriptionChargeRepository;
 
     /**
-     * @param UserRepository               $userRepository
      * @param PaymentRepository            $paymentRepository
      * @param SubscriptionChargeRepository $subscriptionChargeRepository
      */
-    public function __construct(UserRepository $userRepository, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
-        $this->userRepository = $userRepository;
         $this->paymentRepository = $paymentRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
@@ -49,23 +41,10 @@ class PaymentEventHandler
     public function onCreate($userId, $reason, $ref, $paymentId, $status)
     {
         if ($reason == 'balance') {
-
+            // Still in use by admin topups/withdrawals.
             $this->updateBalance($userId);
-
         } elseif ($reason == 'subscription') {
-
             $this->updateSubPayment($paymentId, $userId, $status);
-
-        } elseif ($reason == 'door-key') {
-
-            $this->recordDoorKeyPaymentId($userId, $paymentId);
-
-        } elseif ($reason == 'costs') {
-
-            $this->updateBalance($userId);
-
-        } else {
-            
         }
     }
 
@@ -79,7 +58,7 @@ class PaymentEventHandler
      */
     public function onDelete($userId, $source, $reason, $paymentId)
     {
-        if (($source == 'balance') || ($reason == 'balance')) {
+        if ($reason == 'balance') {
             $this->updateBalance($userId);
         }
 
@@ -167,15 +146,4 @@ class PaymentEventHandler
             $this->subscriptionChargeRepository->updateAmount($subCharge->id, intval($payment->amount));
         }
     }
-
-    private function recordDoorKeyPaymentId($userId, $paymentId)
-    {
-        /* @TODO: Verify payment amount is valid - this could have been changed */
-        /** @var User */
-        $user = $this->userRepository->getById($userId);
-        $user->key_deposit_payment_id = $paymentId;
-        $user->save();
-    }
-
-
 } 

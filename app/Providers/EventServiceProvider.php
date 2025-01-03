@@ -5,12 +5,10 @@ namespace BB\Providers;
 use BB\Events\Inductions\InductionCompletedEvent;
 use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
 use BB\Events\Inductions\InductionRequestedEvent;
-use BB\Events\SubscriptionPayment;
 use BB\Listeners\DiscourseSyncSubscriber;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\ExtendMembership;
-use BB\Listeners\MemberBalanceSubscriber;
 use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
 use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
 use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
@@ -69,7 +67,6 @@ class EventServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $subscribe = [
-		MemberBalanceSubscriber::class,
 		DiscourseSyncSubscriber::class,
 	];
 

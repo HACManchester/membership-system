@@ -10,7 +10,7 @@ use Laracasts\Presenter\PresentableTrait;
  * @property integer $id
  * @property integer $user_id
  * @property Carbon  $charge_date
- * @property Carbon  $payment_date
+ * @property Carbon|null  $payment_date
  * @property integer $amount
  * @property string  $status
  * @package BB\Entities

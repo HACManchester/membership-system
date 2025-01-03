@@ -48,7 +48,6 @@ Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email'
 
 //Balance
 Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'as' => 'account.balance.index', 'middleware' => 'role:member']);
-Route::post('account/{account}/balance/transfer', ['uses' => 'BalanceController@recordTransfer', 'as' => 'account.balance.transfer.create']);
 
 //Inductions
 Route::get('general_induction', ['uses' => 'GeneralInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
@@ -100,8 +99,6 @@ Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub
 
 # Payment provider specific urls
 Route::post('account/{account}/payment/gocardless', ['as' => 'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
-Route::post('account/{account}/payment/balance', ['as' => 'account.payment.balance.create', 'uses' => 'BalancePaymentController@store']);
-Route::post('account/{account}/payment/cash2', ['as' => 'account.payment.cash2.create', 'uses' => 'CashPaymentController@store']);
 Route::post('payment/gocardless/{payment}/cancel', [
     'as' => 'payment.gocardless.cancel',
     'uses' => 'GoCardlessPaymentController@cancel',
@@ -115,7 +112,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::delete('account/{account}/payment/cash', ['as' => 'account.payment.cash.destroy', 'uses' => 'CashPaymentController@destroy']);
 });
 
-//DD Migration to variable payments
 Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.gocardless-migrate', 'uses' => 'PaymentController@migrateDD', 'middleware' => 'role:member']);
 
 

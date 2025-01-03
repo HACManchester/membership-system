@@ -4,12 +4,11 @@ use Carbon\Carbon;
 use Laracasts\Presenter\Presenter;
 
 /**
- * @property string monthlySubscription
- * @property string paymentMethod
+ * @property-read string $monthlySubscription
+ * @property-read string $paymentMethod
  */
 class UserPresenter extends Presenter
 {
-
     public function paymentMethod()
     {
         switch ($this->entity->payment_method) {
@@ -19,9 +18,6 @@ class UserPresenter extends Presenter
 
             case 'standing-order':
                 return 'Standing Order';
-
-            case 'balance':
-                return 'Balance payment';
 
             case '':
                 return '-';
