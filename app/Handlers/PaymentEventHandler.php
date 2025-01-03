@@ -1,9 +1,8 @@
 <?php namespace BB\Handlers;
 
-use BB\Entities\Induction;
-use BB\Events\Inductions\InductionRequestedEvent;
+use BB\Entities\Payment;
+use BB\Entities\User;
 use BB\Exceptions\PaymentException;
-use BB\Repo\InductionRepository;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
@@ -11,19 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentEventHandler
 {
-
     /**
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var InductionRepository
-     */
-    private $inductionRepository;
+    
     /**
      * @var PaymentRepository
      */
     private $paymentRepository;
+    
     /**
      * @var SubscriptionChargeRepository
      */
@@ -31,18 +27,15 @@ class PaymentEventHandler
 
     /**
      * @param UserRepository               $userRepository
-     * @param InductionRepository          $inductionRepository
      * @param PaymentRepository            $paymentRepository
      * @param SubscriptionChargeRepository $subscriptionChargeRepository
      */
-    public function __construct(UserRepository $userRepository, InductionRepository $inductionRepository, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(UserRepository $userRepository, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
     {
         $this->userRepository = $userRepository;
-        $this->inductionRepository = $inductionRepository;
         $this->paymentRepository = $paymentRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
     }
-
 
     /**
      * New payment record is created
@@ -146,6 +139,7 @@ class PaymentEventHandler
 
     private function updateSubPayment($paymentId, $userId, $status)
     {
+        /** @var Payment */
         $payment   = $this->paymentRepository->getById($paymentId);
         $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
 
@@ -156,7 +150,7 @@ class PaymentEventHandler
 
         //The sub charge record id gets saved onto the payment
         if (empty($payment->reference)) {
-            $payment->reference = $subCharge->id;
+            $payment->reference = strval($subCharge->id);
             $payment->save();
         } else if ($payment->reference != $subCharge->id) {
             throw new PaymentException('Attempting to update sub charge (' . $subCharge->id . ') but payment (' . $payment->id . ') doesn\'t match. Sub charge has an existing reference on it.');
@@ -170,13 +164,14 @@ class PaymentEventHandler
 
         //The amount isn't stored on the sub charge record until its paid or processing
         if ($payment->amount != $subCharge->amount) {
-            $this->subscriptionChargeRepository->updateAmount($subCharge->id, $payment->amount);
+            $this->subscriptionChargeRepository->updateAmount($subCharge->id, intval($payment->amount));
         }
     }
 
     private function recordDoorKeyPaymentId($userId, $paymentId)
     {
         /* @TODO: Verify payment amount is valid - this could have been changed */
+        /** @var User */
         $user = $this->userRepository->getById($userId);
         $user->key_deposit_payment_id = $paymentId;
         $user->save();

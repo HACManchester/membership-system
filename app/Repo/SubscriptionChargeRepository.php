@@ -96,7 +96,7 @@ class SubscriptionChargeRepository extends DBRepository
      *
      * @param $userId
      * @param Carbon $paymentDate
-     * @return mixed
+     * @return SubscriptionCharge|null
      */
     public function findCharge($userId, $paymentDate = null)
     {
@@ -186,7 +186,7 @@ class SubscriptionChargeRepository extends DBRepository
      * Return a members most recent paid up subscription charge record
      *
      * @param $userId
-     * @return SubscriptionCharge
+     * @return SubscriptionCharge|null
      */
     public function getMembersLatestPaidCharge($userId)
     {

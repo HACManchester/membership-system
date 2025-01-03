@@ -47,12 +47,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string $phone
  * @property integer $storage_box_payment_id
  * @property ProfileData $profile
- * @property string|null secondary_payment_method
- * @property string      mandate_id
- * @property int         monthly_subscription
- * @property string      gocardless_setup_id
- * @property bool   postFob (false=collect, true=post)
- * @property date last_seen
+ * @property string|null $secondary_payment_method
+ * @property string|null $mandate_id
+ * @property int $monthly_subscription
+ * @property string|null $gocardless_setup_id
+ * @property bool $postFob (false=collect, true=post)
+ * @property date $last_seen
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
@@ -431,7 +431,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->mandate_id = '';
-        $this->payment_day = '';
+        $this->payment_day = 0;
         $this->status = 'leaving';
         $this->save();
     }
@@ -492,13 +492,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public static function findWithPermission($id = null, $role = 'admin')
     {
+        //Return the logged in user
         if (empty($id)) {
-            //Return the logged in user
-            return Auth::user();
+            return Auth::user(); // @phpstan-ignore-line
         }
 
         $requestedUser = self::findOrFail($id);
-        if (Auth::user()->id == $requestedUser->id) {
+        if (Auth::user()->getAuthIdentifier() == $requestedUser->id) {
             //The user they are after is themselves
             return $requestedUser;
         }
@@ -517,7 +517,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         if ($this->banned) {
             return;
         }
-        
+
         if (empty($expiry)) {
             $expiry = Carbon::now()->addMonth();
         }
@@ -527,7 +527,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             $this->payment_method = $paymentMethod;
         }
         $this->gift = '';
-        $this->subscription_expires = $expiry;
+        $this->subscription_expires = Carbon::instance($expiry);
         $this->save();
     }
 
@@ -539,7 +539,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->auditFields;
     }
 
-    public function isActive() {
+    public function isActive()
+    {
         return $this->active && !$this->banned;
     }
 }

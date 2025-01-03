@@ -1,6 +1,6 @@
 <?php
 
-namespace Bb\Http\Middleware;
+namespace BB\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Fideloper\Proxy\TrustProxies as Middleware;
@@ -17,7 +17,7 @@ class TrustProxies extends Middleware
     /**
      * The current proxy header mappings.
      *
-     * @var array
+     * @var null|string|int
      */
     protected $headers = Request::HEADER_X_FORWARDED_ALL;
 }

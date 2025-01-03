@@ -32,11 +32,11 @@ trait UserRoleTrait
      * Assign a role to the user
      *
      * @param $role
-     * @return mixed
+     * @return void
      */
     public function assignRole($role)
     {
-        return $this->roles()->attach($role);
+        $this->roles()->attach($role);
     }
 
     /**

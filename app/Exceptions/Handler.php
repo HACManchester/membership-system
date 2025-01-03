@@ -2,6 +2,7 @@
 
 namespace BB\Exceptions;
 
+use BB\Entities\User;
 use BB\Helpers\TelegramErrorHelper;
 use BB\Notifications\ErrorNotification;
 use Exception;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Validation\ValidationException as IlluminateValidationException;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -72,14 +74,13 @@ class Handler extends ExceptionHandler
             $level = 'error';
             $title = 'Error';
             $suppress = false;
-            $ignore = false;
 
             if ($e instanceof NotImplementedException) {
                 $level = 'info';
                 $title = 'Not Implemented';
             }
 
-            if (!$ignore) $this->notifyTelegram($level, $title, $suppress, $e);
+            $this->notifyTelegram($level, $title, $suppress, $e);
         } catch (Exception $e) {
         }
     }
@@ -102,7 +103,6 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
      * @return \Symfony\Component\HttpFoundation\Response
-     *
      * 
      * @throws \Exception
      */
@@ -134,7 +134,7 @@ class Handler extends ExceptionHandler
             if ($request->wantsJson()) {
                 return \Response::json(['error' => $e->getMessage()], 403);
             }
-            $userString = \Auth::guest() ? "A guest" : \Auth::user()->name;
+            $userString = \Auth::guest() ? "A guest" : (\Auth::user() instanceof User ? \Auth::user()->name : \Auth::user()->getAuthIdentifier());
             Log::warning($userString . " tried to access something they weren't supposed to.");
 
             return \Response::view('errors.403', [], 403);
@@ -145,29 +145,17 @@ class Handler extends ExceptionHandler
         }
 
         if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson()) {
+            // @phpstan-ignore-next-line
             return $this->renderExceptionWithWhoops($e);
         }
 
         if ($request->wantsJson()) {
             if ($this->isHttpException($e)) {
+                /** @var HttpExceptionInterface $e */
                 return \Response::json(['error' => $e->getMessage()], $e->getStatusCode());
             }
         }
         return parent::render($request, $e);
-    }
-
-    /**
-     * Render an exception using Whoops.
-     *
-     * @param  \Exception $e
-     * @return \Illuminate\Http\Response
-     */
-    protected function renderExceptionWithWhoops(Exception $e)
-    {
-        $whoops = new \Whoops\Run;
-        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
-
-        return new \Illuminate\Http\Response($whoops->handleException($e), $e->getCode());
     }
 
     protected function invalid($request, IlluminateValidationException $exception)

@@ -100,6 +100,5 @@ class CashPaymentController extends Controller
         $result = $returnPath . $returnPath_balance;
 
         return \Redirect::to($result);
-        return \Redirect::to($returnPath);
     }
 }
