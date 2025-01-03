@@ -19,7 +19,8 @@ class PaymentBalancesController extends Controller
         $inactiveUsersInDebtQty = User::where('active', false)->where('cash_balance', '<', 0)->count();
         $inactiveUsersInDebtSum = User::where('active', false)->where('cash_balance', '<', 0)->sum('cash_balance') / 100;
 
-        $users = User::where('cash_balance', '!=', 0)->get();
+        $activeUsers = User::where('active', true)->where('cash_balance', '!=', 0)->orderBy('cash_balance', 'desc')->get();
+        $inactiveUsers = User::where('active', false)->where('cash_balance', '!=', 0)->orderBy('cash_balance', 'desc')->get();
 
         return \View::make('payment_balances.index')->with([
             'activeUsersInCreditQty' => $activeUsersInCreditQty,
@@ -30,7 +31,8 @@ class PaymentBalancesController extends Controller
             'inactiveUsersInCreditSum' => $inactiveUsersInCreditSum,
             'inactiveUsersInDebtQty' => $inactiveUsersInDebtQty,
             'inactiveUsersInDebtSum' => $inactiveUsersInDebtSum,
-            'users' => $users,
+            'activeUsers' => $activeUsers,
+            'inactiveUsers' => $inactiveUsers,
         ]);
     }
 }

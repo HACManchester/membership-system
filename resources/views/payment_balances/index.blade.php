@@ -46,32 +46,71 @@
         </tbody>
     </table>
 
-    <table class="table memberList">
-        <thead>
-            <tr>
-                <th>Member name</th>
-                <th>Member Status</th>
-                <th>Balance status (in debt or in credit)</th>
-                <th>Balance amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)
-                <tr>
-                    <td>
-                        <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
-                    </td>
-                    <td>{!! HTML::statusLabel($user->status) !!}</td>
-                    <td>
-                        @if ($user->cash_balance < 0)
-                            <span class="label label-danger">In debt</span>
-                        @else
-                            <span class="label label-info">In credit</span>
-                        @endif
-                    </td>
-                    <td>{{ $user->present()->cashBalance }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#active-users">Active Users</a></li>
+        <li><a data-toggle="tab" href="#inactive-users">Inactive Users</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="active-users" class="tab-pane fade in active">
+            <table class="table memberList">
+                <thead>
+                    <tr>
+                        <th>Member name</th>
+                        <th>Member Status</th>
+                        <th>Balance status (in debt or in credit)</th>
+                        <th>Balance amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($activeUsers as $user)
+                        <tr>
+                            <td>
+                                <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
+                            </td>
+                            <td>{!! HTML::statusLabel($user->status) !!}</td>
+                            <td>
+                                @if ($user->cash_balance < 0)
+                                    <span class="label label-danger">In debt</span>
+                                @else
+                                    <span class="label label-info">In credit</span>
+                                @endif
+                            </td>
+                            <td>{{ $user->present()->cashBalance }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div id="inactive-users" class="tab-pane fade">
+            <table class="table memberList">
+                <thead>
+                    <tr>
+                        <th>Member name</th>
+                        <th>Member Status</th>
+                        <th>Balance status (in debt or in credit)</th>
+                        <th>Balance amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($inactiveUsers as $user)
+                        <tr>
+                            <td>
+                                <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
+                            </td>
+                            <td>{!! HTML::statusLabel($user->status) !!}</td>
+                            <td>
+                                @if ($user->cash_balance < 0)
+                                    <span class="label label-danger">In debt</span>
+                                @else
+                                    <span class="label label-info">In credit</span>
+                                @endif
+                            </td>
+                            <td>{{ $user->present()->cashBalance }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @stop
