@@ -42,7 +42,7 @@ class GoCardlessWebhookParser
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getAction()
     {
@@ -50,7 +50,7 @@ class GoCardlessWebhookParser
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getResourceType()
     {

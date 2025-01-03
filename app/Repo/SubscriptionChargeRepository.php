@@ -71,8 +71,15 @@ class SubscriptionChargeRepository extends DBRepository
             $status = 'error';
         }
 
-        $this->paymentRepository->recordSubscriptionPayment($userId, 'gocardless-variable', $bill->id ?? null,
-            $amount, $status, 0, $charge->id);
+        $this->paymentRepository->recordSubscriptionPayment(
+            $userId,
+            'gocardless-variable',
+            $bill->id ?? null,
+            $amount,
+            $status,
+            0,
+            (string) $charge->id
+        );
 
         return $charge;
     }
@@ -116,6 +123,7 @@ class SubscriptionChargeRepository extends DBRepository
         if (is_null($paymentDate)) {
             $paymentDate = new Carbon();
         }
+        /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
         $subCharge->status = 'paid';
@@ -132,7 +140,9 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function markChargeAsProcessing($chargeId)
     {
+        /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
+        
         $subCharge->status = 'processing';
         $subCharge->save();
 
@@ -146,7 +156,9 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function paymentFailed($chargeId)
     {
+        /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
+        
         //If the charge has already been cancelled dont touch it
         if ($subCharge->status != 'cancelled') {
             $subCharge->payment_date = null;
@@ -230,7 +242,9 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function setDue($chargeId)
     {
+        /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
+        
         $subCharge->status = 'due';
         $subCharge->save();
     }
@@ -263,7 +277,9 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function updateAmount($chargeId, $newAmount)
     {
+        /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
+
         $subCharge->amount = $newAmount;
         $subCharge->save();
     }

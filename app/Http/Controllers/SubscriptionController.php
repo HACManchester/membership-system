@@ -2,22 +2,28 @@
 
 use Carbon\Carbon;
 use BB\Entities\User;
+use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
 
 class SubscriptionController extends Controller
 {
 
+    /**
+     * @var GoCardlessHelper $goCardless
+     */
+    protected $goCardless;
 
     /**
      * @var SubscriptionChargeRepository
      */
-    private $subscriptionChargeRepository;
+    protected $subscriptionChargeRepository;
+
     /**
      * @var \BB\Repo\UserRepository
      */
-    private $userRepository;
+    protected $userRepository;
 
-    function __construct(\BB\Helpers\GoCardlessHelper $goCardless, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository)
+    function __construct(GoCardlessHelper $goCardless, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository)
     {
         $this->goCardless = $goCardless;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;

@@ -1,7 +1,8 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 
-use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Helpers\TelegramHelper;
@@ -18,14 +19,12 @@ class GoCardlessWebhookController extends Controller
      * @var PaymentRepository
      */
     private $paymentRepository;
-    /**
-     * @var SubscriptionChargeRepository
-     */
-    private $subscriptionChargeRepository;
+
     /**
      * @var GoCardlessHelper
      */
     private $goCardless;
+
     /**
      * @var \BB\Repo\UserRepository
      */
@@ -33,11 +32,10 @@ class GoCardlessWebhookController extends Controller
 
     private $telegramHelper;
 
-    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository)
+    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, \BB\Repo\UserRepository $userRepository)
     {
         $this->goCardless = $goCardless;
         $this->paymentRepository = $paymentRepository;
-        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
         $this->userRepository = $userRepository;
         $this->telegramHelper = new TelegramHelper("GoCardless Webhook");
     }
@@ -158,12 +156,12 @@ class GoCardlessWebhookController extends Controller
             //Locate the user through their subscription id
             $user = User::where('subscription_id', $bill['links']['subscription'])->first();
 
-            if ( ! $user) {
+            if (!$user) {
 
                 $message = "GoCardless new sub payment notification for unmatched user. Bill ID: " . $bill['links']['payment'];
                 Log::info($message);
                 $this->telegramHelper->notify(
-                    TelegramHelper::WARNING, 
+                    TelegramHelper::WARNING,
                     $message
                 );
 
@@ -172,7 +170,6 @@ class GoCardlessWebhookController extends Controller
 
             $amount = ($payment->amount * 1) / 100;
             $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['links']['payment'], $amount, $payment->status);
-
         } catch (\Exception $e) {
             Log::error($e);
         }
@@ -230,42 +227,6 @@ class GoCardlessWebhookController extends Controller
                 $message
             );
         }
-
-    }
-
-    /**
-     * @param string $action
-     */
-    private function processBills($action, array $bills)
-    {
-        foreach ($bills as $bill) {
-            $existingPayment = $this->paymentRepository->getPaymentBySourceId($bill['id']);
-            if ($existingPayment) {
-                if (($bill['status'] == 'pending') && ($action == 'resubmission_requested')) {
-                    //Failed payment is being retried
-                    $subCharge = $this->subscriptionChargeRepository->getById($existingPayment->reference);
-                    if ($subCharge) {
-                        if ($subCharge->amount == $bill['amount']) {
-                            $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
-                        } else {
-                            //@TODO: Handle partial payments
-                            Log::warning("Sub charge handling - gocardless partial payment");
-                        }
-                    }
-                } elseif ($bill['status'] == 'refunded') {
-                    //Payment refunded
-                    //Update the payment record and possible the user record
-                }
-            } else {
-                $message = "GoCardless ProcessBills - Webhook received for unknown payment: " . $bill['id'];
-                Log::warning($message);
-                $this->telegramHelper->notify(
-                    TelegramHelper::WARNING,
-                    $message
-                );
-            }
-        }
-
     }
 
     /**
@@ -273,7 +234,7 @@ class GoCardlessWebhookController extends Controller
      */
     private function cancelPreAuth($preAuth)
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = User::where('mandate_id', $preAuth['links']['mandate'])->first();
         if ($user) {
             $user->cancelSubscription();
@@ -284,7 +245,7 @@ class GoCardlessWebhookController extends Controller
     private function cancelSubscriptions($subscription)
     {
         //Make sure our local record is correct
-        /** @var User $user */
+        /** @var User|null $user */
         $user = User::where('subscription_id', $subscription['links']['subscription'])->first();
         if ($user) {
             if ($user->payment_method == 'gocardless') {
@@ -296,5 +257,4 @@ class GoCardlessWebhookController extends Controller
             }
         }
     }
-
 }

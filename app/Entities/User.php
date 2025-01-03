@@ -53,6 +53,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $gocardless_setup_id
  * @property bool $postFob (false=collect, true=post)
  * @property date $last_seen
+ * @property-read \BB\Entities\Address $address
+ * 
  * @package BB\Entities
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
