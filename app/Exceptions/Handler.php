@@ -145,8 +145,7 @@ class Handler extends ExceptionHandler
         }
 
         if (config('app.debug') && $this->shouldReport($e) && !$request->wantsJson()) {
-            // @phpstan-ignore-next-line
-            return $this->renderExceptionWithWhoops($e);
+            return parent::render($request, $e);
         }
 
         if ($request->wantsJson()) {
