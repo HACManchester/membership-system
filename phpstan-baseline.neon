@@ -756,11 +756,6 @@ parameters:
 			path: app/Policies/KeyFobPolicy.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$storageBoxes\\.$#"
-			count: 1
-			path: app/Policies/StorageBoxPolicy.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: app/Process/CheckLeavingUsers.php
