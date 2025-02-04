@@ -6,15 +6,18 @@
 <body>
 <p>
     Hi {{ $user['given_name'] }},<br />
-    <b>😢 You're leaving Hackspace Manchester</b><br />
-    Your membership has been cancelled, and you'll stop being a member of Hackspace Manchester at the end of the current payment cycle.<br />
+    <b>You're leaving Hackspace Manchester</b><br />
+    Your membership has been cancelled and you'll stop being a member of Hackspace Manchester at the end of the current payment cycle.<br />
 </p>
 <p>
-    <b>🙁 How come you chose to leave?</b><br/>
-    We would really appreciate if you could take 30 seconds to fill in our exit survey.<br/>
-    If something went wrong we are keen to make it right.
-    <li>Please take our exit survey: <a href="https://surveys.hacman.org.uk/index.php/735111">https://surveys.hacman.org.uk/index.php/735111</a></li>
-    <li>If something went wrong, and you'd like a response, please email the board at <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a>
+    <b>Help us improve</b><br/>
+
+    Please do let us know if you have any thoughts or feedback for us. We really want to make the Hackspace a friendly & inclusive environment, and make it easier for new members to get involved & be productive.<br/>
+    
+    You can let us know via our short, anonymous, exit survey:<br/>
+    <a href="https://forms.gle/5okny6T3yW3Cq8Zm6">https://forms.gle/5okny6T3yW3Cq8Zm6</a></br>
+
+    Or by emailing us at <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a>
 </p>
 @if ($memberBox)
 <p>
