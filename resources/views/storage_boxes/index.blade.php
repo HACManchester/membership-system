@@ -5,6 +5,22 @@
 @stop
 
 @section('content')
+
+    <div class="well">
+        <h1>Storage is changing: Add stickers to your items by 1st July 2025</h1>
+        <ul>
+            <li>Storage will no longer be managed online</li>
+            <li>Items being stored must have a storage sticker on them, allowing them to be stored for a period of time.</li>
+            <li>New stickers will be released every 3 months</li>
+            <li>Items left with old stickers on them may be disposed of, as per our storage guidelines.</li>
+        </ul>
+        <p>
+            The new storage system went into effect in January 2025, with a
+            grace period until 1st July 2025.
+        </p>
+        <strong>Items left without stickers after 1st July 2025 will be disposed of.</strong>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="well">
@@ -44,54 +60,61 @@
         </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Location</th>
-                <th>Member</th>
-                <th>Message</th>
-                @if (Auth::user()->hasRole('storage'))
-                <th>Admin</th>
-                @endif
-            </tr>
-        </thead>
-        @foreach ($storageBoxes as $box)
-            <tbody>
-                <tr 
-                    @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif
-                >
-                    <td><a href="{{ route('storage_boxes.show', $box) }}">{{ $box->id }}</a></td>
-                    <td>{{ $box->location }}</td>
-                    <td>
-                        @if($box->isClaimed())
-                            <a href="{{ route('members.show', $box->user) }}">
-                                {{ $box->user->name }}
-                            </a>
-                        @else
-                            Available
-                        @endif
-                    </td>
-                    <td>
-                        @if($box->isClaimed() && !$box->user->active)
-                            ⚠️ Member left
-                        @elseif (!$box->isClaimed())
-                            @if (Auth::user()->online_only)
-                                ⛔ Not available to be claimed
-                            @else
-                                @can('claim', $box)
-                                    {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes_claim.update', $box->id], 'class'=>'navbar-left')) !!}
-                                    {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
-                                    {!! Form::close() !!}
-                                @endcan
-                            @endif
-                        @endif
-                    </td>
-                    @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
-                        <td><a href="{{ route('storage_boxes.show', $box) }}">Admin</a></td>
+    @can('canViewOld', BB\Entities\StorageBox::class)
+        <div class="well">
+            <h1>Previous storage claims</h1>
+            <p>These will no longer be in effect after the July 2025 grace period deadline.</p>
+            <p>This box and below is only visible to admins and storage managers.</p>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Location</th>
+                    <th>Member</th>
+                    <th>Message</th>
+                    @if (Auth::user()->hasRole('storage'))
+                    <th>Admin</th>
                     @endif
                 </tr>
-            </tbody>
-        @endforeach
-    </table>
+            </thead>
+            @foreach ($storageBoxes as $box)
+                <tbody>
+                    <tr 
+                        @if($box->user && !$box->user->active)class="warning"@elseif(!$box->user)class="success"@endif
+                    >
+                        <td><a href="{{ route('storage_boxes.show', $box) }}">{{ $box->id }}</a></td>
+                        <td>{{ $box->location }}</td>
+                        <td>
+                            @if($box->isClaimed())
+                                <a href="{{ route('members.show', $box->user) }}">
+                                    {{ $box->user->name }}
+                                </a>
+                            @else
+                                Available
+                            @endif
+                        </td>
+                        <td>
+                            @if($box->isClaimed() && !$box->user->active)
+                                ⚠️ Member left
+                            @elseif (!$box->isClaimed())
+                                @if (Auth::user()->online_only)
+                                    ⛔ Not available to be claimed
+                                @else
+                                    @can('claim', $box)
+                                        {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes_claim.update', $box->id], 'class'=>'navbar-left')) !!}
+                                        {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
+                                        {!! Form::close() !!}
+                                    @endcan
+                                @endif
+                            @endif
+                        </td>
+                        @if (Auth::user()->isAdmin() || Auth::user()->hasRole('storage'))
+                            <td><a href="{{ route('storage_boxes.show', $box) }}">Admin</a></td>
+                        @endif
+                    </tr>
+                </tbody>
+            @endforeach
+        </table>
+    @endcan
 @stop

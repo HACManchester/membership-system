@@ -11,6 +11,16 @@ class StorageBoxPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        if ($user->isAdmin() || $user->hasRole('storage')) {
+            return true;
+        }
+
+        // fall through to policy methods
+        return null;
+    }
+
     /**
      * Determine whether the user can view the StorageBox.
      *
@@ -58,11 +68,16 @@ class StorageBoxPolicy
         return Auth::user()->isAdmin();
     }
 
+    public function canViewOld(User $user)
+    {
+        return false;
+    }
+
     public function claim(User $user, StorageBox $StorageBox)
     {
-        return Auth::user()->isActive() && Auth::user()->storageBoxes->isEmpty();
+        return false;
     }
-    
+
     public function release(User $user, StorageBox $StorageBox)
     {
         return $user->id == $StorageBox->user_id || Auth::user()->isAdmin();
