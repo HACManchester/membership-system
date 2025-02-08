@@ -31,16 +31,25 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
                     <ul class="get-started-checklist">
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '1',
-                            'condition' => $user->email_verified,
+                            'pass_condition' => $user->email_verified,
                             'title' => 'Verify your email address',
                             'link' =>  route('account.send-confirmation-email') ,
                             'description' => 'Please verify your e-mail address to make sure we have up-to-date contact details for you.'
                         ])
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '2',
-                            'condition' => $user->payment_method,
+                            'pass_condition' => $user->induction_completed,
+                            'title' => 'Attend a General Induction',
+                            'link' => route('general-induction.show', $user->id),
+                            'description' => 'Come along to an open evening to attend our General Induction, which includes a tour and covers important information about being a member.'
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '3',
+                            'block_condition' => !$user->induction_completed,
+                            'pass_condition' => $user->payment_method,
                             'title' => 'Set up your membership payment via Direct Debit',
                             'link' => route('account.subscription.create', $user->id),
+                            'block_reason' => 'General Induction',
                             'rawDescription' => <<<DESC
                                 <p>
                                     Visit our payment provider to set up your monthly membership payment of &pound;{$fmtMonthlySubscription}
@@ -55,22 +64,17 @@ $fmtMonthlySubscription = number_format($user->monthly_subscription, 2);
 DESC
                         ])
                         @include('account.partials.get-started-checklist-item', [
-                            'number' => '3',
-                            'condition' => $user->induction_completed,
-                            'title' => 'Get a General Induction',
-                            'link' => route('general-induction.show', $user->id),
-                            'description' => 'Come along to an open evening and get a General Induction which includes a tour and important information about being a member.'
-                        ])
-                        @include('account.partials.get-started-checklist-item', [
                             'number' => '4',
-                            'condition' => $user->keyFob(),
+                            'block_condition' => !$user->payment_method,
+                            'pass_condition' => $user->keyFob(),
                             'title' => 'Get an access method set up',
                             'link' => route('keyfobs.index', $user->id),
-                            'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.'
+                            'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.',
+                            'block_reason' => 'membership payment',
                         ])
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '5',
-                            'condition' => $user->visited_forum,
+                            'pass_condition' => $user->visited_forum,
                             'title' => 'Visit our forum & get involved',
                             'link' => route('links.forum'),
                             'link_target' => '_blank',
