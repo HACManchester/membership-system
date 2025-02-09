@@ -5,7 +5,7 @@ Join Hackspace Manchester
 @endsection
 
 @section('content')
-<div class="register-container col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+<div class="register-container col-xs-12 col-lg-10 col-lg-offset-1">
 
     <div class="page-header">
         <h1>Join Hackspace Manchester</h1>
@@ -105,15 +105,19 @@ Join Hackspace Manchester
     <div class="form-group {{ FlashNotification::hasErrorDetail('suppress_real_name', 'has-error has-feedback') }}">
         {!! Form::label(null, 'Real name privacy', ['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 col-lg-7">
-            <span class="help-block">We understand some members are privacy conscious and may wish to keep their real name private from others in the community.</span>
-            <label>
-                {!! Form::radio('suppress_real_name', '0', true) !!}
-                Yes, my real name may be shared with others
-            </label>
-            <label>
-                {!! Form::radio('suppress_real_name', '1',  false) !!}
-                No, I'd like to keep my real name private
-            </label>
+            <p class="help-block">We understand some members are privacy conscious and may wish to keep their real name private from others in the community.</p>
+            <div>
+                <label>
+                    {!! Form::radio('suppress_real_name', '0', true) !!}
+                    Yes, my real name may be shared with others
+                </label>
+            </div>
+            <div>
+                <label>
+                    {!! Form::radio('suppress_real_name', '1',  false) !!}
+                    No, I'd like to keep my real name private
+                </label>
+            </div>
             {!! FlashNotification::getErrorDetail('suppress_real_name') !!}
         </div>
     </div>
@@ -142,36 +146,55 @@ Join Hackspace Manchester
         </div>
     @endif
 
-    <div class="alert {!! $gift_valid ? 'alert-info' : 'alert-success' !!}">
-        <div class="form-group {{ FlashNotification::hasErrorDetail('monthly_subscription', 'has-error has-feedback') }}">
-            {!! Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'col-sm-3 control-label']) !!}
-            <div class="col-sm-9 col-lg-7">
-                <div class="input-group">
-                    <div class="input-group-addon">&pound;</div>
-                    {!! Form::input('number', 'monthly_subscription', $recommendedAmount / 100, ['class' => 'form-control', 'placeholder' => $recommendedAmount / 100, 'min' => $minAmount / 100, 'step' => '1']) !!}
+
+    <h4>Membership payment</h4>
+
+    <div class="form-group {{ FlashNotification::hasErrorDetail('monthly_subscription', 'has-error has-feedback') }}">
+        {!! FlashNotification::getErrorDetail('membership_tier') !!}
+        <div>
+            @foreach($priceOptions as $option)
+                <div class="col-sm-3">
+                    <div class="panel panel-default" onclick="document.getElementById('subscription_{{ $option->value_in_pence }}').click()">
+                        <div class="panel-heading">
+                            {!! Form::radio('membership_tier', $option->value_in_pence / 100, $option->value_in_pence == $recommendedAmount, ['class' => 'form-check-input', 'id' => 'subscription_' . $option->value_in_pence]) !!}
+                            
+                            {!! Form::label('subscription_' . $option->value_in_pence, $option->title . ': £' . number_format($option->value_in_pence / 100, 2), ['class' => 'form-check-label']) !!}
+                        </div>
+                        <div class="panel-body">
+                            <p>{!! nl2br($option->description) !!}</p>
+                        </div>
+                    </div>
                 </div>
-                {!! FlashNotification::getErrorDetail('monthly_subscription') !!}
-                <span class="help-block"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#howMuchShouldIPayModal">How much should I pay?</button></span>
+            @endforeach
+
+            <div class="col-sm-3">
+                <div class="panel panel-default" onclick="document.getElementById('subscription_custom').click()">
+                    <div class="panel-heading">
+                        {!! Form::radio('membership_tier', 'custom', false, ['class' => 'form-check-input', 'id' => 'subscription_custom']) !!}
+                        {!! Form::label('subscription_custom', 'Custom Amount', ['class' => 'form-check-label']) !!}
+                    </div>
+                    <div class="panel-body">
+                        <p>For those that want to go above and beyond to support the makerspace, enter a custom amount here:</p>
+                        {!! Form::label('custom_subscription_amount', 'Custom Amount', ['class' => 'form-check-label']) !!}
+                        {!! Form::input('number', 'monthly_subscription', null, ['class' => 'form-control', 'placeholder' => 'Enter amount', 'min' => $minAmount / 100, 'step' => '1']) !!}
+                        {!! FlashNotification::getErrorDetail('monthly_subscription') !!}
+                    </div>
+                </div>
             </div>
         </div>
+
         @if($gift_valid)
-        <ul>
-            <li>
-                At any time, you can set up payment details which will mean your membership will roll on after the free duration, at the amount you choose here. 
-            </li>
-            <li>
-                You can change this amount at any time - so if you're not sure you can leave it.
-            </li>
-            <li>
-                If you don't add payment details, your membership will automatically expire after your free gift period.
-            </li>
-        </ul>
-        @else
-        <ul>
-            <li>{{ MembershipPayments::formatPrice($recommendedAmount) }} a month, like a cheap gym membership, is the recommended amount for new starters.</li>
-            <li>You can pay less, perhaps if you're on lower income, but we do ask for a minimum of {{ MembershipPayments::formatPrice($minAmount) }}. Click the link above for more advice.</li>
-            <li>You can pay more (&pound;25-&pound;50) if you'd like to support the space.</li>
-        </ul>
+            <ul>
+                <li>
+                    At any time, you can set up payment details which will mean your membership will roll on after the free duration, at the amount you choose here. 
+                </li>
+                <li>
+                    You can change this amount at any time - so if you're not sure you can leave it.
+                </li>
+                <li>
+                    If you don't add payment details, your membership will automatically expire after your free gift period.
+                </li>
+            </ul>
         @endif
     </div>
 
@@ -272,45 +295,21 @@ Join Hackspace Manchester
 
 </div>
 
-<div class="modal fade" id="howMuchShouldIPayModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Subscription Suggestions</h4>
-            </div>
-            <div class="modal-body">
-                <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const membershipTiers = document.querySelectorAll('input[name="membership_tier"]');
+        const customAmountInput = document.querySelector('input[name="monthly_subscription"]');
 
-                Minimum {{ MembershipPayments::formatPrice($minAmount) }} a month:
-                <ul>
-                    <li>You are on a low income and unable to afford a higher amount.</li>
-                </ul>
-
-                {{ MembershipPayments::formatPrice($recommendedAmount) }} a month:
-                <ul>
-                    <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
-                </ul>
-
-                &pound;25 a month and up:
-                <ul>
-                    <li>You are planning to visit the makerspace regularly and would like to provide a little extra support (thank you!)</li>
-                </ul>
-
-                <p>
-                    If you feel that the makerspace is worth more to you then please do adjust your subscription accordingly.
-                    You can also change your subscription amount at any time!
-                </p>
-
-                <p>
-                    If you would like to pay less than {{ MembershipPayments::formatPrice($minAmount) }} a month please select an amount over {{ MembershipPayments::formatPrice($minAmount) }} and complete
-                    this form, on the next page you will be asked to setup a subscription payment.
-                    Before you do this please send the board an email letting them know how much you would like to
-                    pay, they will then override the amount so you can continue to setup a subscription.
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
+        membershipTiers.forEach(tier => {
+            tier.addEventListener('change', function() {
+                if (this.value !== 'custom') {
+                    customAmountInput.value = this.value;
+                } else {
+                    customAmountInput.value = '';
+                }
+            });
+        });
+    });
+</script>
 
 @endsection
