@@ -5,6 +5,8 @@ namespace BB\Entities;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
@@ -45,7 +47,7 @@ class Equipment extends Model
         'slug',
         'description',
         'help_text',
-        'managing_role_id',
+        'maintainer_group_id',
         'requires_induction',
         'induction_category',
         'working',
@@ -104,6 +106,11 @@ class Equipment extends Model
     public function role()
     {
         return $this->belongsTo('\BB\Entities\Role', 'managing_role_id');
+    }
+
+    public function maintainerGroup(): BelongsTo
+    {
+        return $this->belongsTo(MaintainerGroup::class);
     }
 
     /**

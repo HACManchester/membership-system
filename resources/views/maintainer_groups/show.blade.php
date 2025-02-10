@@ -44,6 +44,19 @@
         </ul>
     </div>
 
+    <div class="well">
+        <h3>Equipment</h3>
+        <ul class="list-group">
+            @foreach ($maintainerGroup->equipment as $equipment)
+                <li class="list-group-item">
+                    <a href="{{ route('equipment.show', $equipment) }}">
+                        <span>{{ $equipment->name }}</span>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
     @can('delete', $maintainerGroup)
         <div class="modal fade" tabindex="-1" role="dialog" id="equipment-area-deletion-modal">
             <form class="modal-dialog" role="document" action="{{ route('maintainer_groups.destroy', $maintainerGroup) }}"

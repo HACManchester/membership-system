@@ -7,6 +7,7 @@ use BB\Entities\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaintainerGroup extends Model
@@ -33,5 +34,10 @@ class MaintainerGroup extends Model
     public function equipmentArea(): BelongsTo
     {
         return $this->belongsTo(EquipmentArea::class);
+    }
+
+    public function equipment(): HasMany
+    {
+        return $this->hasMany(Equipment::class);
     }
 }

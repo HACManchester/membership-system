@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Equipment;
+use BB\Entities\MaintainerGroup;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
@@ -134,11 +135,11 @@ class EquipmentController extends Controller
         $this->authorize('create', Equipment::class);
 
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::pluck('title', 'id');
+        $maintainerGroupOptions = MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id');
 
         return \View::make('equipment.create')
             ->with('memberList', $memberList)
-            ->with('roleList', $roleList->toArray())
+            ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
             ->with('ppeList', $this->ppeList)
             ->with('trusted', true)
             ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
@@ -172,12 +173,12 @@ class EquipmentController extends Controller
         $this->authorize('update', $equipment);
 
         $memberList = $this->userRepository->getAllAsDropdown();
-        $roleList = \BB\Entities\Role::pluck('title', 'id');
+        $maintainerGroupOptions = MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id');
 
         return \View::make('equipment.edit')
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
-            ->with('roleList', $roleList->toArray())
+            ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
             ->with('ppeList', $this->ppeList);
     }
 

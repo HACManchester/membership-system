@@ -34,7 +34,7 @@ class StoreEquipmentRequest extends FormRequest
             'slug'                      => 'required|alpha_dash|unique:equipment,slug',
             'description'               => '',
             'help_text'                 => '',
-            'managing_role_id'          => 'exists:roles,id',
+            'maintainer_group_id'       => 'exists:maintainer_groups,id',
             'requires_induction'        => 'boolean',
             'induction_category'        => 'required_if:requires_induction,1|alpha_dash',
             'working'                   => 'boolean',

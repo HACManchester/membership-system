@@ -60,7 +60,10 @@ class EquipmentPolicy
      */
     public function update(User $user, Equipment $equipment)
     {
-        return $equipment->role ? $user->hasRole($equipment->role->name) : false;
+        $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
+        $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
+
+        return $inMaintainerGroup || $inManagingRole;
     }
 
     /**
@@ -72,7 +75,10 @@ class EquipmentPolicy
      */
     public function delete(User $user, Equipment $equipment)
     {
-        return $equipment->role ? $user->hasRole($equipment->role->name) : false;
+        $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
+        $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
+
+        return $inMaintainerGroup || $inManagingRole;
     }
 
     public function train(User $user, Equipment $equipment)

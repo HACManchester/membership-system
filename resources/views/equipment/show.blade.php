@@ -134,6 +134,18 @@
                                 </div>
                             </div>
                         @endif
+                        @if ($equipment->maintainerGroup)
+                            <div class="tool-info__detail">
+                                <div class="tool-info__key">
+                                    Maintainer by
+                                </div>
+                                <div class="tool-info__value">
+                                    <a href="{{ route('maintainer_groups.show', $equipment->maintainerGroup) }}">
+                                        🛠️ {{ $equipment->maintainerGroup->name }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                         
                         <div class="tool-info__detail">
                             <div class="tool-info__key">
