@@ -49,7 +49,9 @@ class EquipmentPolicy
     public function create(User $user)
     {
         // If they're in a maintainer group, they can create equipment managed by their group
-        return $user->maintainerGroups()->count() > 0;
+        $isMaintainer =  $user->maintainerGroups()->count() > 0;
+        $isAreaCoordinator = $user->equipmentAreas()->count() > 0;
+        return $isMaintainer || $isAreaCoordinator;
     }
 
     /**
@@ -62,9 +64,10 @@ class EquipmentPolicy
     public function update(User $user, Equipment $equipment)
     {
         $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
+        $isAreaCoordinator = $user->equipmentAreas->contains($equipment->maintainerGroup->equipmentArea);
         $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
 
-        return $inMaintainerGroup || $inManagingRole;
+        return $inMaintainerGroup || $isAreaCoordinator || $inManagingRole;
     }
 
     /**
@@ -77,9 +80,10 @@ class EquipmentPolicy
     public function delete(User $user, Equipment $equipment)
     {
         $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
+        $isAreaCoordinator = $user->equipmentAreas->contains($equipment->maintainerGroup->equipmentArea);
         $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
 
-        return $inMaintainerGroup || $inManagingRole;
+        return $inMaintainerGroup || $isAreaCoordinator || $inManagingRole;
     }
 
     public function train(User $user, Equipment $equipment)

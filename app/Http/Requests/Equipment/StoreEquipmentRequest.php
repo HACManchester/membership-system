@@ -2,6 +2,7 @@
 
 namespace BB\Http\Requests\Equipment;
 
+use BB\Entities\MaintainerGroup;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -47,7 +48,11 @@ class StoreEquipmentRequest extends FormRequest
                         return;
                     }
 
-                    if (!$this->user()->maintainerGroups->contains($value)) {
+                    $maintainerGroup = MaintainerGroup::find($value);
+                    $inMaintainerGroup = $this->user()->maintainerGroups->contains($maintainerGroup);
+                    $isAreaCoordinator = $this->user()->equipmentAreas->contains($maintainerGroup->equipmentArea);
+
+                    if (!$inMaintainerGroup && !$isAreaCoordinator) {
                         $fail('You can only create equipment managed by maintainer groups you are in.');
                     }
                 }

@@ -10,6 +10,16 @@ class MaintainerGroupPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // fall through to policy methods
+        return null;
+    }
+
     /**
      * Determine whether the user can view any maintainer groups.
      *
@@ -41,8 +51,8 @@ class MaintainerGroupPolicy
      */
     public function create(User $user)
     {
-        // TODO: Make it possible for area coordinators to make new groups under their area
-        return $user->isAdmin();
+        // Area coordinators can make maintainer groups
+        return $user->equipmentAreas()->count() > 0;
     }
 
     /**
@@ -54,7 +64,10 @@ class MaintainerGroupPolicy
      */
     public function update(User $user, MaintainerGroup $maintainerGroup)
     {
-        return $user->isAdmin() || $maintainerGroup->maintainers->contains($user);
+        $isMaintainer = $maintainerGroup->maintainers->contains($user);
+        $isAreaCoordinator = $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
+
+        return $isMaintainer || $isAreaCoordinator;
     }
 
     /**
@@ -66,7 +79,10 @@ class MaintainerGroupPolicy
      */
     public function delete(User $user, MaintainerGroup $maintainerGroup)
     {
-        return $user->isAdmin();
+        $isMaintainer = $maintainerGroup->maintainers->contains($user);
+        $isAreaCoordinator = $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
+
+        return $isMaintainer || $isAreaCoordinator;
     }
 
     /**
@@ -78,7 +94,7 @@ class MaintainerGroupPolicy
      */
     public function restore(User $user, MaintainerGroup $maintainerGroup)
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
@@ -90,6 +106,6 @@ class MaintainerGroupPolicy
      */
     public function forceDelete(User $user, MaintainerGroup $maintainerGroup)
     {
-        return $user->isAdmin();
+        return false;
     }
 }
