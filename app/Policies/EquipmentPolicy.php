@@ -48,7 +48,8 @@ class EquipmentPolicy
      */
     public function create(User $user)
     {
-        return false;
+        // If they're in a maintainer group, they can create equipment managed by their group
+        return $user->maintainerGroups()->count() > 0;
     }
 
     /**

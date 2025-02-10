@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Equipment;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreEquipmentRequest extends FormRequest
 {
@@ -23,6 +24,8 @@ class StoreEquipmentRequest extends FormRequest
      */
     public function rules()
     {
+        $canGloballyManage = $this->user()->isAdmin() || $this->user()->hasRole('equipment');
+
         return [
             'name'                      => 'required',
             'manufacturer'              => '',
@@ -34,7 +37,21 @@ class StoreEquipmentRequest extends FormRequest
             'slug'                      => 'required|alpha_dash|unique:equipment,slug',
             'description'               => '',
             'help_text'                 => '',
-            'maintainer_group_id'       => 'exists:maintainer_groups,id',
+            'maintainer_group_id'       => [
+                Rule::requiredIf(function () use ($canGloballyManage) {
+                    return !$canGloballyManage;
+                }),
+                'exists:maintainer_groups,id',
+                function ($attribute, $value, $fail) use ($canGloballyManage) {
+                    if ($canGloballyManage) {
+                        return;
+                    }
+
+                    if (!$this->user()->maintainerGroups->contains($value)) {
+                        $fail('You can only create equipment managed by maintainer groups you are in.');
+                    }
+                }
+            ],
             'requires_induction'        => 'boolean',
             'induction_category'        => 'required_if:requires_induction,1|alpha_dash',
             'working'                   => 'boolean',

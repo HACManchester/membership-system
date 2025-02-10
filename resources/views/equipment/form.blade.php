@@ -185,7 +185,7 @@
     <div class="col-md-6">
         <div class="{{ $errors->has('maintainer_group_id') ? 'has-error' : '' }}">
             {!! Form::label('maintainer_group_id', 'Maintainer Group', ['class'=>'']) !!}
-            {!! Form::select('maintainer_group_id', [''=>'']+$maintainerGroupOptions, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+            {!! Form::select('maintainer_group_id', [null => 'Please select...']+$maintainerGroupOptions, null, ['class'=>'form-control js-advanced-dropdown']) !!}
             <p class="help-block">Is a group is responsible for this piece of equipment?</p>
             @if($errors->has('maintainer_group_id'))
                 <span class="help-block">
