@@ -50,6 +50,11 @@ abstract class DBRepository
      */
     public function create($data)
     {
+        // Can remove if we ever add the ConvertEmptyStringsToNull middleware
+        if (is_string($data['maintainer_group_id']) && $data['maintainer_group_id'] == '') {
+            $data['maintainer_group_id'] = null;
+        }
+        
         return $this->model->create($data);
     }
 
@@ -74,6 +79,11 @@ abstract class DBRepository
      */
     public function update($recordId, $recordData)
     {
+        // Can remove if we ever add the ConvertEmptyStringsToNull middleware
+        if (is_string($recordData['maintainer_group_id']) && $recordData['maintainer_group_id'] == '') {
+            $recordData['maintainer_group_id'] = null;
+        }
+
         return $this->getById($recordId)->update($recordData);
     }
 

@@ -148,6 +148,12 @@ Route::group(array('middleware' => 'role:member'), function () {
 Route::resource('equipment_area', 'EquipmentAreaController');
 
 ##########################
+# Maintainer groups
+##########################
+
+Route::resource('maintainer_groups', 'MaintainerGroupController');
+
+##########################
 # Notifications
 ##########################
 

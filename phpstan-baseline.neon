@@ -331,6 +331,41 @@ parameters:
 			path: app/Http/Controllers/LeaderboardController.php
 
 		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:destroy\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:edit\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:index\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:store\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\MaintainerGroupController\\:\\:update\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\Http\\\\RedirectResponse\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
+
+		-
 			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
 			count: 1
 			path: app/Http/Controllers/MembersController.php
@@ -699,36 +734,6 @@ parameters:
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Observer/UserAuditObserver.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$equipmentArea with type BB\\\\EquipmentArea is not subtype of native type BB\\\\Entities\\\\EquipmentArea\\.$#"
-			count: 5
-			path: app/Policies/EquipmentAreaPolicy.php
-
-		-
-			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:delete\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
-			count: 1
-			path: app/Policies/EquipmentAreaPolicy.php
-
-		-
-			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:forceDelete\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
-			count: 1
-			path: app/Policies/EquipmentAreaPolicy.php
-
-		-
-			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:restore\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
-			count: 1
-			path: app/Policies/EquipmentAreaPolicy.php
-
-		-
-			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:update\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
-			count: 1
-			path: app/Policies/EquipmentAreaPolicy.php
-
-		-
-			message: "#^Parameter \\$equipmentArea of method BB\\\\Policies\\\\EquipmentAreaPolicy\\:\\:view\\(\\) has invalid type BB\\\\EquipmentArea\\.$#"
-			count: 1
-			path: app/Policies/EquipmentAreaPolicy.php
 
 		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
