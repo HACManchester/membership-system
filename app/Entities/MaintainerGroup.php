@@ -2,17 +2,18 @@
 
 namespace BB\Entities;
 
-use BB\Entities\MaintainerGroup;
+use BB\Entities\EquipmentArea;
+use BB\Entities\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class EquipmentArea extends Model
+class MaintainerGroup extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'slug', 'description'];
+    protected $fillable = ['name', 'slug', 'description', 'equipment_area_id'];
 
     /**
      * Get the route key for the model.
@@ -24,13 +25,13 @@ class EquipmentArea extends Model
         return 'slug';
     }
 
-    public function areaCoordinators(): BelongsToMany
+    public function maintainers(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }
 
-    public function maintainerGroups(): HasMany
+    public function equipmentArea(): BelongsTo
     {
-        return $this->hasMany(MaintainerGroup::class);
+        return $this->belongsTo(EquipmentArea::class);
     }
 }

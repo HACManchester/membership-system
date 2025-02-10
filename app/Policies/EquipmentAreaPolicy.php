@@ -25,7 +25,7 @@ class EquipmentAreaPolicy
      * Determine whether the user can view the equipment area.
      *
      * @param  \BB\Entities\User  $user
-     * @param  \BB\EquipmentArea  $equipmentArea
+     * @param  \BB\Entities\EquipmentArea  $equipmentArea
      * @return mixed
      */
     public function view(User $user, EquipmentArea $equipmentArea)
@@ -48,7 +48,7 @@ class EquipmentAreaPolicy
      * Determine whether the user can update the equipment area.
      *
      * @param  \BB\Entities\User  $user
-     * @param  \BB\EquipmentArea  $equipmentArea
+     * @param  \BB\Entities\EquipmentArea  $equipmentArea
      * @return mixed
      */
     public function update(User $user, EquipmentArea $equipmentArea)
@@ -60,7 +60,7 @@ class EquipmentAreaPolicy
      * Determine whether the user can delete the equipment area.
      *
      * @param  \BB\Entities\User  $user
-     * @param  \BB\EquipmentArea  $equipmentArea
+     * @param  \BB\Entities\EquipmentArea  $equipmentArea
      * @return mixed
      */
     public function delete(User $user, EquipmentArea $equipmentArea)
@@ -72,7 +72,7 @@ class EquipmentAreaPolicy
      * Determine whether the user can restore the equipment area.
      *
      * @param  \BB\Entities\User  $user
-     * @param  \BB\EquipmentArea  $equipmentArea
+     * @param  \BB\Entities\EquipmentArea  $equipmentArea
      * @return mixed
      */
     public function restore(User $user, EquipmentArea $equipmentArea)
@@ -84,7 +84,7 @@ class EquipmentAreaPolicy
      * Determine whether the user can permanently delete the equipment area.
      *
      * @param  \BB\Entities\User  $user
-     * @param  \BB\EquipmentArea  $equipmentArea
+     * @param  \BB\Entities\EquipmentArea  $equipmentArea
      * @return mixed
      */
     public function forceDelete(User $user, EquipmentArea $equipmentArea)

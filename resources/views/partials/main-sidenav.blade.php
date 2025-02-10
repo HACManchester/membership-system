@@ -184,6 +184,7 @@
             {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
             {!! HTML::sideNavLink('Stats', 'stats.index') !!}
             {!! HTML::sideNavLink('Area Coordinators', 'equipment_area.index') !!}
+            {!! HTML::sideNavLink('Maintainer Groups', 'maintainer_groups.index') !!}
             
             @if(!Auth::guest())
                 @if (Auth::user()->isAdmin())

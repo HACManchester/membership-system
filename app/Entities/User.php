@@ -9,6 +9,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use Auth;
+use BB\Entities\MaintainerGroup;
 use Hash;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -227,6 +228,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsToMany(EquipmentArea::class);
     }
 
+    
+    public function maintainerGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(MaintainerGroup::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
