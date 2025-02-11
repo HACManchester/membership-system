@@ -154,12 +154,16 @@ Route::resource('equipment_area', 'EquipmentAreaController');
 Route::resource('maintainer_groups', 'MaintainerGroupController');
 
 ##########################
+# Induction courses
+##########################
+
+Route::resource('courses', 'CourseController');
+
+##########################
 # Notifications
 ##########################
 
 Route::resource('notifications', 'NotificationController', ['only' => ['index', 'update'], 'middleware' => 'role:member']);
-
-
 
 ##########################
 # Key fobs
@@ -228,12 +232,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
 ##########################
 
 Route::post('settings', 'SettingsController@update')->name('settings.update');
-
-#### 
-## shop
-#####
-
-
 
 ##########################
 # Logviewer
