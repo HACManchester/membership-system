@@ -32,29 +32,41 @@
 
     <div class="well">
         <h3>Maintainers</h3>
-        <ul class="list-group">
-            @foreach ($maintainerGroup->maintainers as $maintainer)
-                <li class="list-group-item">
-                    <a href="{{ route('members.show', $maintainer->id) }}">
-                        {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 64) !!}
-                        <span>{{ $maintainer->name }}</span>
-                    </a>
-                </li>
+        <div class="row">
+            @foreach ($maintainerGroup->maintainers->chunk(ceil($maintainerGroup->maintainers->count() / 2)) as $maintainerChunk)
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        @foreach ($maintainerChunk as $maintainer)
+                            <li class="list-group-item">
+                                <a href="{{ route('members.show', $maintainer->id) }}">
+                                    {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 48, 'hidden-sm hidden-xs') !!}
+                                    <span>{{ $maintainer->name }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
             @endforeach
-        </ul>
+        </div>
     </div>
 
     <div class="well">
         <h3>Equipment</h3>
-        <ul class="list-group">
-            @foreach ($maintainerGroup->equipment as $equipment)
-                <li class="list-group-item">
-                    <a href="{{ route('equipment.show', $equipment) }}">
-                        <span>{{ $equipment->name }}</span>
-                    </a>
-                </li>
+        <div class="row">
+            @foreach ($maintainerGroup->equipment->chunk(ceil($maintainerGroup->equipment->count() / 2)) as $equipmentChunk)
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        @foreach ($equipmentChunk as $equipment)
+                            <li class="list-group-item">
+                                <a href="{{ route('equipment.show', $equipment) }}">
+                                    <span>{{ $equipment->name }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
             @endforeach
-        </ul>
+        </div>
     </div>
 
     @can('delete', $maintainerGroup)

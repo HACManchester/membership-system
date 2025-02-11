@@ -49,16 +49,22 @@
                     </p>
                     
                     <h5>Area Coordinators</h5>
-                    <ul class="list-group">
-                        @foreach ($area->areaCoordinators as $coordinator)
-                            <li class="list-group-item">
-                                <a href="{{ route('members.show', $coordinator->id) }}">
-                                    {!! HTML::memberPhoto($coordinator->profile, $coordinator->hash, 64, 'hidden-sm hidden-xs') !!}
-                                    <span>{{ $coordinator->name }}</span>
-                                </a>
-                            </li>
+                    <div class="row">
+                        @foreach ($area->areaCoordinators->chunk(ceil($area->areaCoordinators->count() / 2)) as $coordinatorChunk)
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    @foreach ($coordinatorChunk as $coordinator)
+                                        <li class="list-group-item">
+                                            <a href="{{ route('members.show', $coordinator->id) }}">
+                                                {!! HTML::memberPhoto($coordinator->profile, $coordinator->hash, 48, 'hidden-sm hidden-xs') !!}
+                                                <span>{{ $coordinator->name }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
             @endforeach
 

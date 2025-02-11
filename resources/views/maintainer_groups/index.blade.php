@@ -15,7 +15,6 @@
 @stop
 
 @section('content')
-
     <div class="row">
         <div class="col-sm-12 col-md-9 col-lg-9">
             <div class="well">
@@ -40,16 +39,22 @@
                     
 
                     <h5>Maintainers</h5>
-                    <ul class="list-group">
-                        @foreach ($maintainerGroup->maintainers as $maintainer)
-                            <li class="list-group-item">
-                                <a href="{{ route('members.show', $maintainer->id) }}">
-                                    {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 64, 'hidden-sm hidden-xs') !!}
-                                    <span>{{ $maintainer->name }}</span>
-                                </a>
-                            </li>
+                    <div class="row">
+                        @foreach ($maintainerGroup->maintainers->chunk(ceil($maintainerGroup->maintainers->count() / 2)) as $maintainerChunk)
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    @foreach ($maintainerChunk as $maintainer)
+                                        <li class="list-group-item">
+                                            <a href="{{ route('members.show', $maintainer->id) }}">
+                                                {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 48, 'hidden-sm hidden-xs') !!}
+                                                <span>{{ $maintainer->name }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
             @endforeach
 
