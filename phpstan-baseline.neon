@@ -96,6 +96,41 @@ parameters:
 			path: app/Http/Controllers/AccountController.php
 
 		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:destroy\\(\\) should return Illuminate\\\\Http\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:edit\\(\\) should return Illuminate\\\\Http\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:index\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:store\\(\\) should return Illuminate\\\\Http\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
+			message: "#^Method BB\\\\Http\\\\Controllers\\\\CourseController\\:\\:update\\(\\) should return Illuminate\\\\Http\\\\Response but return statement is missing\\.$#"
+			count: 1
+			path: app/Http/Controllers/CourseController.php
+
+		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\EquipmentAreaController\\:\\:create\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
 			count: 1
 			path: app/Http/Controllers/EquipmentAreaController.php
@@ -729,6 +764,11 @@ parameters:
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Observer/UserAuditObserver.php
+
+		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Course\\:\\:\\$equipment\\.$#"
+			count: 1
+			path: app/Policies/CoursePolicy.php
 
 		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
