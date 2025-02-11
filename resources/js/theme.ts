@@ -42,8 +42,6 @@ const theme = createTheme({
       styleOverrides: {
         body: {
           background: '#8e9eab',
-          backgroundImage: 'linear-gradient(to bottom, #eef2f3, #8e9eab)',
-          backgroundAttachment: 'fixed',
         },
       },
     },

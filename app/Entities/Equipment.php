@@ -2,11 +2,11 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Course;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
@@ -41,7 +41,6 @@ class Equipment extends Model
         'model_number',
         'serial_number',
         'colour',
-        'location',
         'room',
         'detail',
         'slug',
@@ -281,7 +280,10 @@ class Equipment extends Model
     {
         $items = json_decode($this->attributes['ppe'], true);
         if (is_array($items)) {
-            return $items;
+            // Filter out empty strings and trim whitespace
+            return array_values(array_filter($items, function($item) {
+                return !empty(trim($item));
+            }));
         } else {
             return [];
         }
@@ -293,5 +295,11 @@ class Equipment extends Model
     public function setPpeAttribute($value)
     {
         $this->attributes['ppe'] = json_encode($value);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_equipment')
+            ->withTimestamps();
     }
 }

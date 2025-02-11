@@ -4,6 +4,7 @@ namespace BB\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\Induction;
@@ -16,6 +17,7 @@ use BB\Policies\EquipmentPolicy;
 use BB\Policies\InductionPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
+use BB\Policies\CoursePolicy;
 use BB\Policies\StorageBoxPolicy;
 use BB\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -35,6 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         EquipmentArea::class => EquipmentAreaPolicy::class,
         Induction::class => InductionPolicy::class,
         MaintainerGroup::class => MaintainerGroupPolicy::class,
+        Course::class => CoursePolicy::class,
     ];
 
     /**

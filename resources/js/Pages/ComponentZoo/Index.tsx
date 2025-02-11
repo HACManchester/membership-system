@@ -9,7 +9,7 @@ import {
     IconButton,
     Stack,
     Divider,
-    Grid,
+    Grid2 as Grid,
     Card,
     CardContent,
     CardActions,
@@ -121,13 +121,15 @@ const ComponentZoo = () => {
                 <Typography variant="h4" component="h2" gutterBottom>
                     MUI Component Showcase
                 </Typography>
-                <Typography paragraph>
+                <Typography sx={{
+                    marginBottom: "16px"
+                }}>
                     This page showcases various Material UI components with your theme applied. Use this to preview how theme changes will affect your UI.
                 </Typography>
 
                 <Grid container spacing={4}>
                     {/* TYPOGRAPHY */}
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Typography</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -148,7 +150,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* BUTTONS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Buttons</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -215,7 +221,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* FORM INPUTS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Form Inputs</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -294,13 +304,21 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* CARDS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Cards</Typography>
                             <Divider sx={{ mb: 2 }} />
 
                             <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        md: 6
+                                    }}>
                                     <Card>
                                         <CardHeader
                                             avatar={
@@ -323,7 +341,11 @@ const ComponentZoo = () => {
                                     </Card>
                                 </Grid>
 
-                                <Grid item xs={12} md={6}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        md: 6
+                                    }}>
                                     <Card>
                                         <CardContent>
                                             <Typography variant="h5" component="div">
@@ -348,7 +370,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* ALERTS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Alerts</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -375,7 +401,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* LISTS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Lists</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -404,7 +434,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* TABS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Tabs</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -431,7 +465,11 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* ACCORDIONS */}
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Accordions</Typography>
                             <Divider sx={{ mb: 2 }} />
@@ -470,7 +508,7 @@ const ComponentZoo = () => {
                     </Grid>
 
                     {/* CHIPS AND BADGES */}
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h4" gutterBottom>Chips & Badges</Typography>
                             <Divider sx={{ mb: 2 }} />

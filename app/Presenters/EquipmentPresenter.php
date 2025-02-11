@@ -1,5 +1,7 @@
 <?php namespace BB\Presenters;
 
+use BB\Support\PpeOptions;
+use BB\Support\RoomOptions;
 use Carbon\Carbon;
 use Laracasts\Presenter\Presenter;
 use Michelf\Markdown;
@@ -9,9 +11,7 @@ class EquipmentPresenter extends Presenter
 
     public function livesIn()
     {
-        $string = $this->entity->room;
-        $string = str_replace('-', ' ', $string);
-        $string = ucfirst($string);
+        $string = RoomOptions::getDisplayName($this->entity->room);
         if ($this->entity->detail) {
             $string .= ' (' . $this->entity->detail . ')';
         }
@@ -80,6 +80,26 @@ class EquipmentPresenter extends Presenter
         }
         $ppeHtml .= '<br /><br />';
         return $ppeHtml;
+    }
+
+    /**
+     * Get PPE as a text representation
+     * 
+     * @return string
+     */
+    public function ppeText()
+    {
+        return PpeOptions::asText($this->entity->ppe);
+    }
+
+    /**
+     * Get PPE labels as an array
+     * 
+     * @return array
+     */
+    public function ppeLabels()
+    {
+        return PpeOptions::getLabels($this->entity->ppe);
     }
 
 

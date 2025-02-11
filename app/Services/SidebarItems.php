@@ -3,6 +3,7 @@
 namespace BB\Services;
 
 use BB\Entities\User;
+use BB\Entities\Course;
 use Illuminate\Support\Facades\Auth;
 
 class SidebarItems
@@ -82,7 +83,7 @@ class SidebarItems
 
     protected function resourcesNav()
     {
-        return [
+        $resourcesItems = [
             [
                 'label' => 'Members',
                 'href' => route('members.index'),
@@ -97,6 +98,13 @@ class SidebarItems
                 'label' => 'Tools and Equipment',
                 'href' => route('equipment.index'),
                 'active' => self::isActive('equipment.index')
+            ],
+            [
+                'label' => 'Inductions',
+                'href' => route('courses.index'),
+                'active' => self::isActive('courses.index'),
+                'visible' => $this->user->can('viewAny', Course::class),
+                'badge' => Course::isPreview() ? 'Preview' : null
             ],
             [
                 'label' => 'Stats',
@@ -114,6 +122,10 @@ class SidebarItems
                 'active' => self::isActive('maintainer_groups.index')
             ]
         ];
+
+        return array_filter($resourcesItems, function ($item) {
+            return !isset($item['visible']) || $item['visible'];
+        });
     }
 
     protected function adminNav()

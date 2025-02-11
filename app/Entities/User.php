@@ -298,7 +298,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function isAdmin()
     {
-        return Auth::user()->hasRole('admin');
+        return $this->hasRole('admin');
     }
 
     /**
