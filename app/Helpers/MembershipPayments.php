@@ -1,5 +1,8 @@
-<?php namespace BB\Helpers;
+<?php
 
+namespace BB\Helpers;
+
+use BB\Data\MembershipPriceOption;
 use Carbon\Carbon;
 
 class MembershipPayments
@@ -15,7 +18,7 @@ class MembershipPayments
         /** @var \BB\Repo\SubscriptionChargeRepository */
         $subscriptionChargeRepository = \App::make('BB\Repo\SubscriptionChargeRepository');
         $latestCharge = $subscriptionChargeRepository->getMembersLatestPaidCharge($userId);
-        
+
         if ($latestCharge) {
             return $latestCharge->charge_date;
         }
@@ -92,6 +95,27 @@ class MembershipPayments
     }
 
     /**
+     * The available price options for a membership to the space
+     *
+     * @return MembershipPriceOption[]
+     */
+    public static function getPriceOptions()
+    {
+        $options = config('membership.prices.options');
+        $priceOptions = [];
+
+        foreach ($options as $key => $option) {
+            $priceOptions[] = new MembershipPriceOption(
+                $option['title'],
+                $option['description'],
+                $option['value_in_pence']
+            );
+        }
+
+        return $priceOptions;
+    }
+
+    /**
      * Format membership prices for consistent display across the website
      *
      * @param integer $pence
@@ -101,4 +125,4 @@ class MembershipPayments
     {
         return "£" . number_format($pence / 100, 2);
     }
-} 
+}
