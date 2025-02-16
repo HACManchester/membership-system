@@ -165,6 +165,7 @@ class AccountController extends Controller
 
         $minAmount = MembershipPayments::getMinimumPrice();
         $recommendedAmount = MembershipPayments::getRecommendedPrice();
+        $priceOptions = MembershipPayments::getPriceOptions();
 
         $confetti = $gift ? $gift_valid : true;
 
@@ -172,6 +173,7 @@ class AccountController extends Controller
         return \View::make('account.create', compact(
             'minAmount',
             'recommendedAmount',
+            'priceOptions',
             'gift',
             'gift_code',
             'gift_valid',
@@ -214,6 +216,7 @@ class AccountController extends Controller
             'address.line_4',
             'address.postcode',
             'monthly_subscription',
+            'custom_monthly_subscription',
             'emergency_contact',
             'new_profile_photo',
             'profile_photo_private',

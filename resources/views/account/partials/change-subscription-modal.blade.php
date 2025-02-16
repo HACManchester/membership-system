@@ -11,57 +11,60 @@
                 @else
                     {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-payment', $user->id])) !!}
                         <div class="form-group">
-                            {!! Form::label('monthly_subscription', 'Monthly Subscription Amount', ['class'=>'control-label']) !!}
-                            <div class="input-group">
-                                <div class="input-group-addon">&pound;</div>
-                                    {!! Form::input(
-                                        'number',
-                                        'monthly_subscription',
-                                        round($user->monthly_subscription),
-                                        [
-                                            'class' => 'form-control',
-                                            'placeholder' => MembershipPayments::getRecommendedPrice() / 100,
-                                            'min' => Auth::user()->isAdmin() ? 0 : MembershipPayments::getMinimumPrice() / 100,
-                                            'step' => '1'
-                                        ]
-                                    ) !!}
+                            <div>
+                                @foreach(MembershipPayments::getPriceOptions() as $option)
+                                    <div class="panel panel-default" onclick="document.getElementById('subscription_{{ $option->value_in_pence }}').click()">
+                                        <div class="panel-heading">
+                                            {!! Form::radio('membership_tier', $option->value_in_pence / 100, $option->value_in_pence == $user->monthly_subscription * 100, ['class' => 'form-check-input', 'id' => 'subscription_' . $option->value_in_pence]) !!}
+                                            {!! Form::label('subscription_' . $option->value_in_pence, $option->title . ': £' . number_format($option->value_in_pence / 100, 2), ['class' => 'form-check-label']) !!}
+                                        </div>
+                                        <div class="panel-body">
+                                            <p>{!! nl2br($option->description) !!}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <div class="panel panel-default" onclick="document.getElementById('subscription_custom').click()">
+                                    <div class="panel-heading">
+                                        {!! Form::radio('membership_tier', 'custom', false, ['class' => 'form-check-input', 'id' => 'subscription_custom']) !!}
+                                        {!! Form::label('subscription_custom', 'Custom Amount', ['class' => 'form-check-label']) !!}
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>For those that want to go above and beyond to support the makerspace, enter a custom amount here:</p>
+                                        {!! Form::label('custom_subscription_amount', 'Custom Amount', ['class' => 'form-check-label']) !!}
+                                        {!! Form::input('number', 'monthly_subscription', $user->monthly_subscription, ['class' => 'form-control', 'placeholder' => 'Enter amount', 'min' => MembershipPayments::getMinimumPrice() / 100, 'step' => '1']) !!}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="form-group">
                                 {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
                             </div>
                         <div class="clearfix"></div>
                     {!! Form::close() !!}
 
-                    <p>If you're not sure how much to pay, here are some general guidelines to help you find a suitable subscription amount for your circumstances:</p>
-
-                    <strong>Minimum {{ MembershipPayments::formatPrice(MembershipPayments::getMinimumPrice()) }} a month:</strong>
-                    <ul>
-                        <li>You are on a low income and unable to afford a higher amount.</li>
-                    </ul>
-
-                    <strong>{{ MembershipPayments::formatPrice(MembershipPayments::getRecommendedPrice()) }} a month:</strong>
-                    <ul>
-                        <li>You are planning to visit the makerspace regularly and are a professional / in full-time employment</li>
-                    </ul>
-
-                    <strong>&pound;25 a month and up:</strong>
-                    <ul>
-                        <li>You are planning to visit the makerspace regularly and would like to provide a little extra support (thank you!)</li>
-                    </ul>
-
-                    <p>
-                        If you feel that the makerspace is worth more to you then please do adjust your subscription accordingly.
-                        You can also change your subscription amount at any time!
-                    </p>
-
                     <p>
                         If you would like to pay less than {{ MembershipPayments::formatPrice(MembershipPayments::getMinimumPrice()) }} a month 
-                        please send the board an email letting them know how much you would like to pay, they will then override the amount
-                        so you can continue to setup a subscription.
+                        please email <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a>.
                     </p>
                 @endif
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const membershipTiers = document.querySelectorAll('input[name="membership_tier"]');
+        const customAmountInput = document.querySelector('input[name="monthly_subscription"]');
+
+        membershipTiers.forEach(tier => {
+            tier.addEventListener('change', function() {
+                if (this.value !== 'custom') {
+                    customAmountInput.value = this.value;
+                } else {
+                    customAmountInput.value = '';
+                }
+            });
+        });
+    });
+</script>

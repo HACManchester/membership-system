@@ -222,19 +222,6 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::post('disciplinary/{user}/unban', ['uses' => 'DisciplinaryController@unban', 'as' => 'disciplinary.unban']);
 });
 
-
-##########################
-# Settings
-##########################
-
-Route::post('settings', 'SettingsController@update')->name('settings.update');
-
-#### 
-## shop
-#####
-
-
-
 ##########################
 # Logviewer
 ##########################
