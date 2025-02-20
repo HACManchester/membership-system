@@ -176,7 +176,7 @@ Join Hackspace Manchester
                     <div class="panel-body">
                         <p>For those that want to go above and beyond to support the makerspace, enter a custom amount here:</p>
                         {!! Form::label('custom_subscription_amount', 'Custom Amount', ['class' => 'form-check-label']) !!}
-                        {!! Form::input('number', 'monthly_subscription', null, ['class' => 'form-control', 'placeholder' => 'Enter amount', 'min' => $minAmount / 100, 'step' => '1']) !!}
+                        {!! Form::input('number', 'monthly_subscription', $recommendedAmount / 100, ['class' => 'form-control', 'placeholder' => 'Enter amount', 'min' => $minAmount / 100, 'step' => '1']) !!}
                         {!! FlashNotification::getErrorDetail('monthly_subscription') !!}
                     </div>
                 </div>
