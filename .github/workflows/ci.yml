@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "6"
+          node-version: "16"
           cache: "yarn"
 
       - name: Composer install
@@ -43,7 +43,7 @@ jobs:
         run: yarn install
 
       - name: Frontend build
-        run: yarn run build
+        run: yarn run prod
 
       - name: Prepare the application
         run: |
