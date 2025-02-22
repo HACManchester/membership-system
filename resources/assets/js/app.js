@@ -11,11 +11,6 @@ new SiteInteraction();
 new AdminForms();
 new Snackbar();
 
-if (jQuery('body').hasClass('payment-page')) {
-    var FilterablePaymentTable = require('./components/FilterablePaymentTable');
-    React.render(React.createElement(FilterablePaymentTable, null), document.getElementById('react-test'));
-}
-
 jQuery('.paymentModule').each(function () {
     var reason = jQuery(this).data('reason');
     var displayReason = jQuery(this).data('displayReason');
