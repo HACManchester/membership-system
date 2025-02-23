@@ -7,9 +7,9 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.4",
-    "jquery": "^2.1.4",
+    "jquery": "^3.5.0",
     "material-design-icons": "^2.0.0",
-    "react": "^0.13.3",
+    "react": "^0.14.0",
     "select2": "^3.5.2-browserify"
   },
   "browser": {
