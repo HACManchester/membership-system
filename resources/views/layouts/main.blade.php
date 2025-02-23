@@ -8,7 +8,7 @@
     <title>@yield('meta-title', 'Member System') | Hackspace Manchester</title>
 
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
-    <link href="{{ elixir('/css/main.css') }}" rel="stylesheet">
+    <link href="{{ mix('/css/application.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('img/favicon/favicon.png') }}">
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset("/apple-touch-icon.png") }}">
@@ -89,8 +89,7 @@
 
     @include('partials/js-data')
 
-
-    <script src="{{ elixir('/js/bundle.js') }}"></script>
+    <script src="{{ mix('/js/app.js') }}"></script>
 
     @include('partials/flash-message')
     

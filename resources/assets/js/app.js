@@ -1,28 +1,17 @@
-var React = require('react');
+import React from 'react';
+import SiteInteraction from './SiteInteraction';
+import AdminForms from './AdminForms';
+import Snackbar from './Snackbar';
+import PaymentModule from './components/PaymentModule';
+
 global.jQuery = global.$ = require('jquery');
-require('bootstrap-datepicker');
-require('bootstrap');
+require('bootstrap');;
 
-var SiteInteraction = require('./SiteInteraction');
 new SiteInteraction();
-
-//var PaymentForm = require('./PaymentForm');
-//new PaymentForm();
-
-var AdminForms = require('./AdminForms');
 new AdminForms();
-
-var Snackbar = require('./Snackbar');
 new Snackbar();
 
-if (jQuery('body').hasClass('payment-page')) {
-    var FilterablePaymentTable = require('./components/FilterablePaymentTable');
-    React.render(<FilterablePaymentTable />, document.getElementById('react-test'));
-}
-
-var PaymentModule = require('./components/PaymentModule');
 jQuery('.paymentModule').each(function () {
-
     var reason = jQuery(this).data('reason');
     var displayReason = jQuery(this).data('displayReason');
     var buttonLabel = jQuery(this).data('buttonLabel');
@@ -35,5 +24,19 @@ jQuery('.paymentModule').each(function () {
 
     var handleSuccess = () => { document.location.reload(true) };
 
-    React.render(<PaymentModule csrfToken={csrfToken} description={displayReason} reason={reason} amount={amount} email={memberEmail} userId={userId} onSuccess={handleSuccess} buttonLabel={buttonLabel} methods={methods} reference={ref} />, jQuery(this)[0]);
+    React.render(
+        React.createElement(PaymentModule, {
+            csrfToken: csrfToken,
+            description: displayReason,
+            reason: reason,
+            amount: amount,
+            email: memberEmail,
+            userId: userId,
+            onSuccess: handleSuccess,
+            buttonLabel: buttonLabel,
+            methods: methods,
+            reference: ref
+        }),
+        jQuery(this)[0]
+    );
 });

@@ -1,7 +1,6 @@
 import React from "react";
 
 var Select = require("./form/Select");
-var Loader = require("halogen/PulseLoader");
 
 class PaymentModule extends React.Component {
   constructor(props) {

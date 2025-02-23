@@ -112,13 +112,13 @@ For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might b
 
    ```sh
    docker-compose run laravel composer install
-   docker-compose run laravel yarn install
+   docker-compose run laravel npm install
    ```
 
 3. Build frontend assets with:
 
    ```sh
-   docker-compose run laravel yarn run build
+   docker-compose run laravel npm run build
    ```
 
 4. Start the local runtime with:

@@ -11,6 +11,7 @@ database.sqlite
 yarn-error.log
 /public/build
 /public/css/*.css
+/public/mix-manifest.json
 /public/fonts
 /public/js
 .phpunit.result.cache
@@ -18,3 +19,7 @@ yarn-error.log
 # IDE-helper related
 _ide_helper*
 .phpstorm.meta.php
+
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
