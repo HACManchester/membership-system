@@ -3,7 +3,9 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\KeyFob;
+use BB\Rules\KeyFobRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Unique;
 
 class StoreKeyFobRequest extends FormRequest
 {
@@ -26,7 +28,11 @@ class StoreKeyFobRequest extends FormRequest
     {
         return [
             'type' => ['required', 'in:keyfob,access_code'],
-            'key_id' => ['required_unless:type,access_code', 'unique:key_fobs', 'min:8', 'max:12', 'regex:/^([a-fA-F0-9]+)$/i'],
+            'key_id' => [
+                'required_unless:type,access_code',
+                new KeyFobRule,
+                new Unique((new KeyFob)->getTable(), 'key_id'),
+            ],
         ];
     }
 

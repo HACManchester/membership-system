@@ -226,11 +226,6 @@ parameters:
 			path: app/Http/Controllers/EquipmentController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/GeneralInductionController.php
-
-		-
 			message: "#^Method BB\\\\Http\\\\Controllers\\\\GeneralInductionController\\:\\:show\\(\\) should return Illuminate\\\\Http\\\\Response but returns Illuminate\\\\View\\\\View\\.$#"
 			count: 1
 			path: app/Http/Controllers/GeneralInductionController.php

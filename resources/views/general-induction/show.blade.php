@@ -46,8 +46,7 @@
                     <h3 class="panel-title">Mark your General Induction as completed</h3>
                 </div>
                 <div class="panel-body">
-                    <p>To complete your general induction, enter the code given to you at the end of your induction here.
-                    </p>
+                    <p>To complete your general induction, enter the code given to you at the end of your induction here.</p>
 
                     {!! Form::open(['route' => 'general-induction.update', 'class' => 'form-horizontal', 'method' => 'PUT']) !!}
 
@@ -59,6 +58,25 @@
                              @if($errors->has('induction_code'))
                                 <span class="help-block">
                                     @foreach($errors->get('induction_code') as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <p>
+                        If you have been given a key fob already, enter it's ID below to pre-register it with your
+                        account. Your key fob will start working once your membership payment is set up.
+                    </p>
+                    <div
+                        class="form-group {{ $errors->has('key_id') ? 'has-error' : '' }} }}">
+                        {!! Form::label('key_id', 'Fob ID (optional)', ['class' => 'col-sm-3 control-label']) !!}
+                        <div class="col-sm-9 col-lg-7">
+                            {!! Form::text('key_id', null, ['class' => 'form-control']) !!}
+                            @if($errors->has('key_id'))
+                                <span class="help-block">
+                                    @foreach($errors->get('key_id') as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
                                 </span>
