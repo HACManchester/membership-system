@@ -9,11 +9,11 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => 'maintainer_groups.store']) !!}
+    <form action="{{ route('maintainer_groups.store') }}" method="POST">
+        @csrf
 
-    @include('maintainer_groups/form')
+        @include('maintainer_groups/form')
 
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-
-    {!! Form::close() !!}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 @stop

@@ -1,5 +1,5 @@
 <nav id="mainTabBar">
-    <ul class="" role="tablist">
+    <ul role="tablist">
         <li class="{{ request()->routeIs('payments.index') ? 'active' : '' }}">
             {!! link_to_route('payments.index', 'All Payments') !!}
         </li>

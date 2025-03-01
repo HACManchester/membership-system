@@ -128,7 +128,7 @@
     <div style="border-bottom: 3px dotted #ddd;">
         <span class="sidenav-brand">
             <a href="{{ route('home') }}">
-                <img class="" src="/img/logo-new.png" height="100" style="display:block; margin: 0 auto;"/>
+                <img src="/img/logo-new.png" height="100" style="display:block; margin: 0 auto;"/>
             </a>
             @if (!Auth::guest())
                 @if (Auth::user()->online_only)

@@ -19,12 +19,27 @@ Payments
 
 <div class="row">
     <div class="col-xs-12 well">
-        {!! Form::open(array('method'=>'GET', 'route' => ['payments.index'], 'class'=>'navbar-form navbar-left')) !!}
-        {!! Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::select('member_filter', [''=>'All Members']+$memberList, Request::get('member_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::select('reason_filter', [''=>'All Reasons']+$reasonList, Request::get('reason_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::submit('Filter', array('class'=>'btn btn-default btn-sm')) !!}
-        {!! Form::close() !!}
+        <form method="GET" action="{{ route('payments.index') }}" class="navbar-form navbar-left">
+            <select name="date_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Time</option>
+                @foreach($dateRange as $value => $label)
+                    <option value="{{ $value }}" {{ Request::get('date_filter', '') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+            </select>
+            <select name="member_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Members</option>
+                @foreach($memberList as $id => $name)
+                    <option value="{{ $id }}" {{ Request::get('member_filter', '') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
+            <select name="reason_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Reasons</option>
+                @foreach($reasonList as $id => $name)
+                    <option value="{{ $id }}" {{ Request::get('reason_filter', '') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="btn btn-default btn-sm">Filter</button>
+        </form>
     </div>
 </div>
 

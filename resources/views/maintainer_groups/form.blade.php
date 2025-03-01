@@ -10,8 +10,8 @@
 
 <div class="form-group">
     <div class="{{ $errors->has('name') ? 'has-error' : '' }}">
-        {!! Form::label('name', 'Name', ['class'=>'']) !!}
-        {!! Form::text('name', null, ['class'=>'form-control', 'required']) !!}
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" class="form-control" required value="{{ old('name', isset($maintainerGroup) ? $maintainerGroup->name : null) }}">
         <p class="help-block">Aim for a short but descriptive name, i.e. Visual Arts</p>
         @if($errors->has('name'))
             <span class="help-block">
@@ -25,8 +25,8 @@
 
 <div class="form-group">
     <div class="{{ $errors->has('slug') ? 'has-error' : '' }}">
-        {!! Form::label('slug', 'Slug', ['class'=>'']) !!}
-        {!! Form::text('slug', null, ['class'=>'form-control', 'required']) !!}
+        <label for="slug">Slug</label>
+        <input type="text" name="slug" id="slug" class="form-control" required value="{{ old('slug', isset($maintainerGroup) ? $maintainerGroup->slug : null) }}">
         <p class="help-block">This is the unique reference for the area, no special characters. i.e. woodwork or sewing-machines</p>
         @if($errors->has('slug'))
             <span class="help-block">
@@ -40,8 +40,8 @@
 
 <div class="form-group">
     <div class="{{ $errors->has('description') ? 'has-error' : '' }}">
-        {!! Form::label('description', 'Description', ['class'=>'']) !!}
-        {!! Form::textarea('description', null, ['class'=>'form-control']) !!}
+        <label for="description">Description</label>
+        <textarea name="description" id="description" class="form-control">{{ old('description', isset($maintainerGroup) ? $maintainerGroup->description : null) }}</textarea>
         @if($errors->has('description'))
             <span class="help-block">
                 @foreach($errors->get('description') as $error)
@@ -53,9 +53,14 @@
 </div>
 
 <div class="form-group {{ $errors->has('equipment_area_id') ? 'has-error' : '' }}">
-    {!! Form::label('equipment_area_id', 'Represented by area', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="equipment_area_id" class="col-sm-3 control-label">Represented by area</label>
     
-    {!! Form::select('equipment_area_id', ['' => 'Please select...'] + $equipmentAreaOptions->toArray(), null, ['class'=>'form-control']) !!}
+    <select name="equipment_area_id" id="equipment_area_id" class="form-control">
+        <option value="">Please select...</option>
+        @foreach($equipmentAreaOptions as $id => $name)
+            <option value="{{ $id }}" {{ old('equipment_area_id', isset($maintainerGroup) ? $maintainerGroup->equipment_area_id : null) == $id ? 'selected' : '' }}>{{ $name }}</option>
+        @endforeach
+    </select>
     @if($errors->has('equipment_area_id'))
         <span class="help-block">
             @foreach($errors->get('equipment_area_id') as $error)
@@ -66,9 +71,19 @@
 </div>
 
 <div class="form-group {{ $errors->has('maintainers') ? 'has-error' : '' }}">
-    {!! Form::label('maintainers', 'Maintainers', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="maintainers" class="col-sm-3 control-label">Maintainers</label>
     
-    {!! Form::select('maintainers[]', $memberList, null, ['class'=>'form-control js-advanced-dropdown', 'multiple']) !!}
+    <select name="maintainers[]" id="maintainers" class="form-control js-advanced-dropdown" multiple>
+        @foreach($memberList as $id => $name)
+            <option value="{{ $id }}" 
+                @if(old('maintainers') && is_array(old('maintainers')))
+                    {{ in_array($id, old('maintainers')) ? 'selected' : '' }}
+                @elseif(isset($maintainerGroup) && $maintainerGroup->maintainers)
+                    {{ in_array($id, $maintainerGroup->maintainers->pluck('id')->toArray()) ? 'selected' : '' }}
+                @endif
+            >{{ $name }}</option>
+        @endforeach
+    </select>
     @if($errors->has('maintainers'))
         <span class="help-block">
             @foreach($errors->get('maintainers') as $error)

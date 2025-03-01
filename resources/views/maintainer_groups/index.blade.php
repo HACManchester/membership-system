@@ -23,7 +23,7 @@
             </div>
             @foreach ($maintainerGroups as $maintainerGroup)
                 <div class="well">
-                    <a href="{{ route('maintainer_groups.show', $maintainerGroup) }}" class="">
+                    <a href="{{ route('maintainer_groups.show', $maintainerGroup) }}">
                         <h4 class="list-group-item-heading">{{ $maintainerGroup->name }}</h4>
                     </a>
                     

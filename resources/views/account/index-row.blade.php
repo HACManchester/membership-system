@@ -40,13 +40,4 @@
         <span style="color:green">Created: {{ $user->created_at }}</span><br/>
         <span style="color:blue">Seen: {{ $user->seen_at }}</span>
     </td>
-    <!--
-    <td>
-        {!! Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) !!}
-        {!! Form::hidden('reason', 'subscription') !!}
-        {!! Form::select('source', ['other'=>'Other', 'cash'=>'Cash'], null, ['class'=>'form-control']) !!}
-        {!! Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) !!}
-        {!! Form::close() !!}
-    </td>
-    -->
 </tr>

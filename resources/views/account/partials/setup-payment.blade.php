@@ -9,13 +9,16 @@
         <strong>You haven't set how much you'd like to pay per month yet.</strong> Before you can set up a Direct Debit, you need to <a href="#" class="btn btn-success js-show-alter-subscription-amount">set your monthly direct debit amount</a>
     </p>
 @endif
-{!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) !!}
-<div class="input-group">
-    <div class="input-group-addon">&pound;</div>
-    {!! Form::input('number', 'monthly_subscription', round($user->monthly_subscription), ['class' => 'form-control', 'placeholder' => MembershipPayments::getRecommendedPrice() / 100, 'min' => MembershipPayments::getMinimumPrice() / 100, 'step' => '1']) !!}
-</div>
-{!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
-{!! Form::close() !!}
+<form method="POST" action="{{ route('account.update-sub-payment', $user->id) }}" class="form-inline hidden js-alter-subscription-amount-form" style="display:inline-block">
+    @csrf
+    <div class="input-group">
+        <div class="input-group-addon">&pound;</div>
+        <input type="number" name="monthly_subscription" value="{{ round($user->monthly_subscription) }}" 
+               class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" 
+               min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
+    </div>
+    <button type="submit" class="btn btn-default">Update</button>
+</form>
 <br /><br />
 <p>
     Your subscription payments will be taken on the day you complete this process unless stated otherwise on this page.<br />

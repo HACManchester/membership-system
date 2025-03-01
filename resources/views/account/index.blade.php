@@ -15,7 +15,7 @@ Members
 
 @section('main-tab-bar')
 <nav id="mainTabBar">
-    <ul class="" role="tablist">
+    <ul role="tablist">
         <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
             {!! link_to_route('account.index', 'Active Members', ['showLeft'=>0]) !!}
         </li>

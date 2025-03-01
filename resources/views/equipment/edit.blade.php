@@ -13,18 +13,19 @@
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-xs-12">
 
-        {!! Form::model($equipment, array('route' => ['equipment.update', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'PUT')) !!}
+        <form action="{{ route('equipment.update', $equipment->slug) }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-        @include('equipment/form')
+            @include('equipment/form')
 
-        <div class="row">
-            <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                {!! Form::submit('Update', array('class'=>'btn btn-primary')) !!}
+            <div class="row">
+                <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
             </div>
-        </div>
 
-        {!! Form::close() !!}
-
+        </form>
 
     </div>
 </div>
@@ -40,19 +41,22 @@
                 @for($i=0; $i < $equipment->getNumPhotos(); $i++)
                     <div class="col-xs-12 col-md-4 col-lg-2">
                     <img src="{{ $equipment->getPhotoUrl($i) }}" class="img-thumbnail" width="200" />
-                    {!! Form::open(array('route' => ['equipment.photo.destroy', $equipment->slug, $i], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'DELETE')) !!}
-                        {!! Form::submit('Delete', array('class'=>'btn btn-primary')) !!}
-                    {!! Form::close() !!}
+                    <form action="{{ route('equipment.photo.destroy', [$equipment->slug, $i]) }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
                     </div>
                 @endfor
                 </div>
             @endif
 
 
-            {!! Form::open(array('route' => ['equipment.photo.store', $equipment->slug], 'class'=>'form-horizontal', 'files'=>true, 'method'=>'POST')) !!}
+            <form action="{{ route('equipment.photo.store', $equipment->slug) }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                @csrf
 
                 <div class="form-group {{ $errors->has('photo') ? 'has-error' : ''}}">
-                    {!! Form::label('photo', 'Equipment Photo', ['class'=>'col-sm-3 control-label']) !!}
+                    <label for="photo" class="col-sm-3 control-label">Equipment Photo</label>
                     <div class="col-sm-9 col-lg-7">
                         <input name="photo" class="form-control" type="file" accept="image/*" capture="camera" id="inputPhoto">
                         <p class="help-block">Photos will be cropped to a square so please ensure the item is centered appropriately</p>
@@ -68,11 +72,11 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                        {!! Form::submit('Upload', array('class'=>'btn btn-primary')) !!}
+                        <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
-            </div>
+                </div>
 
-            {!! Form::close() !!}
+            </form>
         </div>
 
     </div>

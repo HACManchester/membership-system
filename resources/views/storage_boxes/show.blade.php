@@ -95,20 +95,29 @@
                             @can('update', $box)
                                 <div class="col-md-12">
                                     <h4>Reclaim this space</h4>
-                                        {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id], 'class'=>'navbar-left')) }}
-                                        {{ Form::hidden('user_id', null) }}
-                                        {{ Form::submit('Reclaim', array('class'=>'btn btn-default btn-sm')) }}
-                                        {{ Form::close() }}
+                                    <form method="POST" action="{{ route('storage_boxes.update', $box->id) }}" class="navbar-left">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="user_id" value="">
+                                        <button type="submit" class="btn btn-default btn-sm">Reclaim</button>
+                                    </form>
                                 </div>
                             @endcan
                         @else
                             @can('update', $box)
                                 <div class="col-md-12">
                                     <h4>Allocate this space to a user</h4>
-                                    {{ Form::open(array('method'=>'PUT', 'route' => ['storage_boxes.update', $box->id])) }}
-                                    {{ Form::select('user_id', [''=>'Allocate member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) }}
-                                    {{ Form::submit('✔️', array('class'=>'btn btn-default btn-xs')) }}
-                                    {{ Form::close() }}
+                                    <form method="POST" action="{{ route('storage_boxes.update', $box->id) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <select name="user_id" class="form-control js-advanced-dropdown">
+                                            <option value="">Allocate member</option>
+                                            @foreach($memberList as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="btn btn-default btn-xs">✔️</button>
+                                    </form>
                                 </div>
                             @endcan
                         @endif

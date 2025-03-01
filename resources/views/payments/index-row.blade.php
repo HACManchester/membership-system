@@ -20,30 +20,31 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 @if (($payment->source == 'cash') && ($payment->reason == 'balance'))
                     <li>
-                    {!! Form::open(array('method'=>'DELETE', 'route' => ['payments.destroy', $payment->id], 'class'=>'navbar-form navbar-left')) !!}
-                    {!! Form::submit('Delete', array('class'=>'btn btn-link')) !!}
-                    {!! Form::close() !!}
+                    <form method="POST" action="{{ route('payments.destroy', $payment->id) }}" class="navbar-form navbar-left">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-link">Delete</button>
+                    </form>
                     </li>
                 @endif
                 @if (!$payment->user)
                     <li>
-                        {!! Form::open(array('method'=>'PUT', 'route' => ['payments.update', $payment->id], 'class'=>'navbar-form navbar-left')) !!}
-                        {!! Form::hidden('change', 'assign-unknown-to-user') !!}
-                        {!! Form::input('number', 'user_id', null, ['placeholder' => 'User ID', 'class' => 'form-control']) !!}
-                        {!! Form::submit('Assign to user', array('class'=>'btn')) !!}
-                        {!! Form::close() !!}
+                        <form method="POST" action="{{ route('payments.update', $payment->id) }}" class="navbar-form navbar-left">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="change" value="assign-unknown-to-user">
+                            <input type="number" name="user_id" placeholder="User ID" class="form-control">
+                            <button type="submit" class="btn">Assign to user</button>
+                        </form>
                     </li>
                 @endif
                 @if ($payment->source == 'gocardless-variable' && $payment->status == \BB\Entities\Payment::STATUS_PENDING)
                     <li>
-                        {!! Form::open([
-                            'method' => 'POST', 
-                            'route' => ['payment.gocardless.cancel', $payment], 
-                            'class' => 'navbar-form navbar-left'
-                        ]) !!}
-                        {!! Form::hidden('cancel', 'confirm-gocardless-variable') !!}
-                        {!! Form::submit('Cancel payment', array('class'=>'btn btn-link')) !!}
-                        {!! Form::close() !!}
+                        <form method="POST" action="{{ route('payment.gocardless.cancel', $payment) }}" class="navbar-form navbar-left">
+                            @csrf
+                            <input type="hidden" name="cancel" value="confirm-gocardless-variable">
+                            <button type="submit" class="btn btn-link">Cancel payment</button>
+                        </form>
                     </li>
                 @endif
             </ul>

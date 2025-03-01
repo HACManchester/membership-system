@@ -96,17 +96,4 @@ class HtmlBuilder extends CollectiveHtmlBuilder
         $style = $highlight ? "background:yellow;" : "";
         return '<li><a style="' . $style . '" href="' . route($route, $routeParams) . '">' . $name . '</a></li>';
     }
-
-    public function paymentFormMethodDropdown($methods = [])
-    {
-        $possibleMethods = ['gocardless'=>'Direct Debit'];
-        if ( ! empty($methods)) {
-            foreach ($possibleMethods as $method => $methodName) {
-                if ( ! in_array($method, $methods)) {
-                    unset($possibleMethods[$method]);
-                }
-            }
-        }
-        return \Form::select('source', $possibleMethods, null, ['class'=>'form-control']);
-    }
 }

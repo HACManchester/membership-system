@@ -11,14 +11,13 @@
 @stop
 
 @section('content')
-    {!! Form::model($equipmentArea, [
-        'route' => ['equipment_area.update', $equipmentArea],
-        'method' => 'PUT',
-    ]) !!}
+    <form action="{{ route('equipment_area.update', $equipmentArea) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-    @include('equipment_areas/form')
+        @include('equipment_areas/form')
 
-    {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
+        <button type="submit" class="btn btn-primary">Update</button>
 
-    {!! Form::close() !!}
+    </form>
 @stop

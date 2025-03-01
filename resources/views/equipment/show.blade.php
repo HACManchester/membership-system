@@ -74,9 +74,10 @@
                                     @if(Auth::user()->online_only)
                                         <h4>Online Only members may not use tools or request inductions.</h4>
                                     @else
-                                        {!! Form::open(['method'=>'POST', 'route' => ['equipment_training.create', 'equipment' => $equipment]]) !!}
-                                            {!! Form::submit('Request induction', array('class'=>'btn btn-primary')) !!}
-                                        {!! Form::close() !!}
+                                        <form method="POST" action="{{ route('equipment_training.create', ['equipment' => $equipment]) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Request induction</button>
+                                        </form>
                                     @endif
                                 @else
                                     <div class="alert alert-warning">
@@ -295,9 +296,10 @@
                             </div>
                             <div>
                                 @can('demote', $trainer)
-                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.demote', 'equipment' => $equipment, 'induction' => $trainer])) !!}
-                                    {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
-                                    {!! Form::close() !!}
+                                    <form method="POST" style="display:inline;float:right;" action="{{ route('equipment_training.demote', ['equipment' => $equipment, 'induction' => $trainer]) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-default btn-sm">❌</button>
+                                    </form>
                                 @endcan
                             </div>
                         </div>
@@ -335,15 +337,17 @@
                             <p><strong>Trained:</strong> <span>{{ $inductionRecord->trained->toFormattedDateString() }}</span></p>
                             <div>
                                 @can('untrain', $inductionRecord)
-                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.untrain', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
-                                    {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
-                                    {!! Form::close() !!}
+                                    <form method="POST" style="display:inline;float:right;" action="{{ route('equipment_training.untrain', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-default btn-sm">❌</button>
+                                    </form>
                                 @endcan
 
                                 @can('promote', $inductionRecord)
-                                    {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.promote', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
-                                    {!! Form::submit('🎓', array('class'=> $inductionRecord->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default')) !!}
-                                    {!! Form::close() !!}
+                                    <form method="POST" style="display:inline;float:right;" action="{{ route('equipment_training.promote', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                        @csrf
+                                        <button type="submit" class="{{ $inductionRecord->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default' }}">🎓</button>
+                                    </form>
                                 @endcan
                             </div>
                         </div>
@@ -394,17 +398,20 @@
                                 
                                 <div>
                                     @can('delete', $inductionRecord)
-                                        {!! Form::open(array('method'=>'DELETE', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.destroy', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
-                                        {!! Form::submit('❌', array('class'=>'btn btn-default btn-sm')) !!}
-                                        {!! Form::close() !!}
+                                        <form method="POST" style="display:inline;float:right;" action="{{ route('equipment_training.destroy', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-default btn-sm">❌</button>
+                                        </form>
                                     @endcan
 
                                     @can('train', $inductionRecord)
-                                        {!! Form::open(array('method'=>'POST', 'style'=>'display:inline;float:right;', 'route' => ['equipment_training.train', 'equipment' => $equipment, 'induction' => $inductionRecord])) !!}
-                                        {!! Form::hidden('trainer_user_id', Auth::user()->id) !!}
-                                        {!! Form::hidden('mark_trained', '1') !!}
-                                        {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
-                                        {!! Form::close() !!}
+                                        <form method="POST" style="display:inline;float:right;" action="{{ route('equipment_training.train', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                            @csrf
+                                            <input type="hidden" name="trainer_user_id" value="{{ Auth::user()->id }}">
+                                            <input type="hidden" name="mark_trained" value="1">
+                                            <button type="submit" class="btn btn-default btn-sm">✔️</button>
+                                        </form>
                                     @endcan
                                 </div>
                             </div>
@@ -414,10 +421,16 @@
                     @can('train', $equipment)
                         <div class="infobox__grid-item infobox__grid-item--footer">
                             <p>Add a member</p>
-                            {!! Form::open(['method'=>'POST', 'route' => ['equipment_training.create', 'equipment' => $equipment]]) !!}
-                            {!! Form::select('user_id', [''=>'Add a member']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
-                            {!! Form::submit('✔️', array('class'=>'btn btn-default btn-sm')) !!}
-                            {!! Form::close() !!}
+                            <form method="POST" action="{{ route('equipment_training.create', ['equipment' => $equipment]) }}">
+                                @csrf
+                                <select name="user_id" class="form-control js-advanced-dropdown">
+                                    <option value="">Add a member</option>
+                                    @foreach($memberList as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="btn btn-default btn-sm">✔️</button>
+                            </form>
                         </div>
                     @endcan
                 </div>

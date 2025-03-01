@@ -40,7 +40,7 @@
             </div>
             @foreach ($areas as $area)
                 <div class="well">
-                    <a href="{{ route('equipment_area.show', $area) }}" class="">
+                    <a href="{{ route('equipment_area.show', $area) }}">
                         <h4 class="list-group-item-heading">{{ $area->name }}</h4>
                     </a>
                     
