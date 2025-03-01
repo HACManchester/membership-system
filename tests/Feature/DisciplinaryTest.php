@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\Assert;
+use Illuminate\Testing\Assert;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
@@ -10,7 +10,8 @@ class DisciplinaryTest extends TestCase
 {
     public function testBan()
     {
-        Carbon::setTestNow(Carbon::now());
+        $now = Carbon::now()->startOfMinute();
+        Carbon::setTestNow($now);
 
         $admin = factory('BB\Entities\User')->states('admin')->create();
         $user = factory('BB\Entities\User')->create();
@@ -39,7 +40,7 @@ class DisciplinaryTest extends TestCase
                 'status' => 'left',
                 'banned' => true,
                 'banned_reason' => 'Testing',
-                'banned_date' => Carbon::now()
+                'banned_date' => $now->toIso8601ZuluString('microsecond')
             ],
             $user->fresh()->toArray()
         );
@@ -47,13 +48,16 @@ class DisciplinaryTest extends TestCase
 
     public function testUnban()
     {
+        $now = Carbon::now()->startOfMinute();
+        Carbon::setTestNow($now);
+
         $admin = factory('BB\Entities\User')->states('admin')->create();
         $user = factory('BB\Entities\User')->create([
             'active' => false,
             'status' => 'left',
             'banned' => true,
             'banned_reason' => 'Testing',
-            'banned_date' => \Carbon\Carbon::now(),
+            'banned_date' => $now,
         ]);
 
         Assert::assertArraySubset(
@@ -62,7 +66,7 @@ class DisciplinaryTest extends TestCase
                 'status' => 'left',
                 'banned' => true,
                 'banned_reason' => 'Testing',
-                'banned_date' => Carbon::now()
+                'banned_date' => $now->toIso8601ZuluString('microsecond')
             ],
             $user->fresh()->toArray()
         );

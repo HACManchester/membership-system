@@ -7,7 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Foundation\Testing\Assert;
+use Illuminate\Testing\Assert;
 use Tests\TestCase;
 
 class DiscourseSyncTest extends TestCase

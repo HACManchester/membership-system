@@ -5,13 +5,13 @@ namespace BB\Exceptions;
 use BB\Entities\User;
 use BB\Helpers\TelegramErrorHelper;
 use BB\Notifications\ErrorNotification;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Validation\ValidationException as IlluminateValidationException;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -49,12 +49,12 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      * 
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function report(Exception $e)
+    public function report(Throwable $e)
     {
         if ($this->shouldReport($e) && app()->bound('sentry')) {
             app('sentry')->captureException($e);
@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
         parent::report($e);
     }
 
-    protected function telegramException(Exception $e)
+    protected function telegramException(Throwable $e)
     {
         try {
             $level = 'error';
@@ -81,17 +81,17 @@ class Handler extends ExceptionHandler
             }
 
             $this->notifyTelegram($level, $title, $suppress, $e);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
         }
     }
 
-    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
+    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Throwable $e)
     {
         Log::error($e);
         try {
             $helper = new TelegramErrorHelper();
             $helper->notify(new ErrorNotification($level, $title, $suppress, $e));
-        } catch (Exception $telegramE) {
+        } catch (Throwable $telegramE) {
             // Make sure Telegram exceptions don't stop regular exceptions being logged
             Log::error($telegramE);
         }
@@ -101,12 +101,12 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      * 
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         if ($e instanceof FormValidationException) {
             if ($request->wantsJson()) {
