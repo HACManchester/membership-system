@@ -22,7 +22,6 @@
         "laravel/framework": "^6.0",
         "laravel/helpers": "^1.7",
         "laravel/tinker": "^2.5",
-        "laravelcollective/html": "^6.0",
         "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "^2.0.0",
         "owen-it/laravel-auditing": "^9.0",
