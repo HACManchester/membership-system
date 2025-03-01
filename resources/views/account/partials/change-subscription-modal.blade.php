@@ -9,14 +9,19 @@
                 @if (!$user->canMemberChangeSubAmount() && $user->payment_method)
                     <p>Unfortunately we cannot change your subscription amount with your current payment provider. Please contact the board for assistance.</p>
                 @else
-                    {!! Form::open(array('method'=>'POST', 'class'=>'', 'style'=>'margin-bottom:20px;', 'route' => ['account.update-sub-payment', $user->id])) !!}
+                    <form method="POST" action="{{ route('account.update-sub-payment', $user->id) }}" class="" style="margin-bottom:20px;">
+                        @csrf
                         <div class="form-group">
                             <div>
                                 @foreach(MembershipPayments::getPriceOptions() as $option)
                                     <div class="panel panel-default" onclick="document.getElementById('subscription_{{ $option->value_in_pence }}').click()">
                                         <div class="panel-heading">
-                                            {!! Form::radio('membership_tier', $option->value_in_pence / 100, $option->value_in_pence == $user->monthly_subscription * 100, ['class' => 'form-check-input', 'id' => 'subscription_' . $option->value_in_pence]) !!}
-                                            {!! Form::label('subscription_' . $option->value_in_pence, $option->title . ': £' . number_format($option->value_in_pence / 100, 2), ['class' => 'form-check-label']) !!}
+                                            <input type="radio" name="membership_tier" value="{{ $option->value_in_pence / 100 }}" 
+                                                  id="subscription_{{ $option->value_in_pence }}" class="form-check-input"
+                                                  {{ $option->value_in_pence == $user->monthly_subscription * 100 ? 'checked' : '' }}>
+                                            <label for="subscription_{{ $option->value_in_pence }}" class="form-check-label">
+                                                {{ $option->title }}: £{{ number_format($option->value_in_pence / 100, 2) }}
+                                            </label>
                                         </div>
                                         <div class="panel-body">
                                             <p>{!! nl2br($option->description) !!}</p>
@@ -26,21 +31,23 @@
 
                                 <div class="panel panel-default" onclick="document.getElementById('subscription_custom').click()">
                                     <div class="panel-heading">
-                                        {!! Form::radio('membership_tier', 'custom', false, ['class' => 'form-check-input', 'id' => 'subscription_custom']) !!}
-                                        {!! Form::label('subscription_custom', 'Custom Amount', ['class' => 'form-check-label']) !!}
+                                        <input type="radio" name="membership_tier" value="custom" id="subscription_custom" class="form-check-input">
+                                        <label for="subscription_custom" class="form-check-label">Custom Amount</label>
                                     </div>
                                     <div class="panel-body">
                                         <p>For those that want to go above and beyond to support the makerspace, enter a custom amount here:</p>
-                                        {!! Form::label('custom_subscription_amount', 'Custom Amount', ['class' => 'form-check-label']) !!}
-                                        {!! Form::input('number', 'monthly_subscription', $user->monthly_subscription, ['class' => 'form-control', 'placeholder' => 'Enter amount', 'min' => MembershipPayments::getMinimumPrice() / 100, 'step' => '1']) !!}
+                                        <label for="custom_subscription_amount" class="form-check-label">Custom Amount</label>
+                                        <input type="number" name="monthly_subscription" value="{{ $user->monthly_subscription }}" 
+                                              class="form-control" placeholder="Enter amount" 
+                                              min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
+                                <button type="submit" class="btn btn-default">Update</button>
                             </div>
                         <div class="clearfix"></div>
-                    {!! Form::close() !!}
+                    </form>
 
                     <p>
                         If you would like to pay less than {{ MembershipPayments::formatPrice(MembershipPayments::getMinimumPrice()) }} a month 

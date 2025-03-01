@@ -10,11 +10,11 @@
                     <p>
                         <h3>A gift for you awaits!</h3>
                         <p>Enter your gift code below, and you'll be able to register your account</p>
-                        {!! Form::open(array('route' => 'register', 'method'=>'GET' ,'class'=>'form-horizontal')) !!}
-                        {!! Form::hidden('gift_certificate', '1') !!}
-                        {!! Form::text('gift_code', null, ['class'=>'form-control', 'required' => 'required', 'placeholder' => 'XXX-YYY-ZZZ']) !!}
-                        {!! Form::submit('Claim your gift!', array('class'=>'btn btn-primary')) !!}
-                        {!! Form::close() !!}
+                        <form action="{{ route('register') }}" method="GET" class="form-horizontal">
+                            <input type="hidden" name="gift_certificate" value="1">
+                            <input type="text" name="gift_code" class="form-control" required="required" placeholder="XXX-YYY-ZZZ" value="{{ old('gift_code') }}">
+                            <button type="submit" class="btn btn-primary">Claim your gift!</button>
+                        </form>
                     </p>
                 </div>
 

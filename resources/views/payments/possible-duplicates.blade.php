@@ -32,7 +32,7 @@ Payments - Sub Charges
                 <td>&pound;{{ number_format($possibleDuplicate->amount, 2) }}</td>
                 <td>{{ $possibleDuplicate->count }}</td>
                 <td>
-                    {!! link_to_route('payments.index', 'View this member\'s payments', ['member_filter' => $possibleDuplicate->user->id], ['class'=>'btn btn-primary']) !!}
+                    <a href="{{ route('payments.index', ['member_filter' => $possibleDuplicate->user->id]) }}" class="btn btn-primary">View this member's payments</a>
                 </td>
             </tr>
         @endforeach

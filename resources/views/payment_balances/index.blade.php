@@ -68,7 +68,7 @@
                             <td>
                                 <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
                             </td>
-                            <td>{!! HTML::statusLabel($user->status) !!}</td>
+                            <td>@include('partials.components.status-label', ['status' => $user->status])</td>
                             <td>
                                 @if ($user->cash_balance < 0)
                                     <span class="label label-danger">In debt</span>
@@ -98,7 +98,7 @@
                             <td>
                                 <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
                             </td>
-                            <td>{!! HTML::statusLabel($user->status) !!}</td>
+                            <td>@include('partials.components.status-label', ['status' => $user->status])</td>
                             <td>
                                 @if ($user->cash_balance < 0)
                                     <span class="label label-danger">In debt</span>

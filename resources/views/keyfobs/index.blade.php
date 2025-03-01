@@ -58,50 +58,47 @@
                                         <div class="col-md-12">
                                             <ol class="list-group">
                                                 @foreach ($user->keyFobs()->get() as $fob)
-                                                    {!! Form::open([
-                                                        'method' => 'DELETE',
-                                                        'route' => ['keyfobs.destroy', $user->id, $fob->id],
-                                                        'class' => 'form-horizontal',
-                                                    ]) !!}
-                                                    <li class="list-group-item row">
-                                                        <div class="col-md-6">
-                                                            @if (substr($fob->key_id, 0, 2) !== 'ff')
-                                                                <h4>
-                                                                    <span class="label label-info"
-                                                                        style="background:forestgreen">
-                                                                        🔑 Fob
-                                                                    </span>
-                                                                </h4>
-                                                                <h4>Fob ID:{{ $fob->key_id }}</h4>
-                                                            @else
-                                                                <h4>
-                                                                    <span class="label label-info"
-                                                                        style="background:tomato">
-                                                                        🔢 Access Code
-                                                                    </span>
-                                                                </h4>
-                                                                <h4>
-                                                                    Code: {{ str_replace('f', '', $fob->key_id) }} #
-                                                                </h4>
-                                                            @endif
-
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class=" pull-right">
+                                                    <form method="POST" action="{{ route('keyfobs.destroy', [$user->id, $fob->id]) }}" class="form-horizontal">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <li class="list-group-item row">
+                                                            <div class="col-md-6">
                                                                 @if (substr($fob->key_id, 0, 2) !== 'ff')
-                                                                    <small>(added
-                                                                        {{ $fob->created_at->toFormattedDateString() }})</small>
-                                                                    {!! Form::submit('Mark Fob Lost', ['class' => 'btn btn-default']) !!}
+                                                                    <h4>
+                                                                        <span class="label label-info"
+                                                                            style="background:forestgreen">
+                                                                            🔑 Fob
+                                                                        </span>
+                                                                    </h4>
+                                                                    <h4>Fob ID:{{ $fob->key_id }}</h4>
                                                                 @else
-                                                                    <small>(added
-                                                                        {{ $fob->created_at->toFormattedDateString() }})</small>
-                                                                    {!! Form::submit('Mark Code Lost', ['class' => 'btn btn-default']) !!}
+                                                                    <h4>
+                                                                        <span class="label label-info"
+                                                                            style="background:tomato">
+                                                                            🔢 Access Code
+                                                                        </span>
+                                                                    </h4>
+                                                                    <h4>
+                                                                        Code: {{ str_replace('f', '', $fob->key_id) }} #
+                                                                    </h4>
                                                                 @endif
+
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    {!! Form::hidden('user_id', $user->id) !!}
-                                                    {!! Form::close() !!}
+                                                            <div class="col-md-6">
+                                                                <div class=" pull-right">
+                                                                    @if (substr($fob->key_id, 0, 2) !== 'ff')
+                                                                        <small>(added
+                                                                            {{ $fob->created_at->toFormattedDateString() }})</small>
+                                                                        <button type="submit" class="btn btn-default">Mark Fob Lost</button>
+                                                                    @else
+                                                                        <small>(added
+                                                                            {{ $fob->created_at->toFormattedDateString() }})</small>
+                                                                        <button type="submit" class="btn btn-default">Mark Code Lost</button>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </form>
                                                 @endforeach
                                             </ol>
                                         </div>
@@ -127,10 +124,11 @@
                                 <p><strong>In the hackspace?</strong> Select a fob from the pot, select the text box below,
                                     then scan your fob with the reader. The ID will be typed in.</p>
 
-                                {!! Form::open(['method' => 'POST', 'route' => ['keyfobs.store', $user->id], 'class' => 'form-horizontal']) !!}
+                                <form method="POST" action="{{ route('keyfobs.store', $user->id) }}" class="form-horizontal">
+                                    @csrf
                                     <div class="form-group {{ $errors->has('key_id') ? 'has-error' : '' }}">
                                         <div class="col-sm-5">
-                                            {!! Form::text('key_id', '', ['class' => 'form-control']) !!}
+                                            <input type="text" name="key_id" value="" class="form-control">
                                             Characters A-F and numbers 0-9 only.
                                             @if($errors->has('key_id'))
                                                 <span class="help-block">
@@ -141,25 +139,25 @@
                                             @endif
                                         </div>
                                         <div class="col-sm-3">
-                                            {!! Form::hidden('type', 'keyfob') !!}
-                                            {!! Form::submit('Add a new fob', ['class' => 'btn btn-primary']) !!}
+                                            <input type="hidden" name="type" value="keyfob">
+                                            <button type="submit" class="btn btn-primary">Add a new fob</button>
                                         </div>
                                     </div>
-                                {!! Form::close() !!}
+                                </form>
                             </div>
                             <div class="col-md-6">
                                 <h4>Request access code</h4>
                                 <p>You'll be assigned a random 8 digit access code.</p>
-                                {!! Form::open(['method' => 'POST', 'route' => ['keyfobs.store', $user->id], 'class' => 'form-horizontal']) !!}
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        {{-- Do not use Form::Hidden as that might pull 'type' from previous form submissions. --}}
-                                        <input type="hidden" name="type" value="access_code" />
-                                        {!! Form::submit('Request access code', ['class' => 'btn btn-info']) !!}
+                                <form method="POST" action="{{ route('keyfobs.store', $user->id) }}" class="form-horizontal">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            {{-- Do not use 'old' helper as that might pull 'type' from previous form submissions. --}}
+                                            <input type="hidden" name="type" value="access_code" />
+                                            <button type="submit" class="btn btn-info">Request access code</button>
+                                        </div>
                                     </div>
-                                </div>
-                                {!! Form::close() !!}
-
+                                </form>
                             </div>
                         </div>
                     @else

@@ -9,11 +9,12 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => 'equipment_area.store']) !!}
+    <form action="{{ route('equipment_area.store') }}" method="POST">
+        @csrf
 
-    @include('equipment_areas/form')
+        @include('equipment_areas/form')
 
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+        <button type="submit" class="btn btn-primary">Save</button>
 
-    {!! Form::close() !!}
+    </form>
 @stop

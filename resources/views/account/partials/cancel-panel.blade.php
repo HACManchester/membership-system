@@ -10,21 +10,27 @@
         </p>
         @if ($user->payment_method == 'gocardless')
 
-            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) !!}
-            {!! Form::submit('Cancel Your Monthly Direct Debit', array('class'=>'btn btn-danger')) !!}
-            {!! Form::close() !!}
+            <form method="POST" action="{{ route('account.subscription.destroy', [$user->id, 1]) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Cancel Your Monthly Direct Debit</button>
+            </form>
 
         @elseif ($user->payment_method == 'gocardless-variable')
 
-            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.subscription.destroy', $user->id, 1])) !!}
-            {!! Form::submit('Cancel Your Direct Debit and Leave', array('class'=>'btn btn-danger')) !!}
-            {!! Form::close() !!}
+            <form method="POST" action="{{ route('account.subscription.destroy', [$user->id, 1]) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Cancel Your Direct Debit and Leave</button>
+            </form>
 
         @else
 
-            {!! Form::open(array('method'=>'DELETE', 'route' => ['account.destroy', $user->id])) !!}
-            {!! Form::submit('Leave Hackspace Manchester :(', array('class'=>'btn btn-danger')) !!}
-            {!! Form::close() !!}
+            <form method="POST" action="{{ route('account.destroy', $user->id) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Leave Hackspace Manchester</button>
+            </form>
 
         @endif
     </div>

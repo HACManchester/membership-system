@@ -11,14 +11,12 @@
 @stop
 
 @section('content')
-    {!! Form::model($maintainerGroup, [
-        'route' => ['maintainer_groups.update', $maintainerGroup],
-        'method' => 'PUT',
-    ]) !!}
+    <form action="{{ route('maintainer_groups.update', $maintainerGroup) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-    @include('maintainer_groups/form')
+        @include('maintainer_groups/form')
 
-    {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
-
-    {!! Form::close() !!}
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
 @stop

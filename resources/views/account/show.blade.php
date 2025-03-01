@@ -11,7 +11,7 @@
 
 
 @section('page-key-image')
-    {!! HTML::memberPhoto($user->profile, $user->hash, 100, '') !!}
+    @include('partials.components.member-photo', ['profileData' => $user->profile, 'userHash' => $user->hash, 'size' => 100, 'class' => ''])
 @stop
 
 

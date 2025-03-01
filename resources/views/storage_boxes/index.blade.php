@@ -29,11 +29,13 @@
                     <p>Please make sure an obvious "Do Not Hack" label is on your box (preferably front and back) or each piece of loose material</p>
                     <ul>
                         @foreach($memberBoxes as $box)
-                            <h3 class="">
-                                {!! Form::open(array('method'=>'DELETE', 'route' => ['storage_boxes_claim.destroy', $box->id], 'class'=>'js-return-box-form')) !!}
-                                📦 Location {{ $box->location }}<small>(#{{ $box->id }})</small>
-                                {!! Form::submit('Return Storage Location', array('class'=>'btn btn-default btn-link btn-sm')) !!}
-                                {!! Form::close() !!}
+                            <h3>
+                                <form method="POST" action="{{ route('storage_boxes_claim.destroy', $box->id) }}" class="js-return-box-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    📦 Location {{ $box->location }}<small>(#{{ $box->id }})</small>
+                                    <button type="submit" class="btn btn-default btn-link btn-sm">Return Storage Location</button>
+                                </form>
                             </h3>
                         @endforeach
                     </ul>
@@ -102,9 +104,10 @@
                                     ⛔ Not available to be claimed
                                 @else
                                     @can('claim', $box)
-                                        {!! Form::open(array('method'=>'POST', 'route' => ['storage_boxes_claim.update', $box->id], 'class'=>'navbar-left')) !!}
-                                        {!! Form::submit('Claim', array('class'=>'btn btn-default')) !!}
-                                        {!! Form::close() !!}
+                                        <form method="POST" action="{{ route('storage_boxes_claim.update', $box->id) }}" class="navbar-left">
+                                            @csrf
+                                            <button type="submit" class="btn btn-default">Claim</button>
+                                        </form>
                                     @endcan
                                 @endif
                             @endif

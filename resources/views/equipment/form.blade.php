@@ -18,8 +18,8 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('name') ? 'has-error' : '' }}">
-            {!! Form::label('name', 'Name', ['class'=>'']) !!}
-            {!! Form::text('name', null, ['class'=>'form-control', 'required']) !!}
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-control" required value="{{ old('name', isset($equipment) ? $equipment->name : null) }}">
             <p class="help-block">Aim for a short but descriptive name, i.e. Metal Bandsaw</p>
             @if($errors->has('name'))
                 <span class="help-block">
@@ -32,8 +32,8 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('slug') ? 'has-error' : '' }}">
-            {!! Form::label('slug', 'Slug', ['class'=>'']) !!}
-            {!! Form::text('slug', null, ['class'=>'form-control', 'required']) !!}
+            <label for="slug">Slug</label>
+            <input type="text" name="slug" id="slug" class="form-control" required value="{{ old('slug', isset($equipment) ? $equipment->slug : null) }}">
             <p class="help-block">This is the unique reference for the item, no special characters. i.e. metal-bandsaw or cordless-drill-1</p>
             @if($errors->has('slug'))
                 <span class="help-block">
@@ -50,8 +50,8 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('manufacturer') ? 'has-error' : '' }}">
-            {!! Form::label('manufacturer', 'Manufacturer', ['class'=>'']) !!}
-            {!! Form::text('manufacturer', null, ['class'=>'form-control']) !!}
+            <label for="manufacturer">Manufacturer</label>
+            <input type="text" name="manufacturer" id="manufacturer" class="form-control" value="{{ old('manufacturer', isset($equipment) ? $equipment->manufacturer : null) }}">
             @if($errors->has('manufacturer'))
                 <span class="help-block">
                     @foreach($errors->get('manufacturer') as $error)
@@ -63,8 +63,8 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('model_number') ? 'has-error' : '' }}">
-            {!! Form::label('model_number', 'Model Number', ['class'=>'']) !!}
-            {!! Form::text('model_number', null, ['class'=>'form-control']) !!}
+            <label for="model_number">Model Number</label>
+            <input type="text" name="model_number" id="model_number" class="form-control" value="{{ old('model_number', isset($equipment) ? $equipment->model_number : null) }}">
             @if($errors->has('model_number'))
                 <span class="help-block">
                     @foreach($errors->get('model_number') as $error)
@@ -79,8 +79,8 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('serial_number') ? 'has-error' : '' }}">
-            {!! Form::label('serial_number', 'Serial Number', ['class'=>'']) !!}
-            {!! Form::text('serial_number', null, ['class'=>'form-control']) !!}
+            <label for="serial_number">Serial Number</label>
+            <input type="text" name="serial_number" id="serial_number" class="form-control" value="{{ old('serial_number', isset($equipment) ? $equipment->serial_number : null) }}">
             @if($errors->has('serial_number'))
                 <span class="help-block">
                     @foreach($errors->get('serial_number') as $error)
@@ -92,8 +92,8 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('colour') ? 'has-error' : '' }}">
-            {!! Form::label('colour', 'Colour', ['class'=>'']) !!}
-            {!! Form::text('colour', null, ['class'=>'form-control']) !!}
+            <label for="colour">Colour</label>
+            <input type="text" name="colour" id="colour" class="form-control" value="{{ old('colour', isset($equipment) ? $equipment->colour : null) }}">
             <p class="help-block">A rough guide such as grey or blue/green</p>
             @if($errors->has('colour'))
                 <span class="help-block">
@@ -108,8 +108,11 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('permaloan') ? 'has-error' : '' }}">
-            {!! Form::label('permaloan', 'Permaloan', ['class'=>'']) !!}
-            {!! Form::select('permaloan', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
+            <label for="permaloan">Permaloan</label>
+            <select name="permaloan" id="permaloan" class="form-control">
+                <option value="0" {{ old('permaloan', isset($equipment) ? $equipment->permaloan : null) == 0 ? 'selected' : '' }}>No</option>
+                <option value="1" {{ old('permaloan', isset($equipment) ? $equipment->permaloan : null) == 1 ? 'selected' : '' }}>Yes</option>
+            </select>
             <p class="help-block">Is this item on permanent loan from a member?</p>
             @if($errors->has('permaloan'))
                 <span class="help-block">
@@ -122,8 +125,13 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('permaloan_user_id') ? 'has-error' : '' }}">
-            {!! Form::label('permaloan_user_id', 'Permaloan Owner', ['class'=>'']) !!}
-            {!! Form::select('permaloan_user_id', [''=>'']+$memberList, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+            <label for="permaloan_user_id">Permaloan Owner</label>
+            <select name="permaloan_user_id" id="permaloan_user_id" class="form-control js-advanced-dropdown">
+                <option value=""></option>
+                @foreach($memberList as $id => $name)
+                    <option value="{{ $id }}" {{ old('permaloan_user_id', isset($equipment) ? $equipment->permaloan_user_id : null) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
             <p class="help-block">If its being loaned who owns it?</p>
             @if($errors->has('permaloan_user_id'))
                 <span class="help-block">
@@ -141,8 +149,16 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('room') ? 'has-error' : '' }}">
-            {!! Form::label('room', 'Room', ['class'=>'']) !!}
-            {!! Form::select('room', ['' => '','welding' => 'Welding','woodwork'=>'Woody Dusty', 'metalworking'=>'Metalwork', 'visual-arts'=>'Visual Arts', 'electronics'=>'Electronics','main-room'=>'Main Room'], null, ['class'=>'form-control', 'required']) !!}
+            <label for="room">Room</label>
+            <select name="room" id="room" class="form-control" required>
+                <option value=""></option>
+                <option value="welding" {{ old('room', isset($equipment) ? $equipment->room : null) == 'welding' ? 'selected' : '' }}>Welding</option>
+                <option value="woodwork" {{ old('room', isset($equipment) ? $equipment->room : null) == 'woodwork' ? 'selected' : '' }}>Woody Dusty</option>
+                <option value="metalworking" {{ old('room', isset($equipment) ? $equipment->room : null) == 'metalworking' ? 'selected' : '' }}>Metalwork</option>
+                <option value="visual-arts" {{ old('room', isset($equipment) ? $equipment->room : null) == 'visual-arts' ? 'selected' : '' }}>Visual Arts</option>
+                <option value="electronics" {{ old('room', isset($equipment) ? $equipment->room : null) == 'electronics' ? 'selected' : '' }}>Electronics</option>
+                <option value="main-room" {{ old('room', isset($equipment) ? $equipment->room : null) == 'main-room' ? 'selected' : '' }}>Main Room</option>
+            </select>
             @if($errors->has('room'))
                 <span class="help-block">
                     @foreach($errors->get('room') as $error)
@@ -154,8 +170,8 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('detail') ? 'has-error' : '' }}">
-            {!! Form::label('detail', 'Detail', ['class'=>'']) !!}
-            {!! Form::text('detail', null, ['class'=>'form-control']) !!}
+            <label for="detail">Detail</label>
+            <input type="text" name="detail" id="detail" class="form-control" value="{{ old('detail', isset($equipment) ? $equipment->detail : null) }}">
             <p class="help-block">Where in the room is it kept?</p>
             @if($errors->has('detail'))
                 <span class="help-block">
@@ -170,8 +186,11 @@
 <div class="row">
     <div class="col-md-6">
         <div class="{{ $errors->has('working') ? 'has-error' : '' }}">
-            {!! Form::label('working', 'Working', ['class'=>'']) !!}
-            {!! Form::select('working', [1=>'Yes', 0=>'No'], null, ['class'=>'form-control']) !!}
+            <label for="working">Working</label>
+            <select name="working" id="working" class="form-control">
+                <option value="1" {{ old('working', isset($equipment) ? $equipment->working : null) == 1 ? 'selected' : '' }}>Yes</option>
+                <option value="0" {{ old('working', isset($equipment) ? $equipment->working : null) == 0 ? 'selected' : '' }}>No</option>
+            </select>
             <p class="help-block">Is the equipment ready for use?</p>
             @if($errors->has('working'))
                 <span class="help-block">
@@ -184,8 +203,13 @@
     </div>
     <div class="col-md-6">
         <div class="{{ $errors->has('maintainer_group_id') ? 'has-error' : '' }}">
-            {!! Form::label('maintainer_group_id', 'Maintainer Group', ['class'=>'']) !!}
-            {!! Form::select('maintainer_group_id', [null => 'Please select...']+$maintainerGroupOptions, null, ['class'=>'form-control js-advanced-dropdown']) !!}
+            <label for="maintainer_group_id">Maintainer Group</label>
+            <select name="maintainer_group_id" id="maintainer_group_id" class="form-control js-advanced-dropdown">
+                <option value="">Please select...</option>
+                @foreach($maintainerGroupOptions as $id => $name)
+                    <option value="{{ $id }}" {{ old('maintainer_group_id', isset($equipment) ? $equipment->maintainer_group_id : null) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
             <p class="help-block">Is a group is responsible for this piece of equipment?</p>
             @if($errors->has('maintainer_group_id'))
                 <span class="help-block">
@@ -201,8 +225,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="{{ $errors->has('description') ? 'has-error' : '' }}">
-            {!! Form::label('description', 'Description', ['class'=>'']) !!}
-            {!! Form::textarea('description', null, ['class'=>'form-control']) !!}
+            <label for="description">Description</label>
+            <textarea name="description" id="description" class="form-control">{{ old('description', isset($equipment) ? $equipment->description : null) }}</textarea>
             <p class="help-block">Use markdown for formatting</p>
             @if($errors->has('description'))
                 <span class="help-block">
@@ -218,9 +242,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="form-group {{ $errors->has('docs') ? 'has-error' : '' }}">
-            {!! Form::label('docs', 'Link to documentation system', ['class'=>'col-sm-3 control-label']) !!}
+            <label for="docs" class="col-sm-3 control-label">Link to documentation system</label>
             <div class="col-sm-9 col-lg-7">
-                {!! Form::text('docs', null, ['class'=>'form-control']) !!}
+                <input type="text" name="docs" id="docs" class="form-control" value="{{ old('docs', isset($equipment) ? $equipment->docs : null) }}">
                 <p class="help-block">
                     Enter a link to the documentation system for this tool.
                 </p>
@@ -237,9 +261,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('help_text') ? 'has-error' : '' }}">
-    {!! Form::label('help_text', 'Help Text', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="help_text" class="col-sm-3 control-label">Help Text</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::textarea('help_text', null, ['class'=>'form-control']) !!}
+        <textarea name="help_text" id="help_text" class="form-control">{{ old('help_text', isset($equipment) ? $equipment->help_text : null) }}</textarea>
         <p class="help-block">Helpful hints - make sure to keep most information on the documentation system.</p>
         @if($errors->has('help_text'))
             <span class="help-block">
@@ -258,9 +282,22 @@
 </div>
 
 <div class="form-group {{ $errors->has('ppe') ? 'has-error' : '' }}">
-    {!! Form::label('ppe', 'PPE', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="ppe" class="col-sm-3 control-label">PPE</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('ppe[]', [''=>'']+$ppeList, null, ['class'=>'form-control js-advanced-dropdown', 'multiple']) !!}
+        <select name="ppe[]" id="ppe" class="form-control js-advanced-dropdown" multiple>
+            <option value=""></option>
+            @foreach($ppeList as $id => $name)
+                <option value="{{ $id }}" 
+                    @if(old('ppe', isset($equipment) ? $equipment->ppe : null))
+                        @if(is_array(old('ppe')))
+                            {{ in_array($id, old('ppe')) ? 'selected' : '' }}
+                        @else
+                            {{ in_array($id, (isset($equipment) ? $equipment->ppe : [])) ? 'selected' : '' }}
+                        @endif
+                    @endif
+                >{{ $name }}</option>
+            @endforeach
+        </select>
         @if($errors->has('ppe'))
             <span class="help-block">
                 @foreach($errors->get('ppe') as $error)
@@ -273,9 +310,12 @@
 
 
 <div class="form-group alert-danger {{ $errors->has('dangerous') ? 'has-error' : '' }}">
-    {!! Form::label('dangerous', 'Is Bloody Dangerous?', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="dangerous" class="col-sm-3 control-label">Is Bloody Dangerous?</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('dangerous', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
+        <select name="dangerous" id="dangerous" class="form-control">
+            <option value="0" {{ old('dangerous', isset($equipment) ? $equipment->dangerous : null) == 0 ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('dangerous', isset($equipment) ? $equipment->dangerous : null) == 1 ? 'selected' : '' }}>Yes</option>
+        </select>
         @if($errors->has('dangerous'))
             <span class="help-block">
                 @foreach($errors->get('dangerous') as $error)
@@ -290,9 +330,12 @@
 <h3>Training & Inductions</h3>
 
 <div class="form-group {{ $errors->has('requires_induction') ? 'has-error' : '' }}">
-    {!! Form::label('requires_induction', 'Requires Induction', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="requires_induction" class="col-sm-3 control-label">Requires Induction</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('requires_induction', [0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
+        <select name="requires_induction" id="requires_induction" class="form-control">
+            <option value="0" {{ old('requires_induction', isset($equipment) ? $equipment->requires_induction : null) == 0 ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('requires_induction', isset($equipment) ? $equipment->requires_induction : null) == 1 ? 'selected' : '' }}>Yes</option>
+        </select>
         @if($errors->has('requires_induction'))
             <span class="help-block">
                 @foreach($errors->get('requires_induction') as $error)
@@ -304,9 +347,13 @@
 </div>
 
 <div class="form-group {{ $errors->has('accepting_inductions') ? 'has-error' : '' }}">
-    {!! Form::label('accepting_inductions', 'Accepting Induction Requests', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="accepting_inductions" class="col-sm-3 control-label">Accepting Induction Requests</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::select('accepting_inductions', [null => '', 0=>'No', 1=>'Yes'], null, ['class'=>'form-control']) !!}
+        <select name="accepting_inductions" id="accepting_inductions" class="form-control">
+            <option value=""></option>
+            <option value="0" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === '0' || old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === 0 ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === '1' || old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === 1 ? 'selected' : '' }}>Yes</option>
+        </select>
         <div class="help-block">Ability to enable/disable inductions, depending on maintainer/trainer workload.</div>
         @if($errors->has('accepting_inductions'))
             <span class="help-block">
@@ -319,9 +366,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('induction_category') ? 'has-error' : '' }}">
-    {!! Form::label('induction_category', 'Induction Category', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="induction_category" class="col-sm-3 control-label">Induction Category</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('induction_category', null, ['class'=>'form-control']) !!}
+        <input type="text" name="induction_category" id="induction_category" class="form-control" value="{{ old('induction_category', isset($equipment) ? $equipment->induction_category : null) }}">
         <p class="help-block">By getting inducted on this piece of equipment they are inducted to this category meaning they have access to any other piece of equipment in the same category. i.e. access to all 3D Printers.</p>
         @if($errors->has('induction_category'))
             <span class="help-block">
@@ -334,9 +381,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('induction_instructions') ? 'has-error' : '' }}">
-    {!! Form::label('induction_instructions', 'Instructions to those awaiting training', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="induction_instructions" class="col-sm-3 control-label">Instructions to those awaiting training</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::textarea('induction_instructions', null, ['class'=>'form-control']) !!}
+        <textarea name="induction_instructions" id="induction_instructions" class="form-control">{{ old('induction_instructions', isset($equipment) ? $equipment->induction_instructions : null) }}</textarea>
         <p class="help-block">Shown to members after they have requested training. Possible uses: Linking to Telegram group to request training, or schedule of frequent training sessions. Uses markdown for formatting.</p>
         <p class="help-block"></p>
         @if($errors->has('induction_instructions'))
@@ -350,9 +397,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('trained_instructions') ? 'has-error' : '' }}">
-    {!! Form::label('trained_instructions', 'Instructions for trained users', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="trained_instructions" class="col-sm-3 control-label">Instructions for trained users</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::textarea('trained_instructions', null, ['class'=>'form-control']) !!}
+        <textarea name="trained_instructions" id="trained_instructions" class="form-control">{{ old('trained_instructions', isset($equipment) ? $equipment->trained_instructions : null) }}</textarea>
         <p class="help-block">Instructions for those who have been trained. You could use this to remind them of important notes about the equipment, or share access/padlock codes to use the equipment. Use markdown for formatting.</p>
         @if($errors->has('trained_instructions'))
             <span class="help-block">
@@ -365,9 +412,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('trainer_instructions') ? 'has-error' : '' }}">
-    {!! Form::label('trainer_instructions', 'Instructions for Trainers', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="trainer_instructions" class="col-sm-3 control-label">Instructions for Trainers</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::textarea('trainer_instructions', null, ['class'=>'form-control']) !!}
+        <textarea name="trainer_instructions" id="trainer_instructions" class="form-control">{{ old('trainer_instructions', isset($equipment) ? $equipment->trainer_instructions : null) }}</textarea>
         <p class="help-block">Only trainers see this - e.g. documents to risk assessments. Use markdown for formatting.</p>
         @if($errors->has('trainer_instructions'))
             <span class="help-block">
@@ -383,11 +430,11 @@
 <h3>Misc</h3>
 
 <div class="form-group {{ $errors->has('access_fee') ? 'has-error' : '' }}">
-    {!! Form::label('access_fee', 'Access Fee', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="access_fee" class="col-sm-3 control-label">Access Fee</label>
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'access_fee', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'1']) !!}
+            <input type="number" name="access_fee" id="access_fee" class="form-control" min="0" step="1" value="{{ old('access_fee', isset($equipment) ? $equipment->access_fee : null) }}">
         </div>
         <p class="help-block">Is an access fee being charged?</p>
         @if($errors->has('access_fee'))
@@ -401,13 +448,19 @@
 </div>
 
 <div class="form-group {{ $errors->has('usage_cost') ? 'has-error' : '' }}">
-    {!! Form::label('usage_cost', 'Usage Cost', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="usage_cost" class="col-sm-3 control-label">Usage Cost</label>
     <div class="col-sm-9 col-lg-7">
         <div class="input-group">
             <div class="input-group-addon">&pound;</div>
-            {!! Form::input('number', 'usage_cost', null, ['class'=>'form-control', 'min'=>'0', 'step'=>'0.01', 'required']) !!}
+            <input type="number" name="usage_cost" id="usage_cost" class="form-control" min="0" step="0.01" required value="{{ old('usage_cost', isset($equipment) ? $equipment->usage_cost : null) }}">
             <div class="input-group-addon">
-            Per {!! Form::select('usage_cost_per', [''=>'-', 'hour'=>'hour', 'gram'=>'gram', 'page'=>'page'], null, ['class'=>'', 'required']) !!}
+                Per 
+                <select name="usage_cost_per" id="usage_cost_per" required>
+                    <option value="">-</option>
+                    <option value="hour" {{ old('usage_cost_per', isset($equipment) ? $equipment->usage_cost_per : null) == 'hour' ? 'selected' : '' }}>hour</option>
+                    <option value="gram" {{ old('usage_cost_per', isset($equipment) ? $equipment->usage_cost_per : null) == 'gram' ? 'selected' : '' }}>gram</option>
+                    <option value="page" {{ old('usage_cost_per', isset($equipment) ? $equipment->usage_cost_per : null) == 'page' ? 'selected' : '' }}>page</option>
+                </select>
             </div>
         </div>
         <p class="help-block">Does the equipment cost anything to use?</p>
@@ -422,9 +475,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('access_code') ? 'has-error' : '' }}">
-    {!! Form::label('access_code', 'Access Code (e.g. for padlock)', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="access_code" class="col-sm-3 control-label">Access Code (e.g. for padlock)</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('access_code', null, ['class'=>'form-control']) !!}
+        <input type="text" name="access_code" id="access_code" class="form-control" value="{{ old('access_code', isset($equipment) ? $equipment->access_code : null) }}">
         <p class="help-block">The access code, if applicable, for this tool to be used.</p>
         @if($errors->has('access_code'))
             <span class="help-block">
@@ -437,9 +490,9 @@
 </div>
 
 <div class="form-group {{ $errors->has('asset_tag_id') ? 'has-error' : '' }}">
-    {!! Form::label('asset_tag_id', 'Asset Tag ID', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="asset_tag_id" class="col-sm-3 control-label">Asset Tag ID</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('asset_tag_id', null, ['class'=>'form-control']) !!}
+        <input type="text" name="asset_tag_id" id="asset_tag_id" class="form-control" value="{{ old('asset_tag_id', isset($equipment) ? $equipment->asset_tag_id : null) }}">
         <p class="help-block">If an asset tag is being placed onto this piece of equipment whats the ID?</p>
         @if($errors->has('asset_tag_id'))
             <span class="help-block">
@@ -453,9 +506,9 @@
 
 {{-- Allow anybody to set on creation, but only admins/trainers to edit --}}
 <div class="form-group {{ $errors->has('obtained_at') ? 'has-error' : '' }}">
-    {!! Form::label('obtained_at', 'Date Obtained', ['class'=>'col-sm-3 control-label']) !!}
+    <label for="obtained_at" class="col-sm-3 control-label">Date Obtained</label>
     <div class="col-sm-9 col-lg-7">
-        {!! Form::text('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+        <input type="text" name="obtained_at" id="obtained_at" class="form-control js-date-select" pattern="\d{4}-\d{2}-\d{2}" value="{{ old('obtained_at', (isset($equipment) && $equipment) ? ($equipment->obtained_at ? $equipment->obtained_at->toDateString() : null) : null) }}">
         <p class="help-block">When did Hackspace Manchester obtain/purchase the item? Formatted as <code>YYYY-MM-DD</code></p>
         @if($errors->has('obtained_at'))
             <span class="help-block">
@@ -470,16 +523,16 @@
 {{-- Only show on edit page--}}
 @if (isset($equipment))
     <div class="form-group {{ $errors->has('removed_at') ? 'has-error' : '' }}">
-        {!! Form::label('removed_at', 'Date Removed', ['class'=>'col-sm-3 control-label']) !!}
+        <label for="removed_at" class="col-sm-3 control-label">Date Removed</label>
         <div class="col-sm-9 col-lg-7">
-            {!! Form::text('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null, ['class'=>'form-control js-date-select', "pattern" => "\d{4}-\d{2}-\d{2}"]) !!}
+            <input type="text" name="removed_at" id="removed_at" class="form-control js-date-select" pattern="\d{4}-\d{2}-\d{2}" value="{{ old('removed_at', (isset($equipment) && $equipment) ? ($equipment->removed_at ? $equipment->removed_at->toDateString() : null) : null) }}">
             <p class="help-block">When did Hackspace Manchester get rid of it? Formatted as <code>YYYY-MM-DD</code></p>
             @if($errors->has('removed_at'))
                 <span class="help-block">
                     @foreach($errors->get('removed_at') as $error)
                         <li>{{ $error }}</li>
                     @endforeach
-                </span>
+            </span>
             @endif
         </div>
     </div>

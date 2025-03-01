@@ -23,7 +23,7 @@
             </div>
             @foreach ($maintainerGroups as $maintainerGroup)
                 <div class="well">
-                    <a href="{{ route('maintainer_groups.show', $maintainerGroup) }}" class="">
+                    <a href="{{ route('maintainer_groups.show', $maintainerGroup) }}">
                         <h4 class="list-group-item-heading">{{ $maintainerGroup->name }}</h4>
                     </a>
                     
@@ -46,7 +46,12 @@
                                     @foreach ($maintainerChunk as $maintainer)
                                         <li class="list-group-item">
                                             <a href="{{ route('members.show', $maintainer->id) }}">
-                                                {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 48, 'hidden-sm hidden-xs') !!}
+                                                @include('partials.components.member-photo', [
+                                                    'profileData' => $maintainer->profile,
+                                                    'userHash' => $maintainer->hash,
+                                                    'size' => 48,
+                                                    'class' => 'hidden-sm hidden-xs'
+                                                ])
                                                 <span>{{ $maintainer->name }}</span>
                                             </a>
                                         </li>

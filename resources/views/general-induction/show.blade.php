@@ -48,48 +48,48 @@
                 <div class="panel-body">
                     <p>To complete your general induction, enter the code given to you at the end of your induction here.</p>
 
-                    {!! Form::open(['route' => 'general-induction.update', 'class' => 'form-horizontal', 'method' => 'PUT']) !!}
+                    <form method="POST" action="{{ route('general-induction.update') }}" class="form-horizontal">
+                        @csrf
+                        @method('PUT')
 
-                    <div
-                        class="form-group {{ $errors->has('induction_code') ? 'has-error' : '' }} }}">
-                        {!! Form::label('induction_code', 'Induction Code', ['class' => 'col-sm-3 control-label']) !!}
-                        <div class="col-sm-9 col-lg-7">
-                            {!! Form::text('induction_code', null, ['class' => 'form-control', 'required' => 'required']) !!}
-                             @if($errors->has('induction_code'))
-                                <span class="help-block">
-                                    @foreach($errors->get('induction_code') as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </span>
-                            @endif
+                        <div class="form-group {{ $errors->has('induction_code') ? 'has-error' : '' }}">
+                            <label for="induction_code" class="col-sm-3 control-label">Induction Code</label>
+                            <div class="col-sm-9 col-lg-7">
+                                <input type="text" name="induction_code" id="induction_code" class="form-control" required>
+                                @if($errors->has('induction_code'))
+                                    <span class="help-block">
+                                        @foreach($errors->get('induction_code') as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <p>
-                        If you have been given a key fob already, enter it's ID below to pre-register it with your
-                        account. Your key fob will start working once your membership payment is set up.
-                    </p>
-                    <div
-                        class="form-group {{ $errors->has('key_id') ? 'has-error' : '' }} }}">
-                        {!! Form::label('key_id', 'Fob ID (optional)', ['class' => 'col-sm-3 control-label']) !!}
-                        <div class="col-sm-9 col-lg-7">
-                            {!! Form::text('key_id', null, ['class' => 'form-control']) !!}
-                            @if($errors->has('key_id'))
-                                <span class="help-block">
-                                    @foreach($errors->get('key_id') as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </span>
-                            @endif
+                        <p>
+                            If you have been given a key fob already, enter it's ID below to pre-register it with your
+                            account. Your key fob will start working once your membership payment is set up.
+                        </p>
+                        <div class="form-group {{ $errors->has('key_id') ? 'has-error' : '' }}">
+                            <label for="key_id" class="col-sm-3 control-label">Fob ID (optional)</label>
+                            <div class="col-sm-9 col-lg-7">
+                                <input type="text" name="key_id" id="key_id" class="form-control">
+                                @if($errors->has('key_id'))
+                                    <span class="help-block">
+                                        @foreach($errors->get('key_id') as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                            {!! Form::submit('Complete General Induction', ['class' => 'btn btn-primary']) !!}
+                        <div class="row">
+                            <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">Complete General Induction</button>
+                            </div>
                         </div>
-                    </div>
-                    {!! Form::close() !!}
+                    </form>
                 </div>
             </div>
         @else

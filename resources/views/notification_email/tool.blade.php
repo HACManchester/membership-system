@@ -29,72 +29,73 @@ Email members by training status
 <div class="row">
     <div class="col-xs-12 col-md-12 col-lg-8">
         <div class="infobox well">
-            {!! Form::open(array('route' => 'notificationemail.store', 'class'=>'', 'method'=>'POST')) !!}
+            <form action="{{ route('notificationemail.store') }}" method="POST">
+                @csrf
 
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    <div class="{{ FlashNotification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
-                
-                        <h3>Recipients</h3>
-                        {!! Form::hidden('recipient', "tool/$equipment->slug/$status", null, ['class'=>'form-control']) !!}
-                       
-                        {!! Form::label('equipment', 'Equipment') !!}
-                        <div class="form-control">{{ $equipment->name }} 
-                            (<a href="{{route('equipment.show', [$equipment->slug])}}">
-                                Visit tool
-                            </a>) 
+                <div class="row">
+                    <div class="col-xs-12 col-md-9">
+                        <div class="{{ FlashNotification::hasErrorDetail('recipient', 'has-error has-feedback') }}">
+                    
+                            <h3>Recipients</h3>
+                            <input type="hidden" name="recipient" value="tool/{{ $equipment->slug }}/{{ $status }}">
+                        
+                            <label for="equipment">Equipment</label>
+                            <div class="form-control">{{ $equipment->name }} 
+                                (<a href="{{route('equipment.show', [$equipment->slug])}}">
+                                    Visit tool
+                                </a>) 
+                            </div>
+                            
+                            <label for="status">Training Status</label>
+                            <div class="form-control">{{ $statuses[$status] }}</div>
+                            
+                            {!! FlashNotification::getErrorDetail('recipient') !!}
                         </div>
-                        
-                        {!! Form::label('status', 'Training Status') !!}
-                        <div class="form-control">{{ $statuses[$status] }}</div>
-                         
-                        {!! FlashNotification::getErrorDetail('recipient') !!}
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    <div class="{{ FlashNotification::hasErrorDetail('subject', 'has-error has-feedback') }}">
-                        <h3>Subject</h3>
-                        {!! Form::text('subject', null, ['class'=>'form-control']) !!}
-                        {!! FlashNotification::getErrorDetail('subject') !!}
+                <div class="row">
+                    <div class="col-xs-12 col-md-9">
+                        <div class="{{ FlashNotification::hasErrorDetail('subject', 'has-error has-feedback') }}">
+                            <h3>Subject</h3>
+                            <input type="text" name="subject" id="subject" class="form-control" value="{{ old('subject') }}">
+                            {!! FlashNotification::getErrorDetail('subject') !!}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    <div class="form-group {{ FlashNotification::hasErrorDetail('message', 'has-error has-feedback') }}">
-                        
-                        <h3>Message</h3>
-                        <p>Do not draft messages here, this form does not save drafts on page refreshes.</p>
-                        <p>The email will be addressed to the user (e.g. Hi User), and contain the standard signature, the message above will be placed in between</p>
-                        {!! Form::textarea('message', null, ['class'=>'form-control']) !!}
-                        {!! FlashNotification::getErrorDetail('message') !!}
+                <div class="row">
+                    <div class="col-xs-12 col-md-9">
+                        <div class="form-group {{ FlashNotification::hasErrorDetail('message', 'has-error has-feedback') }}">
+                            
+                            <h3>Message</h3>
+                            <p>Do not draft messages here, this form does not save drafts on page refreshes.</p>
+                            <p>The email will be addressed to the user (e.g. Hi User), and contain the standard signature, the message above will be placed in between</p>
+                            <textarea name="message" id="message" class="form-control">{{ old('message') }}</textarea>
+                            {!! FlashNotification::getErrorDetail('message') !!}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <p>
-                        <b>Important!</b><br>
-                        <ul>
-                            <li>The message will be sent as soon as you click send.</li>
-                            <li>If you do not tick the checkbox, it will only go to you</li>
-                            <li>Be sure to copy the message if you're writing a draft, as the message won't reappear once the page loads</li>
-                            </ul>
-                    </p>
-                    <p>To actually send the email to everyone, make sure to tick the checkbox below.</p>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            <b>Important!</b><br>
+                            <ul>
+                                <li>The message will be sent as soon as you click send.</li>
+                                <li>If you do not tick the checkbox, it will only go to you</li>
+                                <li>Be sure to copy the message if you're writing a draft, as the message won't reappear once the page loads</li>
+                                </ul>
+                        </p>
+                        <p>To actually send the email to everyone, make sure to tick the checkbox below.</p>
 
-                        {!! Form::checkbox('send_to_all') !!}
-                        {!! Form::label('send_to_all', 'Send the message to everyone, not just yourself') !!}<br>
-                    {!! Form::submit('Send', array('class'=>'btn btn-primary')) !!}<br>
+                        <input type="checkbox" name="send_to_all" id="send_to_all" value="1" {{ old('send_to_all') ? 'checked' : '' }}>
+                        <label for="send_to_all">Send the message to everyone, not just yourself</label><br>
+                        <button type="submit" class="btn btn-primary">Send</button><br>
+                    </div>
                 </div>
-            </div>
 
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 </div>

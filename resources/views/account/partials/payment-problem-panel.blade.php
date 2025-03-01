@@ -13,9 +13,10 @@
                         This process wont charge you anything, just setup the new Direct Debit.
                     </p>
                     <p>
-                        {!! Form::open(array('method'=>'POST', 'route' => ['account.payment.gocardless-migrate'])) !!}
-                        {!! Form::submit('Setup a variable Direct Debit', array('class'=>'btn btn-primary')) !!}
-                        {!! Form::close() !!}
+                        <form method="POST" action="{{ route('account.payment.gocardless-migrate') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Setup a variable Direct Debit</button>
+                        </form>
                     </p>
                     @else
                     <p>
@@ -43,13 +44,14 @@
                     <br />
                     <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
                     <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly amount</a></small>
-                    {!! Form::open(array('method'=>'POST', 'class'=>'form-inline hidden js-alter-subscription-amount-form', 'style'=>'display:inline-block', 'route' => ['account.update-sub-payment', $user->id])) !!}
-                    <div class="input-group">
-                        <div class="input-group-addon">&pound;</div>
-                        {!! Form::input('number', 'monthly_subscription', round($user->monthly_subscription), ['class' => 'form-control', 'placeholder' => MembershipPayments::getRecommendedPrice() / 100, 'min' => MembershipPayments::getMinimumPrice() / 100, 'step' => '1']) !!}
-                    </div>
-                    {!! Form::submit('Update', array('class'=>'btn btn-default')) !!}
-                    {!! Form::close() !!}
+                    <form method="POST" action="{{ route('account.update-sub-payment', $user->id) }}" class="form-inline hidden js-alter-subscription-amount-form" style="display:inline-block">
+                        @csrf
+                        <div class="input-group">
+                            <div class="input-group-addon">&pound;</div>
+                            <input type="number" name="monthly_subscription" value="{{ round($user->monthly_subscription) }}" class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
+                        </div>
+                        <button type="submit" class="btn btn-default">Update</button>
+                    </form>
                 </p>
                 @endif
 

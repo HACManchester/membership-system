@@ -19,25 +19,40 @@ Payments
 
 <div class="row">
     <div class="col-xs-12 well">
-        {!! Form::open(array('method'=>'GET', 'route' => ['payments.index'], 'class'=>'navbar-form navbar-left')) !!}
-        {!! Form::select('date_filter', [''=>'All Time']+$dateRange, Request::get('date_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::select('member_filter', [''=>'All Members']+$memberList, Request::get('member_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::select('reason_filter', [''=>'All Reasons']+$reasonList, Request::get('reason_filter', ''), ['class'=>'form-control js-advanced-dropdown', 'style'=>'margin-right:10px; width:150px;']) !!}
-        {!! Form::submit('Filter', array('class'=>'btn btn-default btn-sm')) !!}
-        {!! Form::close() !!}
+        <form method="GET" action="{{ route('payments.index') }}" class="navbar-form navbar-left">
+            <select name="date_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Time</option>
+                @foreach($dateRange as $value => $label)
+                    <option value="{{ $value }}" {{ Request::get('date_filter', '') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+            </select>
+            <select name="member_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Members</option>
+                @foreach($memberList as $id => $name)
+                    <option value="{{ $id }}" {{ Request::get('member_filter', '') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
+            <select name="reason_filter" class="form-control js-advanced-dropdown" style="margin-right:10px; width:150px;">
+                <option value="">All Reasons</option>
+                @foreach($reasonList as $id => $name)
+                    <option value="{{ $id }}" {{ Request::get('reason_filter', '') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="btn btn-default btn-sm">Filter</button>
+        </form>
     </div>
 </div>
 
-{!! HTML::sortablePaginatorLinks($payments) !!}
+@include('partials.components.paginator-links', ['collection' => $payments])
 <table class="table memberList">
     <thead>
         <tr>
-            <th>{!! HTML::sortBy('created_at', 'Date', 'payments.index') !!}</th>
+            <th>@include('partials.components.sort-by', ['column' => 'created_at', 'body' => 'Date', 'route' => 'payments.index'])</th>
             <th>Member</th>
-            <th>{!! HTML::sortBy('reason', 'Reason', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('source', 'Method', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('amount', 'Amount', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('reference', 'Reference', 'payments.index') !!}</th>
+            <th>@include('partials.components.sort-by', ['column' => 'reason', 'body' => 'Reason', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'source', 'body' => 'Method', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'amount', 'body' => 'Amount', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'reference', 'body' => 'Reference', 'route' => 'payments.index'])</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -54,7 +69,7 @@ Payments
     </tfoot>
 </table>
 
-{!! HTML::sortablePaginatorLinks($payments) !!}
+@include('partials.components.paginator-links', ['collection' => $payments])
 
     <div id="react-test"></div>
 

@@ -39,7 +39,12 @@
                         @foreach ($maintainerChunk as $maintainer)
                             <li class="list-group-item">
                                 <a href="{{ route('members.show', $maintainer->id) }}">
-                                    {!! HTML::memberPhoto($maintainer->profile, $maintainer->hash, 48, 'hidden-sm hidden-xs') !!}
+                                    @include('partials.components.member-photo', [
+                                        'profileData' => $maintainer->profile,
+                                        'userHash' => $maintainer->hash,
+                                        'size' => 48,
+                                        'class' => 'hidden-sm hidden-xs'
+                                    ])
                                     <span>{{ $maintainer->name }}</span>
                                 </a>
                             </li>

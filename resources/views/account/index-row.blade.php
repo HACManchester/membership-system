@@ -1,6 +1,6 @@
 <tr>
     <td class="profilePhotoCol">
-        {!! HTML::memberPhoto($user->profile, $user->hash, 100, 'img-circle profilePhoto') !!}
+        @include('partials.components.member-photo', ['profileData' => $user->profile, 'userHash' => $user->hash, 'size' => 100, 'class' => 'img-circle profilePhoto'])
     </td>
     <td>
         <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
@@ -11,7 +11,7 @@
         {{ $user->email }}
     </td>
     <td>
-        {!! HTML::statusLabel($user->status) !!}
+        @include('partials.components.status-label', ['status' => $user->status])
         @if ($user->online_only)
             <div class="label label-warning">Online Only</div>
         @endif
@@ -40,13 +40,4 @@
         <span style="color:green">Created: {{ $user->created_at }}</span><br/>
         <span style="color:blue">Seen: {{ $user->seen_at }}</span>
     </td>
-    <!--
-    <td>
-        {!! Form::open(array('method'=>'POST', 'class'=>'well form-inline', 'route' => ['account.payment.store', $user->id])) !!}
-        {!! Form::hidden('reason', 'subscription') !!}
-        {!! Form::select('source', ['other'=>'Other', 'cash'=>'Cash'], null, ['class'=>'form-control']) !!}
-        {!! Form::submit('Record A &pound;'.round($user->monthly_subscription).' Payment', array('class'=>'btn btn-default')) !!}
-        {!! Form::close() !!}
-    </td>
-    -->
 </tr>

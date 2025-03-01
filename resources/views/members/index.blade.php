@@ -21,14 +21,14 @@ Members
         <div class="col-xs-6 col-md-3 col-lg-2">
             <div class="memberBlock" style="border: 5px solid #000; border-radius: 1em; background: black;">
                 <a href="{{ route('members.show', $user->user_id) }}">
-                    {!! HTML::memberPhoto(
-                        (object)[
+                    @include('partials.components.member-photo', [
+                        'profileData' => (object)[
                             "profile_photo"=>$user->profile_photo,
                             "profile_photo_private"=>$user->profile_photo_private
-                        ], 
-                        $user->hash, 
-                        200) 
-                    !!}
+                        ],
+                        'userHash' => $user->hash,
+                        'size' => 200
+                    ])
                     <div class="memberDetails" style="color:white;">
                         <strong>{{ $user->display_name }}</strong>
                     </div>

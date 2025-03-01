@@ -164,7 +164,6 @@ return [
         BB\Providers\EventServiceProvider::class,
         BB\Providers\RouteServiceProvider::class,
         BB\Providers\ValidatorServiceProvider::class,
-        BB\Providers\HtmlServiceProvider::class,
         \BB\Providers\ObserverServiceProvider::class,
 
         /*
@@ -225,8 +224,6 @@ return [
         'URL'                   => Illuminate\Support\Facades\URL::class,
         'Validator'             => Illuminate\Support\Facades\Validator::class,
         'View'                  => Illuminate\Support\Facades\View::class,
-        'Form'                  => Collective\Html\FormFacade::class,
-        'HTML'                  => Collective\Html\HtmlFacade::class,
         'FlashNotification'     => BB\FlashNotification\FlashNotificationFacade::class,
         'Notification'          => Illuminate\Support\Facades\Notification::class,
         'Image'                 => Intervention\Image\Facades\Image::class,

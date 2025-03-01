@@ -40,7 +40,7 @@
             </div>
             @foreach ($areas as $area)
                 <div class="well">
-                    <a href="{{ route('equipment_area.show', $area) }}" class="">
+                    <a href="{{ route('equipment_area.show', $area) }}">
                         <h4 class="list-group-item-heading">{{ $area->name }}</h4>
                     </a>
                     
@@ -56,7 +56,12 @@
                                     @foreach ($coordinatorChunk as $coordinator)
                                         <li class="list-group-item">
                                             <a href="{{ route('members.show', $coordinator->id) }}">
-                                                {!! HTML::memberPhoto($coordinator->profile, $coordinator->hash, 48, 'hidden-sm hidden-xs') !!}
+                                                @include('partials.components.member-photo', [
+                                                    'profileData' => $coordinator->profile,
+                                                    'userHash' => $coordinator->hash,
+                                                    'size' => 48,
+                                                    'class' => 'hidden-sm hidden-xs'
+                                                ])
                                                 <span>{{ $coordinator->name }}</span>
                                             </a>
                                         </li>
