@@ -43,16 +43,16 @@ Payments
     </div>
 </div>
 
-{!! HTML::sortablePaginatorLinks($payments) !!}
+@include('partials.components.paginator-links', ['collection' => $payments])
 <table class="table memberList">
     <thead>
         <tr>
-            <th>{!! HTML::sortBy('created_at', 'Date', 'payments.index') !!}</th>
+            <th>@include('partials.components.sort-by', ['column' => 'created_at', 'body' => 'Date', 'route' => 'payments.index'])</th>
             <th>Member</th>
-            <th>{!! HTML::sortBy('reason', 'Reason', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('source', 'Method', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('amount', 'Amount', 'payments.index') !!}</th>
-            <th>{!! HTML::sortBy('reference', 'Reference', 'payments.index') !!}</th>
+            <th>@include('partials.components.sort-by', ['column' => 'reason', 'body' => 'Reason', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'source', 'body' => 'Method', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'amount', 'body' => 'Amount', 'route' => 'payments.index'])</th>
+            <th>@include('partials.components.sort-by', ['column' => 'reference', 'body' => 'Reference', 'route' => 'payments.index'])</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -69,7 +69,7 @@ Payments
     </tfoot>
 </table>
 
-{!! HTML::sortablePaginatorLinks($payments) !!}
+@include('partials.components.paginator-links', ['collection' => $payments])
 
     <div id="react-test"></div>
 

@@ -286,10 +286,15 @@
                     @foreach($trainers as $trainer)
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <div>
-                                <a href="{{ route('members.show', $trainer->user->id) }}">
-                                    {!! HTML::memberPhoto($trainer->user->profile, $trainer->user->hash, 25, 'hidden-sm hidden-xs') !!}
-                                    {{ $trainer->user->name }}
-                                </a>
+                                    <a href="{{ route('members.show', $trainer->user->id) }}">
+                                        @include('partials.components.member-photo', [
+                                            'profileData' => $trainer->user->profile,
+                                            'userHash' => $trainer->user->hash,
+                                            'size' => 25,
+                                            'class' => 'hidden-sm hidden-xs'
+                                        ])
+                                        {{ $trainer->user->name }}
+                                    </a>
                                 @if ($trainer->user->pronouns)
                                     <span>({{ $trainer->user->pronouns }})</span>
                                 @endif
@@ -327,7 +332,12 @@
                         <div class="infobox__grid-item infobox__grid-item--user">
                             <div>
                                 <a href="{{ route('members.show', $inductionRecord->user->id) }}">
-                                    {!! HTML::memberPhoto($inductionRecord->user->profile, $inductionRecord->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                    @include('partials.components.member-photo', [
+                                        'profileData' => $inductionRecord->user->profile,
+                                        'userHash' => $inductionRecord->user->hash,
+                                        'size' => 25,
+                                        'class' => 'hidden-sm hidden-xs'
+                                    ])
                                     {{ $inductionRecord->user->name }}
                                 </a>
                                 @if ($inductionRecord->user->pronouns)
@@ -387,7 +397,12 @@
                             <div class="infobox__grid-item infobox__grid-item--user" >
                                 <div>
                                     <a href="{{ route('members.show', $inductionRecord->user->id) }}">
-                                        {!! HTML::memberPhoto($inductionRecord->user->profile, $inductionRecord->user->hash, 25, 'hidden-sm hidden-xs') !!}
+                                        @include('partials.components.member-photo', [
+                                            'profileData' => $inductionRecord->user->profile,
+                                            'userHash' => $inductionRecord->user->hash,
+                                            'size' => 25,
+                                            'class' => 'hidden-sm hidden-xs'
+                                        ])
                                         {{ $inductionRecord->user->name }}
                                     </a>
                                     @if ($inductionRecord->user->pronouns)

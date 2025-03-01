@@ -135,7 +135,7 @@
                     <span class="label label-warning">Online Only</span>
                 @else
                     @if (Auth::user()->status != 'active')
-                        {!! HTML::statusLabel(Auth::user()->status) !!}
+                        @include('partials.components.status-label', ['status' => Auth::user()->status])
                     @endif
                 @endif
             @endif
@@ -155,12 +155,12 @@
                 </a>
             </li>
             <ul class="nav nested-nav accountSettings">
-                {!! HTML::sideNavLink('Edit Your Account', 'account.edit', [Auth::id()]) !!}
-                {!! HTML::sideNavLink('Edit Your Profile', 'account.profile.edit', [Auth::id()]) !!}
+                @include('partials.components.side-nav-link', ['name' => 'Edit Your Account', 'route' => 'account.edit', 'routeParams' => [Auth::id()]])
+                @include('partials.components.side-nav-link', ['name' => 'Edit Your Profile', 'route' => 'account.profile.edit', 'routeParams' => [Auth::id()]])
             </ul>
 
-            {!! HTML::sideNavLink('💳 Manage Your Balance', 'account.balance.index', [Auth::id()]) !!}
-            {!! HTML::sideNavLink('ℹ️ General Induction', 'general-induction.show', [Auth::id()], !Auth::user()->induction_completed) !!}
+            @include('partials.components.side-nav-link', ['name' => '💳 Manage Your Balance', 'route' => 'account.balance.index', 'routeParams' => [Auth::id()]])
+            @include('partials.components.side-nav-link', ['name' => 'ℹ️ General Induction', 'route' => 'general-induction.show', 'routeParams' => [Auth::id()], 'highlight' => !Auth::user()->induction_completed])
 
             <li><a href="https://list.hacman.org.uk" target="_blank">💬 Forum</a></li>
         </ul>
@@ -179,23 +179,23 @@
     @if (!Auth::guest())
         <ul class="nav">
             
-            {!! HTML::sideNavLink('Members', 'members.index') !!}
-            {!! HTML::sideNavLink('Member Storage', 'storage_boxes.index') !!}
-            {!! HTML::sideNavLink('Tools and Equipment', 'equipment.index') !!}
-            {!! HTML::sideNavLink('Stats', 'stats.index') !!}
-            {!! HTML::sideNavLink('Area Coordinators', 'equipment_area.index') !!}
-            {!! HTML::sideNavLink('Maintainer Groups', 'maintainer_groups.index') !!}
+            @include('partials.components.side-nav-link', ['name' => 'Members', 'route' => 'members.index'])
+            @include('partials.components.side-nav-link', ['name' => 'Member Storage', 'route' => 'storage_boxes.index'])
+            @include('partials.components.side-nav-link', ['name' => 'Tools and Equipment', 'route' => 'equipment.index'])
+            @include('partials.components.side-nav-link', ['name' => 'Stats', 'route' => 'stats.index'])
+            @include('partials.components.side-nav-link', ['name' => 'Area Coordinators', 'route' => 'equipment_area.index'])
+            @include('partials.components.side-nav-link', ['name' => 'Maintainer Groups', 'route' => 'maintainer_groups.index'])
             
             @if(!Auth::guest())
                 @if (Auth::user()->isAdmin())
-                    {!! HTML::sideNavLink('👮 Admin', 'admin') !!}
-                    {!! HTML::sideNavLink('👮 Manage Members', 'account.index') !!}
-                    {!! HTML::sideNavLink('👮 Log Files', 'logs') !!}
-                    {!! HTML::sideNavLink('💌 Newsletter', 'newsletter') !!}
+                    @include('partials.components.side-nav-link', ['name' => '👮 Admin', 'route' => 'admin'])
+                    @include('partials.components.side-nav-link', ['name' => '👮 Manage Members', 'route' => 'account.index'])
+                    @include('partials.components.side-nav-link', ['name' => '👮 Log Files', 'route' => 'logs'])
+                    @include('partials.components.side-nav-link', ['name' => '💌 Newsletter', 'route' => 'newsletter'])
                 @endif
 
                 @if (Auth::user()->hasRole('finance') || Auth::user()->isAdmin())
-                    {!! HTML::sideNavLink('💰 Payments', 'payments.index') !!}
+                    @include('partials.components.side-nav-link', ['name' => '💰 Payments', 'route' => 'payments.index'])
                 @endif
             @endif
         </ul>

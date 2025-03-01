@@ -164,7 +164,6 @@ return [
         BB\Providers\EventServiceProvider::class,
         BB\Providers\RouteServiceProvider::class,
         BB\Providers\ValidatorServiceProvider::class,
-        BB\Providers\HtmlServiceProvider::class,
         \BB\Providers\ObserverServiceProvider::class,
 
         /*

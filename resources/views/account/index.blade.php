@@ -17,10 +17,10 @@ Members
 <nav id="mainTabBar">
     <ul role="tablist">
         <li class="@if (Request::get('showLeft', 0) == '0') active @endif">
-            {!! link_to_route('account.index', 'Active Members', ['showLeft'=>0]) !!}
+            <a href="{{ route('account.index', ['showLeft' => 0]) }}">Active Members</a>
         </li>
         <li class="@if (Request::get('showLeft', 0) == 1) active @endif">
-            {!! link_to_route('account.index', 'Old Members', ['showLeft'=>1]) !!}
+            <a href="{{ route('account.index', ['showLeft' => 1]) }}">Old Members</a>
         </li>
     </ul>
 </nav>
@@ -47,22 +47,22 @@ Members
             </div>
         </div>
     </form>
-    {!! HTML::userPaginatorLinks($users) !!}
+    @include('partials.components.user-paginator-links', ['collection' => $users])
 </div>
 <table class="table memberList">
     <thead>
         <tr>
             <th></th>
-            <th>{!! HTML::sortUsersBy('name', 'Name') !!}</th>
-            <th>{!! HTML::sortUsersBy('status', 'Status') !!}</th>
-            <th class="hidden-xs">{!! HTML::sortUsersBy('key_holder', 'Key Holder') !!}</th>
-            <th class="hidden-xs">{!! HTML::sortUsersBy('trusted', 'Trusted') !!}</th>
-            <th class="hidden-xs">{!! HTML::sortUsersBy('created_at', 'Created') !!}/{!! HTML::sortUsersBy('seen_at', 'Seen') !!}</th>
+            <th>@include('partials.components.sort-users-by', ['column' => 'name', 'body' => 'Name'])</th>
+            <th>@include('partials.components.sort-users-by', ['column' => 'status', 'body' => 'Status'])</th>
+            <th class="hidden-xs">@include('partials.components.sort-users-by', ['column' => 'key_holder', 'body' => 'Key Holder'])</th>
+            <th class="hidden-xs">@include('partials.components.sort-users-by', ['column' => 'trusted', 'body' => 'Trusted'])</th>
+            <th class="hidden-xs">@include('partials.components.sort-users-by', ['column' => 'created_at', 'body' => 'Created'])/@include('partials.components.sort-users-by', ['column' => 'seen_at', 'body' => 'Seen'])</th>
         </tr>
     </thead>
     <tbody>
         @each('account.index-row', $users, 'user')
     </tbody>
 </table>
-{!! HTML::userPaginatorLinks($users) !!}
+@include('partials.components.user-paginator-links', ['collection' => $users])
 @stop

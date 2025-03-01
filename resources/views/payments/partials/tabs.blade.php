@@ -1,19 +1,19 @@
 <nav id="mainTabBar">
     <ul role="tablist">
         <li class="{{ request()->routeIs('payments.index') ? 'active' : '' }}">
-            {!! link_to_route('payments.index', 'All Payments') !!}
+            <a href="{{ route('payments.index') }}">All Payments</a>
         </li>
         <li class="{{ request()->routeIs('payments.overview') ? 'active' : '' }}">
-            {!! link_to_route('payments.overview', 'Overview') !!}
+            <a href="{{ route('payments.overview') }}">Overview</a>
         </li>
         <li class="{{ request()->routeIs('payments.sub-charges') ? 'active' : '' }}">
-            {!! link_to_route('payments.sub-charges', 'Subscription Charges') !!}
+            <a href="{{ route('payments.sub-charges') }}">Subscription Charges</a>
         </li>
         <li class="{{ request()->routeIs('payments.possible-duplicates') ? 'active' : '' }}">
-            {!! link_to_route('payments.possible-duplicates', 'Possible Duplicates') !!}
+            <a href="{{ route('payments.possible-duplicates') }}">Possible Duplicates</a>
         </li>
         <li class="{{ request()->routeIs('payments.balances') ? 'active' : '' }}">
-            {!! link_to_route('payments.balances', 'Balances') !!}
+            <a href="{{ route('payments.balances') }}">Balances</a>
         </li>
     </ul>
 </nav>

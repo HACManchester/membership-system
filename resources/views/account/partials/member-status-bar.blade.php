@@ -5,12 +5,12 @@
         </div>
     @else
         <div>
-            {!! HTML::statusLabel($user->status) !!}
+            @include('partials.components.status-label', ['status' => $user->status])
         </div>
     @endif
     
     <div>
-        {!! HTML::spaceAccessLabel($user->active) !!}
+        @include('partials.components.space-access-label', ['active' => $user->active])
     </div>
 
     @if (!$user->online_only)

@@ -1,6 +1,6 @@
 <tr>
     <td class="profilePhotoCol">
-        {!! HTML::memberPhoto($user->profile, $user->hash, 100, 'img-circle profilePhoto') !!}
+        @include('partials.components.member-photo', ['profileData' => $user->profile, 'userHash' => $user->hash, 'size' => 100, 'class' => 'img-circle profilePhoto'])
     </td>
     <td>
         <a href="{{ route('account.show', $user->id) }}">{{ $user->name }}</a>
@@ -11,7 +11,7 @@
         {{ $user->email }}
     </td>
     <td>
-        {!! HTML::statusLabel($user->status) !!}
+        @include('partials.components.status-label', ['status' => $user->status])
         @if ($user->online_only)
             <div class="label label-warning">Online Only</div>
         @endif

@@ -27,7 +27,7 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
-                {!! HTML::memberPhoto($profileData, $user->hash) !!}
+                @include('partials.components.member-photo', ['profileData' => $profileData, 'userHash' => $user->hash])
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8 pull-right">
                 <h3 style="border-bottom: 1px solid black; padding-bottom: 5px;">{{ $profileData->present()->tagline }}</h3>
@@ -35,11 +35,11 @@
                     {{ $profileData->present()->description }}
                 </p>
                 <ul>
-                    {!! HTML::profileSocialMediaListItem('GitHub', $profileData->present()->gitHubLink) !!}
-                    {!! HTML::profileSocialMediaListItem('Twitter', $profileData->present()->twitterLink) !!}
-                    {!! HTML::profileSocialMediaListItem('Telegram', $profileData->present()->googlePlusLink) !!}
-                    {!! HTML::profileSocialMediaListItem('Facebook', $profileData->present()->facebookLink) !!}
-                    {!! HTML::profileSocialMediaListItem('Website', $profileData->present()->website) !!}
+                    @include('partials.components.profile-social-media-list-item', ['name' => 'GitHub', 'url' => $profileData->present()->gitHubLink])
+                    @include('partials.components.profile-social-media-list-item', ['name' => 'Twitter', 'url' => $profileData->present()->twitterLink])
+                    @include('partials.components.profile-social-media-list-item', ['name' => 'Telegram', 'url' => $profileData->present()->googlePlusLink])
+                    @include('partials.components.profile-social-media-list-item', ['name' => 'Facebook', 'url' => $profileData->present()->facebookLink])
+                    @include('partials.components.profile-social-media-list-item', ['name' => 'Website', 'url' => $profileData->present()->website])
                     @if ($profileData->irc)
                     <li>IRC - <a href="https://t.me/HACManchester">https://t.me/HACManchester</a> - {{ $profileData->irc }}</li>
                     @endif
