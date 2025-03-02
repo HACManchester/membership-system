@@ -2,7 +2,7 @@
 
 namespace BB\Notifications;
 
-use Exception;
+use Throwable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,7 +22,7 @@ class ErrorNotification extends Notification
     /** @var bool */
     protected $suppress;
 
-    /** @var Exception */
+    /** @var Throwable */
     protected $e;
 
     /**
@@ -30,7 +30,7 @@ class ErrorNotification extends Notification
      *
      * @return void
      */
-    public function __construct($level = 'error', $title = 'Exception', $suppress = false, Exception $e)
+    public function __construct($level = 'error', $title = 'Exception', $suppress = false, Throwable $e)
     {
         $this->level = $level;
         $this->title = $title;
