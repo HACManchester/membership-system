@@ -48,6 +48,9 @@ jobs:
       - name: Frontend build
         run: yarn run production
 
+      - name: Run frontend tests
+        run: yarn test --ci
+
       - name: Prepare the application
         run: |
           php -r "file_exists('.env') || copy('.env.example', '.env');"
