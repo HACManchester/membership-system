@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 class Select extends React.Component {
 
     render() {
@@ -24,7 +22,7 @@ class Select extends React.Component {
 
         var fieldStyle = 'form-group';
         if (this.props.bsStyle) {
-            fieldStyle += ' has-'+this.props.bsStyle;
+            fieldStyle += ' has-' + this.props.bsStyle;
         }
 
         return (
@@ -32,9 +30,9 @@ class Select extends React.Component {
             <div className={fieldStyle}>
                 {label}
                 <select className="form-control" value={this.props.value} onChange={this.props.onChange}>
-                    { options }
+                    {options}
                 </select>
-                { help }
+                {help}
             </div>
         );
     }

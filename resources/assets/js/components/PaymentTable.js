@@ -1,9 +1,7 @@
 import React from 'react';
-
-var PaymentTableRow = require('./PaymentTableRow');
+import PaymentTableRow from './PaymentTableRow';
 
 class PaymentTable extends React.Component {
-
     render() {
         var displayRow = (payment) => <PaymentTableRow payment={payment} key={payment.id} />;
 
@@ -24,13 +22,12 @@ class PaymentTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                    { this.props.payments.map(displayRow) }
+                        {this.props.payments.map(displayRow)}
                     </tbody>
                 </table>
             </div>
         );
     }
-
 }
 
 export default PaymentTable;

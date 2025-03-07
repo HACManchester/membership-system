@@ -3,7 +3,7 @@ const mix = require('laravel-mix');
 mix.copy('node_modules/bootstrap/dist/fonts', 'public/fonts');
 mix.copy('node_modules/material-design-icons/iconfont', 'public/fonts');
 
-mix.react('resources/assets/js/app.js', 'public/js');
+mix.js('resources/assets/js/app.js', 'public/js').react();
 
 mix.less('resources/assets/less/application.less', 'public/css');
 

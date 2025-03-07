@@ -1,6 +1,5 @@
 import React from "react";
-
-var Select = require("./form/Select");
+import Select from "./form/Select";
 
 class PaymentModule extends React.Component {
   constructor(props) {
@@ -48,21 +47,21 @@ class PaymentModule extends React.Component {
     var $ = require("jquery");
 
     var parsedAmount = parseFloat(this.state.amount);
-    console.log(parsedAmount, this.state);
+    // console.log(parsedAmount, this.state);
 
     if (parsedAmount < 0) {
-      this.setState({ errorMessage: 'Amount cannot be negative'})
+      this.setState({ errorMessage: 'Amount cannot be negative' })
       return;
     }
 
     if (isNaN(parsedAmount)) {
-      this.setState({ 
+      this.setState({
         errorMessage: 'Invalid amount. Please re-enter'
       })
       return;
     }
 
-    this.setState({ errorMessage: null})
+    this.setState({ errorMessage: null })
     this.setState({ requestInProgress: true });
 
     // loading indicator
@@ -92,10 +91,10 @@ class PaymentModule extends React.Component {
         this.setState({ requestInProgress: false });
 
         if (xhr.status == 303) {
-          document.location.href = responseData.url;
+          window.location.href = responseData.url;
         }
 
-        this.setState({ errorMessage: responseData.error})
+        this.setState({ errorMessage: responseData.error })
       }.bind(this),
     });
   }
@@ -212,7 +211,7 @@ PaymentModule.defaultProps = {
   userId: null,
   amount: null,
   buttonLabel: "Pay Now",
-  onSuccess: function () {},
+  onSuccess: function () { },
   methods: "gocardless",
   reference: null,
   reason: null,

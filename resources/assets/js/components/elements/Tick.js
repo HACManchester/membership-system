@@ -1,8 +1,6 @@
 import React from 'react';
 
-
 class Tick extends React.Component {
-
     render() {
 
         if (this.props.ticked) {
@@ -12,7 +10,6 @@ class Tick extends React.Component {
         }
         return null;
     }
-
 }
 
 export default Tick;
