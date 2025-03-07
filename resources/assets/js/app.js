@@ -1,11 +1,12 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import SiteInteraction from './SiteInteraction';
 import AdminForms from './AdminForms';
 import Snackbar from './Snackbar';
 import PaymentModule from './components/PaymentModule';
 
 global.jQuery = global.$ = require('jquery');
-require('bootstrap');;
+require('bootstrap');
 
 new SiteInteraction();
 new AdminForms();
@@ -24,7 +25,7 @@ jQuery('.paymentModule').each(function () {
 
     var handleSuccess = () => { document.location.reload(true) };
 
-    React.render(
+    ReactDOM.render(
         React.createElement(PaymentModule, {
             csrfToken: csrfToken,
             description: displayReason,
