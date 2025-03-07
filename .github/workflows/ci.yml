@@ -31,6 +31,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
+      - name: Fix yarn being stupid
+        run: corepack enable
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -43,7 +46,7 @@ jobs:
         run: yarn install
 
       - name: Frontend build
-        run: yarn run prod
+        run: yarn run production
 
       - name: Prepare the application
         run: |
