@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import SiteInteraction from './SiteInteraction';
 import AdminForms from './AdminForms';
 import Snackbar from './Snackbar';
@@ -25,7 +25,8 @@ jQuery('.paymentModule').each(function () {
 
     var handleSuccess = () => { document.location.reload(true) };
 
-    ReactDOM.render(
+    const root = createRoot(jQuery(this)[0]);
+    root.render(
         React.createElement(PaymentModule, {
             csrfToken: csrfToken,
             description: displayReason,
@@ -37,7 +38,6 @@ jQuery('.paymentModule').each(function () {
             buttonLabel: buttonLabel,
             methods: methods,
             reference: ref
-        }),
-        jQuery(this)[0]
+        })
     );
 });
