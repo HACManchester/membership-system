@@ -366,7 +366,6 @@ class AccountController extends Controller
 
         $madeTrusted = false;
 
-
         if (\Request::has('trusted')) {
             if ( ! $user->trusted && \Request::input('trusted')) {
                 //User has been made a trusted member
@@ -398,6 +397,20 @@ class AccountController extends Controller
             } else {
                 $profile->update(['new_profile_photo' => false]);
                 event(new MemberPhotoWasDeclined($user));
+            }
+        }
+
+        // Handle membership state fields
+        if (\Request::has('active')) {
+            $user->active = \Request::input('active');
+        }
+        if (\Request::has('status')) {
+            $user->status = \Request::input('status');
+        }
+        if (\Request::has('subscription_expires')) {
+            $expiryDate = \Request::input('subscription_expires');
+            if (!empty($expiryDate)) {
+                $user->subscription_expires = $expiryDate;
             }
         }
 

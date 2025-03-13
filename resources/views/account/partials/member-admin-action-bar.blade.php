@@ -39,6 +39,56 @@
                         </li>
                     </div>
                 
+                    <div class="infobox__grid-item infobox__grid-item--main">
+                        <h4>Membership fields</h4>
+
+                        <p>These fields directly affect access to the space and member resources. To reactivate a
+                            member after payment issues, set them to active, their status to active, and push the
+                            expiry date to next month.</p>
+
+                        <form method="POST" action="{{ route('account.admin-update', $user->id) }}" class="form-horizontal">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="form-group">
+                                <label for="active" class="col-sm-4 control-label">Active Member:</label>
+                                <div class="col-sm-8">
+                                    <select name="active" id="active" class="form-control">
+                                        <option value="1" {{ $user->active ? 'selected' : '' }}>Yes - Can access space</option>
+                                        <option value="0" {{ !$user->active ? 'selected' : '' }}>No - Cannot access space</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status" class="col-sm-4 control-label">Member Status:</label>
+                                <div class="col-sm-8">
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="setting-up" {{ $user->status == 'setting-up' ? 'selected' : '' }}>Setting Up</option>
+                                        <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                                        <option value="payment-warning" {{ $user->status == 'payment-warning' ? 'selected' : '' }}>Payment Warning</option>
+                                        <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                                        <option value="leaving" {{ $user->status == 'leaving' ? 'selected' : '' }}>Leaving</option>
+                                        <option value="left" {{ $user->status == 'left' ? 'selected' : '' }}>Left</option>
+                                        <option value="honorary" {{ $user->status == 'honorary' ? 'selected' : '' }}>Honorary</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="subscription_expires" class="col-sm-4 control-label">Membership Expiry:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="subscription_expires" id="subscription_expires" class="form-control" value="{{ $user->subscription_expires ? $user->subscription_expires->format('Y-m-d') : '' }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-primary">Update membership fields</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     
                     <div class="infobox__grid-item infobox__grid-item--main">
                         <h4>Trusted Member</h4>
