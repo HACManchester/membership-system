@@ -2,6 +2,7 @@
 
 namespace BB\Http;
 
+use BB\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 
@@ -25,6 +26,8 @@ class Kernel extends HttpKernel
         // Introduced in 5.4, but affects validation rules (we have rules that we'd need to set nullable on to allow empty strings)
         // \BB\Http\Middleware\TrimStrings::class,
         // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
+        HandleInertiaRequests::class,
     ];
 
     /**
