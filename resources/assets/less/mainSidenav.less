@@ -2,13 +2,13 @@
   border-right: 1px solid @gray-lighter;
   bottom: 0;
   background: #fff;
-  box-shadow: -10px 0 20px black;
+  box-shadow: 4px 4px 10px -7px black;
   color: #333;
   display: block;
   left: 0;
-  position: fixed;
-  overflow: auto;
-  top: 0;
+  position: absolute;
+  overflow-y: scroll;
+  top: 50px;
   width: 240px;
   z-index: 4;
   transform: translateZ(0);
@@ -16,6 +16,7 @@
   transition-delay: 0.1s;
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
   ul {
     padding: 10px 0;
   }
@@ -25,6 +26,7 @@
   .nav {
     width: 100%;
     margin-left: 0 !important;
+    border-top: 3px dotted #ddd;
   }
   .secondaryNav {
     border-top: 1px solid @gray-lighter;
@@ -85,11 +87,17 @@
   }
 }
 .sidenav-brand {
-  display: block;
-  height: 113px;
-  margin: auto;
-  padding: 7px 15px 7px 15px;
-  position: relative;
+  padding: 2rem 1rem;
+  
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.sidenav-section {
+  padding: 16px;
 }
 
 .navbar-default {

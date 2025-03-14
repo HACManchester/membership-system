@@ -16,6 +16,7 @@
         "gocardless/gocardless-pro": "~1.1",
         "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
         "guzzlehttp/psr7": "^1.9",
+        "inertiajs/inertia-laravel": "^0.6.11",
         "intervention/image": "2.*",
         "itsgoingd/clockwork": "~1.8",
         "laracasts/presenter": "~0.2.7",
