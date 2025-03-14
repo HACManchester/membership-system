@@ -25,6 +25,13 @@ Route::get('sso/login', ['uses' => 'SessionController@sso_login']);
 
 
 ##########################
+# Component Zoo
+##########################
+
+Route::inertia('component-zoo', 'ComponentZoo/Index');
+
+
+##########################
 # Account
 ##########################
 
