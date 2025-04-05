@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Typography,
-    Container,
-    Box,
     Paper,
     Button,
     List,
@@ -12,13 +10,18 @@ import {
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
 
-const Index = ({ activeMemberEmails, newsletterRecipientEmails }) => {
+type Props = {
+    activeMemberEmails: string[];
+    newsletterRecipientEmails: string[];
+}
+
+const Index = ({ activeMemberEmails, newsletterRecipientEmails }: Props) => {
     const [buttonTexts, setButtonTexts] = useState({
         'newsletter-recipients': 'Copy to clipboard',
         'active-members': 'Copy to clipboard'
     });
 
-    const copyToClipboard = async (contentId) => {
+    const copyToClipboard = async (contentId: string) => {
         let copyText = 'Copied!';
 
         const data = contentId === 'newsletter-recipients'
@@ -136,6 +139,6 @@ const Index = ({ activeMemberEmails, newsletterRecipientEmails }) => {
     );
 }
 
-Index.layout = page => <MainLayout children={page} />
+Index.layout = (page: React.ReactNode) => <MainLayout children={page} />
 
 export default Index;

@@ -9,8 +9,21 @@ import TopNav from '../Components/TopNav';
 
 const drawerWidth = 240;
 
-export default function MainLayout({ children }) {
-    const { auth } = usePage().props;
+type MainLayoutProps = {
+    children: React.ReactNode;
+}
+
+type PageProps = {
+    auth: {
+        user: {
+            name: string;
+            account_path: string;
+        };
+    } | null;
+}
+
+export default function MainLayout({ children }: MainLayoutProps) {
+    const { auth } = usePage<PageProps>().props;
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
@@ -37,7 +50,7 @@ export default function MainLayout({ children }) {
                 handleDrawerToggle={handleDrawerToggle}
                 auth={auth}
             />
-            <Stack direction="row" minHeight="100vh" flexGrow>
+            <Stack direction="row" minHeight="100vh" flexGrow={1}>
                 <SideNav
                     drawerWidth={drawerWidth}
                     mobileOpen={mobileOpen}

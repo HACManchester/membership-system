@@ -1,15 +1,29 @@
-import React from 'react';
 import {
     IconButton,
     Stack,
     Link,
     Paper,
-    useMediaQuery
+    useMediaQuery,
+    Theme
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export default function TopNav({ handleDrawerToggle, auth }) {
-    const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+type AuthUser = {
+    name: string;
+    account_path: string;
+}
+
+type Auth = {
+    user: AuthUser;
+}
+
+type TopNavProps = {
+    handleDrawerToggle: () => void;
+    auth: Auth | null;
+}
+
+export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     return (
         <Paper

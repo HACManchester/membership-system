@@ -40,7 +40,8 @@ import {
     AccordionSummary,
     AccordionDetails,
     Badge,
-    Tooltip
+    Tooltip,
+    SelectChangeEvent
 } from '@mui/material';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
@@ -54,7 +55,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-function TabPanel(props) {
+type TabPanelProps = {
+    children?: React.ReactNode;
+    value: number;
+    index: number;
+}
+
+function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
@@ -81,29 +88,29 @@ const ComponentZoo = () => {
     const [selectValue, setSelectValue] = useState('');
     const [sliderValue, setSliderValue] = useState(30);
     const [tabValue, setTabValue] = useState(0);
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState<string | false>(false);
 
-    const handleCheckboxChange = (event) => {
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
 
-    const handleRadioChange = (event) => {
+    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRadioValue(event.target.value);
     };
 
-    const handleSelectChange = (event) => {
+    const handleSelectChange = (event: SelectChangeEvent) => {
         setSelectValue(event.target.value);
     };
 
-    const handleSliderChange = (event, newValue) => {
-        setSliderValue(newValue);
+    const handleSliderChange = (event: Event, newValue: number | number[]) => {
+        setSliderValue(newValue as number);
     };
 
-    const handleTabChange = (event, newValue) => {
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
 
-    const handleAccordionChange = (panel) => (event, isExpanded) => {
+    const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded ? panel : false);
     };
 
@@ -503,7 +510,6 @@ const ComponentZoo = () => {
     );
 }
 
-// Define the missing MailIcon component
 function MailIcon() {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -513,7 +519,6 @@ function MailIcon() {
     );
 }
 
-// Define layout for this page to persist at route changes
-ComponentZoo.layout = page => <MainLayout children={page} />
+ComponentZoo.layout = (page: React.ReactNode) => <MainLayout children={page} />
 
 export default ComponentZoo;

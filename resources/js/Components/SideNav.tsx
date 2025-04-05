@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Box,
     Drawer,
@@ -14,8 +13,29 @@ import {
 } from '@mui/material';
 import { Link as InertiaLink, usePage } from '@inertiajs/react';
 
-export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, handleDrawerTransitionEnd, drawerWidth }) {
-    const { navRoutes } = usePage().props;
+type NavEntry = {
+    label: string;
+    href: string;
+    active: boolean;
+    badge?: number;
+    highlight?: boolean;
+    external?: boolean;
+}
+
+type SideNavProps = {
+    mobileOpen: boolean;
+    isClosing: boolean;
+    handleDrawerClose: () => void;
+    handleDrawerTransitionEnd: () => void;
+    drawerWidth: number;
+}
+
+type PageProps = {
+    navRoutes: NavEntry[][];
+}
+
+export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, handleDrawerTransitionEnd, drawerWidth }: SideNavProps) {
+    const { navRoutes } = usePage<PageProps>().props;
 
     const drawerContent = (
         <>
@@ -26,7 +46,7 @@ export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, hand
                 },
             }} />
             <Stack divider={<Divider />}>
-                <Stack p={4} as={Link} href="/">
+                <Stack p={4} component={Link} href="/">
                     <img src="/img/logo-new.png" alt="Hackspace Manchester" height="100" style={{ margin: '0 auto' }} />
                 </Stack>
                 {navRoutes.map((groupedNavItems, i) => (
