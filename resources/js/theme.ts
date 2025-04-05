@@ -1,4 +1,22 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { PaletteColorOptions } from '@mui/material';
+
+// Extend the default palette to include a custom 'yellow' color
+declare module '@mui/material/styles' {
+  interface CustomPalette {
+    yellow: PaletteColorOptions;
+  }
+  
+  interface Palette extends CustomPalette {}
+  interface PaletteOptions extends CustomPalette {}
+}
+
+// Update the Button's props to allow using 'yellow' color
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    yellow: true;
+  }
+}
 
 const theme = createTheme({
   palette: {
@@ -47,6 +65,6 @@ const theme = createTheme({
     fontFamily: '"Asap", "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif',
     fontSize: 13,
   },
-});
+} as ThemeOptions);
 
 export default theme;

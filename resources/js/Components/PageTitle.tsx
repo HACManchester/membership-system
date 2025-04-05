@@ -1,6 +1,12 @@
+import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
 
-const PageTitle = ({ title, children }) => {
+type Props = {
+    title: string;
+    children?: React.ReactNode;
+}
+
+const PageTitle = ({ title, children }: Props) => {
     return (
         <Box bgcolor="yellow.main">
             <Stack

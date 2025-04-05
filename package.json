@@ -41,6 +41,8 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
     "babel-jest": "^29.7.0",
     "cross-env": "^7.0",
     "identity-obj-proxy": "^3.0.0",
@@ -53,6 +55,8 @@
     "react-refresh": "^0.16.0",
     "sass": "^1.85.1",
     "sass-loader": "^12.1.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
     "vue-template-compiler": "^2.7.16",
     "webpack": "^5.0.0",
     "webpack-cli": "^4.9.1"
