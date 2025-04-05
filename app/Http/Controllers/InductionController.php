@@ -33,7 +33,7 @@ class InductionController extends Controller
 
         $induction->update([
             'trained' => \Carbon\Carbon::now(),
-            'trainer_user_id' => $trainer,
+            'trainer_user_id' => $trainer->id,
         ]);
 
         \Event::dispatch(new InductionCompletedEvent($induction));
