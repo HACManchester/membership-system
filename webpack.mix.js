@@ -11,11 +11,6 @@ mix.less('resources/assets/less/application.less', 'public/css');
 
 mix.version();
 
-mix.options({
-    // Don't perform any css url rewriting by default
-    processCssUrls: false,
-})
-
 if (!mix.inProduction()) {
     mix.sourceMaps();
 }
