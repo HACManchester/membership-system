@@ -796,11 +796,6 @@ parameters:
 			path: app/Repo/UserRepository.php
 
 		-
-			message: "#^Method BB\\\\Repo\\\\UserRepository\\:\\:getWantNewsletter\\(\\) should return array\\<BB\\\\Entities\\\\User\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<BB\\\\Entities\\\\User\\>\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php

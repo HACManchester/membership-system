@@ -3,10 +3,10 @@
 namespace BB\Http\Controllers;
 
 use BB\Repo\UserRepository;
+use Inertia\Inertia;
 
 class NewsletterController extends Controller
 {
-
     private $userRepository;
 
     function __construct(UserRepository $userRepository)
@@ -19,6 +19,9 @@ class NewsletterController extends Controller
         $activeMembers = $this->userRepository->getActive();
         $newsletterRecipients = $this->userRepository->getWantNewsletter();
 
-        return view('newsletter.index', compact('activeMembers', 'newsletterRecipients'));
+        return Inertia::render('Newsletter/Index', [
+            'activeMemberEmails' => $activeMembers->pluck('email'),
+            'newsletterRecipientEmails' => $newsletterRecipients->pluck('email')
+        ]);
     }
 }

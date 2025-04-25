@@ -156,8 +156,6 @@ class UserRepository extends DBRepository
      * This is scoped to users who:
      * - Have not opted out of newsletters
      * - Have an active membership, or their membership lapsed witihn the last 6 months
-     *
-     * @return User[]
      */
     public function getWantNewsletter()
     {
