@@ -3,9 +3,13 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Course;
+use BB\Entities\Equipment;
 use BB\Http\Requests\StoreCourseRequest;
 use BB\Http\Requests\UpdateCourseRequest;
+use BB\Http\Resources\CourseResource;
+use BB\Http\Resources\EquipmentResource;
 use FlashNotification;
+use Inertia\Inertia;
 
 class CourseController extends Controller
 {
@@ -21,9 +25,17 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::orderBy('name', 'ASC')->get();
+        $courses = Course::with('equipment')->orderBy('name', 'ASC')->get();
 
-        return view('courses.index', compact('courses'));
+        return Inertia::render('Courses/Index', [
+            'courses' => CourseResource::collection($courses),
+            'can' => [
+                'create' => auth()->user() ? auth()->user()->can('create', Course::class) : false,
+            ],
+            'urls' => [
+                'create' => route('courses.create', [], false),
+            ],
+        ]);
     }
 
     /**
@@ -33,7 +45,17 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('courses.create');
+        $equipment = Equipment::where('induction_category', '')->orderBy('name')->get();
+
+        return Inertia::render('Courses/Create', [
+            'formatOptions' => Course::formatOptions(),
+            'frequencyOptions' => Course::frequencyOptions(),
+            'equipment' => EquipmentResource::collection($equipment),
+            'urls' => [
+                'index' => route('courses.index', [], false),
+                'store' => route('courses.store', [], false),
+            ],
+        ]);
     }
 
     /**
@@ -44,7 +66,7 @@ class CourseController extends Controller
      */
     public function store(StoreCourseRequest $request)
     {
-        $course = course::create($request->validated());
+        $course = Course::create($request->validated());
 
         return redirect()->route('courses.show', $course);
     }
@@ -57,7 +79,20 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        return view('courses.show', compact('course'));
+        $course->load('equipment');
+
+        return Inertia::render('Courses/Show', [
+            'course' => (new CourseResource($course)),
+            'can' => [
+                'update' => auth()->user() ? auth()->user()->can('update', $course) : false,
+                'delete' => auth()->user() ? auth()->user()->can('delete', $course) : false,
+            ],
+            'urls' => [
+                'index' => route('courses.index', [], false),
+                'edit' => route('courses.edit', $course, false),
+                'destroy' => route('courses.destroy', $course, false),
+            ],
+        ]);
     }
 
     /**
@@ -68,7 +103,22 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('courses.edit', compact('course'));
+        $course->load('equipment');
+        $equipment = Equipment::orderBy('name')->get();
+
+        return Inertia::render('Courses/Edit', [
+            'course' => (new CourseResource($course))->additional([
+                'equipment' => $course->equipment->pluck('id'),
+            ]),
+            'formatOptions' => Course::formatOptions(),
+            'frequencyOptions' => Course::frequencyOptions(),
+            'equipment' => EquipmentResource::collection($equipment),
+            'urls' => [
+                'update' => route('courses.update', $course, false),
+                'show' => route('courses.show', $course, false),
+                'index' => route('courses.index', [], false),
+            ],
+        ]);
     }
 
     /**

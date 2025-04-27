@@ -28,11 +28,11 @@ class StoreCourseRequest extends FormRequest
         return [
             'name' => ['required', 'unique:equipment_areas'],
             'slug' => ['required', 'unique:equipment_areas'],
-            'description' => [],
+            'description' => ['required'],
             'format' => ['required', Rule::in(Course::formatOptions()->keys())],
-            'format_description' => ['required'],
+            'format_description' => ['present'],
             'frequency' => ['required', Rule::in(Course::frequencyOptions()->keys())],
-            'frequency_description' => ['required'],
+            'frequency_description' => ['present'],
             'wait_time' => ['required'],
         ];
     }
