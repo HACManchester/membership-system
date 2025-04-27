@@ -73,4 +73,9 @@ class Induction extends Model
     {
         return self::where('key', $key)->where('is_trainer', 1)->get();
     }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'key');
+    }
 }
