@@ -10,6 +10,13 @@ Newsletter Recipients
 
 @section('content')
 
+<div>
+    <strong>Select separator:</strong><br>
+    <label><input type="radio" name="separator" value=" " checked> Space</label>
+    <label><input type="radio" name="separator" value="\\n"> New Line</label>
+    <label><input type="radio" name="separator" value=","> Comma</label>
+</div>
+
 <section>
     <h2>Newsletter recipients ({{$newsletterRecipients->count()}} members)</h2>
 
@@ -22,7 +29,7 @@ Newsletter Recipients
 
     <p>This list is intended to send regular news &amp; announcements relating to the space.</p>
 
-    <pre><code id="newsletter-recipients">{{ $newsletterRecipients->pluck('email')->implode(' ') }}</code></pre>
+    <pre><code id="newsletter-recipients" data-emails="{{ implode('|', $newsletterRecipients->pluck('email')->toArray()) }}">Loading...</code></pre>
 
     <button class="btn btn-primary" onclick="copyToClipboard(event, 'newsletter-recipients')">Copy to clipboard</button>
 </section>
@@ -32,7 +39,7 @@ Newsletter Recipients
 
     <p>These e-mail address represent currently active members, and should be emailed for urgent matters relating to membership of the space.</p>
 
-    <pre><code id="active-members">{{ $activeMembers->pluck('email')->implode(' ') }}</code></pre>
+    <pre><code id="active-members" data-emails="{{ implode('|', $activeMembers->pluck('email')->toArray()) }}">Loading...</code></pre>
 
     <button class="btn btn-primary" onclick="copyToClipboard(event, 'active-members')">Copy to clipboard</button>
 </section>
@@ -58,5 +65,23 @@ Newsletter Recipients
 
         navigator.clipboard.writeText(data);
     }
+    function getSelectedSeparator() {
+        const selected = document.querySelector('input[name="separator"]:checked');
+        return selected?.value === '\\n' ? '\n' : selected?.value || ' ';
+    }
+
+    function updateEmails(contentId) {
+        const el = document.getElementById(contentId);
+        if (!el) return;
+        const emails = el.dataset.emails?.split('|') || [];
+        el.textContent = emails.join(getSelectedSeparator());
+    }
+
+    function updateAllEmails() {
+        updateEmails('newsletter-recipients');
+        updateEmails('active-members');
+    }
+
+    document.addEventListener('DOMContentLoaded', updateAllEmails);
 </script>
 @stop
