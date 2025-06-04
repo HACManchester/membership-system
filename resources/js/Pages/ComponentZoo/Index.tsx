@@ -9,7 +9,7 @@ import {
     IconButton,
     Stack,
     Divider,
-    Grid,
+    Grid2 as Grid,
     Card,
     CardContent,
     CardActions,

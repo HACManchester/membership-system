@@ -34,6 +34,8 @@ class StoreCourseRequest extends FormRequest
             'frequency' => ['required', Rule::in(Course::frequencyOptions()->keys())],
             'frequency_description' => ['present'],
             'wait_time' => ['required'],
+            'equipment' => ['array'],
+            'equipment.*' => ['integer', 'exists:equipment,id'],
         ];
     }
 }

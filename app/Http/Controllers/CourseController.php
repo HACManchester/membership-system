@@ -66,7 +66,23 @@ class CourseController extends Controller
      */
     public function store(StoreCourseRequest $request)
     {
-        $course = Course::create($request->validated());
+        $validated = $request->validated();
+        $equipment = null;
+
+        // Extract equipment IDs before creating the course
+        if (isset($validated['equipment'])) {
+            $equipment = $validated['equipment'];
+            unset($validated['equipment']);
+        }
+
+        $course = Course::create($validated);
+
+        // TODO: Probably not this way. Many to many relationships maybe?
+        // Update equipment induction_category if equipment IDs were provided
+        if ($equipment && !empty($equipment)) {
+            Equipment::whereIn('id', $equipment)
+                ->update(['induction_category' => $course->slug]);
+        }
 
         return redirect()->route('courses.show', $course);
     }
@@ -130,7 +146,29 @@ class CourseController extends Controller
      */
     public function update(UpdateCourseRequest $request, Course $course)
     {
-        $course->update($request->validated());
+        $validated = $request->validated();
+        $equipment = null;
+
+        // Extract equipment IDs before updating the course
+        if (isset($validated['equipment'])) {
+            $equipment = $validated['equipment'];
+            unset($validated['equipment']);
+        }
+
+        // If slug changes, we need to update all equipment references
+        $oldSlug = $course->slug;
+
+        $course->update($validated);
+
+        // Clear previous equipment associations
+        Equipment::where('induction_category', $oldSlug)
+            ->update(['induction_category' => '']);
+
+        // Update equipment induction_category if equipment IDs were provided
+        if ($equipment && !empty($equipment)) {
+            Equipment::whereIn('id', $equipment)
+                ->update(['induction_category' => $course->slug]);
+        }
 
         return redirect()->route('courses.show', $course);
     }

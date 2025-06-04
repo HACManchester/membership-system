@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     TextField,
     Button,
@@ -12,8 +12,14 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    Box,
+    Typography,
+    Divider,
+    Switch,
+    FormGroup,
 } from "@mui/material";
 import { useForm } from "@inertiajs/react";
+import CourseSummary from "./CourseSummary";
 
 type Equipment = {
     id: number;
@@ -87,6 +93,7 @@ const CourseForm = ({
     };
 
     const { data, setData, post, put, processing, errors } = useForm(initialData);
+    const [preview, setPreview] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -284,6 +291,50 @@ const CourseForm = ({
                         {submitLabel}
                     </Button>
                 </Grid2>
+
+                <Grid2 size={12}>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={preview}
+                                    onChange={(e) => setPreview(e.target.checked)}
+                                />
+                            }
+                            label="Enable Preview"
+                        />
+                    </FormGroup>
+                </Grid2>
+
+                {preview && (
+                    <Grid2 size={12}>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="h6">Course Preview</Typography>
+                        <CourseSummary
+                            course={{
+                                id: course?.data.id || 0,
+                                name: data.name,
+                                slug: data.slug,
+                                description: data.description,
+                                format: {
+                                    label: formatOptions[data.format] || '',
+                                    value: data.format
+                                },
+                                format_description: data.format_description,
+                                frequency: {
+                                    label: frequencyOptions[data.frequency] || '',
+                                    value: data.frequency
+                                },
+                                frequency_description: data.frequency_description,
+                                wait_time: data.wait_time,
+                                equipment: equipment.filter(item => 
+                                    data.equipment.includes(item.id)
+                                ),
+                                urls: course?.data.urls
+                            }}
+                        />
+                    </Grid2>
+                )}
             </Grid2>
         </form>
     );
