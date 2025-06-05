@@ -99,6 +99,11 @@ class SidebarItems
                 'active' => self::isActive('equipment.index')
             ],
             [
+                'label' => 'Inductions',
+                'href' => route('courses.index'),
+                'active' => self::isActive('courses.index')
+            ],
+            [
                 'label' => 'Stats',
                 'href' => route('stats.index'),
                 'active' => self::isActive('stats.index')

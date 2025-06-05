@@ -2,6 +2,7 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Course;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -293,5 +294,10 @@ class Equipment extends Model
     public function setPpeAttribute($value)
     {
         $this->attributes['ppe'] = json_encode($value);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'induction_category');
     }
 }
