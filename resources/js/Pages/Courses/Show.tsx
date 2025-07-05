@@ -36,7 +36,6 @@ type Equipment = {
     dangerous: boolean;
     room: string | null;
     room_display: string | null;
-    location: string | null;
     ppe: string[];
     photo_url: string | null;
     urls: {
@@ -221,11 +220,6 @@ const Show = ({ course, can, urls }: Props) => {
                                                         {equipment.room_display && (
                                                             <Box component="span" sx={{ fontWeight: 'medium' }}>
                                                                 {equipment.room_display}
-                                                            </Box>
-                                                        )}
-                                                        {equipment.location && (
-                                                            <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
-                                                                <br />{equipment.location}
                                                             </Box>
                                                         )}
                                                     </Typography>

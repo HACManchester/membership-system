@@ -11,7 +11,14 @@ import {
 type Equipment = {
     id: number;
     name: string;
-    slug: string;
+    slug: string;   
+    working: boolean;
+    permaloan: boolean;
+    dangerous: boolean;
+    room: string | null;
+    room_display: string | null;
+    ppe: string[];
+    photo_url: string | null;
     urls: {
         show: string;
     };

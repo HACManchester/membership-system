@@ -17,6 +17,13 @@ type Equipment = {
     id: number;
     name: string;
     slug: string;
+    working: boolean;
+    permaloan: boolean;
+    dangerous: boolean;
+    room: string | null;
+    room_display: string | null;
+    ppe: string[];
+    photo_url: string | null;
     urls: {
         show: string;
     };
@@ -33,6 +40,7 @@ type CourseData = {
         frequency: { label: string; value: string };
         frequency_description: string;
         wait_time: string;
+        equipment: Equipment[];
         urls: {
             show: string;
         };

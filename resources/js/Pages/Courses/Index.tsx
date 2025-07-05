@@ -4,10 +4,10 @@ import {
     Container,
     Box,
     Paper,
-    Grid2,
     Button,
     Link,
     Alert,
+    Grid2,
 } from "@mui/material";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
@@ -17,6 +17,13 @@ type Equipment = {
     id: number;
     name: string;
     slug: string;
+    working: boolean;
+    permaloan: boolean;
+    dangerous: boolean;
+    room: string;
+    room_display: string;
+    ppe: string[];
+    photo_url: string | null;
     urls: {
         show: string;
     };
@@ -38,6 +45,31 @@ type Course = {
     };
 };
 
+const CourseGroup = ({
+    title,
+    courses,
+}: {
+    title: string;
+    courses: Course[];
+}) => {
+    if (courses.length === 0) return null;
+
+    return (
+        <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" gutterBottom>
+                {title}
+            </Typography>
+            <Grid2 container spacing={3}>
+                {courses.map((course) => (
+                    <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                        <CourseSummary course={course} />
+                    </Grid2>
+                ))}
+            </Grid2>
+        </Box>
+    );
+};
+
 type Props = {
     courses: Course[];
     can?: {
@@ -55,6 +87,28 @@ const Index = ({
     urls,
     isPreview = false,
 }: Props) => {
+    const allRooms = [
+        ...new Set(
+            courses.flatMap((course) =>
+                course.equipment.map((e) => e.room_display)
+            )
+        ),
+    ].sort();
+
+    const groupedCourses = allRooms.reduce<Record<string, Course[]>>(
+        (acc, room) => {
+            acc[room] = courses.filter((course) =>
+                course.equipment.some((e) => e.room_display === room)
+            );
+            return acc;
+        },
+        {}
+    );
+
+    const ungroupedCourses = courses.filter(
+        (course) => !course.equipment || course.equipment.length === 0
+    );
+
     const actionButtons = can.create ? (
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Link href={urls.create} underline="none">
@@ -102,13 +156,17 @@ const Index = ({
                     )}
                 </Paper>
 
-                <Grid2 container spacing={3}>
-                    {courses.map((course) => (
-                        <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
-                            <CourseSummary course={course} />
-                        </Grid2>
-                    ))}
-                </Grid2>
+                {Object.entries(groupedCourses).map(
+                    ([areaName, areaCourses]) => (
+                        <CourseGroup
+                            key={areaName}
+                            title={areaName}
+                            courses={areaCourses}
+                        />
+                    )
+                )}
+
+                <CourseGroup title="Ungrouped" courses={ungroupedCourses} />
             </Container>
         </>
     );
