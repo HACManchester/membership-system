@@ -11,6 +11,10 @@ mix.less('resources/assets/less/application.less', 'public/css');
 
 mix.version();
 
+mix.webpackConfig({ 
+	output: { chunkFilename: "js/app/[name].js?id=[chunkhash]" } 
+});
+
 if (!mix.inProduction()) {
     mix.sourceMaps();
 }
