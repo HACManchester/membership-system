@@ -2,6 +2,7 @@
 
 namespace BB\Providers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
 			// TODO: What's this doing? 🤔
 			$this->app['request']->server->set('HTTPS', true);
 		}
+
+		JsonResource::withoutWrapping();
 	}
 
 	/**

@@ -152,12 +152,9 @@
             <label for="room">Room</label>
             <select name="room" id="room" class="form-control" required>
                 <option value=""></option>
-                <option value="welding" {{ old('room', isset($equipment) ? $equipment->room : null) == 'welding' ? 'selected' : '' }}>Welding</option>
-                <option value="woodwork" {{ old('room', isset($equipment) ? $equipment->room : null) == 'woodwork' ? 'selected' : '' }}>Woody Dusty</option>
-                <option value="metalworking" {{ old('room', isset($equipment) ? $equipment->room : null) == 'metalworking' ? 'selected' : '' }}>Metalwork</option>
-                <option value="visual-arts" {{ old('room', isset($equipment) ? $equipment->room : null) == 'visual-arts' ? 'selected' : '' }}>Visual Arts</option>
-                <option value="electronics" {{ old('room', isset($equipment) ? $equipment->room : null) == 'electronics' ? 'selected' : '' }}>Electronics</option>
-                <option value="main-room" {{ old('room', isset($equipment) ? $equipment->room : null) == 'main-room' ? 'selected' : '' }}>Main Room</option>
+                @foreach($roomList as $id => $name)
+                    <option value="{{ $id }}" {{ old('room', isset($equipment) ? $equipment->room : null) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
             </select>
             @if($errors->has('room'))
                 <span class="help-block">

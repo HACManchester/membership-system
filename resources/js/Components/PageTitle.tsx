@@ -3,21 +3,29 @@ import { Box, Stack, Typography } from "@mui/material";
 
 type Props = {
     title: string;
+    actionButtons?: React.ReactNode;
     children?: React.ReactNode;
 }
 
-const PageTitle = ({ title, children }: Props) => {
+const PageTitle = ({ title, actionButtons, children }: Props) => {
     return (
         <Box bgcolor="yellow.main">
             <Stack
-                justifyContent="end"
-                py={2}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="end"
+                py={8}
+                pb={2}
                 px={4}
-                minHeight={180}
             >
                 <Typography variant="h4" component="h1">
                     {title}
                 </Typography>
+                {actionButtons && (
+                    <Box className="action-buttons">
+                        {actionButtons}
+                    </Box>
+                )}
             </Stack>
             {children && (
                 <Stack

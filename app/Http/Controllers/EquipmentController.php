@@ -10,6 +10,8 @@ use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use BB\Repo\UserRepository;
+use BB\Support\PpeOptions;
+use BB\Support\RoomOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -37,10 +39,6 @@ class EquipmentController extends Controller
     /** @var \Illuminate\Filesystem\FilesystemAdapter */
     protected $disk;
 
-    /**
-     * @var array
-     */
-    protected $ppeList;
 
     /**
      * @param InductionRepository                    $inductionRepository
@@ -58,16 +56,6 @@ class EquipmentController extends Controller
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
-
-        $this->ppeList = [
-            'ear-protection'      => 'Ear protection',
-            'eye-protection'      => 'Eye protection',
-            'face-mask'           => 'Face mask',
-            'face-guard'          => 'Full face guard',
-            'gloves'              => 'Gloves',
-            'protective-clothing' => 'Protective clothing',
-            'welding-mask'        => 'Welding mask'
-        ];
     }
 
     /**
@@ -140,7 +128,8 @@ class EquipmentController extends Controller
         return \View::make('equipment.create')
             ->with('memberList', $memberList)
             ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
-            ->with('ppeList', $this->ppeList)
+            ->with('ppeList', PpeOptions::all())
+            ->with('roomList', RoomOptions::all())
             ->with('trusted', true)
             ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
     }
@@ -179,7 +168,8 @@ class EquipmentController extends Controller
             ->with('equipment', $equipment)
             ->with('memberList', $memberList)
             ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
-            ->with('ppeList', $this->ppeList);
+            ->with('ppeList', PpeOptions::all())
+            ->with('roomList', RoomOptions::all());
     }
 
 

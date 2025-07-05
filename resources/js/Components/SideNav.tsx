@@ -10,17 +10,18 @@ import {
     Link,
     Divider,
     Toolbar,
-} from '@mui/material';
-import { Link as InertiaLink, usePage } from '@inertiajs/react';
+    Chip,
+} from "@mui/material";
+import { usePage } from "@inertiajs/react";
 
 type NavEntry = {
     label: string;
     href: string;
     active: boolean;
-    badge?: number;
+    badge?: string | number;
     highlight?: boolean;
     external?: boolean;
-}
+};
 
 type SideNavProps = {
     mobileOpen: boolean;
@@ -28,31 +29,51 @@ type SideNavProps = {
     handleDrawerClose: () => void;
     handleDrawerTransitionEnd: () => void;
     drawerWidth: number;
-}
+};
 
 type PageProps = {
     navRoutes: NavEntry[][];
-}
+};
 
-export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, handleDrawerTransitionEnd, drawerWidth }: SideNavProps) {
+export default function SideNav({
+    mobileOpen,
+    isClosing,
+    handleDrawerClose,
+    handleDrawerTransitionEnd,
+    drawerWidth,
+}: SideNavProps) {
     const { navRoutes } = usePage<PageProps>().props;
 
     const drawerContent = (
         <>
-            <Toolbar sx={{
-                display: {
-                    xs: 'block',
-                    md: 'none'
-                },
-            }} />
+            <Toolbar
+                sx={{
+                    display: {
+                        xs: "block",
+                        md: "none",
+                    },
+                }}
+            />
             <Stack divider={<Divider />}>
                 <Stack p={4} component={Link} href="/">
-                    <img src="/img/logo-new.png" alt="Hackspace Manchester" height="100" style={{ margin: '0 auto' }} />
+                    <img
+                        src="/img/logo-new.png"
+                        alt="Hackspace Manchester"
+                        height="100"
+                        style={{ margin: "0 auto" }}
+                    />
                 </Stack>
                 {navRoutes.map((groupedNavItems, i) => (
                     <List key={i}>
                         {groupedNavItems.map((navEntry, index) => {
-                            const { label, href, active, highlight, badge, external } = navEntry;
+                            const {
+                                label,
+                                href,
+                                active,
+                                highlight,
+                                badge,
+                                external,
+                            } = navEntry;
                             return (
                                 <ListItemButton
                                     key={index}
@@ -60,19 +81,31 @@ export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, hand
                                     // todo: Currently no other website links are inertia links
                                     // component={external ? Link : InertiaLink}
                                     selected={active}
-                                    sx={{ color: highlight ? 'primary.main' : 'inherit' }}
-                                    target={external ? '_blank' : '_self'}
+                                    sx={{
+                                        color: highlight
+                                            ? "primary.main"
+                                            : "inherit",
+                                    }}
+                                    target={external ? "_blank" : "_self"}
                                 >
-                                    <ListItemText>
-                                        {label}
-                                    </ListItemText>
+                                    <ListItemText>{label}</ListItemText>
                                     {badge && (
                                         <ListItemSecondaryAction>
-                                            <Badge badgeContent={badge} color="error" />
+                                            {typeof badge === "number" ? (
+                                                <Badge
+                                                    badgeContent={badge}
+                                                    color="error"
+                                                />
+                                            ) : (
+                                                <Chip
+                                                    label={badge}
+                                                    size="small"
+                                                />
+                                            )}
                                         </ListItemSecondaryAction>
                                     )}
                                 </ListItemButton>
-                            )
+                            );
                         })}
                     </List>
                 ))}
@@ -97,11 +130,11 @@ export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, hand
                 onClose={handleDrawerClose}
                 sx={{
                     display: {
-                        xs: 'block',
-                        md: 'none'
+                        xs: "block",
+                        md: "none",
                     },
-                    '& .MuiDrawer-paper': {
-                        boxSizing: 'border-box',
+                    "& .MuiDrawer-paper": {
+                        boxSizing: "border-box",
                         width: drawerWidth,
                         borderRadius: 0,
                     },
@@ -120,16 +153,16 @@ export default function SideNav({ mobileOpen, isClosing, handleDrawerClose, hand
                 variant="permanent"
                 sx={{
                     display: {
-                        xs: 'none',
-                        md: 'block'
+                        xs: "none",
+                        md: "block",
                     },
-                    height: '100%',
-                    '& .MuiDrawer-paper': {
-                        boxSizing: 'border-box',
+                    height: "100%",
+                    "& .MuiDrawer-paper": {
+                        boxSizing: "border-box",
                         width: drawerWidth,
                         borderRadius: 0,
-                        position: 'relative',
-                        height: '100%',
+                        position: "relative",
+                        height: "100%",
                     },
                 }}
                 open

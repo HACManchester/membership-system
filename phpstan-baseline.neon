@@ -731,6 +731,11 @@ parameters:
 			path: app/Observer/UserAuditObserver.php
 
 		-
+			message: "#^Access to an undefined property BB\\\\Entities\\\\Course\\:\\:\\$equipment\\.$#"
+			count: 1
+			path: app/Policies/CoursePolicy.php
+
+		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
 			count: 2
 			path: app/Policies/EquipmentPolicy.php
