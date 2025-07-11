@@ -65,7 +65,7 @@ class CheckMemberships
             
             if ($needsExtension) {
                 $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
-                if ($paidUntil && $user->subscription_expires && $user->subscription_expires->lt($paidUntil)) {
+                if ($paidUntil && $user->subscription_expires->lt($paidUntil)) {
                     $user->extendMembership($user->payment_method, $paidUntil);
                     echo ' - Membership extended';
                     array_push($recoveredMembers, $user->name);

@@ -69,3 +69,15 @@ $factory->define('BB\Entities\KeyFob', function (Generator $faker) {
         'lost'    => 0,
     ];
 });
+
+$factory->define('BB\Entities\SubscriptionCharge', function (Generator $faker) {
+    return [
+        'user_id' => function () {
+            return factory(\BB\Entities\User::class)->create()->id;
+        },
+        'charge_date' => $faker->dateTimeBetween('-1 month', 'now'),
+        'payment_date' => $faker->optional(0.7)->dateTimeBetween('-1 month', 'now'),
+        'amount' => $faker->randomElement([1700, 2200, 2700]), // Common subscription amounts in pence
+        'status' => $faker->randomElement(['pending', 'due', 'processing', 'paid', 'cancelled']),
+    ];
+});
