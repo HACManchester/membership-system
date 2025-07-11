@@ -154,7 +154,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at', 'suspended_at');
     }
 
 
@@ -460,6 +460,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->status = 'suspended';
         $this->active = false;
+        $this->suspended_at = Carbon::now();
+        $this->save();
+    }
+
+    public function setPaymentWarning($gracePeriodDays = 10)
+    {
+        $this->status = 'payment-warning';
+        $this->active = true; // Keep space access during warning period
+        
+        // Set subscription_expires to failure date + grace period for fair timing
+        // TODO: Articles of association say 2 weeks from payment falling due
+        $this->subscription_expires = Carbon::now()->addDays($gracePeriodDays);
         $this->save();
     }
 

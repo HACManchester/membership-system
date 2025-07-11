@@ -63,14 +63,25 @@ class SubChargeEventHandler
      */
     public function onPaymentFailure($chargeId, $userId, Carbon $paymentDate, $amount)
     {
-        $paidUntil = MembershipPayments::lastUserPaymentExpires($userId);
-
         $user = $this->userRepository->getById($userId);
 
-        if ($paidUntil) {
-            $user->extendMembership(null, $paidUntil);
-        } else {
-            $user->extendMembership(null, Carbon::now());
+        // Only set payment warning if they don't have other payments for this charge
+        if ($this->hasOtherPaymentsForCharge($chargeId)) {
+            return; // Don't set payment warning if other payments exist for this charge
         }
+
+        $user->setPaymentWarning();
+    }
+
+    private function hasOtherPaymentsForCharge($chargeId)
+    {
+        $paymentRepository = app('BB\Repo\PaymentRepository');
+        
+        // Check for any other payments linked to this subscription charge
+        $otherPayments = $paymentRepository->getPaymentsByReference($chargeId)
+            ->whereIn('status', ['paid', 'pending', 'pending_submission', 'processing'])
+            ->count();
+            
+        return $otherPayments > 0;
     }
 }

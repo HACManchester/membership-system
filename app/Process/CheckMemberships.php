@@ -29,49 +29,63 @@ class CheckMemberships
 
     public function run()
     {
-        $users = User::active()->notSpecialCase()->get();
-        $members = [];
+        $leftMembers = [];
 
-        foreach ($users as $user) {
-            /** @var $user \BB\Entities\User */
+        // Process suspended users for transition to left after 30 days
+        $suspendedUsers = User::suspended()->get();
+        foreach ($suspendedUsers as $user) {
+            /** @var \BB\Entities\User $user */
             echo $user->name;
-            $expired = false;
-
-            $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-            if ( ! $user->subscription_expires || $user->subscription_expires->lt($cutOffDate)) {
-                // TODO: Send email warning members who've fallen within the grace period?
-                $expired = true;
+            
+            // Check if they've been suspended for 30 days
+            if ($user->suspended_at && $user->suspended_at->lt(\Carbon\Carbon::now()->subDays(30))) {
+                // Mark as left
+                $user->status = 'left';
+                $user->active = false;
+                $user->save();
+                echo ' - Marked as left (30 days since suspension)';
+                array_push($leftMembers, $user->name);
+            } else {
+                echo ' - Still suspended';
             }
-
-            //Check for payments first
-            if ($expired) {
-                $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
-                //$paidUntil = $this->memberSubscriptionCharges->lastUserChargeExpires($user->id);
-                if ($paidUntil) {
-                    if ($user->subscription_expires && $user->subscription_expires->lt($paidUntil)) {
-                        $user->extendMembership($user->payment_method, $paidUntil);
-
-                        //This may not be true but it simplifies things now and tomorrows process will deal with it
-                        $expired = false;
-                    }
-                }
-            }
-            if ($expired) {
-                $user->setSuspended();
-                echo ' - Suspended';
-                array_push($members, $user->name);
-            }
-
-
             echo PHP_EOL;
         }
 
-        $message = "Checked Memberships - set suspended: " . implode(", ", $members);
+        // Process active users for recovery (extend membership if valid payments found)
+        $activeUsers = User::active()->notSpecialCase()->get();
+        $recoveredMembers = [];
+        
+        foreach ($activeUsers as $user) {
+            /** @var \BB\Entities\User $user */
+            echo $user->name;
+            
+            // Check if they have valid payments that should extend their membership
+            $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
+            $needsExtension = !$user->subscription_expires || $user->subscription_expires->lt($cutOffDate);
+            
+            if ($needsExtension) {
+                $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
+                if ($paidUntil && $user->subscription_expires && $user->subscription_expires->lt($paidUntil)) {
+                    $user->extendMembership($user->payment_method, $paidUntil);
+                    echo ' - Membership extended';
+                    array_push($recoveredMembers, $user->name);
+                }
+            }
+            echo PHP_EOL;
+        }
+
+        $message = "Checked Memberships";
+        if (!empty($leftMembers)) {
+            $message .= " - Marked as left: " . implode(", ", $leftMembers);
+        }
+        if (!empty($recoveredMembers)) {
+            $message .= " - Recovered: " . implode(", ", $recoveredMembers);
+        }
+        
         Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 
             $message
         );
-
     }
 } 
