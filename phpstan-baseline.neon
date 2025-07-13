@@ -782,7 +782,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 2
+			count: 1
 			path: app/Process/CheckSuspendedUsers.php
 
 		-
