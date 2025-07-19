@@ -332,6 +332,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @return bool
      */
+    public function hasPaymentWarning()
+    {
+        return ($this->status == 'payment-warning');
+    }
+    
+    /**
+     * @return bool
+     */
     public function isSuspended()
     {
         return ($this->status == 'suspended');

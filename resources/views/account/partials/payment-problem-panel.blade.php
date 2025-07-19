@@ -25,7 +25,7 @@
                     @endif
                 @elseif ($user->payment_method == 'gocardless-variable')
                     <p>
-                        Your latest subscription payment has failed and your account has been temporarily suspended.<br />
+                        Your latest subscription payment has failed.<br />
                         You can retry your payment now.
 
                         <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless" data-amount="{{ $user->monthly_subscription }}"></div>
