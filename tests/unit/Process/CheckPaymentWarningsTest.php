@@ -55,35 +55,6 @@ class CheckPaymentWarningsTest extends TestCase
         $this->assertNull($user->suspended_at);
     }
 
-    public function testRunRecoversUserWithValidPayment()
-    {
-        $user = factory(User::class)->create([
-            'status' => 'payment-warning',
-            'active' => true,
-            'subscription_expires' => Carbon::now()->subDays(1), // Would normally be suspended
-            'payment_method' => 'gocardless-variable',
-        ]);
-
-        // Create a valid payment that should extend membership
-        $subscriptionCharge = factory(SubscriptionCharge::class)->create([
-            'user_id' => $user->id,
-            'charge_date' => Carbon::now()->subDays(5),
-            'status' => 'paid',
-            'payment_date' => Carbon::now()->subDays(5),
-        ]);
-
-        $this->process->run();
-
-        $user->refresh();
-        $this->assertEquals('active', $user->status);
-        $this->assertTrue($user->active);
-        $this->assertNotNull($user->subscription_expires);
-        
-        // Should be extended based on payment date
-        $expectedExpiry = Carbon::now()->subDays(5)->addMonth();
-        $this->assertTrue($user->subscription_expires->isSameDay($expectedExpiry));
-    }
-
     public function testRunIgnoresUsersNotInPaymentWarningStatus()
     {
         $activeUser = factory(User::class)->create([
@@ -123,33 +94,6 @@ class CheckPaymentWarningsTest extends TestCase
         // Should suspend user with no expiry date
         $this->assertEquals('suspended', $user->status);
         $this->assertFalse($user->active);
-    }
-
-    public function testRunHandlesRecoveryWithNullSubscriptionExpires()
-    {
-        $user = factory(User::class)->create([
-            'status' => 'payment-warning',
-            'active' => true,
-            'subscription_expires' => null,
-            'payment_method' => 'gocardless-variable',
-        ]);
-
-        // Create valid payment
-        factory(SubscriptionCharge::class)->create([
-            'user_id' => $user->id,
-            'charge_date' => Carbon::now()->subDays(3),
-            'status' => 'paid',
-            'payment_date' => Carbon::now()->subDays(3),
-        ]);
-
-        $this->process->run();
-
-        $user->refresh();
-        
-        // Should recover user even with null subscription_expires
-        $this->assertEquals('active', $user->status);
-        $this->assertTrue($user->active);
-        $this->assertNotNull($user->subscription_expires);
     }
 
     public function testRunDoesNotRecoverWithOldPayment()

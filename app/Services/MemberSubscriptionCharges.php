@@ -121,7 +121,7 @@ class MemberSubscriptionCharges
                 }
             }
             catch (InvalidStateException | ValidationFailedException $e) {
-                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMemberships
+                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMembershipStatus
                 $status = 'failed';
                 $membersWeCouldntBill[] = $charge->user->name;
             }

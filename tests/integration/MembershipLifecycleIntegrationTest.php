@@ -2,8 +2,9 @@
 
 use BB\Entities\User;
 use BB\Process\CheckPaymentWarnings;
-use BB\Process\CheckMemberships;
+use BB\Process\CheckSuspendedUsers;
 use BB\Process\CheckLeavingUsers;
+use BB\Process\RecoverMemberships;
 use BB\Services\MemberSubscriptionCharges;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -15,22 +16,22 @@ class MembershipLifecycleIntegrationTest extends TestCase
 {
     private $userRepository;
     private $subscriptionChargeRepository;
-    private $memberSubscriptionCharges;
     private $subChargeEventHandler;
     private $checkPaymentWarnings;
-    private $checkMemberships;
+    private $checkSuspendedUsers;
     private $checkLeavingUsers;
+    private $recoverMemberships;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->memberSubscriptionCharges = app(MemberSubscriptionCharges::class);
         $this->subChargeEventHandler = new SubChargeEventHandler($this->userRepository);
-        $this->checkPaymentWarnings = new CheckPaymentWarnings($this->userRepository);
-        $this->checkMemberships = new CheckMemberships($this->memberSubscriptionCharges);
+        $this->checkPaymentWarnings = new CheckPaymentWarnings();
+        $this->checkSuspendedUsers = new CheckSuspendedUsers($this->userRepository);
         $this->checkLeavingUsers = new CheckLeavingUsers($this->userRepository);
+        $this->recoverMemberships = new RecoverMemberships();
     }
 
     public function testCompleteNewMemberJourney()
@@ -108,8 +109,18 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $recoveryDate = $failureDate->copy()->addDays(7);
         Carbon::setTestNow($recoveryDate);
 
-        // Simulate payment retry flow: PaymentModule -> GoCardlessPaymentController -> ensureMembershipActive()
-        $this->userRepository->ensureMembershipActive($user->id);
+        // Create a successful payment
+        $recoveryCharge = $this->subscriptionChargeRepository->createCharge(
+            $user->id,
+            $recoveryDate,
+            2200,
+            'paid'
+        );
+        $recoveryCharge->payment_date = $recoveryDate;
+        $recoveryCharge->save();
+
+        // Run recovery process
+        $this->recoverMemberships->run();
 
         $user->refresh();
         $this->assertEquals('active', $user->status);
@@ -147,7 +158,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // Step 8: 30 days after suspension - member marked as left
         Carbon::setTestNow(Carbon::now()->addDays(30));
-        $this->checkMemberships->run();
+        $this->checkSuspendedUsers->run();
 
         $user->refresh();
         $this->assertEquals('left', $user->status);
@@ -200,17 +211,23 @@ class MembershipLifecycleIntegrationTest extends TestCase
             'suspended_at' => Carbon::now()->subDays(5),
         ]);
 
-        // Step 2: Member uses payment retry to reactivate (simulates PaymentModule flow)
-        // Simulate payment retry flow: PaymentModule -> GoCardlessPaymentController -> ensureMembershipActive()
-        $this->userRepository->ensureMembershipActive($user->id);
+        // Step 2: Member makes a new payment to reactivate
+        $reactivationCharge = $this->subscriptionChargeRepository->createCharge(
+            $user->id,
+            Carbon::now(),
+            2200,
+            'paid'
+        );
+        $reactivationCharge->payment_date = Carbon::now();
+        $reactivationCharge->save();
+
+        // Run recovery process
+        $this->recoverMemberships->run();
 
         $user->refresh();
         $this->assertEquals('active', $user->status);
         $this->assertTrue($user->active);
-        
-        // ensureMembershipActive() should create a new subscription charge
-        $hasCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($user->id);
-        $this->assertTrue($hasCharges);
+        $this->assertNull($user->suspended_at);
     }
 
     public function testHonoraryMemberExemption()
@@ -223,9 +240,10 @@ class MembershipLifecycleIntegrationTest extends TestCase
             'subscription_expires' => Carbon::now()->subMonths(6), // Very expired
         ]);
 
-        // Step 2: Run all checks
+        // Step 2: Run all checks (recovery should ignore special case users)
+        $this->recoverMemberships->run();
         $this->checkPaymentWarnings->run();
-        $this->checkMemberships->run();
+        $this->checkSuspendedUsers->run();
 
         // Verify: Honorary member should be unaffected
         $user->refresh();
@@ -341,9 +359,10 @@ class MembershipLifecycleIntegrationTest extends TestCase
             ]),
         ]);
 
-        // Run all checks
+        // Run all checks in order
+        $this->recoverMemberships->run();
         $this->checkPaymentWarnings->run();
-        $this->checkMemberships->run();
+        $this->checkSuspendedUsers->run();
 
         // Verify cascading effects
         $users[0]->refresh();
@@ -416,7 +435,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // Marked as left
         Carbon::setTestNow(Carbon::now()->addDays(30));
-        $this->checkMemberships->run();
+        $this->checkSuspendedUsers->run();
 
         $user->refresh();
         $this->verifyDataIntegrity($user, $originalData);

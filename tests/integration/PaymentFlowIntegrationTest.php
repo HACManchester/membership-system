@@ -4,7 +4,8 @@ use BB\Entities\User;
 use BB\Entities\Payment;
 use BB\Handlers\SubChargeEventHandler;
 use BB\Process\CheckPaymentWarnings;
-use BB\Process\CheckMemberships;
+use BB\Process\CheckSuspendedUsers;
+use BB\Process\RecoverMemberships;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Services\MemberSubscriptionCharges;
@@ -17,18 +18,18 @@ class PaymentFlowIntegrationTest extends TestCase
     private $subscriptionChargeRepository;
     private $subChargeEventHandler;
     private $checkPaymentWarnings;
-    private $checkMemberships;
-    private $memberSubscriptionCharges;
+    private $checkSuspendedUsers;
+    private $recoverMemberships;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->memberSubscriptionCharges = app(MemberSubscriptionCharges::class);
         $this->subChargeEventHandler = new SubChargeEventHandler($this->userRepository);
-        $this->checkPaymentWarnings = new CheckPaymentWarnings($this->userRepository);
-        $this->checkMemberships = new CheckMemberships($this->memberSubscriptionCharges);
+        $this->checkPaymentWarnings = new CheckPaymentWarnings();
+        $this->checkSuspendedUsers = new CheckSuspendedUsers($this->userRepository);
+        $this->recoverMemberships = new RecoverMemberships();
     }
 
     public function testCompletePaymentFailureToSuspensionFlow()
@@ -80,8 +81,8 @@ class PaymentFlowIntegrationTest extends TestCase
         // Step 5: Simulate time passing - 31 days after suspension
         Carbon::setTestNow(Carbon::now()->addDays(31));
 
-        // Step 6: Run CheckMemberships process
-        $this->checkMemberships->run();
+        // Step 6: Run CheckSuspendedUsers process
+        $this->checkSuspendedUsers->run();
 
         // Verify: User should now be marked as left
         $user->refresh();
@@ -135,25 +136,11 @@ class PaymentFlowIntegrationTest extends TestCase
         $recoveryCharge->payment_date = $recoveryDate->copy()->subDays(1);
         $recoveryCharge->save();
 
-        // Step 3: Run CheckPaymentWarnings process
-        $this->checkPaymentWarnings->run();
-
-        // Debug: Check what the recovery logic found
-        $user->refresh();
-        // The recovery logic should find that the user has a valid payment
-        // and extend their membership accordingly
+        // Step 3: Run RecoverMemberships process first
+        $this->recoverMemberships->run();
         
-        // For now, let's check if they're still in payment-warning but with extended expiry
-        if ($user->status === 'payment-warning') {
-            // This means recovery didn't happen, let's check the dates
-            $paidUntil = \BB\Helpers\MembershipPayments::lastUserPaymentExpires($user->id);
-            $this->assertNotNull($paidUntil, 'Should have found a paid subscription charge');
-            
-            // If there's a valid payment, manually extend for this test
-            if ($paidUntil) {
-                $user->extendMembership($user->payment_method, $paidUntil);
-            }
-        }
+        // Then run payment warnings
+        $this->checkPaymentWarnings->run();
 
         // Verify: User should be recovered to active status
         $user->refresh();
@@ -296,16 +283,9 @@ class PaymentFlowIntegrationTest extends TestCase
         $successfulCharge->payment_date = $paymentDate;
         $successfulCharge->save();
 
+        // Run recovery first, then payment warnings
+        $this->recoverMemberships->run();
         $this->checkPaymentWarnings->run();
-
-        $user->refresh();
-        // Handle recovery manually if needed (same as earlier test)
-        if ($user->status === 'payment-warning') {
-            $paidUntil = \BB\Helpers\MembershipPayments::lastUserPaymentExpires($user->id);
-            if ($paidUntil) {
-                $user->extendMembership($user->payment_method, $paidUntil);
-            }
-        }
         
         $user->refresh();
         $this->assertEquals('active', $user->status);
@@ -342,7 +322,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Step 6: 30 days after suspension
         Carbon::setTestNow(Carbon::now()->addDays(30));
-        $this->checkMemberships->run();
+        $this->checkSuspendedUsers->run();
 
         $user->refresh();
         $this->assertEquals('left', $user->status);
@@ -417,7 +397,8 @@ class PaymentFlowIntegrationTest extends TestCase
         // Step 3: Time passes beyond grace period for users 1 and 3
         Carbon::setTestNow(Carbon::now()->addDays(11));
 
-        // Step 4: Run payment warnings check
+        // Step 4: Run recovery first, then payment warnings check
+        $this->recoverMemberships->run();
         $this->checkPaymentWarnings->run();
 
         // Verify results

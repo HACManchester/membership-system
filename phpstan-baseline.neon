@@ -765,25 +765,6 @@ parameters:
 			count: 1
 			path: app/Process/CheckLeavingUsers.php
 
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: app/Process/CheckMemberships.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/Process/CheckMemberships.php
-
-		-
-			message: "#^Property BB\\\\Process\\\\CheckMemberships\\:\\:\\$memberSubscriptionCharges is never read, only written\\.$#"
-			count: 1
-			path: app/Process/CheckMemberships.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/Process/CheckSuspendedUsers.php
 
 		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$events$#"

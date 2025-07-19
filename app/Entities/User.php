@@ -439,7 +439,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->mandate_id = '';
-        $this->payment_day = 0;
         $this->status = 'leaving';
         $this->save();
     }
@@ -548,6 +547,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         }
         $this->gift = '';
         $this->subscription_expires = Carbon::instance($expiry);
+        $this->suspended_at = null;
         $this->save();
     }
 
