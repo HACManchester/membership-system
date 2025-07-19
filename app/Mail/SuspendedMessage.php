@@ -32,8 +32,10 @@ class SuspendedMessage extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('Your Hackspace Manchester membership has been suspended')
+            ->subject('Membership suspended - Immediate action required')
             ->replyTo('board@hacman.org.uk', 'Hackspace Manchester Board')
-            ->view('emails.suspended');
+            ->markdown('emails.suspended', [
+                'name' => $this->user->given_name
+            ]);
     }
 }

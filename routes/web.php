@@ -238,3 +238,26 @@ Route::group(array('middleware' => 'role:admin'), function () {
 ##########################
 
 Route::get('logs', ['uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index', 'middleware' => 'role:admin'])->name('logs');
+
+##########################
+# Email Previews
+##########################
+
+Route::group(array('middleware' => 'role:admin'), function () {
+    Route::get('email-preview', ['uses' => 'EmailPreviewController@index', 'as' => 'email-preview.index']);
+    Route::get('email-preview/payment-warning', ['uses' => 'EmailPreviewController@paymentWarning', 'as' => 'email-preview.payment-warning']);
+    Route::get('email-preview/suspended', ['uses' => 'EmailPreviewController@suspended', 'as' => 'email-preview.suspended']);
+    Route::get('email-preview/leaving', ['uses' => 'EmailPreviewController@leaving', 'as' => 'email-preview.leaving']);
+    Route::get('email-preview/left', ['uses' => 'EmailPreviewController@left', 'as' => 'email-preview.left']);
+    Route::get('email-preview/welcome-member', ['uses' => 'EmailPreviewController@welcomeMember', 'as' => 'email-preview.welcome-member']);
+    Route::get('email-preview/welcome-member-online-only', ['uses' => 'EmailPreviewController@welcomeMemberOnlineOnly', 'as' => 'email-preview.welcome-member-online-only']);
+    Route::get('email-preview/notification', ['uses' => 'EmailPreviewController@notification', 'as' => 'email-preview.notification']);
+    Route::get('email-preview/equipment-notification', ['uses' => 'EmailPreviewController@equipmentNotification', 'as' => 'email-preview.equipment-notification']);
+    Route::get('email-preview/confirmation', ['uses' => 'EmailPreviewController@confirmation', 'as' => 'email-preview.confirmation']);
+    
+    // Notification previews
+    Route::get('notification-preview/induction-completed', ['uses' => 'NotificationPreviewController@inductionCompleted', 'as' => 'notification-preview.induction-completed']);
+    Route::get('notification-preview/induction-marked-as-trainer', ['uses' => 'NotificationPreviewController@inductionMarkedAsTrainer', 'as' => 'notification-preview.induction-marked-as-trainer']);
+    Route::get('notification-preview/inductee-induction-requested', ['uses' => 'NotificationPreviewController@inducteeInductionRequested', 'as' => 'notification-preview.inductee-induction-requested']);
+    Route::get('notification-preview/trainer-induction-requested', ['uses' => 'NotificationPreviewController@trainerInductionRequested', 'as' => 'notification-preview.trainer-induction-requested']);
+});

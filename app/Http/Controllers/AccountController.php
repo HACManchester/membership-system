@@ -518,9 +518,6 @@ class AccountController extends Controller
 
         \FlashNotification::success('Updated status to leaving');
 
-        $userMailer = new UserMailer($user);
-        $userMailer->sendLeftMessage();
-
         return \Redirect::route('account.show', [$user->id]);
     }
 

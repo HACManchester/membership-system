@@ -1,32 +1,44 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="utf-8">
-</head>
-<body>
-<p>
-    Hi {{ $user['given_name'] }},<br />
-    We haven't been notified about your latest subscription payment or you have cancelled your direct debit
-    subscription.<br />
-    Your account has been flagged with a payment warning, if you're in the process of setting up a new subscription
-    this will be cleared as soon as that's done.<br />
-    <br />
-    What to do:<br />
-    If you're changing payment method please disregard this email and complete the process if you haven't done it already.<br />
-    If you have paid please email us asap with the details and we will see what went wrong.<br />
-    If you have decided to leave it would be great if you could click the leaving button in your account or email us and let us know.
-</p>
-<p>
-    Within the next 24 hours your status will be changed to leaving or left depending on your last subscription payment.
-    This may mean you lose access to the space so please get in contact soon.
-</p>
-<p>
-    <a href="{{ URL::route('home') }}">Hackspace Manchester Member System</a><br/>
-</p>
-<p>
-    Thank you,<br />
-    The Hackspace Manchester board
-</p>
+@component('mail::message')
+# Your membership payment has failed
 
-</body>
-</html>
+Hi {{ $name }},
+
+We've detected an issue with your latest subscription payment to Hackspace Manchester.
+
+## What this means
+
+- Your membership is still active for now
+- You have approximately **10 days** to resolve the payment issue
+- You currently retain access to the space and systems
+
+## What might have happened
+
+- Your direct debit payment failed (insufficient funds, cancelled mandate, etc.)
+- There was a temporary banking issue
+
+## What you need to do
+
+### If you want to continue your membership:
+
+1. Log into your member dashboard
+2. Set up a new subscription payment
+3. Your membership will be automatically reactivated
+
+@component('mail::button', ['url' => URL::route('home')])
+Access Member Dashboard
+@endcomponent
+
+## If you're leaving
+
+We'd love to understand your experience and how we can do better.
+
+- Complete our [anonymous exit survey](https://forms.gle/5okny6T3yW3Cq8Zm6)
+- Email us directly at [board@hacman.org.uk](mailto:board@hacman.org.uk)
+
+Your insights help us create a better hackspace for future members.
+
+## Questions or issues?
+
+If you believe this was sent in error or have questions about your departure, please contact us at [board@hacman.org.uk](mailto:board@hacman.org.uk).
+
+@endcomponent

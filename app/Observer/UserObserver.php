@@ -47,9 +47,14 @@ class UserObserver
             $this->paymentWarning($user);
         }
 
-        //User status changed to payment warning
+        //User status changed to suspended
         if (($original['status'] != 'suspended') && ($user->status == 'suspended')) {
             $this->suspended($user);
+        }
+
+        //User status changed to leaving
+        if (($original['status'] != 'leaving') && ($user->status == 'leaving')) {
+            $this->userLeaving($user);
         }
 
         //User left
@@ -125,6 +130,20 @@ class UserObserver
 
         $telegramHelper = new TelegramHelper("UserObserver");
         $message = "User marked as suspended for non payment: " . $user->name;
+        Log::info($message);
+        $telegramHelper->notify(
+            TelegramHelper::RENDER, 
+            $message
+        );
+    }
+
+    private function userLeaving($user)
+    {
+        $userMailer = new UserMailer($user);
+        $userMailer->sendLeavingMessage();
+
+        $telegramHelper = new TelegramHelper("UserObserver");
+        $message = "User marked as leaving: " . $user->name;
         Log::info($message);
         $telegramHelper->notify(
             TelegramHelper::RENDER, 

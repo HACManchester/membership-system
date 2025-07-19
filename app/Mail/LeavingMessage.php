@@ -14,17 +14,15 @@ class LeavingMessage extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
-    public $memberBox;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, StorageBox $storageBox = null)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->memberBox = $storageBox;
     }
 
     /**
@@ -35,7 +33,10 @@ class LeavingMessage extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('You are leaving Hackspace Manchester')
-            ->view('emails.user-leaving');
+            ->subject('Membership cancellation confirmed - you\'re leaving Hackspace Manchester')
+            ->replyTo('board@hacman.org.uk', 'Hackspace Manchester Board')
+            ->markdown('emails.user-leaving', [
+                'name' => $this->user->given_name
+            ]);
     }
 }

@@ -91,7 +91,7 @@ class UserMailerTest extends TestCase
         \Mail::assertQueued(PaymentWarning::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
-                $mail->subject == 'We have detected a payment problem';
+                $mail->subject == 'Payment issue - Action required for your Hackspace Membership';
         });
     }
 
@@ -109,7 +109,7 @@ class UserMailerTest extends TestCase
         \Mail::assertQueued(LeavingMessage::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
-                $mail->subject == 'You are leaving Hackspace Manchester';
+                $mail->subject == 'Membership cancellation confirmed - you\'re leaving Hackspace Manchester';
         });
     }
 
@@ -127,7 +127,7 @@ class UserMailerTest extends TestCase
         \Mail::assertQueued(LeftMessage::class, function ($mail) use ($user) {
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
-                $mail->subject == 'You have left Hackspace Manchester';
+                $mail->subject == 'Your Hackspace Manchester membership has ended';
         });
     }
 
@@ -187,7 +187,7 @@ class UserMailerTest extends TestCase
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->replyTo[0]['address'] == 'board@hacman.org.uk' &&
                 $mail->replyTo[0]['name'] == 'Hackspace Manchester Board' &&
-                $mail->subject == 'Your Hackspace Manchester membership has been suspended';
+                $mail->subject == 'Membership suspended - Immediate action required';
         });
     }
 }
