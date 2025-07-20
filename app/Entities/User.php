@@ -482,15 +482,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->save();
     }
 
-    /**
-     * @deprecated
-     */
-    public function rejoin()
-    {
-        $this->status = 'setting-up';
-        $this->save();
-    }
-
     public function emailConfirmed()
     {
         $this->email_verified = true;

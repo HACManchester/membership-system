@@ -49,7 +49,6 @@ Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@c
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as' => 'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware' => 'role:admin']);
 Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware' => 'role:admin']);
-Route::put('account/{account}/rejoin', ['as' => 'account.rejoin', 'uses' => 'AccountController@rejoin', 'middleware' => 'role:member']);
 Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'AccountController@sendConfirmationEmail']);
 Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'AccountController@confirmEmail']);
 

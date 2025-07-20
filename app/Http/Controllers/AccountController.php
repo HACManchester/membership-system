@@ -521,15 +521,6 @@ class AccountController extends Controller
         return \Redirect::route('account.show', [$user->id]);
     }
 
-
-    public function rejoin($id)
-    {
-        $user = User::findWithPermission($id);
-        $user->rejoin();
-        \FlashNotification::success('Details Updated');
-        return \Redirect::route('account.show', [$user->id]);
-    }
-
     public function updateSubscriptionAmount($id)
     {
         $amount = \Request::input('monthly_subscription');
