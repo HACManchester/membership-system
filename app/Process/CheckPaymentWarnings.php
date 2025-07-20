@@ -1,9 +1,7 @@
 <?php namespace BB\Process;
 
 use BB\Entities\User;
-use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
-use BB\Repo\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -11,54 +9,47 @@ class CheckPaymentWarnings
 {
 
     /**
-     * @var UserRepository
+     * @var TelegramHelper
      */
-    private $userRepository;
     private $telegramHelper;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
-        $this->userRepository = $userRepository;
         $this->telegramHelper = new TelegramHelper("CheckPaymentWarnings");
     }
 
     public function run()
     {
-
         $today = new Carbon();
-        $members = [];
+        $warningMembers = [];
+        $suspendedMembers = [];
 
-        //Fetch and check over active users which have a status of leaving
+        // Process users in payment-warning status
         $users = User::paymentWarning()->get();
         foreach ($users as $user) {
-            /** @var $user \BB\Entities\User */
-            if ($user->subscription_expires->lt($today)) {
-                //User has passed their expiry date
-                echo $user->name . ' has a payment warning and has passed their expiry date' . PHP_EOL;
-                array_push($members, $user->name);
-
-                //Check the actual expiry date
-
-                //When did their last sub payment expire
-                $paidUntil = MembershipPayments::lastUserPaymentExpires($user->id);
-
-                //What grace period do they have - when should we give them to
-                $cutOffDate = MembershipPayments::getSubGracePeriodDate($user->payment_method);
-
-                //If the cut of date is greater than (sooner) than the last payment date "expire" them
-                if (($paidUntil == false) || $cutOffDate->subDays(2)->gt($paidUntil)) {
-                    //set the status to left and active to false
-                    $this->userRepository->memberLeft($user->id);
-                    echo $user->name . ' marked as having left' . PHP_EOL;
-                }
-
-                //an email will be sent by the user observer
+            /** @var \BB\Entities\User $user */
+            
+            // Check if grace period has expired (subscription_expires is set to failure date + grace period)
+            if ($user->subscription_expires === null || $user->subscription_expires->lt($today)) {
+                // Suspend the member
+                $user->setSuspended();
+                Log::info($user->name . ' suspended - payment warning grace period expired');
+                array_push($suspendedMembers, $user->name);
             } else {
-                echo $user->name . ' has a payment warning but is within their expiry date' . PHP_EOL;
+                $daysLeft = $user->subscription_expires->diffInDays($today, false);
+                Log::info($user->name . ' has payment warning, ' . abs($daysLeft) . ' days until suspension');
+                array_push($warningMembers, $user->name);
             }
         }
 
-        $message = "Members with payment warning: " . implode(", ", $members);
+        $message = "Payment warnings processed";
+        if (!empty($warningMembers)) {
+            $message .= " - Active warnings: " . implode(", ", $warningMembers);
+        }
+        if (!empty($suspendedMembers)) {
+            $message .= " - Suspended: " . implode(", ", $suspendedMembers);
+        }
+        
         Log::info($message);
         $this->telegramHelper->notify(
             TelegramHelper::JOB, 

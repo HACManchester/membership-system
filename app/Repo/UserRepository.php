@@ -243,6 +243,7 @@ class UserRepository extends DBRepository
 
         $user->active = true;
         $user->status = 'active';
+        $user->suspended_at = null;
         $user->save();
 
         $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
@@ -299,7 +300,6 @@ class UserRepository extends DBRepository
         $user = $this->getById($userId);
         $user->active       = false;
         $user->status       = 'left';
-        $user->payment_day  = 0;
         $user->save();
 
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);

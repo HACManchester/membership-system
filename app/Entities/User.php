@@ -154,7 +154,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at');
+        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at', 'suspended_at');
     }
 
 
@@ -332,6 +332,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @return bool
      */
+    public function hasPaymentWarning()
+    {
+        return ($this->status == 'payment-warning');
+    }
+    
+    /**
+     * @return bool
+     */
     public function isSuspended()
     {
         return ($this->status == 'suspended');
@@ -439,7 +447,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->mandate_id = '';
-        $this->payment_day = 0;
         $this->status = 'leaving';
         $this->save();
     }
@@ -460,15 +467,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->status = 'suspended';
         $this->active = false;
+        $this->suspended_at = Carbon::now();
         $this->save();
     }
 
-    /**
-     * @deprecated
-     */
-    public function rejoin()
+    public function setPaymentWarning($gracePeriodDays = 10)
     {
-        $this->status = 'setting-up';
+        $this->status = 'payment-warning';
+        $this->active = true; // Keep space access during warning period
+        
+        // Set subscription_expires to failure date + grace period for fair timing
+        // TODO: Articles of association say 2 weeks from payment falling due
+        $this->subscription_expires = Carbon::now()->addDays($gracePeriodDays);
         $this->save();
     }
 
@@ -536,6 +546,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         }
         $this->gift = '';
         $this->subscription_expires = Carbon::instance($expiry);
+        $this->suspended_at = null;
         $this->save();
     }
 

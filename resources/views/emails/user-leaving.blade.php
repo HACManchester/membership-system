@@ -1,39 +1,40 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="utf-8">
-</head>
-<body>
-<p>
-    Hi {{ $user['given_name'] }},<br />
-    <b>You're leaving Hackspace Manchester</b><br />
-    Your membership has been cancelled and you'll stop being a member of Hackspace Manchester at the end of the current payment cycle.<br />
-</p>
-<p>
-    <b>Help us improve</b><br/>
+@component('mail::message')
+# You're leaving Hackspace Manchester
 
-    Please do let us know if you have any thoughts or feedback for us. We really want to make the Hackspace a friendly & inclusive environment, and make it easier for new members to get involved & be productive.<br/>
-    
-    You can let us know via our short, anonymous, exit survey:<br/>
-    <a href="https://forms.gle/5okny6T3yW3Cq8Zm6">https://forms.gle/5okny6T3yW3Cq8Zm6</a></br>
+Hi {{ $name }},
 
-    Or by emailing us at <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a>
-</p>
-@if ($memberBox)
-<p>
-    It looks like you have a members storage box. Please ensure you have removed all your items from it otherwise they will be disposed of to free up space for other members.
-</p>
-@endif
-<p>
-    <b>You're welcome back any time!<b><br/>
-    If you have changed your mind and wish to remain part of Hackspace Manchester you can do this by logging in anytime within the next 12 months and set up a subscription payment, after this time you will need to sign up again.<br />
-    Alternatively if you believe this has been sent in error please email <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a> with the details of your subscription payment and we will investigate.<br />
-    <a href="{{ URL::route('home') }}">Hackspace Manchester Member System</a><br/>
-</p>
-<p>
-    Thank you,<br />
-    The Hackspace Manchester board
-</p>
+We've received your request to leave Hackspace Manchester.
 
-</body>
-</html>
+## What this means
+
+- Your membership will end at the conclusion of your current payment cycle
+- You'll retain access until your membership expires
+- Your subscription payments will stop after the current period
+
+## Help us improve
+
+We'd love to understand your experience and how we can do better.
+
+- Complete our [anonymous exit survey](https://forms.gle/5okny6T3yW3Cq8Zm6)
+- Email us directly at [board@hacman.org.uk](mailto:board@hacman.org.uk)
+
+Your insights help us create a better hackspace for future members.
+
+## Changed your mind?
+
+If you change your mind, just:
+
+1. Log into your member dashboard
+2. Set up a new subscription payment
+3. Your membership will be automatically reactivated
+
+@component('mail::button', ['url' => URL::route('home')])
+Access Member Dashboard
+@endcomponent
+
+## Questions or issues?
+
+If you believe this was sent in error or have questions about your departure, please contact us at [board@hacman.org.uk](mailto:board@hacman.org.uk).
+
+
+@endcomponent

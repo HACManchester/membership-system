@@ -57,20 +57,14 @@ class UserMailer
     public function sendLeavingMessage()
     {
         $user = $this->user;
-        $storageBoxRepository = \App::make('BB\Repo\StorageBoxRepository');
-        $memberBox = $storageBoxRepository->getMemberBox($this->user->id);
-
-        Mail::to($user)->send(new LeavingMessage($user, $memberBox));
+        Mail::to($user)->send(new LeavingMessage($user));
     }
 
 
     public function sendLeftMessage()
     {
         $user = $this->user;
-        $storageBoxRepository = \App::make('BB\Repo\StorageBoxRepository');
-        $memberBox = $storageBoxRepository->getMemberBox($this->user->id);
-
-        Mail::to($user)->send(new LeftMessage($user, $memberBox));
+        Mail::to($user)->send(new LeftMessage($user));
     }
 
 

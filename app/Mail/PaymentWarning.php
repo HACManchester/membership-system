@@ -32,7 +32,10 @@ class PaymentWarning extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('We have detected a payment problem')
-            ->view('emails.payment-warning');
+            ->subject('Payment issue - Action required for your Hackspace Membership')
+            ->replyTo('board@hacman.org.uk', 'Hackspace Manchester Board')
+            ->markdown('emails.payment-warning', [
+                'name' => $this->user->given_name
+            ]);
     }
 }

@@ -54,7 +54,7 @@ class MemberSubscriptionCharges
             $users = $this->userRepository->getBillableActive();
             foreach ($users as $user) {
                 if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
-                    $this->subscriptionChargeRepository->createCharge($user->id, $targetDate);
+                    $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);
                 }
             }
 
@@ -98,7 +98,7 @@ class MemberSubscriptionCharges
 
         //Check each of the due charges, if they have previous attempted payments ignore them
         // we don't want to retry failed payments as for DD's this will generate bank charges
-        $subCharges->reject(function ($charge) {
+        $subCharges = $subCharges->reject(function ($charge) {
             return $this->paymentRepository->getPaymentsByReference($charge->id)->count() > 0;
         });
 
@@ -111,7 +111,7 @@ class MemberSubscriptionCharges
         $members = [];
         $membersWeCouldntBill = [];
         foreach ($goCardlessUsers as $charge) {
-            $amount = $charge->user->monthly_subscription;
+            $amount = $charge->amount > 0 ? $charge->amount : $charge->user->monthly_subscription;
             try {
                 $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
                 $members[] = $charge->user->name;
@@ -121,7 +121,7 @@ class MemberSubscriptionCharges
                 }
             }
             catch (InvalidStateException | ValidationFailedException $e) {
-                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMemberships
+                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMembershipStatus
                 $status = 'failed';
                 $membersWeCouldntBill[] = $charge->user->name;
             }

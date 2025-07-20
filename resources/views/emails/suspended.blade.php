@@ -1,30 +1,43 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="utf-8">
-</head>
-<body>
-<p>
-    Hi {{ $user['given_name'] }},<br />
-    Your Hackspace Manchester membership has been suspended because of a payment problem.<br />
-    <br />
-    Your latest subscription payment has failed to process and we need you to login and retry your payment or make a manual payment.
-</p>
-<p>
-    While your membership is suspended you wont have access to Hackspace Manchester.
-</p>
-<p>
-    Please login as soon as you can and make your subscription payment.<br />
-    <a href="{{ URL::route('home') }}">Hackspace Manchester Member System</a><br/>
-    If you have any questions please email the <a href="mailto:board@hacman.org.uk">board</a>
-</p>
-<p>
-    If you are leaving then we would be really grateful if you could click the leaving button in your account or let us know.
-</p>
-<p>
-    Thank you,<br />
-    The Hackspace Manchester board
-</p>
+@component('mail::message')
+# Your membership has been suspended
 
-</body>
-</html>
+Hi {{ $name }},
+
+Your Hackspace Manchester membership has been **suspended** due to unresolved payment issues.
+
+## What this means
+
+- Your access has been deactivated - Key fobs, door codes, and system access are now disabled
+- All membership benefits have ended - You're no longer able to use the space or equipment
+
+## Why this happened
+
+Your subscription payment failed and 2 weeks has passed from when the payment became due. This typically occurs when:
+- Direct debit payments continue to fail
+- Payment retry attempts were unsuccessful
+- No alternative payment was made
+
+## How to recover your membership
+
+1. Log into your member dashboard
+2. Set up a new subscription payment
+3. Your membership will be automatically reactivated
+
+@component('mail::button', ['url' => URL::route('home')])
+Access Member Dashboard
+@endcomponent
+
+## If you're leaving
+
+We'd love to understand your experience and how we can do better.
+
+- Complete our [anonymous exit survey](https://forms.gle/5okny6T3yW3Cq8Zm6)
+- Email us directly at [board@hacman.org.uk](mailto:board@hacman.org.uk)
+
+Your insights help us create a better hackspace for future members.
+
+## Questions or issues?
+
+If you believe this was sent in error or have questions about your departure, please contact us at [board@hacman.org.uk](mailto:board@hacman.org.uk).
+
+@endcomponent

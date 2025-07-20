@@ -40,7 +40,7 @@
     @include('account.partials.leaving-warning')
 @endif
 
-@if ($user->isSuspended())
+@if ($user->hasPaymentWarning() || $user->isSuspended())
     @include('account.partials.payment-problem-panel')
 @endif
 
