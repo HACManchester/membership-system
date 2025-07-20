@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace BB\Http\Controllers;
 
@@ -81,8 +81,8 @@ class AccountController extends Controller
         \BB\Validators\ProfileValidator $profileValidator,
         \BB\Repo\AddressRepository $addressRepository,
         \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
-        \BB\Services\Credit $bbCredit)
-    {
+        \BB\Services\Credit $bbCredit
+    ) {
         $this->userForm = $userForm;
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
@@ -98,7 +98,7 @@ class AccountController extends Controller
         $this->bbCredit = $bbCredit;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride( ! \Auth::guest() && \Auth::user()->hasRole('admin'));
+        $this->userForm->setAdminOverride(! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
         $this->middleware('role:member', array('except' => ['create', 'createOnlineOnly', 'store']));
         $this->middleware('role:admin', array('only' => ['index']));
@@ -112,7 +112,6 @@ class AccountController extends Controller
         ];
         \View::share('paymentMethods', $paymentMethods);
         \View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
-
     }
 
     /**
@@ -131,7 +130,7 @@ class AccountController extends Controller
         $limit = \Request::get('limit');
 
         $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter', 'include_online_only', 'new_only', 'limit'));
-        
+
         return \View::make('account.index')->with('users', $users);
     }
 
@@ -152,7 +151,7 @@ class AccountController extends Controller
         // Check it is valid
         $gift_record = Gift::where('code', $gift_code)->first();
 
-        if($gift_record){
+        if ($gift_record) {
             $gift_valid = true;
             $gift_details = array(
                 'from' => $gift_record->gifter_name,
@@ -237,7 +236,7 @@ class AccountController extends Controller
             try {
                 $this->userImage->uploadPhoto($user->hash, \Request::file('new_profile_photo')->getRealPath(), true);
 
-                $this->profileRepo->update($user->id, ['new_profile_photo'=>1, 'profile_photo_private'=>$input['profile_photo_private']]);
+                $this->profileRepo->update($user->id, ['new_profile_photo' => 1, 'profile_photo_private' => $input['profile_photo_private']]);
             } catch (\Exception $e) {
                 Log::error($e);
             }
@@ -266,7 +265,7 @@ class AccountController extends Controller
 
         // todo: make these variable names make sense
         $userInductions = $user->inductions()->get();
-        foreach ($inductions as $i=>$induction) {
+        foreach ($inductions as $i => $induction) {
             $inductions[$i]->userInduction = false;
             foreach ($userInductions as $userInduction) {
                 if ($userInduction->key == $induction->induction_category) {
@@ -287,13 +286,16 @@ class AccountController extends Controller
 
         $doorCode = Settings::get("emergency_door_key_storage_pin");
 
+        $hasSubscriptionPaymentsInProgress = $this->hasSubscriptionPaymentsInProgress($user);
+
         return \View::make('account.show')
             ->with('user', $user)
-            ->with('doorCode',$doorCode)
+            ->with('doorCode', $doorCode)
             ->with('inductions', $inductions)
             ->with('newAddress', $newAddress)
             ->with('subscriptionCharges', $subscriptionCharges)
-            ->with('memberBalance', $memberBalance);
+            ->with('memberBalance', $memberBalance)
+            ->with('hasSubscriptionPaymentsInProgress', $hasSubscriptionPaymentsInProgress);
     }
 
 
@@ -324,23 +326,23 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
         $input = \Request::only(
-            'given_name', 
-            'family_name', 
-            'email', 
-            'secondary_email', 
-            'display_name', 
-            'announce_name', 
-            'online_only', 
-            'password', 
-            'phone', 
-            'address.line_1', 
-            'address.line_2', 
-            'address.line_3', 
-            'address.line_4', 
-            'address.postcode', 
-            'emergency_contact', 
-            'profile_private', 
-            'newsletter', 
+            'given_name',
+            'family_name',
+            'email',
+            'secondary_email',
+            'display_name',
+            'announce_name',
+            'online_only',
+            'password',
+            'phone',
+            'address.line_1',
+            'address.line_2',
+            'address.line_3',
+            'address.line_4',
+            'address.postcode',
+            'emergency_contact',
+            'profile_private',
+            'newsletter',
             'pronouns',
             'suppress_real_name'
         );
@@ -367,7 +369,7 @@ class AccountController extends Controller
         $madeTrusted = false;
 
         if (\Request::has('trusted')) {
-            if ( ! $user->trusted && \Request::input('trusted')) {
+            if (! $user->trusted && \Request::input('trusted')) {
                 //User has been made a trusted member
                 $madeTrusted = true;
             }
@@ -487,12 +489,12 @@ class AccountController extends Controller
         return \Redirect::route('home');
     }
 
-    
+
     public function sendConfirmationEmail()
     {
         $user = \Auth::user();
-      
-        if(!$user->email_verified){
+
+        if (!$user->email_verified) {
             $userMailer = new UserMailer($user);
             $userMailer->sendConfirmationEmail();
             \FlashNotification::success('An email has been sent to your email address. Please click the link to confirm it.');
@@ -540,5 +542,20 @@ class AccountController extends Controller
         $user->updateSubAmount(\Request::input('monthly_subscription'));
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
+    }
+
+    private function hasSubscriptionPaymentsInProgress($user)
+    {
+        if ($user->payment_method !== 'gocardless-variable') {
+            return false;
+        }
+
+        $outstandingPayments = $user->payments()
+            ->subscription()
+            ->whereIn('status', ['pending', 'pending_submission', 'processing'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $outstandingPayments->isNotEmpty();
     }
 }
