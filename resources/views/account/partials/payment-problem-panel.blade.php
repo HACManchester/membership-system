@@ -25,15 +25,61 @@
                     @endif
                 @elseif ($user->payment_method == 'gocardless-variable')
                     <p>
-                        Your latest subscription payment has failed.<br />
-                        You can retry your payment now.
-
-                        <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless" data-amount="{{ $user->monthly_subscription }}"></div>
-
-                        @if (Auth::user()->isAdmin())
-                            <small>Admins: You cannot do this process on behalf of the member, it will just charge your account.</small>
-                        @endif
+                        Your latest subscription payment has failed.
                     </p>
+
+                    @if ($hasSubscriptionPaymentsInProgress)
+                        <div class="alert alert-warning">
+                            <strong>Outstanding payment in progress:</strong> You have a payment being processed. 
+                            Direct Debit payments take 3-5 business days to complete.
+                        </div>
+                        
+                        <strong>While you wait, consider:</strong>
+                        <ul class="mb-0">
+                            <li>Check your bank account has sufficient funds</li>
+                            <li>Verify your Direct Debit mandate hasn't been cancelled</li>
+                            <li>If your bank details changed, set up a new Direct Debit below</li>
+                        </ul>
+                        
+                        <p>
+                            <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">
+                                Set up new Direct Debit (if details changed)
+                            </a>
+                        </p>
+                        
+                    @else
+                        <strong>Common reasons for payment failure:</strong>
+                        <ul class="mb-0">
+                            <li>Bank account closed or details changed</li>
+                            <li>Insufficient funds on payment date</li>
+                            <li>Direct Debit mandate cancelled at your bank</li>
+                        </ul>
+                        
+                        <p>
+                            <strong>Important:</strong> Direct Debit payments take 3-5 business days to process.
+                        </p>
+                        
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-sm-6">
+                                <h5>Option 1: Retry Direct Debit</h5>
+                                <p class="small text-muted">Use this if your bank details and balance are definitely correct.</p>
+                                <div class="paymentModule" data-reason="subscription" data-display-reason="Retry payment" data-methods="gocardless" data-amount="{{ $user->monthly_subscription }}"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <h5>Option 2: Set up new Direct Debit</h5>
+                                <p class="small text-muted">Use this if your bank details have changed or you're unsure.</p>
+                                <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">
+                                    Set up new Direct Debit
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (Auth::user()->isAdmin())
+                        <div class="alert alert-danger" style="margin-top: 15px;">
+                            <small><strong>Admins:</strong> You cannot do this process on behalf of the member, it will just charge your account.</small>
+                        </div>
+                    @endif
                 @else
                 <p>
                     There is a problem with your subscription payment,
