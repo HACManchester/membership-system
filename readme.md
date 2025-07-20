@@ -49,10 +49,49 @@ Sign up -> setup payment -> get welcome email
 There are a variety of member statuses which are used for various scenarios.
 
 - Setting Up - just signed up, no subscription setup, no access to space
-- Active
-- Suspended - missed payment - DD is still active but the member doesn't have access to the workshop
-- Leaving - The user has said they are leaving or they were in a payment warning state, member retains full access
-- Left - Leaving users move here once their last payment expires.
+- Active - paid member with full access to the space
+- Payment Warning - payment failed but member retains access during 10-day grace period
+- Suspended - grace period expired, no space access but can still recover
+- Leaving - member voluntarily canceling but retains access until subscription expires
+- Left - former member who has completed leaving process
+- Honorary - special exempt status
+
+### Subscription & Payment Process
+
+The membership system handles subscription payments and automatic state transitions:
+
+#### Payment Success Flow
+1. Member sets up Direct Debit via GoCardless
+2. Monthly payments taken automatically on their chosen day
+3. Each successful payment extends membership by 1 month
+4. Member remains in `Active` status with full space access
+
+#### Payment Failure & Recovery
+1. **Payment fails** → Member enters `Payment Warning` status
+   - 10-day grace period begins
+   - Member retains full space access
+   - Daily reminder emails sent
+   - Can recover by making payment within grace period
+
+2. **Grace period expires** → Member becomes `Suspended`
+   - Space access removed
+   - 30-day recovery window
+   - Can still reactivate by making payment
+
+3. **30 days suspended** → Member marked as `Left`
+   - Must set up new subscription to rejoin
+   - No explicit "rejoin" process - just set up payment again
+
+#### Voluntary Leaving
+1. Member cancels subscription → enters `Leaving` status
+2. Retains access until current paid period expires
+3. Automatically transitions to `Left` when subscription expires
+
+#### Daily Automated Processes
+- `RecoverMemberships` - Checks for new payments and reactivates members
+- `CheckPaymentWarnings` - Moves expired warnings to suspended
+- `CheckSuspendedUsers` - Marks 30-day suspended members as left
+- `CheckLeavingUsers` - Transitions expired leaving members to left
 
 ## Third-party services
 
