@@ -13,6 +13,7 @@ import {
     Stack,
     Alert,
 } from "@mui/material";
+import { ComponentProps } from "react";
 
 type Equipment = {
     id: number;
@@ -48,7 +49,7 @@ type CourseProps = {
     };
 };
 
-type Props = {
+type Props = ComponentProps<typeof Box> & {
     course: CourseProps;
     formatOptions?: Record<string, string>;
     frequencyOptions?: Record<string, string>;
@@ -62,6 +63,7 @@ const CourseSummary = ({
     frequencyOptions = {},
     clickable = true,
     isPreview = false,
+    ...rest
 }: Props) => {
     // Handle format/frequency which might be strings or objects
     const formatLabel =
@@ -75,7 +77,7 @@ const CourseSummary = ({
             : frequencyOptions[course.frequency] || course.frequency;
 
     return (
-        <Box>
+        <Box {...rest}>
             {isPreview && (
                 <Typography variant="h6" gutterBottom>
                     Preview (How it will appear on the index page)

@@ -55,6 +55,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
                 <Box
                     component="main"
+                    width="100%"
                     sx={{
                         flexGrow: 1,
                         backgroundImage:

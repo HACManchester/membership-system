@@ -66,7 +66,7 @@ const CourseGroup = ({
             <Grid2 container spacing={3}>
                 {courses.map((course) => (
                     <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
-                        <CourseSummary course={course} />
+                        <CourseSummary course={course} height="100%" />
                     </Grid2>
                 ))}
             </Grid2>
@@ -150,12 +150,12 @@ const Index = ({
             <PageTitle title="Inductions" actionButtons={actionButtons} />
             <Container sx={{ mt: 4 }}>
                 <Paper sx={{ p: 3, mb: 4 }}>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
+                    <Typography sx={{ mb: 2 }}>
                         Inductions are required before using certain equipment
                         in the Hackspace. These cover safe operation according
                         to our safety protocols.
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography color="text.secondary">
                         For skills development, check our{" "}
                         <a
                             href="https://list.hacman.org.uk/c/events/12"
@@ -168,13 +168,13 @@ const Index = ({
 
                     {isPreview && (
                         <Alert severity="info" sx={{ mt: 3 }}>
-                            <Typography variant="body2" sx={{ mb: 1 }}>
+                            <Typography sx={{ mb: 1 }}>
                                 <strong>Preview Feature:</strong> This
                                 inductions section is currently only visible to
                                 admins, area coordinators, and equipment
                                 maintainers while we develop the system.
                             </Typography>
-                            <Typography variant="body2">
+                            <Typography>
                                 It will be made available to all members once
                                 fully tested and ready.
                             </Typography>
