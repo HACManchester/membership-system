@@ -70,7 +70,9 @@ class SubChargeEventHandler
             return; // Don't set payment warning if other payments exist for this charge
         }
 
-        $user->setPaymentWarning();
+        if ($user->status === "active") {
+            $user->setPaymentWarning();
+        }
     }
 
     private function hasOtherPaymentsForCharge($chargeId)
