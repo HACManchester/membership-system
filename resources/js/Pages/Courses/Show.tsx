@@ -22,7 +22,9 @@ import {
     TableRow,
     Paper,
     Avatar,
+    Alert,
 } from "@mui/material";
+import PauseIcon from "@mui/icons-material/Pause";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import { useForm } from "@inertiajs/react";
@@ -53,6 +55,8 @@ type Course = {
     frequency: { label: string; value: string };
     frequency_description: string;
     wait_time: string;
+    paused_at: string | null;
+    is_paused: boolean;
     equipment: Equipment[];
     urls: {
         show: string;
@@ -106,7 +110,11 @@ const Show = ({ course, can, urls }: Props) => {
         <>
             <PageTitle title={course.name} actionButtons={actionButtons} />
             <Container sx={{ mt: 4 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 3 }}
+                >
                     <Link href={urls.index} color="inherit" underline="hover">
                         Inductions
                     </Link>{" "}
@@ -118,25 +126,47 @@ const Show = ({ course, can, urls }: Props) => {
                         <Typography variant="h4" component="h1" gutterBottom>
                             {course.name}
                         </Typography>
-                        
-                        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+
+                        {course.is_paused && (
+                            <Alert
+                                severity="warning"
+                                icon={<PauseIcon />}
+                                sx={{ mb: 3 }}
+                            >
+                                This induction is currently unavailable for
+                                enrollment.
+                            </Alert>
+                        )}
+
+                        <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            sx={{ mb: 3 }}
+                        >
                             {course.description}
                         </Typography>
-                        
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-                            <Chip 
-                                label={course.format.label} 
-                                size="medium" 
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 1,
+                                mb: 3,
+                            }}
+                        >
+                            <Chip
+                                label={course.format.label}
+                                size="medium"
                                 variant="outlined"
                             />
-                            <Chip 
-                                label={course.frequency.label} 
-                                size="medium" 
+                            <Chip
+                                label={course.frequency.label}
+                                size="medium"
                                 variant="outlined"
                             />
-                            <Chip 
-                                label={`Wait: ${course.wait_time}`} 
-                                size="medium" 
+                            <Chip
+                                label={`Wait: ${course.wait_time}`}
+                                size="medium"
                                 variant="outlined"
                             />
                         </Box>
@@ -144,7 +174,10 @@ const Show = ({ course, can, urls }: Props) => {
                         <Grid2 container spacing={3}>
                             {course.format_description && (
                                 <Grid2 size={{ xs: 12, md: 6 }}>
-                                    <Typography variant="subtitle2" color="text.secondary">
+                                    <Typography
+                                        variant="subtitle2"
+                                        color="text.secondary"
+                                    >
                                         About the Format
                                     </Typography>
                                     <Typography variant="body2">
@@ -154,7 +187,10 @@ const Show = ({ course, can, urls }: Props) => {
                             )}
                             {course.frequency_description && (
                                 <Grid2 size={{ xs: 12, md: 6 }}>
-                                    <Typography variant="subtitle2" color="text.secondary">
+                                    <Typography
+                                        variant="subtitle2"
+                                        color="text.secondary"
+                                    >
                                         About the Schedule
                                     </Typography>
                                     <Typography variant="body2">
@@ -169,14 +205,26 @@ const Show = ({ course, can, urls }: Props) => {
                 {course.equipment.length > 0 && (
                     <Card>
                         <CardContent>
-                            <Typography variant="h5" component="h2" gutterBottom>
+                            <Typography
+                                variant="h5"
+                                component="h2"
+                                gutterBottom
+                            >
                                 Equipment Access
                             </Typography>
-                            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                                Completing this induction will grant you access to the following equipment:
+                            <Typography
+                                variant="body1"
+                                color="text.secondary"
+                                sx={{ mb: 3 }}
+                            >
+                                Completing this induction will grant you access
+                                to the following equipment:
                             </Typography>
 
-                            <TableContainer component={Paper} variant="outlined">
+                            <TableContainer
+                                component={Paper}
+                                variant="outlined"
+                            >
                                 <Table>
                                     <TableHead>
                                         <TableRow>
@@ -185,7 +233,9 @@ const Show = ({ course, can, urls }: Props) => {
                                             <TableCell>Location</TableCell>
                                             <TableCell>PPE Required</TableCell>
                                             <TableCell>Status</TableCell>
-                                            <TableCell align="center">Dangerous</TableCell>
+                                            <TableCell align="center">
+                                                Dangerous
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -193,24 +243,42 @@ const Show = ({ course, can, urls }: Props) => {
                                             <TableRow key={equipment.id}>
                                                 <TableCell>
                                                     {equipment.photo_url ? (
-                                                        <Avatar 
-                                                            src={equipment.photo_url} 
+                                                        <Avatar
+                                                            src={
+                                                                equipment.photo_url
+                                                            }
                                                             alt={equipment.name}
                                                             variant="rounded"
-                                                            sx={{ width: 60, height: 60 }}
+                                                            sx={{
+                                                                width: 60,
+                                                                height: 60,
+                                                            }}
                                                         />
                                                     ) : (
-                                                        <Avatar 
+                                                        <Avatar
                                                             variant="rounded"
-                                                            sx={{ width: 60, height: 60, bgcolor: 'grey.300' }}
+                                                            sx={{
+                                                                width: 60,
+                                                                height: 60,
+                                                                bgcolor:
+                                                                    "grey.300",
+                                                            }}
                                                         >
                                                             🔧
                                                         </Avatar>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Link href={equipment.urls.show} underline="hover">
-                                                        <Typography variant="body2" fontWeight="medium">
+                                                    <Link
+                                                        href={
+                                                            equipment.urls.show
+                                                        }
+                                                        underline="hover"
+                                                    >
+                                                        <Typography
+                                                            variant="body2"
+                                                            fontWeight="medium"
+                                                        >
                                                             {equipment.name}
                                                         </Typography>
                                                     </Link>
@@ -218,48 +286,79 @@ const Show = ({ course, can, urls }: Props) => {
                                                 <TableCell>
                                                     <Typography variant="body2">
                                                         {equipment.room_display && (
-                                                            <Box component="span" sx={{ fontWeight: 'medium' }}>
-                                                                {equipment.room_display}
+                                                            <Box
+                                                                component="span"
+                                                                sx={{
+                                                                    fontWeight:
+                                                                        "medium",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    equipment.room_display
+                                                                }
                                                             </Box>
                                                         )}
                                                     </Typography>
                                                 </TableCell>
                                                 <TableCell>
-                                                    {equipment.ppe.length > 0 && (
-                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                            {equipment.ppe.map((item, index) => (
-                                                                <Chip 
-                                                                    key={index}
-                                                                    label={item} 
-                                                                    size="small" 
-                                                                    variant="outlined"
-                                                                    color="info"
-                                                                />
-                                                            ))}
+                                                    {equipment.ppe.length >
+                                                        0 && (
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                flexWrap:
+                                                                    "wrap",
+                                                                gap: 0.5,
+                                                            }}
+                                                        >
+                                                            {equipment.ppe.map(
+                                                                (
+                                                                    item,
+                                                                    index
+                                                                ) => (
+                                                                    <Chip
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        label={
+                                                                            item
+                                                                        }
+                                                                        size="small"
+                                                                        variant="outlined"
+                                                                        color="info"
+                                                                    />
+                                                                )
+                                                            )}
                                                         </Box>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            flexWrap: "wrap",
+                                                            gap: 0.5,
+                                                        }}
+                                                    >
                                                         {equipment.working ? (
-                                                            <Chip 
-                                                                label="Working" 
-                                                                size="small" 
+                                                            <Chip
+                                                                label="Working"
+                                                                size="small"
                                                                 color="success"
                                                                 variant="filled"
                                                             />
                                                         ) : (
-                                                            <Chip 
-                                                                label="Out of action" 
-                                                                size="small" 
+                                                            <Chip
+                                                                label="Out of action"
+                                                                size="small"
                                                                 color="error"
                                                                 variant="filled"
                                                             />
                                                         )}
                                                         {equipment.permaloan ? (
-                                                            <Chip 
-                                                                label="Permaloan" 
-                                                                size="small" 
+                                                            <Chip
+                                                                label="Permaloan"
+                                                                size="small"
                                                                 color="warning"
                                                                 variant="filled"
                                                             />
@@ -267,7 +366,9 @@ const Show = ({ course, can, urls }: Props) => {
                                                     </Box>
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    {equipment.dangerous ? '⚠️' : ''}
+                                                    {equipment.dangerous
+                                                        ? "⚠️"
+                                                        : ""}
                                                 </TableCell>
                                             </TableRow>
                                         ))}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Typography,
     Container,
@@ -8,6 +8,8 @@ import {
     Link,
     Alert,
     Grid2,
+    FormControlLabel,
+    Switch,
 } from "@mui/material";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
@@ -39,6 +41,8 @@ type Course = {
     frequency: { label: string; value: string };
     frequency_description: string;
     wait_time: string;
+    paused_at: string | null;
+    is_paused: boolean;
     equipment: Equipment[];
     urls: {
         show: string;
@@ -87,9 +91,16 @@ const Index = ({
     urls,
     isPreview = false,
 }: Props) => {
+    const [showPaused, setShowPaused] = useState(false);
+    
+    // Filter courses based on pause status
+    const filteredCourses = courses.filter(course => 
+        showPaused || !course.is_paused
+    );
+    
     const allRooms = [
         ...new Set(
-            courses.flatMap((course) =>
+            filteredCourses.flatMap((course) =>
                 course.equipment.map((e) => e.room_display)
             )
         ),
@@ -97,7 +108,7 @@ const Index = ({
 
     const groupedCourses = allRooms.reduce<Record<string, Course[]>>(
         (acc, room) => {
-            acc[room] = courses.filter((course) =>
+            acc[room] = filteredCourses.filter((course) =>
                 course.equipment.some((e) => e.room_display === room)
             );
             return acc;
@@ -105,19 +116,34 @@ const Index = ({
         {}
     );
 
-    const ungroupedCourses = courses.filter(
+    const ungroupedCourses = filteredCourses.filter(
         (course) => !course.equipment || course.equipment.length === 0
     );
 
-    const actionButtons = can.create ? (
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link href={urls.create} underline="none">
-                <Button variant="contained" color="primary">
-                    Create induction
-                </Button>
-            </Link>
+    const pausedCount = courses.filter(course => course.is_paused).length;
+    
+    const actionButtons = (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
+            {pausedCount > 0 && (
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={showPaused}
+                            onChange={(e) => setShowPaused(e.target.checked)}
+                        />
+                    }
+                    label={`Show unavailable inductions (${pausedCount})`}
+                />
+            )}
+            {can.create && (
+                <Link href={urls.create} underline="none">
+                    <Button variant="contained" color="primary">
+                        Create induction
+                    </Button>
+                </Link>
+            )}
         </Box>
-    ) : null;
+    );
 
     return (
         <>

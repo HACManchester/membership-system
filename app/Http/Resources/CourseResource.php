@@ -33,6 +33,8 @@ class CourseResource extends JsonResource
             ],
             'frequency_description' => $this->frequency_description,
             'wait_time' => $this->wait_time,
+            'paused_at' => $this->paused_at,
+            'is_paused' => $this->isPaused(),
             'equipment' => EquipmentResource::collection($this->whenLoaded('equipment')),
             'urls' => [
                 'show' => route('courses.show', $this->slug, false),

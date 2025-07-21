@@ -8,6 +8,8 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    FormControlLabel,
+    Switch,
 } from "@mui/material";
 
 type Equipment = {
@@ -36,6 +38,7 @@ type FormData = {
     frequency_description: string;
     wait_time: string;
     equipment: number[];
+    paused: boolean;
 };
 
 type Props = {
@@ -219,6 +222,21 @@ const CourseForm = ({
                             Select equipment that requires this induction
                         </FormHelperText>
                     </FormControl>
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={data.paused}
+                                onChange={(e) => setData("paused", e.target.checked)}
+                            />
+                        }
+                        label="Pause this course"
+                    />
+                    {errors.paused && (
+                        <FormHelperText error>{errors.paused}</FormHelperText>
+                    )}
                 </Grid2>
 
                 <Grid2 size={12}>

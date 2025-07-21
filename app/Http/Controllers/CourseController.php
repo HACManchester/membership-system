@@ -83,6 +83,11 @@ class CourseController extends Controller
             unset($validated['equipment']);
         }
 
+        if (isset($validated['paused'])) {
+            $validated['paused_at'] = $validated['paused'] ? now() : null;
+            unset($validated['paused']);
+        }
+
         return DB::transaction(function () use ($validated, $equipmentIds) {
             $course = Course::create($validated);
 
@@ -159,6 +164,11 @@ class CourseController extends Controller
         if (isset($validated['equipment'])) {
             $equipmentIds = $validated['equipment'];
             unset($validated['equipment']);
+        }
+
+        if (isset($validated['paused'])) {
+            $validated['paused_at'] = $validated['paused'] ? now() : null;
+            unset($validated['paused']);
         }
 
         return DB::transaction(function () use ($validated, $equipmentIds, $course) {

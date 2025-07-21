@@ -36,6 +36,7 @@ class StoreCourseRequest extends FormRequest
             'wait_time' => ['required'],
             'equipment' => ['array'],
             'equipment.*' => ['integer', 'exists:equipment,id'],
+            'paused' => ['boolean'],
         ];
     }
 }

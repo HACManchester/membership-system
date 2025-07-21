@@ -40,6 +40,8 @@ type CourseData = {
         frequency: { label: string; value: string };
         frequency_description: string;
         wait_time: string;
+        paused_at: string | null;
+        is_paused: boolean;
         equipment: Equipment[];
         urls: {
             show: string;
@@ -76,7 +78,8 @@ const Edit = ({
         frequency: typeof course.data.frequency === 'object' ? course.data.frequency.value : course.data.frequency,
         frequency_description: course.data.frequency_description,
         wait_time: course.data.wait_time,
-        equipment: course.equipment
+        equipment: course.equipment,
+        paused: course.data.is_paused || false
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -136,6 +139,7 @@ const Edit = ({
                                         frequency: data.frequency,
                                         frequency_description: data.frequency_description,
                                         wait_time: data.wait_time,
+                                        is_paused: data.paused,
                                         equipment: equipment.filter(eq => data.equipment.includes(eq.id))
                                     }}
                                     formatOptions={formatOptions}

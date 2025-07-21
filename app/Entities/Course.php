@@ -27,6 +27,7 @@ class Course extends Model
         'frequency', // self-serve (quiz), regular, ad-hoc
         'frequency_description',
         'wait_time', // Free-text, but conventional format. "1-2 weeks"
+        'paused_at',
     ];
 
     public function getRouteKeyName()
@@ -87,5 +88,15 @@ class Course extends Model
     public static function isPreview()
     {
         return !static::isLive();
+    }
+
+    /**
+     * Check if the course is currently paused
+     *
+     * @return bool
+     */
+    public function isPaused()
+    {
+        return !is_null($this->paused_at);
     }
 }

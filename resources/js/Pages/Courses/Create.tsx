@@ -54,7 +54,8 @@ const Create = ({
         frequency: "",
         frequency_description: "",
         wait_time: "",
-        equipment: [] as number[]
+        equipment: [] as number[],
+        paused: false
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -111,6 +112,7 @@ const Create = ({
                                         frequency: data.frequency,
                                         frequency_description: data.frequency_description,
                                         wait_time: data.wait_time,
+                                        is_paused: data.paused,
                                         equipment: equipment.filter(eq => data.equipment.includes(eq.id))
                                     }}
                                     formatOptions={formatOptions}
