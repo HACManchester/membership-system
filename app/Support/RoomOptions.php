@@ -12,12 +12,16 @@ class RoomOptions
     public static function all()
     {
         return [
-            'welding'      => 'Welding',
-            'woodwork'     => 'Woody Dusty',
+            'welding'      => 'Fabrication',
+            'woodwork'     => 'Woodwork',
             'metalworking' => 'Metalwork',
-            'visual-arts'  => 'Visual Arts',
+            'visual-arts'  => 'Visual Arts', // Migrate to The Stage / Main Area
             'electronics'  => 'Electronics',
-            'main-room'    => 'Main Room'
+            'main-room'    => 'Main Area',
+            'stage'        => 'The Stage',
+            'bikespace'    => 'Bike Space',
+            'snackspace'   => 'Snackspace',
+            'bar'          => 'The Bar',
         ];
     }
 
