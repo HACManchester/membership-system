@@ -156,7 +156,17 @@ const CourseSummary = ({
                             </Box>
                         )}
 
-                        <Typography color="text.secondary" sx={{ mb: 2 }}>
+                        <Typography 
+                            color="text.secondary" 
+                            sx={{ 
+                                mb: 2,
+                                display: '-webkit-box',
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                            }}
+                        >
                             {course.description ? (
                                 <ReactMarkdown
                                     components={{
