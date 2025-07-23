@@ -43,20 +43,21 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testCreateSubscriptionChargesForMatchingPaymentDay()
     {
-        $targetDate = Carbon::now()->addDays(7);
+        $paymentDay = 15; // Use a day that exists in all months
+        $otherDay = 10; // Different payment day
         
         // Create active users with payment day matching target date
         $user1 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'payment_day' => $targetDate->day,
+            'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
 
         $user2 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'payment_day' => $targetDate->day,
+            'payment_day' => $paymentDay,
             'monthly_subscription' => 17,
         ]);
 
@@ -64,10 +65,13 @@ class MemberSubscriptionChargesTest extends TestCase
         $user3 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'payment_day' => $targetDate->day + 1,
+            'payment_day' => $otherDay,
             'monthly_subscription' => 27,
         ]);
 
+        // Set target date to match the payment day
+        $targetDate = Carbon::now()->setDay($paymentDay);
+        
         $this->service->createSubscriptionCharges($targetDate);
 
         // Verify charges were created for matching users
@@ -93,19 +97,20 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testCreateSubscriptionChargesIgnoresInactiveUsers()
     {
-        $targetDate = Carbon::now()->addDays(7);
+        $paymentDay = 15; // Use a day that exists in all months
+        $targetDate = Carbon::now()->setDay($paymentDay);
         
         $suspendedUser = factory(User::class)->create([
             'status' => 'suspended',
             'active' => false,
-            'payment_day' => $targetDate->day,
+            'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
 
         $leftUser = factory(User::class)->create([
             'status' => 'left',
             'active' => false,
-            'payment_day' => $targetDate->day,
+            'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
 
@@ -124,12 +129,13 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testCreateSubscriptionChargesPreventsDuplicates()
     {
-        $targetDate = Carbon::now()->addDays(7);
+        $paymentDay = 15; // Use a day that exists in all months
+        $targetDate = Carbon::now()->setDay($paymentDay);
         
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'payment_day' => $targetDate->day,
+            'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
 
