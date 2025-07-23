@@ -2,6 +2,7 @@ import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import PauseIcon from "@mui/icons-material/Pause";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import {
     Typography,
@@ -26,9 +27,16 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
+};
+
+type Induction = {
+    key: string;
+    trained: string;
+    is_trainer: boolean;
 };
 
 type CourseProps = {
@@ -55,6 +63,7 @@ type Props = ComponentProps<typeof Box> & {
     frequencyOptions?: Record<string, string>;
     clickable?: boolean;
     isPreview?: boolean;
+    userInductions?: Induction[];
 };
 
 const CourseSummary = ({
@@ -63,6 +72,7 @@ const CourseSummary = ({
     frequencyOptions = {},
     clickable = true,
     isPreview = false,
+    userInductions = [],
     ...rest
 }: Props) => {
     // Handle format/frequency which might be strings or objects
@@ -75,6 +85,14 @@ const CourseSummary = ({
         typeof course.frequency === "object"
             ? course.frequency.label
             : frequencyOptions[course.frequency] || course.frequency;
+
+    const isUserTrained =
+        course.equipment.length > 0 &&
+        course.equipment.every((equipment) => {
+            return userInductions.some(
+                (induction) => induction.key === equipment.induction_category
+            );
+        });
 
     return (
         <Box {...rest}>
@@ -108,9 +126,21 @@ const CourseSummary = ({
                 }}
             >
                 <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h2" gutterBottom>
-                        {course.name || "Induction Name"}
-                    </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            justifyContent: "space-between",
+                            mb: 1,
+                        }}
+                    >
+                        <Typography variant="h6" component="h2">
+                            {course.name || "Induction Name"}
+                        </Typography>
+                        {isUserTrained && (
+                            <CheckCircleIcon color="success" sx={{ ml: 1 }} />
+                        )}
+                    </Box>
 
                     <Stack spacing={2}>
                         {course.is_paused && (
@@ -172,7 +202,19 @@ const CourseSummary = ({
                         {course.equipment.length > 0 && (
                             <Stack spacing={0.5}>
                                 {course.equipment.map((equipment) => (
-                                    <Chip label={equipment.name} size="small" />
+                                    <Chip
+                                        label={equipment.name}
+                                        size="small"
+                                        icon={
+                                            userInductions.some(
+                                                (induction) =>
+                                                    induction.key ===
+                                                    equipment.induction_category
+                                            ) ? (
+                                                <CheckCircleIcon />
+                                            ) : undefined
+                                        }
+                                    />
                                 ))}
                             </Stack>
                         )}

@@ -26,9 +26,16 @@ type Equipment = {
     room_display: string;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
+};
+
+type Induction = {
+    key: string;
+    trained: string;
+    is_trainer: boolean;
 };
 
 type Course = {
@@ -52,9 +59,11 @@ type Course = {
 const CourseGroup = ({
     title,
     courses,
+    userInductions,
 }: {
     title: string;
     courses: Course[];
+    userInductions: Induction[];
 }) => {
     if (courses.length === 0) return null;
 
@@ -64,11 +73,17 @@ const CourseGroup = ({
                 {title}
             </Typography>
             <Grid2 container spacing={3}>
-                {courses.map((course) => (
-                    <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
-                        <CourseSummary course={course} height="100%" />
-                    </Grid2>
-                ))}
+                {courses.map((course) => {
+                    return (
+                        <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                            <CourseSummary
+                                course={course}
+                                height="100%"
+                                userInductions={userInductions}
+                            />
+                        </Grid2>
+                    );
+                })}
             </Grid2>
         </Box>
     );
@@ -76,6 +91,7 @@ const CourseGroup = ({
 
 type Props = {
     courses: Course[];
+    userInductions: Induction[];
     can?: {
         create: boolean;
     };
@@ -87,17 +103,18 @@ type Props = {
 
 const Index = ({
     courses,
+    userInductions = [],
     can = { create: false },
     urls,
     isPreview = false,
 }: Props) => {
     const [showPaused, setShowPaused] = useState(false);
-    
+
     // Filter courses based on pause status
-    const filteredCourses = courses.filter(course => 
-        showPaused || !course.is_paused
+    const filteredCourses = courses.filter(
+        (course) => showPaused || !course.is_paused
     );
-    
+
     const allRooms = [
         ...new Set(
             filteredCourses.flatMap((course) =>
@@ -120,10 +137,17 @@ const Index = ({
         (course) => !course.equipment || course.equipment.length === 0
     );
 
-    const pausedCount = courses.filter(course => course.is_paused).length;
-    
+    const pausedCount = courses.filter((course) => course.is_paused).length;
+
     const actionButtons = (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: 2,
+            }}
+        >
             {pausedCount > 0 && (
                 <FormControlLabel
                     control={
@@ -188,11 +212,16 @@ const Index = ({
                             key={areaName}
                             title={areaName}
                             courses={areaCourses}
+                            userInductions={userInductions}
                         />
                     )
                 )}
 
-                <CourseGroup title="Ungrouped" courses={ungroupedCourses} />
+                <CourseGroup
+                    title="Ungrouped"
+                    courses={ungroupedCourses}
+                    userInductions={userInductions}
+                />
             </Container>
         </>
     );

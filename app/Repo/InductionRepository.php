@@ -135,4 +135,18 @@ class InductionRepository extends DBRepository
             ->limit(10)
             ->get();
     }
+
+    /**
+     * Get all inductions for a user (for frontend comparison with equipment)
+     * 
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUserInductions($userId)
+    {
+        return $this->model
+            ->where('user_id', $userId)
+            ->whereNotNull('trained')
+            ->get();
+    }
 }

@@ -8,15 +8,20 @@ use BB\Http\Requests\StoreCourseRequest;
 use BB\Http\Requests\UpdateCourseRequest;
 use BB\Http\Resources\CourseResource;
 use BB\Http\Resources\EquipmentResource;
+use BB\Http\Resources\InductionResource;
+use BB\Repo\InductionRepository;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CourseController extends Controller
 {
-    public function __construct()
+    protected $inductionRepository;
+
+    public function __construct(InductionRepository $inductionRepository)
     {
         $this->authorizeResource(Course::class, 'course');
+        $this->inductionRepository = $inductionRepository;
     }
 
     /**
@@ -27,17 +32,20 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with('equipment')->orderBy('name', 'ASC')->get();
-        $isPreview = Course::isPreview();
+        $userInductions = $this->inductionRepository->getUserInductions(
+            auth()->user()->id
+        );
 
         return Inertia::render('Courses/Index', [
             'courses' => CourseResource::collection($courses),
+            'userInductions' => InductionResource::collection($userInductions),
             'can' => [
                 'create' => auth()->user() ? auth()->user()->can('create', Course::class) : false,
             ],
             'urls' => [
                 'create' => route('courses.create', [], false),
             ],
-            'isPreview' => $isPreview,
+            'isPreview' => Course::isPreview(),
         ]);
     }
 
@@ -109,8 +117,13 @@ class CourseController extends Controller
     {
         $course->load('equipment');
 
+        $userInductions = $this->inductionRepository->getUserInductions(
+            auth()->user()->id
+        );
+
         return Inertia::render('Courses/Show', [
             'course' => (new CourseResource($course)),
+            'userInductions' => InductionResource::collection($userInductions),
             'can' => [
                 'update' => auth()->user() ? auth()->user()->can('update', $course) : false,
                 'delete' => auth()->user() ? auth()->user()->can('delete', $course) : false,
@@ -192,7 +205,7 @@ class CourseController extends Controller
     {
         return DB::transaction(function () use ($course) {
             $course->equipment()->detach();
-            
+
             $course->delete();
             FlashNotification::success("Induction, {$course->name}, deleted successfully.");
 

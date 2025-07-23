@@ -29,6 +29,7 @@ class EquipmentResource extends JsonResource
             'room_display' => RoomOptions::getDisplayName($this->room),
             'ppe' => $this->present()->ppeLabels(),
             'photo_url' => $this->hasPhoto() ? $this->getPhotoUrl(0) : null,
+            'induction_category' => $this->induction_category,
             'urls' => [
                 'show' => route('equipment.show', $this->slug, false),
             ],

@@ -25,6 +25,7 @@ import {
     Alert,
 } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import { useForm } from "@inertiajs/react";
@@ -40,9 +41,16 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
+};
+
+type Induction = {
+    key: string;
+    trained: string;
+    is_trainer: boolean;
 };
 
 type Course = {
@@ -65,6 +73,7 @@ type Course = {
 
 type Props = {
     course: Course;
+    userInductions: Induction[];
     can: {
         update: boolean;
         delete: boolean;
@@ -76,9 +85,18 @@ type Props = {
     };
 };
 
-const Show = ({ course, can, urls }: Props) => {
+const Show = ({ course, userInductions = [], can, urls }: Props) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const { delete: destroy } = useForm();
+
+    // Calculate if user is trained on all equipment for this course
+    const isUserTrainedForCourse = course.equipment.length === 0 || 
+        course.equipment.every(equipment => {
+            // Check if user has induction for this equipment's category or slug
+            return userInductions.some(induction => 
+                induction.key === equipment.induction_category
+            );
+        });
 
     const handleDelete = () => {
         destroy(urls.destroy);
@@ -123,9 +141,19 @@ const Show = ({ course, can, urls }: Props) => {
 
                 <Card sx={{ mb: 4 }}>
                     <CardContent>
-                        <Typography variant="h4" component="h1" gutterBottom>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                            <Typography variant="h4" component="h1" sx={{ flexGrow: 1 }}>
                             {course.name}
                         </Typography>
+                            {isUserTrainedForCourse && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'success.main' }}>
+                                    <CheckCircleIcon />
+                                    <Typography variant="body2" color="success.main" fontWeight="medium">
+                                        Completed
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
 
                         {course.is_paused && (
                             <Alert
@@ -235,6 +263,9 @@ const Show = ({ course, can, urls }: Props) => {
                                             <TableCell>Status</TableCell>
                                             <TableCell align="center">
                                                 Dangerous
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                Trained
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -369,6 +400,25 @@ const Show = ({ course, can, urls }: Props) => {
                                                     {equipment.dangerous
                                                         ? "⚠️"
                                                         : ""}
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    {(() => {
+                                                        const induction = userInductions.find(induction => 
+                                                            induction.key === equipment.induction_category
+                                                        );
+                                                        
+                                                        if (induction) {
+                                                            return (
+                                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                        <CheckCircleIcon color="success" />
+                                                                    <Typography variant="caption" color="text.secondary">
+                                                                        {new Date(induction.trained).toLocaleDateString()}
+                                                                    </Typography>
+                                                                </Box>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })()}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
