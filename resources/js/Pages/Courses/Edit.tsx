@@ -24,6 +24,7 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
@@ -40,6 +41,10 @@ type CourseData = {
         frequency: { label: string; value: string };
         frequency_description: string;
         wait_time: string;
+        training_organisation_description: string | null;
+        schedule_url: string | null;
+        quiz_url: string | null;
+        request_induction_url: string | null;
         paused_at: string | null;
         is_paused: boolean;
         equipment: Equipment[];
@@ -78,6 +83,10 @@ const Edit = ({
         frequency: typeof course.data.frequency === 'object' ? course.data.frequency.value : course.data.frequency,
         frequency_description: course.data.frequency_description,
         wait_time: course.data.wait_time,
+        training_organisation_description: course.data.training_organisation_description || "",
+        schedule_url: course.data.schedule_url || "",
+        quiz_url: course.data.quiz_url || "",
+        request_induction_url: course.data.request_induction_url || "",
         equipment: course.equipment,
         paused: course.data.is_paused || false
     });

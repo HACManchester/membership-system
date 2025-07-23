@@ -23,10 +23,15 @@ import {
     Paper,
     Avatar,
     Alert,
+    ButtonGroup,
+    Stack,
 } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LaunchIcon from "@mui/icons-material/Launch";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
+import MarkdownRenderer from "../../Components/MarkdownRenderer";
 import { useForm } from "@inertiajs/react";
 
 type Equipment = {
@@ -40,9 +45,16 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
+};
+
+type Induction = {
+    key: string;
+    trained: string;
+    is_trainer: boolean;
 };
 
 type Course = {
@@ -55,6 +67,10 @@ type Course = {
     frequency: { label: string; value: string };
     frequency_description: string;
     wait_time: string;
+    training_organisation_description: string | null;
+    schedule_url: string | null;
+    quiz_url: string | null;
+    request_induction_url: string | null;
     paused_at: string | null;
     is_paused: boolean;
     equipment: Equipment[];
@@ -65,6 +81,7 @@ type Course = {
 
 type Props = {
     course: Course;
+    userInductions: Induction[];
     can: {
         update: boolean;
         delete: boolean;
@@ -76,9 +93,19 @@ type Props = {
     };
 };
 
-const Show = ({ course, can, urls }: Props) => {
+const Show = ({ course, userInductions = [], can, urls }: Props) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const { delete: destroy } = useForm();
+
+    // Calculate if user is trained on all equipment for this course
+    const isUserTrainedForCourse =
+        course.equipment.length === 0 ||
+        course.equipment.every((equipment) => {
+            // Check if user has induction for this equipment's category or slug
+            return userInductions.some(
+                (induction) => induction.key === equipment.induction_category
+            );
+        });
 
     const handleDelete = () => {
         destroy(urls.destroy);
@@ -123,9 +150,41 @@ const Show = ({ course, can, urls }: Props) => {
 
                 <Card sx={{ mb: 4 }}>
                     <CardContent>
-                        <Typography variant="h4" component="h1" gutterBottom>
-                            {course.name}
-                        </Typography>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2,
+                                mb: 2,
+                            }}
+                        >
+                            <Typography
+                                variant="h4"
+                                component="h1"
+                                sx={{ flexGrow: 1 }}
+                            >
+                                {course.name}
+                            </Typography>
+                            {isUserTrainedForCourse && (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        color: "success.main",
+                                    }}
+                                >
+                                    <CheckCircleIcon />
+                                    <Typography
+                                        variant="body2"
+                                        color="success.main"
+                                        fontWeight="medium"
+                                    >
+                                        Completed
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
 
                         {course.is_paused && (
                             <Alert
@@ -138,13 +197,12 @@ const Show = ({ course, can, urls }: Props) => {
                             </Alert>
                         )}
 
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{ mb: 3 }}
-                        >
-                            {course.description}
-                        </Typography>
+                        <Box sx={{ mb: 3 }}>
+                            <MarkdownRenderer
+                                content={course.description}
+                                variant="body1"
+                            />
+                        </Box>
 
                         <Box
                             sx={{
@@ -180,9 +238,10 @@ const Show = ({ course, can, urls }: Props) => {
                                     >
                                         About the Format
                                     </Typography>
-                                    <Typography variant="body2">
-                                        {course.format_description}
-                                    </Typography>
+                                    <MarkdownRenderer
+                                        content={course.format_description}
+                                        variant="body2"
+                                    />
                                 </Grid2>
                             )}
                             {course.frequency_description && (
@@ -193,14 +252,80 @@ const Show = ({ course, can, urls }: Props) => {
                                     >
                                         About the Schedule
                                     </Typography>
-                                    <Typography variant="body2">
-                                        {course.frequency_description}
-                                    </Typography>
+                                    <MarkdownRenderer
+                                        content={course.frequency_description}
+                                        variant="body2"
+                                    />
                                 </Grid2>
                             )}
                         </Grid2>
                     </CardContent>
                 </Card>
+
+                {(course.training_organisation_description ||
+                    course.schedule_url ||
+                    course.quiz_url ||
+                    course.request_induction_url) && (
+                    <Card sx={{ mb: 4 }}>
+                        <CardContent>
+                            <Typography
+                                variant="h5"
+                                component="h2"
+                                gutterBottom
+                            >
+                                How to Get Trained
+                            </Typography>
+
+                            {course.training_organisation_description && (
+                                <Box sx={{ mb: 3 }}>
+                                    <MarkdownRenderer
+                                        content={
+                                            course.training_organisation_description
+                                        }
+                                    />
+                                </Box>
+                            )}
+
+                            <Stack direction="row" spacing={2}>
+                                {course.schedule_url && (
+                                    <Button
+                                        variant="contained"
+                                        href={course.schedule_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        endIcon={<LaunchIcon />}
+                                    >
+                                        View Training Schedule
+                                    </Button>
+                                )}
+
+                                {course.quiz_url && (
+                                    <Button
+                                        variant="contained"
+                                        href={course.quiz_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        endIcon={<LaunchIcon />}
+                                    >
+                                        Take Online Quiz
+                                    </Button>
+                                )}
+
+                                {course.request_induction_url && (
+                                    <Button
+                                        variant="contained"
+                                        href={course.request_induction_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        endIcon={<LaunchIcon />}
+                                    >
+                                        Request Training
+                                    </Button>
+                                )}
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {course.equipment.length > 0 && (
                     <Card>
@@ -235,6 +360,9 @@ const Show = ({ course, can, urls }: Props) => {
                                             <TableCell>Status</TableCell>
                                             <TableCell align="center">
                                                 Dangerous
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                Trained
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -369,6 +497,43 @@ const Show = ({ course, can, urls }: Props) => {
                                                     {equipment.dangerous
                                                         ? "⚠️"
                                                         : ""}
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    {(() => {
+                                                        const induction =
+                                                            userInductions.find(
+                                                                (induction) =>
+                                                                    induction.key ===
+                                                                    equipment.induction_category
+                                                            );
+
+                                                        if (induction) {
+                                                            return (
+                                                                <Box
+                                                                    sx={{
+                                                                        display:
+                                                                            "flex",
+                                                                        flexDirection:
+                                                                            "column",
+                                                                        alignItems:
+                                                                            "center",
+                                                                        gap: 0.5,
+                                                                    }}
+                                                                >
+                                                                    <CheckCircleIcon color="success" />
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="text.secondary"
+                                                                    >
+                                                                        {new Date(
+                                                                            induction.trained
+                                                                        ).toLocaleDateString()}
+                                                                    </Typography>
+                                                                </Box>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })()}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
