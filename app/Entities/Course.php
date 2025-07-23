@@ -27,6 +27,10 @@ class Course extends Model
         'frequency', // self-serve (quiz), regular, ad-hoc
         'frequency_description',
         'wait_time', // Free-text, but conventional format. "1-2 weeks"
+        'training_organisation_description',
+        'schedule_url',
+        'quiz_url',
+        'request_induction_url',
         'paused_at',
     ];
 

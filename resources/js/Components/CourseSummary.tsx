@@ -3,6 +3,7 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import PauseIcon from "@mui/icons-material/Pause";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ReactMarkdown from "react-markdown";
 
 import {
     Typography,
@@ -156,14 +157,34 @@ const CourseSummary = ({
                         )}
 
                         <Typography color="text.secondary" sx={{ mb: 2 }}>
-                            {course.description
-                                ? course.description.length > 120
-                                    ? `${course.description.substring(
-                                          0,
-                                          120
-                                      )}...`
-                                    : course.description
-                                : "Induction description will appear here..."}
+                            {course.description ? (
+                                <ReactMarkdown
+                                    components={{
+                                        p: ({ children }) => children,
+                                        h1: ({ children }) => children,
+                                        h2: ({ children }) => children,
+                                        h3: ({ children }) => children,
+                                        h4: ({ children }) => children,
+                                        h5: ({ children }) => children,
+                                        h6: ({ children }) => children,
+                                        strong: ({ children }) => children,
+                                        em: ({ children }) => children,
+                                        a: ({ children }) => children,
+                                        code: ({ children }) => children,
+                                        pre: ({ children }) => children,
+                                        blockquote: ({ children }) => children,
+                                        ul: ({ children }) => children,
+                                        ol: ({ children }) => children,
+                                        li: ({ children }) => children,
+                                        br: () => " ",
+                                        hr: () => "",
+                                    }}
+                                >
+                                    {course.description}
+                                </ReactMarkdown>
+                            ) : (
+                                "Induction description will appear here..."
+                            )}
                         </Typography>
 
                         <Stack spacing={1}>

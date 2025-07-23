@@ -24,6 +24,7 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
@@ -54,6 +55,10 @@ const Create = ({
         frequency: "",
         frequency_description: "",
         wait_time: "",
+        training_organisation_description: "",
+        schedule_url: "",
+        quiz_url: "",
+        request_induction_url: "",
         equipment: [] as number[],
         paused: false
     });

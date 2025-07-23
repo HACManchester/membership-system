@@ -22,8 +22,8 @@ type Equipment = {
     working: boolean;
     permaloan: boolean;
     dangerous: boolean;
-    room: string;
-    room_display: string;
+    room: string | null;
+    room_display: string | null;
     ppe: string[];
     photo_url: string | null;
     induction_category: string | null;
@@ -48,6 +48,10 @@ type Course = {
     frequency: { label: string; value: string };
     frequency_description: string;
     wait_time: string;
+    training_organisation_description: string | null;
+    schedule_url: string | null;
+    quiz_url: string | null;
+    request_induction_url: string | null;
     paused_at: string | null;
     is_paused: boolean;
     equipment: Equipment[];
@@ -118,7 +122,7 @@ const Index = ({
     const allRooms = [
         ...new Set(
             filteredCourses.flatMap((course) =>
-                course.equipment.map((e) => e.room_display)
+                course.equipment.map((e) => e.room_display || "Not assigned to a room")
             )
         ),
     ].sort();
@@ -126,7 +130,7 @@ const Index = ({
     const groupedCourses = allRooms.reduce<Record<string, Course[]>>(
         (acc, room) => {
             acc[room] = filteredCourses.filter((course) =>
-                course.equipment.some((e) => e.room_display === room)
+                course.equipment.some((e) => (e.room_display || "Not assigned to a room") === room)
             );
             return acc;
         },

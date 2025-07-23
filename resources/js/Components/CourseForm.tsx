@@ -10,7 +10,11 @@ import {
     MenuItem,
     FormControlLabel,
     Switch,
+    Typography,
+    Divider,
+    Box,
 } from "@mui/material";
+import MarkdownTextField from "./MarkdownTextField";
 
 type Equipment = {
     id: number;
@@ -23,6 +27,7 @@ type Equipment = {
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
+    induction_category: string | null;
     urls: {
         show: string;
     };
@@ -37,6 +42,10 @@ type FormData = {
     frequency: string;
     frequency_description: string;
     wait_time: string;
+    training_organisation_description: string;
+    schedule_url: string;
+    quiz_url: string;
+    request_induction_url: string;
     equipment: number[];
     paused: boolean;
 };
@@ -81,6 +90,13 @@ const CourseForm = ({
     return (
         <form onSubmit={onSubmit}>
             <Grid2 container spacing={3}>
+                {/* Basic Information Section */}
+                <Grid2 size={12}>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                        Basic Information
+                    </Typography>
+                </Grid2>
+
                 <Grid2 size={12}>
                     <TextField
                         label="Name"
@@ -109,20 +125,28 @@ const CourseForm = ({
                 </Grid2>
 
                 <Grid2 size={12}>
-                    <TextField
+                    <MarkdownTextField
                         label="Description"
                         value={data.description}
                         onChange={(e) => setData("description", e.target.value)}
-                        fullWidth
-                        multiline
-                        rows={3}
                         required
                         error={!!errors.description}
-                        helperText={errors.description}
+                        helperText={errors.description || "Brief introduction to the induction, what it covers, how the session will be run, etc. Supports markdown formatting."}
+                        rows={3}
                     />
                 </Grid2>
 
-                <Grid2 size={12}>
+                {/* Training Format & Schedule Section */}
+                <Grid2 size={12} sx={{ mt: 3 }}>
+                    <Divider />
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h6" component="h3" gutterBottom>
+                            Training Format & Schedule
+                        </Typography>
+                    </Box>
+                </Grid2>
+
+                <Grid2 size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth error={!!errors.format}>
                         <InputLabel>Format</InputLabel>
                         <Select
@@ -142,18 +166,7 @@ const CourseForm = ({
                     </FormControl>
                 </Grid2>
 
-                <Grid2 size={12}>
-                    <TextField
-                        label="Format Description"
-                        value={data.format_description}
-                        onChange={(e) => setData("format_description", e.target.value)}
-                        fullWidth
-                        error={!!errors.format_description}
-                        helperText={errors.format_description}
-                    />
-                </Grid2>
-
-                <Grid2 size={12}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth error={!!errors.frequency}>
                         <InputLabel>Frequency</InputLabel>
                         <Select
@@ -174,13 +187,24 @@ const CourseForm = ({
                 </Grid2>
 
                 <Grid2 size={12}>
-                    <TextField
+                    <MarkdownTextField
+                        label="Format Description"
+                        value={data.format_description}
+                        onChange={(e) => setData("format_description", e.target.value)}
+                        error={!!errors.format_description}
+                        helperText={errors.format_description || "e.g. 'In-person workshop', 'Online webinar', etc. Supports markdown formatting."}
+                        rows={2}
+                    />
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <MarkdownTextField
                         label="Frequency Description"
                         value={data.frequency_description}
                         onChange={(e) => setData("frequency_description", e.target.value)}
-                        fullWidth
                         error={!!errors.frequency_description}
-                        helperText={errors.frequency_description}
+                        helperText={errors.frequency_description || "e.g. 'Weekly on Mondays at 7pm'. Supports markdown formatting."}
+                        rows={2}
                     />
                 </Grid2>
 
@@ -194,6 +218,73 @@ const CourseForm = ({
                         error={!!errors.wait_time}
                         helperText={errors.wait_time || 'e.g. "1-2 weeks"'}
                     />
+                </Grid2>
+
+                {/* Training Organization Section */}
+                <Grid2 size={12} sx={{ mt: 3 }}>
+                    <Divider />
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h6" component="h3" gutterBottom>
+                            How to Get Trained
+                        </Typography>
+                    </Box>
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <MarkdownTextField
+                        label="How to Organise Training"
+                        value={data.training_organisation_description}
+                        onChange={(e) => setData("training_organisation_description", e.target.value)}
+                        error={!!errors.training_organisation_description}
+                        helperText={errors.training_organisation_description || "Instructions to members on how to become trained. E.g. Whether to ask on forum or Telegram, any prerequisites they need to fulfil, etc. Supports markdown formatting."}
+                        rows={3}
+                    />
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <TextField
+                        label="Schedule URL"
+                        value={data.schedule_url}
+                        onChange={(e) => setData("schedule_url", e.target.value)}
+                        fullWidth
+                        type="url"
+                        error={!!errors.schedule_url}
+                        helperText={errors.schedule_url || "Link to forum thread, category, or google sheet where training slots are announced (optional)"}
+                    />
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <TextField
+                        label="Quiz URL"
+                        value={data.quiz_url}
+                        onChange={(e) => setData("quiz_url", e.target.value)}
+                        fullWidth
+                        type="url"
+                        error={!!errors.quiz_url}
+                        helperText={errors.quiz_url || "Link to online quiz if applicable (optional)"}
+                    />
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <TextField
+                        label="Request Training URL"
+                        value={data.request_induction_url}
+                        onChange={(e) => setData("request_induction_url", e.target.value)}
+                        fullWidth
+                        type="url"
+                        error={!!errors.request_induction_url}
+                        helperText={errors.request_induction_url || "Link to forum thread for members to request training sessions. We prefer the forum over Telegram, as not every member has or is comfortable using Telegram. (optional)"}
+                    />
+                </Grid2>
+
+                {/* Equipment & Status Section */}
+                <Grid2 size={12} sx={{ mt: 3 }}>
+                    <Divider />
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h6" component="h3" gutterBottom>
+                            Equipment & Status
+                        </Typography>
+                    </Box>
                 </Grid2>
 
                 <Grid2 size={12}>
@@ -239,13 +330,13 @@ const CourseForm = ({
                     )}
                 </Grid2>
 
-                <Grid2 size={12}>
+                <Grid2 size={12} sx={{ mt: 4 }}>
                     <Button
                         type="submit"
                         variant="contained"
                         color="primary"
                         disabled={processing}
-                        sx={{ mt: 2 }}
+                        size="large"
                     >
                         {submitLabel}
                     </Button>
