@@ -18,15 +18,26 @@ class InductionMarkedAsTrainerNotification extends AbstractInductionNotification
      */
     public function toMail($notifiable)
     {
-        $equipmentNames = $this->equipment->pluck('name')->implode(', ');
+        // Use course-based messaging when courses are live and we have a course
+        if (\BB\Entities\Course::isLive() && $this->course) {
+            $mailMessage = (new MailMessage)
+                ->subject("You're a trainer for {$this->course->name}!")
+                ->line("You can now start training others for the {$this->course->name} course!")
+                ->line("Visit the course training page to manage training requests and contact those awaiting training.");
 
-        $mailMessage = (new MailMessage)
-            ->subject("You're a trainer on {$equipmentNames}!")
-            ->line("You can now start training others on {$equipmentNames}!")
-            ->line("Visit the equipment page to manage training, and contact those awaiting training");
+            $mailMessage->action("View {$this->course->name} Training", route('courses.training.index', $this->course));
+        } else {
+            // Fall back to equipment-based messaging
+            $equipmentNames = $this->equipment->pluck('name')->implode(', ');
 
-        foreach ($this->equipment as $equipment) {
-            $mailMessage->action("View {$equipment->name} page",  route('equipment.show', $equipment->slug));
+            $mailMessage = (new MailMessage)
+                ->subject("You're a trainer on {$equipmentNames}!")
+                ->line("You can now start training others on {$equipmentNames}!")
+                ->line("Visit the equipment page to manage training, and contact those awaiting training");
+
+            foreach ($this->equipment as $equipment) {
+                $mailMessage->action("View {$equipment->name} page",  route('equipment.show', $equipment->slug));
+            }
         }
 
         return $mailMessage;

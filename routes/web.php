@@ -274,4 +274,10 @@ Route::group(array('middleware' => 'role:admin'), function () {
     Route::get('notification-preview/induction-marked-as-trainer', ['uses' => 'NotificationPreviewController@inductionMarkedAsTrainer', 'as' => 'notification-preview.induction-marked-as-trainer']);
     Route::get('notification-preview/inductee-induction-requested', ['uses' => 'NotificationPreviewController@inducteeInductionRequested', 'as' => 'notification-preview.inductee-induction-requested']);
     Route::get('notification-preview/trainer-induction-requested', ['uses' => 'NotificationPreviewController@trainerInductionRequested', 'as' => 'notification-preview.trainer-induction-requested']);
+    
+    // Course-based notification previews
+    Route::get('notification-preview/course-induction-completed', ['uses' => 'NotificationPreviewController@courseInductionCompleted', 'as' => 'notification-preview.course-induction-completed']);
+    Route::get('notification-preview/course-induction-marked-as-trainer', ['uses' => 'NotificationPreviewController@courseInductionMarkedAsTrainer', 'as' => 'notification-preview.course-induction-marked-as-trainer']);
+    Route::get('notification-preview/course-inductee-induction-requested', ['uses' => 'NotificationPreviewController@courseInducteeInductionRequested', 'as' => 'notification-preview.course-inductee-induction-requested']);
+    Route::get('notification-preview/course-trainer-induction-requested', ['uses' => 'NotificationPreviewController@courseTrainerInductionRequested', 'as' => 'notification-preview.course-trainer-induction-requested']);
 });

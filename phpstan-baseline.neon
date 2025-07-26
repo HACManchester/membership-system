@@ -696,21 +696,6 @@ parameters:
 			path: app/Listeners/EmailMemberAboutDeclinedPhoto.php
 
 		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
-			count: 1
-			path: app/Listeners/Notifications/Inductions/InductionCompletedListener.php
-
-		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
-			count: 1
-			path: app/Listeners/Notifications/Inductions/InductionMarkedAsTrainerListener.php
-
-		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
-			count: 2
-			path: app/Listeners/Notifications/Inductions/InductionRequestedListener.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Notifications/ErrorNotification.php
@@ -719,11 +704,6 @@ parameters:
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$name\\.$#"
 			count: 1
 			path: app/Notifications/ErrorNotification.php
-
-		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\Induction\\:\\:\\$user\\.$#"
-			count: 1
-			path: app/Notifications/Inductions/Trainers/InductionRequestedNotification.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
@@ -764,7 +744,6 @@ parameters:
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: app/Process/CheckLeavingUsers.php
-
 
 		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$events$#"

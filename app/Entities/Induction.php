@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
  * Class Induction
  *
  * @property bool $trained
+ * @property int|null $course_id
+ * @property Course|null $course
+ * @property User $user
+ * @property User|null $trainerUser
+ * @property \Carbon\Carbon|null $sign_off_requested_at
  * @package BB\Entities
  */
 class Induction extends Model

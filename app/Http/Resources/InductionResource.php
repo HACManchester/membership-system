@@ -31,7 +31,7 @@ class InductionResource extends JsonResource
         ];
 
         // Include user information when loaded
-        if ($this->relationLoaded('user') && $this->user) {
+        if ($this->relationLoaded('user')) {
             $data['user'] = [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
@@ -41,14 +41,14 @@ class InductionResource extends JsonResource
         }
 
         // Include trainer information when loaded
-        if ($this->relationLoaded('trainerUser') && $this->trainerUser) {
+        if ($this->relationLoaded('trainerUser')) {
             $data['trainer'] = [
                 'id' => $this->trainerUser->id,
                 'name' => $this->trainerUser->name,
             ];
         }
 
-        if ($this->relationLoaded('course') && $this->course && $this->user) {
+        if ($this->relationLoaded('course') && $this->relationLoaded('user')) {
             $data['urls'] = [
                 'train' => route('courses.training.train', ['course' => $this->course, 'user' => $this->user], false),
                 'untrain' => route('courses.training.untrain', ['course' => $this->course, 'user' => $this->user], false),

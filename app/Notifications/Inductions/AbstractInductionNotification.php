@@ -3,6 +3,7 @@
 namespace BB\Notifications\Inductions;
 
 use BB\Entities\Induction;
+use BB\Entities\Course;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,6 +20,9 @@ abstract class AbstractInductionNotification extends Notification
     /** @var Collection */
     protected $equipment;
 
+    /** @var Course|null */
+    protected $course;
+
     /**
      * Create a new notification instance.
      *
@@ -28,6 +32,7 @@ abstract class AbstractInductionNotification extends Notification
     {
         $this->induction = $induction;
         $this->equipment = $equipment;
+        $this->course = $induction->course;
     }
 
     /**
