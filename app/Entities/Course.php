@@ -47,7 +47,7 @@ class Course extends Model
 
     public function inductions()
     {
-        return $this->hasMany(Induction::class, 'key', 'slug');
+        return $this->hasMany(Induction::class);
     }
 
     public static function formatOptions()

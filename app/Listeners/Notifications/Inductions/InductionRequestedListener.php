@@ -39,6 +39,9 @@ class InductionRequestedListener
      */
     public function handle(InductionRequestedEvent $event)
     {
+        // Load the course relationship
+        $event->induction->load('course');
+        
         $inductionKey = $event->induction->key;
         $equipment = $this->equipmentRepository->findByInductionCategory($inductionKey);
 

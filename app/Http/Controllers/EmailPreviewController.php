@@ -34,6 +34,10 @@ class EmailPreviewController extends Controller
             'Marked as Trainer' => route('notification-preview.induction-marked-as-trainer'),
             'Induction Requested (Inductee)' => route('notification-preview.inductee-induction-requested'),
             'Induction Requested (Trainer)' => route('notification-preview.trainer-induction-requested'),
+            'Course: Induction Completed' => route('notification-preview.course-induction-completed'),
+            'Course: Marked as Trainer' => route('notification-preview.course-induction-marked-as-trainer'),
+            'Course: Induction Requested (Inductee)' => route('notification-preview.course-inductee-induction-requested'),
+            'Course: Induction Requested (Trainer)' => route('notification-preview.course-trainer-induction-requested'),
         ];
 
         return view('email-preview.index', compact('emails', 'notifications'));

@@ -17,9 +17,12 @@ class InductionController extends Controller
     {
         $userId = $request->input('user_id', \Auth::user()->id);
 
+        $course = $equipment->courses->first();
+
         $induction = Induction::create([
             'user_id' => $userId,
-            'key' => $equipment->induction_category,
+            'key' => $equipment->induction_category, // Keep for backwards compatibility
+            'course_id' => $course ? $course->id : null,
         ]);
 
         \Event::dispatch(new InductionRequestedEvent($induction));

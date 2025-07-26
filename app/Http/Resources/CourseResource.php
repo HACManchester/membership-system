@@ -17,7 +17,7 @@ class CourseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
@@ -44,5 +44,18 @@ class CourseResource extends JsonResource
                 'show' => route('courses.show', $this->slug, false),
             ],
         ];
+        
+        // Include user course induction status when user is authenticated
+        if (auth()->check()) {
+            $inductionRepo = app(\BB\Repo\InductionRepository::class);
+            $userCourseInduction = $inductionRepo->getUserForCourse(auth()->user()->id, $this->id);
+            $data['user_course_induction'] = $userCourseInduction ? new InductionResource($userCourseInduction) : null;
+            
+            // Include trainers for this course
+            $trainers = $inductionRepo->getTrainersForCourse($this->id);
+            $data['trainers'] = InductionResource::collection($trainers);
+        }
+        
+        return $data;
     }
 }

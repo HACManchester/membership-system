@@ -14,98 +14,48 @@ import {
     CardContent,
     Chip,
     Link,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Avatar,
     Alert,
-    ButtonGroup,
-    Stack,
 } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import LaunchIcon from "@mui/icons-material/Launch";
+import SchoolIcon from "@mui/icons-material/School";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import MarkdownRenderer from "../../Components/MarkdownRenderer";
-import { useForm } from "@inertiajs/react";
-
-type Equipment = {
-    id: number;
-    name: string;
-    slug: string;
-    working: boolean;
-    permaloan: boolean;
-    dangerous: boolean;
-    room: string | null;
-    room_display: string | null;
-    ppe: string[];
-    photo_url: string | null;
-    induction_category: string | null;
-    urls: {
-        show: string;
-    };
-};
-
-type Induction = {
-    key: string;
-    trained: string;
-    is_trainer: boolean;
-};
-
-type Course = {
-    id: number;
-    name: string;
-    slug: string;
-    description: string;
-    format: { label: string; value: string };
-    format_description: string;
-    frequency: { label: string; value: string };
-    frequency_description: string;
-    wait_time: string;
-    training_organisation_description: string | null;
-    schedule_url: string | null;
-    quiz_url: string | null;
-    request_induction_url: string | null;
-    paused_at: string | null;
-    is_paused: boolean;
-    equipment: Equipment[];
-    urls: {
-        show: string;
-    };
-};
+import { useForm, router } from "@inertiajs/react";
+import { InductionResource, CourseResource, EquipmentResource } from "../../types/resources";
+import RequestSignOffButton from "../../Components/RequestSignOffButton";
+import CourseTrainersSection from "../../Components/Courses/CourseTrainersSection";
+import EquipmentAccessTable from "../../Components/Courses/EquipmentAccessTable";
+import TrainingInstructionsSection from "../../Components/Courses/TrainingInstructionsSection";
 
 type Props = {
-    course: Course;
-    userInductions: Induction[];
+    course: CourseResource;
+    userCourseInduction: InductionResource | null;
     can: {
         update: boolean;
         delete: boolean;
+        viewTraining: boolean;
     };
     urls: {
         index: string;
         edit: string;
         destroy: string;
+        training: string;
+        requestSignOff: string | null;
     };
 };
 
-const Show = ({ course, userInductions = [], can, urls }: Props) => {
+const Show = ({
+    course,
+    userCourseInduction,
+    can,
+    urls,
+}: Props) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const { delete: destroy } = useForm();
 
-    // Calculate if user is trained on all equipment for this course
-    const isUserTrainedForCourse =
-        course.equipment.length === 0 ||
-        course.equipment.every((equipment) => {
-            // Check if user has induction for this equipment's category or slug
-            return userInductions.some(
-                (induction) => induction.key === equipment.induction_category
-            );
-        });
+    const isUserTrainedForCourse = userCourseInduction?.trained != null && userCourseInduction.trained !== '';
 
     const handleDelete = () => {
         destroy(urls.destroy);
@@ -114,6 +64,17 @@ const Show = ({ course, userInductions = [], can, urls }: Props) => {
 
     const actionButtons = (
         <Box sx={{ display: "flex", gap: 2 }}>
+            {can.viewTraining && (
+                <Link href={urls.training} underline="none">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<SchoolIcon />}
+                    >
+                        Manage Training
+                    </Button>
+                </Link>
+            )}
             {can.update && (
                 <Link href={urls.edit} underline="none">
                     <Button variant="contained" color="secondary">
@@ -262,287 +223,19 @@ const Show = ({ course, userInductions = [], can, urls }: Props) => {
                     </CardContent>
                 </Card>
 
-                {(course.training_organisation_description ||
-                    course.schedule_url ||
-                    course.quiz_url ||
-                    course.request_induction_url) && (
-                    <Card sx={{ mb: 4 }}>
-                        <CardContent>
-                            <Typography
-                                variant="h5"
-                                component="h2"
-                                gutterBottom
-                            >
-                                How to Get Trained
-                            </Typography>
+                <CourseTrainersSection trainers={course.trainers || []} />
 
-                            {course.training_organisation_description && (
-                                <Box sx={{ mb: 3 }}>
-                                    <MarkdownRenderer
-                                        content={
-                                            course.training_organisation_description
-                                        }
-                                    />
-                                </Box>
-                            )}
+                <TrainingInstructionsSection
+                    course={course}
+                    userCourseInduction={userCourseInduction}
+                    requestSignOffUrl={urls.requestSignOff}
+                />
 
-                            <Stack direction="row" spacing={2}>
-                                {course.schedule_url && (
-                                    <Button
-                                        variant="contained"
-                                        href={course.schedule_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        endIcon={<LaunchIcon />}
-                                    >
-                                        View Training Schedule
-                                    </Button>
-                                )}
-
-                                {course.quiz_url && (
-                                    <Button
-                                        variant="contained"
-                                        href={course.quiz_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        endIcon={<LaunchIcon />}
-                                    >
-                                        Take Online Quiz
-                                    </Button>
-                                )}
-
-                                {course.request_induction_url && (
-                                    <Button
-                                        variant="contained"
-                                        href={course.request_induction_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        endIcon={<LaunchIcon />}
-                                    >
-                                        Request Training
-                                    </Button>
-                                )}
-                            </Stack>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {course.equipment.length > 0 && (
-                    <Card>
-                        <CardContent>
-                            <Typography
-                                variant="h5"
-                                component="h2"
-                                gutterBottom
-                            >
-                                Equipment Access
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                color="text.secondary"
-                                sx={{ mb: 3 }}
-                            >
-                                Completing this induction will grant you access
-                                to the following equipment:
-                            </Typography>
-
-                            <TableContainer
-                                component={Paper}
-                                variant="outlined"
-                            >
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell></TableCell>
-                                            <TableCell>Name</TableCell>
-                                            <TableCell>Location</TableCell>
-                                            <TableCell>PPE Required</TableCell>
-                                            <TableCell>Status</TableCell>
-                                            <TableCell align="center">
-                                                Dangerous
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                Trained
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {course.equipment.map((equipment) => (
-                                            <TableRow key={equipment.id}>
-                                                <TableCell>
-                                                    {equipment.photo_url ? (
-                                                        <Avatar
-                                                            src={
-                                                                equipment.photo_url
-                                                            }
-                                                            alt={equipment.name}
-                                                            variant="rounded"
-                                                            sx={{
-                                                                width: 60,
-                                                                height: 60,
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <Avatar
-                                                            variant="rounded"
-                                                            sx={{
-                                                                width: 60,
-                                                                height: 60,
-                                                                bgcolor:
-                                                                    "grey.300",
-                                                            }}
-                                                        >
-                                                            🔧
-                                                        </Avatar>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Link
-                                                        href={
-                                                            equipment.urls.show
-                                                        }
-                                                        underline="hover"
-                                                    >
-                                                        <Typography
-                                                            variant="body2"
-                                                            fontWeight="medium"
-                                                        >
-                                                            {equipment.name}
-                                                        </Typography>
-                                                    </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Typography variant="body2">
-                                                        {equipment.room_display && (
-                                                            <Box
-                                                                component="span"
-                                                                sx={{
-                                                                    fontWeight:
-                                                                        "medium",
-                                                                }}
-                                                            >
-                                                                {
-                                                                    equipment.room_display
-                                                                }
-                                                            </Box>
-                                                        )}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {equipment.ppe.length >
-                                                        0 && (
-                                                        <Box
-                                                            sx={{
-                                                                display: "flex",
-                                                                flexWrap:
-                                                                    "wrap",
-                                                                gap: 0.5,
-                                                            }}
-                                                        >
-                                                            {equipment.ppe.map(
-                                                                (
-                                                                    item,
-                                                                    index
-                                                                ) => (
-                                                                    <Chip
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        label={
-                                                                            item
-                                                                        }
-                                                                        size="small"
-                                                                        variant="outlined"
-                                                                        color="info"
-                                                                    />
-                                                                )
-                                                            )}
-                                                        </Box>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            flexWrap: "wrap",
-                                                            gap: 0.5,
-                                                        }}
-                                                    >
-                                                        {equipment.working ? (
-                                                            <Chip
-                                                                label="Working"
-                                                                size="small"
-                                                                color="success"
-                                                                variant="filled"
-                                                            />
-                                                        ) : (
-                                                            <Chip
-                                                                label="Out of action"
-                                                                size="small"
-                                                                color="error"
-                                                                variant="filled"
-                                                            />
-                                                        )}
-                                                        {equipment.permaloan ? (
-                                                            <Chip
-                                                                label="Permaloan"
-                                                                size="small"
-                                                                color="warning"
-                                                                variant="filled"
-                                                            />
-                                                        ) : null}
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {equipment.dangerous
-                                                        ? "⚠️"
-                                                        : ""}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {(() => {
-                                                        const induction =
-                                                            userInductions.find(
-                                                                (induction) =>
-                                                                    induction.key ===
-                                                                    equipment.induction_category
-                                                            );
-
-                                                        if (induction) {
-                                                            return (
-                                                                <Box
-                                                                    sx={{
-                                                                        display:
-                                                                            "flex",
-                                                                        flexDirection:
-                                                                            "column",
-                                                                        alignItems:
-                                                                            "center",
-                                                                        gap: 0.5,
-                                                                    }}
-                                                                >
-                                                                    <CheckCircleIcon color="success" />
-                                                                    <Typography
-                                                                        variant="caption"
-                                                                        color="text.secondary"
-                                                                    >
-                                                                        {new Date(
-                                                                            induction.trained
-                                                                        ).toLocaleDateString()}
-                                                                    </Typography>
-                                                                </Box>
-                                                            );
-                                                        }
-                                                        return null;
-                                                    })()}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </CardContent>
-                    </Card>
-                )}
+                <EquipmentAccessTable
+                    equipment={course.equipment}
+                    userCourseInduction={userCourseInduction}
+                    isUserTrained={isUserTrainedForCourse}
+                />
 
                 <Dialog
                     open={deleteModalOpen}
