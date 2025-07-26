@@ -163,7 +163,22 @@ Route::resource('maintainer_groups', 'MaintainerGroupController');
 # Induction courses
 ##########################
 
-Route::resource('courses', 'CourseController');
+Route::group(['middleware' => 'role:member'], function() {
+    Route::resource('courses', 'CourseController');
+
+    Route::group(['prefix' => 'courses/{course}', 'as' => 'courses.'], function() {
+        Route::post('/request-sign-off', ['uses' => 'CourseInductionController@store', 'as' => 'request-sign-off']);
+    });
+
+    Route::group(['prefix' => 'courses/{course}/training', 'as' => 'courses.training.'], function() {
+        Route::get('/', ['uses' => 'CourseTrainingController@index', 'as' => 'index']);
+        Route::post('/bulk-train', ['uses' => 'CourseTrainingController@bulkTrain', 'as' => 'bulk-train']);
+        Route::post('/train/{user}', ['uses' => 'CourseTrainingController@train', 'as' => 'train']);
+        Route::post('/untrain/{user}', ['uses' => 'CourseTrainingController@untrain', 'as' => 'untrain']);
+        Route::post('/promote/{user}', ['uses' => 'CourseTrainingController@promote', 'as' => 'promote']);
+        Route::post('/demote/{user}', ['uses' => 'CourseTrainingController@demote', 'as' => 'demote']);
+    });
+});
 
 ##########################
 # Notifications

@@ -149,4 +149,122 @@ class InductionRepository extends DBRepository
             ->whereNotNull('trained')
             ->get();
     }
+    
+    /**
+     * Course-based methods for new system
+     */
+    
+    /**
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getTrainersForCourse($courseId)
+    {
+        $trainers = $this->model->with('user', 'user.profile')
+            ->where('is_trainer', true)
+            ->where('course_id', $courseId)
+            ->get();
+        return $trainers->filter(function ($trainer) {
+            return $trainer->user && $trainer->user->active;
+        });
+    }
+    
+    /**
+     * @param $user
+     * @param int $courseId
+     * @return bool
+     */
+    public function isTrainerForCourse($user, $courseId)
+    {
+        return $this->model->where('user_id', $user->id)
+            ->where('course_id', $courseId)
+            ->where('is_trainer', 1)
+            ->count() > 0;
+    }
+    
+    /**
+     * @param int $courseId
+     * @return mixed
+     */
+    public function getTrainedUsersForCourse($courseId)
+    {
+        $users = $this->model->with('user', 'user.profile', 'trainerUser')
+            ->whereNotNull('trained')
+            ->where('course_id', $courseId)
+            ->orderBy('trained', 'desc')
+            ->get();
+        return $users->filter(function ($trainer) {
+            return $trainer->user && $trainer->user->active;
+        });
+    }
+    
+    /**
+     * @param int $courseId
+     * @return mixed
+     */
+    public function getUsersPendingInductionForCourse($courseId)
+    {
+        $users = $this->model->with('user', 'user.profile')
+            ->where('course_id', $courseId)
+            ->whereNull('trained')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return $users->filter(function ($trainer) {
+            return $trainer->user && $trainer->user->active;
+        });
+    }
+    
+    /**
+     * @param int $userId
+     * @param int $courseId
+     * @return bool
+     */
+    public function isUserTrainedForCourse($userId, $courseId)
+    {
+        $record = $this->model->with('user', 'user.profile')
+            ->whereNotNull('trained')
+            ->where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->first();
+        return (bool)$record;
+    }
+    
+    /**
+     * @param int $userId
+     * @param int $courseId
+     * @return mixed
+     */
+    public function getUserForCourse($userId, $courseId)
+    {
+        $record = $this->model->with('user', 'user.profile')
+            ->where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->first();
+        if ($record) {
+            return $record;
+        }
+        return false;
+    }
+    
+    /**
+     * Get users with pending sign-off requests for a course (within expiration window)
+     * 
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getUsersPendingSignOffForCourse($courseId)
+    {
+        $expirationHours = Induction::SIGN_OFF_EXPIRATION_HOURS;
+        
+        $users = $this->model->with('user', 'user.profile')
+            ->where('course_id', $courseId)
+            ->whereNotNull('sign_off_requested_at')
+            ->where('sign_off_requested_at', '>=', Carbon::now()->subHours($expirationHours))
+            ->whereNull('trained')
+            ->orderBy('sign_off_requested_at', 'asc')
+            ->get();
+        return $users->filter(function ($induction) {
+            return $induction->user && $induction->user->active;
+        });
+    }
 }

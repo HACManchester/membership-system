@@ -118,6 +118,25 @@ class CoursePolicy
         return false;
     }
 
+    public function viewTraining(User $user, Course $course)
+    {
+        $inductionRepo = app(\BB\Repo\InductionRepository::class);
+        return $inductionRepo->isTrainerForCourse($user, $course->id);
+    }
+
+    public function train(User $user, Course $course)
+    {
+        $inductionRepo = app(\BB\Repo\InductionRepository::class);
+        return $inductionRepo->isTrainerForCourse($user, $course->id);
+    }
+
+    public function requestSignOff(User $user, Course $course)
+    {
+        // Users can request sign-off for themselves if course is not paused
+        return !$course->isPaused();
+    }
+
+
     protected function isMaintainerOrCoordinator(User $user, Course $course)
     {
         $maintainerGroups = $course->equipment->map(function ($equipment) {

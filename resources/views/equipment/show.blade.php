@@ -67,22 +67,32 @@
                                 <h3>This tool requires an induction</h3>
                                 <ul>
                                     <li>An induction is required before you may use this tool.</li>
-                                    <li>Inductions are given by other members, request an induction for details on next steps.</li>
+                                    @if (\BB\Entities\Course::isLive() && $equipment->courses->count() > 0)
+                                        <li>Training for this equipment is covered by:
+                                            @foreach($equipment->courses as $course)
+                                                <a href="{{ route('courses.show', $course) }}">{{ $course->name }}</a>@if(!$loop->last), @endif
+                                            @endforeach
+                                        </li>
+                                    @else
+                                        <li>Inductions are given by other members, request an induction for details on next steps.</li>
+                                    @endif
                                 </ul>
                                 
-                                @if ($equipment->accepting_inductions)
-                                    @if(Auth::user()->online_only)
-                                        <h4>Online Only members may not use tools or request inductions.</h4>
+                                @if (!\BB\Entities\Course::isLive())
+                                    @if ($equipment->accepting_inductions)
+                                        @if(Auth::user()->online_only)
+                                            <h4>Online Only members may not use tools or request inductions.</h4>
+                                        @else
+                                            <form method="POST" action="{{ route('equipment_training.create', ['equipment' => $equipment]) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary">Request induction</button>
+                                            </form>
+                                        @endif
                                     @else
-                                        <form method="POST" action="{{ route('equipment_training.create', ['equipment' => $equipment]) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">Request induction</button>
-                                        </form>
+                                        <div class="alert alert-warning">
+                                            <strong>Inductions are currently paused for {{ $equipment->name }}.</strong>
+                                        </div>
                                     @endif
-                                @else
-                                    <div class="alert alert-warning">
-                                        <strong>Inductions are currently paused for {{ $equipment->name }}.</strong>
-                                    </div>
                                 @endif
                             </div>
                         @endif
@@ -114,6 +124,16 @@
                                     </p>
                                 </div>
                             @endif
+                        @elseif (!$userInduction && $equipment->courses->count() > 0)
+                            <div class="alert alert-info">
+                                <h3>🔴 Training Required</h3>
+                                <p>Training for this equipment is covered by the following course(s):</p>
+                                <ul>
+                                    @foreach($equipment->courses as $course)
+                                        <li><a href="{{ route('courses.show', $course) }}">{{ $course->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @else
                             @if ($equipment->induction_instructions)
                                 <div class="alert alert-info">
@@ -274,7 +294,7 @@
     </div>
 </div>
 
-@if ($equipment->requiresInduction())
+@if ($equipment->requiresInduction() && !\BB\Entities\Course::isLive())
     <h2>Member statuses for this tool</h2>
     <div class="row">
         <div class="col-sm-12">

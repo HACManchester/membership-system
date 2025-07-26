@@ -39,7 +39,9 @@ class Induction extends Model
         'trained',
         'active',
         'is_trainer',
-        'trainer_user_id'
+        'trainer_user_id',
+        'course_id',
+        'sign_off_requested_at'
     ];
 
     protected $attributes = [
@@ -55,7 +57,7 @@ class Induction extends Model
 
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'trained');
+        return array('created_at', 'updated_at', 'trained', 'sign_off_requested_at');
     }
 
 
@@ -66,7 +68,7 @@ class Induction extends Model
 
     public function trainerUser()
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo('\BB\Entities\User', 'trainer_user_id');
     }
 
     public static function trainersFor($key)
@@ -76,6 +78,38 @@ class Induction extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class, 'key');
+        return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * Sign-off request expiration time in hours
+     */
+    const SIGN_OFF_EXPIRATION_HOURS = 7 * 24;
+
+    /**
+     * Check if a sign-off request has expired
+     */
+    public function isSignOffExpired(): bool
+    {
+        if (!$this->sign_off_requested_at) {
+            return false;
+        }
+
+        return $this->sign_off_requested_at->lt(now()->subHours(self::SIGN_OFF_EXPIRATION_HOURS));
+    }
+
+    /**
+     * Get the expiry date for the sign-off request
+     */
+    public function getSignOffExpiryDate(): ?string
+    {
+        if (!$this->sign_off_requested_at) {
+            return null;
+        }
+
+        return $this->sign_off_requested_at
+            ->copy()
+            ->addHours(self::SIGN_OFF_EXPIRATION_HOURS)
+            ->toISOString();
     }
 }

@@ -16,30 +16,9 @@ import {
     Alert,
 } from "@mui/material";
 import { ComponentProps } from "react";
+import { CourseResource } from "../types/resources";
 
-type Equipment = {
-    id: number;
-    name: string;
-    slug: string;
-    working: boolean;
-    permaloan: boolean;
-    dangerous: boolean;
-    room: string | null;
-    room_display: string | null;
-    ppe: string[];
-    photo_url: string | null;
-    induction_category: string | null;
-    urls: {
-        show: string;
-    };
-};
-
-type Induction = {
-    key: string;
-    trained: string;
-    is_trainer: boolean;
-};
-
+// For preview/form mode where some fields might be optional or different types
 type CourseProps = {
     id?: number;
     name: string;
@@ -52,7 +31,8 @@ type CourseProps = {
     wait_time: string;
     paused_at?: string | null;
     is_paused?: boolean;
-    equipment: Equipment[];
+    equipment: CourseResource['equipment'];
+    user_course_induction?: CourseResource['user_course_induction'];
     urls?: {
         show: string;
     };
@@ -64,7 +44,6 @@ type Props = ComponentProps<typeof Box> & {
     frequencyOptions?: Record<string, string>;
     clickable?: boolean;
     isPreview?: boolean;
-    userInductions?: Induction[];
 };
 
 const CourseSummary = ({
@@ -73,7 +52,6 @@ const CourseSummary = ({
     frequencyOptions = {},
     clickable = true,
     isPreview = false,
-    userInductions = [],
     ...rest
 }: Props) => {
     // Handle format/frequency which might be strings or objects
@@ -87,13 +65,7 @@ const CourseSummary = ({
             ? course.frequency.label
             : frequencyOptions[course.frequency] || course.frequency;
 
-    const isUserTrained =
-        course.equipment.length > 0 &&
-        course.equipment.every((equipment) => {
-            return userInductions.some(
-                (induction) => induction.key === equipment.induction_category
-            );
-        });
+    const isUserTrained = course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
 
     return (
         <Box {...rest}>
@@ -234,14 +206,11 @@ const CourseSummary = ({
                             <Stack spacing={0.5}>
                                 {course.equipment.map((equipment) => (
                                     <Chip
+                                        key={equipment.id}
                                         label={equipment.name}
                                         size="small"
                                         icon={
-                                            userInductions.some(
-                                                (induction) =>
-                                                    induction.key ===
-                                                    equipment.induction_category
-                                            ) ? (
+                                            course.user_course_induction?.trained ? (
                                                 <CheckCircleIcon />
                                             ) : undefined
                                         }

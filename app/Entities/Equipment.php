@@ -20,6 +20,7 @@ use Laracasts\Presenter\PresentableTrait;
  * @property Carbon  $removed_at
  * @property integer $usageCost
  * @property string  $induction_category
+ * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Course> $courses
  * @package BB\Entities
  */
 class Equipment extends Model

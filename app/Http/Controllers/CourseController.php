@@ -32,15 +32,11 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with('equipment')->orderBy('name', 'ASC')->get();
-        $userInductions = $this->inductionRepository->getUserInductions(
-            auth()->user()->id
-        );
 
         return Inertia::render('Courses/Index', [
             'courses' => CourseResource::collection($courses),
-            'userInductions' => InductionResource::collection($userInductions),
             'can' => [
-                'create' => auth()->user() ? auth()->user()->can('create', Course::class) : false,
+                'create' => auth()->user()->can('create', Course::class),
             ],
             'urls' => [
                 'create' => route('courses.create', [], false),
@@ -117,21 +113,25 @@ class CourseController extends Controller
     {
         $course->load('equipment');
 
-        $userInductions = $this->inductionRepository->getUserInductions(
-            auth()->user()->id
+        $userCourseInduction = $this->inductionRepository->getUserForCourse(
+            auth()->user()->id,
+            $course->id
         );
 
         return Inertia::render('Courses/Show', [
             'course' => (new CourseResource($course)),
-            'userInductions' => InductionResource::collection($userInductions),
+            'userCourseInduction' => $userCourseInduction ? new InductionResource($userCourseInduction) : null,
             'can' => [
-                'update' => auth()->user() ? auth()->user()->can('update', $course) : false,
-                'delete' => auth()->user() ? auth()->user()->can('delete', $course) : false,
+                'update' => auth()->user()->can('update', $course),
+                'delete' => auth()->user()->can('delete', $course),
+                'viewTraining' => auth()->user()->can('viewTraining', $course),
             ],
             'urls' => [
                 'index' => route('courses.index', [], false),
                 'edit' => route('courses.edit', $course, false),
                 'destroy' => route('courses.destroy', $course, false),
+                'training' => route('courses.training.index', $course, false),
+                'requestSignOff' => route('courses.request-sign-off', $course, false),
             ],
         ]);
     }

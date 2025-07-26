@@ -69,6 +69,11 @@ class InductionPolicy
      */
     public function train(User $user, Induction $induction)
     {
+        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
+        if ($induction->course_id) {
+            return $this->inductionRepository->isTrainerForCourse($user, $induction->course_id);
+        }
+        
         return $this->inductionRepository->isTrainerForEquipment($user, $induction->key);
     }
 
@@ -81,6 +86,11 @@ class InductionPolicy
      */
     public function untrain(User $user, Induction $induction)
     {
+        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
+        if ($induction->course_id) {
+            return $this->inductionRepository->isTrainerForCourse($user, $induction->course_id);
+        }
+        
         return $this->inductionRepository->isTrainerForEquipment($user, $induction->key);
     }
 
@@ -93,6 +103,11 @@ class InductionPolicy
      */
     public function promote(User $user, Induction $induction)
     {
+        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
+        if ($induction->course_id) {
+            return $this->inductionRepository->isTrainerForCourse($user, $induction->course_id);
+        }
+        
         return $this->inductionRepository->isTrainerForEquipment($user, $induction->key);
     }
 
@@ -105,6 +120,11 @@ class InductionPolicy
      */
     public function demote(User $user, Induction $induction)
     {
+        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
+        if ($induction->course_id) {
+            return $this->inductionRepository->isTrainerForCourse($user, $induction->course_id);
+        }
+        
         return $this->inductionRepository->isTrainerForEquipment($user, $induction->key);
     }
 

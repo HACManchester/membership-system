@@ -18,60 +18,14 @@ import {
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import CourseSummary from "../../Components/CourseSummary";
-
-type Equipment = {
-    id: number;
-    name: string;
-    slug: string;
-    working: boolean;
-    permaloan: boolean;
-    dangerous: boolean;
-    room: string | null;
-    room_display: string | null;
-    ppe: string[];
-    photo_url: string | null;
-    induction_category: string | null;
-    urls: {
-        show: string;
-    };
-};
-
-type Induction = {
-    key: string;
-    trained: string;
-    is_trainer: boolean;
-};
-
-type Course = {
-    id: number;
-    name: string;
-    slug: string;
-    description: string;
-    format: { label: string; value: string };
-    format_description: string;
-    frequency: { label: string; value: string };
-    frequency_description: string;
-    wait_time: string;
-    training_organisation_description: string | null;
-    schedule_url: string | null;
-    quiz_url: string | null;
-    request_induction_url: string | null;
-    paused_at: string | null;
-    is_paused: boolean;
-    equipment: Equipment[];
-    urls: {
-        show: string;
-    };
-};
+import { CourseResource } from "../../types/resources";
 
 const CourseGroup = ({
     title,
     courses,
-    userInductions,
 }: {
     title: string;
-    courses: Course[];
-    userInductions: Induction[];
+    courses: CourseResource[];
 }) => {
     if (courses.length === 0) return null;
 
@@ -87,7 +41,6 @@ const CourseGroup = ({
                             <CourseSummary
                                 course={course}
                                 height="100%"
-                                userInductions={userInductions}
                             />
                         </Grid2>
                     );
@@ -98,8 +51,7 @@ const CourseGroup = ({
 };
 
 type Props = {
-    courses: Course[];
-    userInductions: Induction[];
+    courses: CourseResource[];
     can?: {
         create: boolean;
     };
@@ -111,7 +63,6 @@ type Props = {
 
 const Index = ({
     courses,
-    userInductions = [],
     can = { create: false },
     urls,
     isPreview = false,
@@ -120,16 +71,8 @@ const Index = ({
     const [hideCompleted, setHideCompleted] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string>("all");
 
-    const isUserTrainedForCourse = (course: Course) => {
-        return (
-            course.equipment.length > 0 &&
-            course.equipment.every((equipment) => {
-                return userInductions.some(
-                    (induction) =>
-                        induction.key === equipment.induction_category
-                );
-            })
-        );
+    const isUserTrainedForCourse = (course: CourseResource) => {
+        return course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
     };
 
     const allAvailableRooms = [
@@ -173,7 +116,7 @@ const Index = ({
         ),
     ].sort();
 
-    const groupedCourses = allRooms.reduce<Record<string, Course[]>>(
+    const groupedCourses = allRooms.reduce<Record<string, CourseResource[]>>(
         (acc, room) => {
             acc[room] = filteredCourses.filter((course) =>
                 course.equipment.some(
@@ -311,7 +254,6 @@ const Index = ({
                                 key={areaName}
                                 title={areaName}
                                 courses={areaCourses}
-                                userInductions={userInductions}
                             />
                         )
                     )}
@@ -319,7 +261,6 @@ const Index = ({
                     <CourseGroup
                         title="Ungrouped"
                         courses={ungroupedCourses}
-                        userInductions={userInductions}
                     />
                 </Stack>
             </Container>
