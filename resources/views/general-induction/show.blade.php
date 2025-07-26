@@ -34,7 +34,7 @@
                         href="https://www.hacman.org.uk/visit-us/" target="_blank" rel="noopener">Visit Us</a> page for
                     timings.</p>
 
-                <p>You can also reach out on <a href="https://docs.hacman.org.uk/Telegram/" target="_blank"
+                <p>You can also reach out on <a href="https://docs.hacman.org.uk/getting_started/communications/telegram/" target="_blank"
                         rel="noopener">Telegram</a> to organise an ad-hoc induction, if any members are free and able to
                     do so.</p>
             </div>

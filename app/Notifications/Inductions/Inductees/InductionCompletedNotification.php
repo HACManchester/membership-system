@@ -48,7 +48,7 @@ class InductionCompletedNotification extends AbstractInductionNotification
 
         $mailMessage->line('Please reach out in the forum or Telegram group chats if you have any questions or need any help.');
         $mailMessage->action("Visit our forum", 'https://list.hacman.org.uk');
-        $mailMessage->action("Join us on Telegram",  'https://docs.hacman.org.uk/Telegram/');
+        $mailMessage->action("Join us on Telegram",  'https://docs.hacman.org.uk/getting_started/communications/telegram/');
 
         return $mailMessage;
     }
