@@ -53,6 +53,7 @@ class CourseResource extends JsonResource
             
             // Include trainers for this course
             $trainers = $inductionRepo->getTrainersForCourse($this->id);
+            $trainers->load(['user.profile']);
             $data['trainers'] = InductionResource::collection($trainers);
         }
         

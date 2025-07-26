@@ -31,13 +31,13 @@ class CourseTrainingController extends Controller
         $this->authorize('viewTraining', $course);
 
         $trainers = $this->inductionRepository->getTrainersForCourse($course->id);
-        $trainers->load('course');
+        $trainers->load(['course', 'user.profile']);
 
         $trainedUsers = $this->inductionRepository->getTrainedUsersForCourse($course->id);
-        $trainedUsers->load('course');
+        $trainedUsers->load(['course', 'user.profile']);
 
         $usersPendingSignOff = $this->inductionRepository->getUsersPendingSignOffForCourse($course->id);
-        $usersPendingSignOff->load('course');
+        $usersPendingSignOff->load(['course', 'user.profile']);
 
         $memberList = $this->userRepository->getAllAsDropdown();
 

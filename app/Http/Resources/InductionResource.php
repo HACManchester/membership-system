@@ -2,6 +2,7 @@
 
 namespace BB\Http\Resources;
 
+use BB\Helpers\UserImage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -36,7 +37,9 @@ class InductionResource extends JsonResource
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'pronouns' => $this->user->pronouns,
-                'profile_photo_url' => $this->user->profile->profile_photo_url ?? null,
+                'profile_photo_url' => $this->user->profile->profile_photo
+                    ? UserImage::thumbnailUrl($this->user->hash)
+                    : null,
             ];
         }
 
