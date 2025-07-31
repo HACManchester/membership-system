@@ -14,6 +14,7 @@ import {
     Link,
     Box,
     Chip,
+    Stack,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { EquipmentResource, InductionResource } from "../../types/resources";
@@ -24,10 +25,10 @@ type Props = {
     isUserTrained: boolean;
 };
 
-const EquipmentAccessTable: React.FC<Props> = ({ 
-    equipment, 
-    userCourseInduction, 
-    isUserTrained 
+const EquipmentAccessTable: React.FC<Props> = ({
+    equipment,
+    userCourseInduction,
+    isUserTrained,
 }) => {
     if (equipment.length === 0) {
         return null;
@@ -36,11 +37,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
     return (
         <Card>
             <CardContent>
-                <Typography
-                    variant="h5"
-                    component="h2"
-                    gutterBottom
-                >
+                <Typography variant="h5" component="h2" gutterBottom>
                     Equipment Access
                 </Typography>
                 <Typography
@@ -48,14 +45,11 @@ const EquipmentAccessTable: React.FC<Props> = ({
                     color="text.secondary"
                     sx={{ mb: 3 }}
                 >
-                    Completing this induction will grant you access
-                    to the following equipment:
+                    Completing this induction will grant you access to the
+                    following equipment:
                 </Typography>
 
-                <TableContainer
-                    component={Paper}
-                    variant="outlined"
-                >
+                <TableContainer component={Paper} variant="outlined">
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -64,15 +58,11 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                 <TableCell>Location</TableCell>
                                 <TableCell>PPE Required</TableCell>
                                 <TableCell>Status</TableCell>
-                                <TableCell align="center">
-                                    Dangerous
-                                </TableCell>
+                                <TableCell align="center">Dangerous</TableCell>
                                 {isUserTrained && (
                                     <TableCell>Access Code</TableCell>
                                 )}
-                                <TableCell align="center">
-                                    Trained
-                                </TableCell>
+                                <TableCell align="center">Trained</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -138,15 +128,17 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                     gap: 0.5,
                                                 }}
                                             >
-                                                {equipmentItem.ppe.map((item, index) => (
-                                                    <Chip
-                                                        key={index}
-                                                        label={item}
-                                                        size="small"
-                                                        variant="outlined"
-                                                        color="info"
-                                                    />
-                                                ))}
+                                                {equipmentItem.ppe.map(
+                                                    (item, index) => (
+                                                        <Chip
+                                                            key={index}
+                                                            label={item}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="info"
+                                                        />
+                                                    )
+                                                )}
                                             </Box>
                                         )}
                                     </TableCell>
@@ -181,30 +173,50 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                     variant="filled"
                                                 />
                                             )}
-                                            {!equipmentItem.lone_working && (
-                                                <Chip
-                                                    label="NO LONE WORKING"
-                                                    size="small"
-                                                    color="error"
-                                                    variant="filled"
-                                                />
-                                            )}
                                         </Box>
                                     </TableCell>
                                     <TableCell align="center">
-                                        {equipmentItem.dangerous ? "⚠️" : ""}
+                                        <Stack spacing={1} alignItems="center">
+                                            {!equipmentItem.dangerous && (
+                                                <Chip
+                                                    label="Dangerous"
+                                                    size="small"
+                                                    color="warning"
+                                                    variant="filled"
+                                                    sx={{
+                                                        width: "fit-content",
+                                                    }}
+                                                />
+                                            )}
+                                            {!equipmentItem.lone_working && (
+                                                <Chip
+                                                    label="No lone working"
+                                                    size="small"
+                                                    color="error"
+                                                    variant="filled"
+                                                    sx={{
+                                                        width: "fit-content",
+                                                    }}
+                                                />
+                                            )}
+                                        </Stack>
                                     </TableCell>
                                     {isUserTrained && (
                                         <TableCell>
                                             {equipmentItem.access_code ? (
                                                 <Chip
-                                                    label={equipmentItem.access_code}
+                                                    label={
+                                                        equipmentItem.access_code
+                                                    }
                                                     size="small"
                                                     color="info"
                                                     variant="filled"
                                                 />
                                             ) : (
-                                                <Typography variant="body2" color="text.secondary">
+                                                <Typography
+                                                    variant="body2"
+                                                    color="text.secondary"
+                                                >
                                                     None
                                                 </Typography>
                                             )}

@@ -39,6 +39,7 @@ class EquipmentResource extends JsonResource
             'working' => $this->working,
             'permaloan' => $this->permaloan,
             'dangerous' => $this->dangerous,
+            'lone_working' => $this->lone_working,
             'room' => $this->room,
             'room_display' => RoomOptions::getDisplayName($this->room),
             'ppe' => $this->present()->ppeLabels(),

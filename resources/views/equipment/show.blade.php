@@ -51,6 +51,9 @@
             @if ($equipment->dangerous)
                 <h4><span class="label label-danger">Bloody Dangerous</h4>
             @endif
+            @if (!$equipment->lone_working)
+                <h4><span class="label label-danger">No lone working</span></h4>
+            @endif
         </div>
     </div>
 </div>
@@ -67,7 +70,7 @@
                                 <h3>This tool requires an induction</h3>
                                 <ul>
                                     <li>An induction is required before you may use this tool.</li>
-                                    @if (\BB\Entities\Course::isLive() && $equipment->courses->count() > 0)
+                                    @if ($equipment->courses->count() > 0 && $equipment->courses->first()->live)
                                         <li>Training for this equipment is covered by:
                                             @foreach($equipment->courses as $course)
                                                 <a href="{{ route('courses.show', $course) }}">{{ $course->name }}</a>@if(!$loop->last), @endif
@@ -183,6 +186,15 @@
                             </div>
                             <div class="tool-info__value">
                                 {{ $equipment->requiresInduction() ? "🔴 Yes" : "🟢 No" }}
+                            </div>
+                        </div>
+                        
+                        <div class="tool-info__detail">
+                            <div class="tool-info__key">
+                                Lone working allowed?
+                            </div>
+                            <div class="tool-info__value">
+                                {{ $equipment->lone_working ? "🟢 Yes" : "🔴 No lone working" }}
                             </div>
                         </div>
                         

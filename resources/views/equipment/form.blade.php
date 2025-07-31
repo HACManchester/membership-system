@@ -323,6 +323,31 @@
     </div>
 </div>
 
+<div class="form-group {{ $errors->has('lone_working') ? 'has-error' : '' }}">
+    <label for="lone_working" class="col-sm-3 control-label">Lone Working</label>
+    <div class="col-sm-9 col-lg-7">
+        <div class="radio">
+            <label>
+                <input type="radio" name="lone_working" value="1" {{ old('lone_working', isset($equipment) ? $equipment->lone_working : 1) == 1 ? 'checked' : '' }}>
+                Yes, members are permitted to use this equipment when alone in the hackspace.
+            </label>
+        </div>
+        <div class="radio">
+            <label class="text-danger">
+                <input type="radio" name="lone_working" value="0" {{ old('lone_working', isset($equipment) ? $equipment->lone_working : 1) == 0 ? 'checked' : '' }}>
+                <strong>No lone working.</strong> Users must not operate this equipment whilst alone in the hackspace.
+            </label>
+        </div>
+        @if($errors->has('lone_working'))
+            <span class="help-block">
+                @foreach($errors->get('lone_working') as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </span>
+        @endif
+    </div>
+</div>
+
 
 <h3>Training & Inductions</h3>
 

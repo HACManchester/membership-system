@@ -76,6 +76,7 @@ class StoreEquipmentRequest extends FormRequest
             'ppe'                       => '',
             'docs'                      => '',
             'access_code'               => '',
+            'lone_working'              => 'boolean',
         ];
     }
 }

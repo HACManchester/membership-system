@@ -37,6 +37,7 @@ export type EquipmentResource = {
     working: boolean;
     permaloan: boolean;
     dangerous: boolean;
+    lone_working: boolean;
     room: string | null;
     room_display: string | null;
     ppe: string[];

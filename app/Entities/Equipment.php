@@ -68,7 +68,8 @@ class Equipment extends Model
         'trained_instructions',
         'docs',
         'access_code',
-        'accepting_inductions'
+        'accepting_inductions',
+        'lone_working'
     ];
 
     /**

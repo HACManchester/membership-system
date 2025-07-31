@@ -37,6 +37,7 @@
                         <th>Name</th>
                         <th>Status</th>
                         <th>Bloody Dangerous</th>
+                        <th>Lone Working</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -66,6 +67,11 @@
                             @endif
                         </td>
                         <td>{!! $tool->isDangerous() ? '⚠️' : '' !!}</td>
+                        <td>
+                            @if (!$tool->lone_working)
+                                <span class="label label-danger">No lone working</span>
+                            @endif
+                        </td>
                         <td>
                             @can('update', $tool)
                                 <span class="pull-right"><a href="{{ route('equipment.edit', $tool->slug) }}"
