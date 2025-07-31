@@ -16,9 +16,6 @@ class CourseTest extends TestCase
 
     public function test_user_can_view_courses_index()
     {
-        // Set inductions as live for everyone
-        Settings::create(['key' => 'inductions_live', 'value' => 'true']);
-        
         $user = factory(User::class)->create();
         $course = factory(Course::class)->create();
 
@@ -192,9 +189,6 @@ class CourseTest extends TestCase
 
     public function test_course_show_page_loads()
     {
-        // Set inductions as live for everyone
-        Settings::create(['key' => 'inductions_live', 'value' => 'true']);
-        
         $user = factory(User::class)->create();
         $course = factory(Course::class)->create();
 
@@ -271,73 +265,5 @@ class CourseTest extends TestCase
             'id' => $course->id,
             'deleted_at' => null
         ]);
-    }
-
-    public function test_regular_user_cannot_view_courses_in_preview_mode()
-    {
-        // Don't set the inductions_live setting, so it's in preview mode
-        $user = factory(User::class)->create();
-
-        $response = $this->actingAs($user)
-            ->get(route('courses.index'));
-
-        $response->assertForbidden();
-    }
-
-    public function test_area_coordinator_can_view_courses_in_preview_mode()
-    {
-        // Don't set the inductions_live setting, so it's in preview mode
-        $user = factory(User::class)->create();
-        $area = factory(\BB\Entities\EquipmentArea::class)->create();
-        $user->equipmentAreas()->attach($area);
-
-        $response = $this->actingAs($user)
-            ->get(route('courses.index'));
-
-        $response->assertStatus(200);
-    }
-
-    public function test_equipment_maintainer_can_view_courses_in_preview_mode()
-    {
-        // Don't set the inductions_live setting, so it's in preview mode
-        $user = factory(User::class)->create();
-        $maintainerGroup = factory(\BB\Entities\MaintainerGroup::class)->create();
-        $user->maintainerGroups()->attach($maintainerGroup);
-
-        $response = $this->actingAs($user)
-            ->get(route('courses.index'));
-
-        $response->assertStatus(200);
-    }
-
-    public function test_courses_index_shows_preview_alert_in_preview_mode()
-    {
-        // Don't set the inductions_live setting, so it's in preview mode
-        $admin = factory(User::class)->state('admin')->create();
-
-        $response = $this->actingAs($admin)
-            ->get(route('courses.index'));
-
-        $response->assertStatus(200);
-        $response->assertInertia(function ($page) {
-            $page->component('Courses/Index')
-                ->where('isPreview', true);
-        });
-    }
-
-    public function test_courses_index_does_not_show_preview_alert_when_live()
-    {
-        Settings::create(['key' => 'inductions_live', 'value' => 'true']);
-        
-        $user = factory(User::class)->create();
-
-        $response = $this->actingAs($user)
-            ->get(route('courses.index'));
-
-        $response->assertStatus(200);
-        $response->assertInertia(function ($page) {
-            $page->component('Courses/Index')
-                ->where('isPreview', false);
-        });
     }
 }

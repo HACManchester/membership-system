@@ -32,33 +32,40 @@ class InductionResource extends JsonResource
         ];
 
         // Include user information when loaded
-        if ($this->relationLoaded('user')) {
-            $data['user'] = [
+        $data['user'] = $this->whenLoaded('user', function () {
+            return [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'pronouns' => $this->user->pronouns,
-                'profile_photo_url' => $this->user->profile->profile_photo
-                    ? UserImage::thumbnailUrl($this->user->hash)
-                    : null,
+                'profile_photo_url' => $this->when(
+                    $this->user->relationLoaded('profile') && $this->user->profile->profile_photo,
+                    function () {
+                        return UserImage::thumbnailUrl($this->user->hash);
+                    }
+                ),
             ];
-        }
+        });
 
-        // Include trainer information when loaded
-        if ($this->relationLoaded('trainerUser')) {
-            $data['trainer'] = [
+        // Include trainer information when loaded  
+        $data['trainer'] = $this->whenLoaded('trainerUser', function () {
+            return [
                 'id' => $this->trainerUser->id,
                 'name' => $this->trainerUser->name,
             ];
-        }
+        });
 
-        if ($this->relationLoaded('course') && $this->relationLoaded('user')) {
-            $data['urls'] = [
-                'train' => route('courses.training.train', ['course' => $this->course, 'user' => $this->user], false),
-                'untrain' => route('courses.training.untrain', ['course' => $this->course, 'user' => $this->user], false),
-                'promote' => route('courses.training.promote', ['course' => $this->course, 'user' => $this->user], false),
-                'demote' => route('courses.training.demote', ['course' => $this->course, 'user' => $this->user], false),
-            ];
-        }
+        // Include management URLs when both course and user are loaded
+        $data['urls'] = $this->when(
+            $this->relationLoaded('course') && $this->relationLoaded('user'),
+            function () {
+                return [
+                    'train' => route('courses.training.train', ['course' => $this->course, 'user' => $this->user], false),
+                    'untrain' => route('courses.training.untrain', ['course' => $this->course, 'user' => $this->user], false),
+                    'promote' => route('courses.training.promote', ['course' => $this->course, 'user' => $this->user], false),
+                    'demote' => route('courses.training.demote', ['course' => $this->course, 'user' => $this->user], false),
+                ];
+            }
+        );
 
         return $data;
     }

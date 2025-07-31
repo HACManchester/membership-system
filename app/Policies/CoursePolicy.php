@@ -28,22 +28,8 @@ class CoursePolicy
      */
     public function viewAny(User $user)
     {
-        // Check if inductions feature is live for everyone
-        if (Course::isLive()) {
-            return true;
-        }
-
-        // Area coordinators can access
-        if ($user->equipmentAreas()->count() > 0) {
-            return true;
-        }
-
-        // Equipment maintainers can access
-        if ($user->maintainerGroups()->count() > 0) {
-            return true;
-        }
-
-        return false;
+        // All logged-in users can view courses
+        return true;
     }
 
     /**

@@ -326,6 +326,19 @@
 
 <h3>Training & Inductions</h3>
 
+@if(isset($equipment) && $equipment->courses->count() > 0)
+    <div class="alert alert-warning">
+        <strong>⚠️ Induction fields are being deprecated</strong><br>
+        This equipment has an associated induction course. Going forward, inductions will be managed through the 
+        <a href="{{ route('courses.show', $equipment->courses->first()->slug) }}">{{ $equipment->courses->first()->name }}</a> course page.
+        @if($equipment->courses->first()->live)
+            <br><br><strong>The course is now live</strong> - these fields are no longer in use and changes will have no effect.
+        @else
+            <br><br>The course is not yet live, so these fields are still in use. Once the course goes live, inductions will be managed entirely through the course system.
+        @endif
+    </div>
+@endif
+
 <div class="form-group {{ $errors->has('requires_induction') ? 'has-error' : '' }}">
     <label for="requires_induction" class="col-sm-3 control-label">Requires Induction</label>
     <div class="col-sm-9 col-lg-7">

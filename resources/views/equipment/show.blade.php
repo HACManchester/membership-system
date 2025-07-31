@@ -78,7 +78,7 @@
                                     @endif
                                 </ul>
                                 
-                                @if (!\BB\Entities\Course::isLive())
+                                @if (!($equipment->courses->count() > 0 && $equipment->courses->first()->live))
                                     @if ($equipment->accepting_inductions)
                                         @if(Auth::user()->online_only)
                                             <h4>Online Only members may not use tools or request inductions.</h4>
@@ -294,7 +294,7 @@
     </div>
 </div>
 
-@if ($equipment->requiresInduction() && !\BB\Entities\Course::isLive())
+@if ($equipment->requiresInduction() && !($equipment->courses->count() > 0 && $equipment->courses->first()->live))
     <h2>Member statuses for this tool</h2>
     <div class="row">
         <div class="col-sm-12">

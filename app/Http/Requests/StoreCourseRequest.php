@@ -41,6 +41,7 @@ class StoreCourseRequest extends FormRequest
             'equipment' => ['array'],
             'equipment.*' => ['integer', 'exists:equipment,id'],
             'paused' => ['boolean'],
+            'live' => ['boolean'],
         ];
     }
 }

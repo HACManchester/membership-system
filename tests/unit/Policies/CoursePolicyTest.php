@@ -47,9 +47,6 @@ class CoursePolicyTest extends TestCase
 
     public function test_all_users_can_view_courses()
     {
-        // Set inductions as live for everyone
-        Settings::create(['key' => 'inductions_live', 'value' => 'true']);
-        
         $user = factory(User::class)->create();
         $course = factory(Course::class)->create();
 
@@ -178,65 +175,5 @@ class CoursePolicyTest extends TestCase
         // User should still be able to update/delete since they maintain at least one equipment
         $this->assertTrue($this->policy->update($user, $course));
         $this->assertTrue($this->policy->delete($user, $course));
-    }
-
-    public function test_regular_user_cannot_view_courses_in_preview_mode()
-    {
-        // Don't set inductions_live, so it's in preview mode by default
-        $user = factory(User::class)->create();
-
-        $this->assertFalse($this->policy->viewAny($user));
-    }
-
-    public function test_area_coordinator_can_view_courses_in_preview_mode()
-    {
-        // Don't set inductions_live, so it's in preview mode by default
-        $user = factory(User::class)->create();
-        $area = factory(EquipmentArea::class)->create();
-        $user->equipmentAreas()->attach($area);
-
-        $this->assertTrue($this->policy->viewAny($user));
-    }
-
-    public function test_equipment_maintainer_can_view_courses_in_preview_mode()
-    {
-        // Don't set inductions_live, so it's in preview mode by default
-        $user = factory(User::class)->create();
-        $maintainerGroup = factory(MaintainerGroup::class)->create();
-        $user->maintainerGroups()->attach($maintainerGroup);
-
-        $this->assertTrue($this->policy->viewAny($user));
-    }
-
-    public function test_all_users_can_view_courses_when_live()
-    {
-        // Set inductions as live for everyone
-        Settings::create(['key' => 'inductions_live', 'value' => 'true']);
-        
-        $user = factory(User::class)->create();
-
-        $this->assertTrue($this->policy->viewAny($user));
-    }
-
-    public function test_regular_user_cannot_view_courses_when_setting_is_false()
-    {
-        // Explicitly set inductions_live to false
-        Settings::create(['key' => 'inductions_live', 'value' => 'false']);
-        
-        $user = factory(User::class)->create();
-
-        $this->assertFalse($this->policy->viewAny($user));
-    }
-
-    public function test_privileged_users_can_view_courses_when_setting_is_false()
-    {
-        // Explicitly set inductions_live to false
-        Settings::create(['key' => 'inductions_live', 'value' => 'false']);
-        
-        $user = factory(User::class)->create();
-        $area = factory(EquipmentArea::class)->create();
-        $user->equipmentAreas()->attach($area);
-
-        $this->assertTrue($this->policy->viewAny($user));
     }
 }

@@ -31,7 +31,7 @@ import TrainingInstructionsSection from "../../Components/Courses/TrainingInstru
 
 type Props = {
     course: CourseResource;
-    userCourseInduction: InductionResource | null;
+    canSeeNonLiveCourses: boolean;
     can: {
         update: boolean;
         delete: boolean;
@@ -48,14 +48,14 @@ type Props = {
 
 const Show = ({
     course,
-    userCourseInduction,
+    canSeeNonLiveCourses,
     can,
     urls,
 }: Props) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const { delete: destroy } = useForm();
 
-    const isUserTrainedForCourse = userCourseInduction?.trained != null && userCourseInduction.trained !== '';
+    const isUserTrainedForCourse = course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
 
     const handleDelete = () => {
         destroy(urls.destroy);
@@ -158,6 +158,14 @@ const Show = ({
                             </Alert>
                         )}
 
+                        {canSeeNonLiveCourses && !course.live && (
+                            <Alert severity="info" sx={{ mb: 3 }}>
+                                <Typography variant="body2">
+                                    <strong>Not yet live:</strong> This course is in development. Regular members cannot see it yet.
+                                </Typography>
+                            </Alert>
+                        )}
+
                         <Box sx={{ mb: 3 }}>
                             <MarkdownRenderer
                                 content={course.description}
@@ -227,13 +235,13 @@ const Show = ({
 
                 <TrainingInstructionsSection
                     course={course}
-                    userCourseInduction={userCourseInduction}
+                    userCourseInduction={course.user_course_induction || null}
                     requestSignOffUrl={urls.requestSignOff}
                 />
 
                 <EquipmentAccessTable
                     equipment={course.equipment}
-                    userCourseInduction={userCourseInduction}
+                    userCourseInduction={course.user_course_induction || null}
                     isUserTrained={isUserTrainedForCourse}
                 />
 

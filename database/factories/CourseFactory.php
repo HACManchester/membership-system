@@ -15,5 +15,6 @@ $factory->define(Course::class, function (Faker $faker) {
         'frequency' => $faker->randomElement(['self-serve', 'regular', 'ad-hoc']),
         'frequency_description' => $faker->sentence,
         'wait_time' => $faker->randomElement(['1 week', '1-2 weeks', '3-4 weeks', '5-6 weeks']),
+        'live' => true,
     ];
 });
