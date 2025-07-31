@@ -42,6 +42,7 @@ export type EquipmentResource = {
     ppe: string[];
     photo_url: string | null;
     induction_category: string | null;
+    access_code?: string;
     urls: {
         show: string;
     };

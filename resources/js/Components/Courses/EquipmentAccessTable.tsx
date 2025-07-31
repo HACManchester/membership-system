@@ -67,6 +67,9 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                 <TableCell align="center">
                                     Dangerous
                                 </TableCell>
+                                {isUserTrained && (
+                                    <TableCell>Access Code</TableCell>
+                                )}
                                 <TableCell align="center">
                                     Trained
                                 </TableCell>
@@ -155,7 +158,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                 gap: 0.5,
                                             }}
                                         >
-                                            {equipmentItem.working ? (
+                                            {Boolean(equipmentItem.working) ? (
                                                 <Chip
                                                     label="Working"
                                                     size="small"
@@ -170,11 +173,19 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                     variant="filled"
                                                 />
                                             )}
-                                            {equipmentItem.permaloan && (
+                                            {Boolean(equipmentItem.permaloan) && (
                                                 <Chip
                                                     label="Permaloan"
                                                     size="small"
                                                     color="warning"
+                                                    variant="filled"
+                                                />
+                                            )}
+                                            {!equipmentItem.lone_working && (
+                                                <Chip
+                                                    label="NO LONE WORKING"
+                                                    size="small"
+                                                    color="error"
                                                     variant="filled"
                                                 />
                                             )}
@@ -183,6 +194,22 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                     <TableCell align="center">
                                         {equipmentItem.dangerous ? "⚠️" : ""}
                                     </TableCell>
+                                    {isUserTrained && (
+                                        <TableCell>
+                                            {equipmentItem.access_code ? (
+                                                <Chip
+                                                    label={equipmentItem.access_code}
+                                                    size="small"
+                                                    color="info"
+                                                    variant="filled"
+                                                />
+                                            ) : (
+                                                <Typography variant="body2" color="text.secondary">
+                                                    None
+                                                </Typography>
+                                            )}
+                                        </TableCell>
+                                    )}
                                     <TableCell align="center">
                                         {isUserTrained && (
                                             <Box
