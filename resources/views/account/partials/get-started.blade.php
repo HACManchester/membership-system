@@ -3,8 +3,9 @@ $conditions = [
     $user->email_verified,
     $user->payment_method,
     $user->induction_completed,
-    $user->keyFob(),
+    $user->keyFob()->exists(),
     $user->visited_forum,
+    $user->inductions()->trained()->count() > 0,
 ];
 
 $countOfConditions = count($conditions);
@@ -66,7 +67,7 @@ DESC
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '4',
                             'block_condition' => !$user->payment_method,
-                            'pass_condition' => $user->keyFob(),
+                            'pass_condition' => $user->keyFob()->exists(),
                             'title' => 'Get an access method set up',
                             'link' => route('keyfobs.index', $user->id),
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.',
@@ -79,6 +80,13 @@ DESC
                             'link' => route('links.forum'),
                             'link_target' => '_blank',
                             'description' => 'Please visit the forum and get involved with discussions, lend your support to purchase proposals, and find out about upcoming events.'
+                        ])
+                        @include('account.partials.get-started-checklist-item', [
+                            'number' => '6',
+                            'pass_condition' => $user->inductions()->trained()->count() > 0,
+                            'title' => 'Get trained on the tools you want to use',
+                            'link' => route('courses.index'),
+                            'description' => 'Some equipment requires training before you can use it. Please check the inductions page for more information.'
                         ])
                     </ul>
                 </div>

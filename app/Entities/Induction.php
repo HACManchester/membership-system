@@ -62,6 +62,11 @@ class Induction extends Model
         'sign_off_requested_at' => 'datetime',
     ];
 
+    public function scopeTrained($query)
+    {
+        return $query->whereNotNull('trained');
+    }
+
 
     public function user()
     {
