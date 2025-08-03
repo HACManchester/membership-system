@@ -711,11 +711,6 @@ parameters:
 			path: app/Observer/UserAuditObserver.php
 
 		-
-			message: "#^Access to an undefined property BB\\\\Entities\\\\Course\\:\\:\\$equipment\\.$#"
-			count: 1
-			path: app/Policies/CoursePolicy.php
-
-		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
 			count: 2
 			path: app/Policies/EquipmentPolicy.php
@@ -751,6 +746,11 @@ parameters:
 			path: app/Providers/EventServiceProvider.php
 
 		-
+			message: "#^Relation 'courses' is not found in BB\\\\Entities\\\\Equipment model\\.$#"
+			count: 2
+			path: app/Repo/EquipmentRepository.php
+
+		-
 			message: "#^Access to protected property GoCardlessPro\\\\Resources\\\\Payment\\:\\:\\$status\\.$#"
 			count: 1
 			path: app/Repo/SubscriptionChargeRepository.php
@@ -762,11 +762,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$active \\(bool\\) does not accept string\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php
 

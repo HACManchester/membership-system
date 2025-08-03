@@ -110,8 +110,8 @@
         <div class="{{ $errors->has('permaloan') ? 'has-error' : '' }}">
             <label for="permaloan">Permaloan</label>
             <select name="permaloan" id="permaloan" class="form-control">
-                <option value="0" {{ old('permaloan', isset($equipment) ? $equipment->permaloan : null) == 0 ? 'selected' : '' }}>No</option>
-                <option value="1" {{ old('permaloan', isset($equipment) ? $equipment->permaloan : null) == 1 ? 'selected' : '' }}>Yes</option>
+                <option value="0" {{ !old('permaloan', isset($equipment) ? $equipment->permaloan : false) ? 'selected' : '' }}>No</option>
+                <option value="1" {{ old('permaloan', isset($equipment) ? $equipment->permaloan : false) ? 'selected' : '' }}>Yes</option>
             </select>
             <p class="help-block">Is this item on permanent loan from a member?</p>
             @if($errors->has('permaloan'))
@@ -185,8 +185,8 @@
         <div class="{{ $errors->has('working') ? 'has-error' : '' }}">
             <label for="working">Working</label>
             <select name="working" id="working" class="form-control">
-                <option value="1" {{ old('working', isset($equipment) ? $equipment->working : null) == 1 ? 'selected' : '' }}>Yes</option>
-                <option value="0" {{ old('working', isset($equipment) ? $equipment->working : null) == 0 ? 'selected' : '' }}>No</option>
+                <option value="1" {{ old('working', isset($equipment) ? $equipment->working : true) ? 'selected' : '' }}>Yes</option>
+                <option value="0" {{ !old('working', isset($equipment) ? $equipment->working : true) ? 'selected' : '' }}>No</option>
             </select>
             <p class="help-block">Is the equipment ready for use?</p>
             @if($errors->has('working'))
@@ -310,8 +310,8 @@
     <label for="dangerous" class="col-sm-3 control-label">Is Bloody Dangerous?</label>
     <div class="col-sm-9 col-lg-7">
         <select name="dangerous" id="dangerous" class="form-control">
-            <option value="0" {{ old('dangerous', isset($equipment) ? $equipment->dangerous : null) == 0 ? 'selected' : '' }}>No</option>
-            <option value="1" {{ old('dangerous', isset($equipment) ? $equipment->dangerous : null) == 1 ? 'selected' : '' }}>Yes</option>
+            <option value="0" {{ !old('dangerous', isset($equipment) ? $equipment->dangerous : false) ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('dangerous', isset($equipment) ? $equipment->dangerous : false) ? 'selected' : '' }}>Yes</option>
         </select>
         @if($errors->has('dangerous'))
             <span class="help-block">
@@ -328,13 +328,13 @@
     <div class="col-sm-9 col-lg-7">
         <div class="radio">
             <label>
-                <input type="radio" name="lone_working" value="1" {{ old('lone_working', isset($equipment) ? $equipment->lone_working : 1) == 1 ? 'checked' : '' }}>
+                <input type="radio" name="lone_working" value="1" {{ old('lone_working', isset($equipment) ? $equipment->lone_working : true) ? 'checked' : '' }}>
                 Yes, members are permitted to use this equipment when alone in the hackspace.
             </label>
         </div>
         <div class="radio">
             <label class="text-danger">
-                <input type="radio" name="lone_working" value="0" {{ old('lone_working', isset($equipment) ? $equipment->lone_working : 1) == 0 ? 'checked' : '' }}>
+                <input type="radio" name="lone_working" value="0" {{ !old('lone_working', isset($equipment) ? $equipment->lone_working : true) ? 'checked' : '' }}>
                 <strong>No lone working.</strong> Users must not operate this equipment whilst alone in the hackspace.
             </label>
         </div>
@@ -368,8 +368,8 @@
     <label for="requires_induction" class="col-sm-3 control-label">Requires Induction</label>
     <div class="col-sm-9 col-lg-7">
         <select name="requires_induction" id="requires_induction" class="form-control">
-            <option value="0" {{ old('requires_induction', isset($equipment) ? $equipment->requires_induction : null) == 0 ? 'selected' : '' }}>No</option>
-            <option value="1" {{ old('requires_induction', isset($equipment) ? $equipment->requires_induction : null) == 1 ? 'selected' : '' }}>Yes</option>
+            <option value="0" {{ !old('requires_induction', isset($equipment) ? $equipment->requires_induction : false) ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('requires_induction', isset($equipment) ? $equipment->requires_induction : false) ? 'selected' : '' }}>Yes</option>
         </select>
         @if($errors->has('requires_induction'))
             <span class="help-block">
@@ -386,8 +386,8 @@
     <div class="col-sm-9 col-lg-7">
         <select name="accepting_inductions" id="accepting_inductions" class="form-control">
             <option value=""></option>
-            <option value="0" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === '0' || old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === 0 ? 'selected' : '' }}>No</option>
-            <option value="1" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === '1' || old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) === 1 ? 'selected' : '' }}>Yes</option>
+            <option value="0" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) == '0' || !old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) ? 'selected' : '' }}>No</option>
+            <option value="1" {{ old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) == '1' || old('accepting_inductions', isset($equipment) ? $equipment->accepting_inductions : null) ? 'selected' : '' }}>Yes</option>
         </select>
         <div class="help-block">Ability to enable/disable inductions, depending on maintainer/trainer workload.</div>
         @if($errors->has('accepting_inductions'))

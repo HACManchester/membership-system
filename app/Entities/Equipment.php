@@ -81,6 +81,28 @@ class Equipment extends Model
         'deleted_at'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'working' => 'boolean',
+        'permaloan' => 'boolean',
+        'dangerous' => 'boolean',
+        'lone_working' => 'boolean',
+        'archive' => 'boolean',
+        'requires_induction' => 'boolean',
+        'accepting_inductions' => 'boolean',
+        'obtained_at' => 'datetime',
+        'removed_at' => 'datetime',
+
+        // Swap these over later
+        // 'photos' => 'array',
+        // 'ppe' => 'array',
+        // 'docs' => 'array',
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -99,10 +121,6 @@ class Equipment extends Model
         return 'slug';
     }
 
-    public function getDates()
-    {
-        return array('created_at', 'updated_at', 'obtained_at', 'removed_at');
-    }
 
     public function role()
     {
@@ -247,22 +265,6 @@ class Equipment extends Model
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = strtolower($value);
-    }
-
-    public function getObtainedAtAttribute()
-    {
-        if (!$this->attributes['obtained_at'] || $this->attributes['obtained_at'] == '0000-00-00') {
-            return null;
-        }
-        return new Carbon($this->attributes['obtained_at']);
-    }
-
-    public function getRemovedAtAttribute()
-    {
-        if (!$this->attributes['removed_at'] || $this->attributes['removed_at'] == '0000-00-00') {
-            return null;
-        }
-        return new Carbon($this->attributes['removed_at']);
     }
 
     public function getUsageCostAttribute()

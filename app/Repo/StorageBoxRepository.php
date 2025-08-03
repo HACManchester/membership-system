@@ -32,7 +32,7 @@ class StorageBoxRepository
      */
     public function getAll()
     {
-        return StorageBox::where('active', 1)->get()->sortBy(function ($box) {
+        return StorageBox::where('active', true)->get()->sortBy(function ($box) {
             [$column, $row] = explode(' ', $box->location);
             return [$column, $row];
         });
@@ -44,6 +44,6 @@ class StorageBoxRepository
      */
     public function numAvailableBoxes()
     {
-        return StorageBox::where(['active' => 1,'user_id' => 0])->count();
+        return StorageBox::where(['active' => true,'user_id' => 0])->count();
     }
 } 

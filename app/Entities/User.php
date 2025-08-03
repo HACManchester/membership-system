@@ -148,14 +148,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         // 'induction_completed' => 'boolean',
         // 'profile_private' => 'boolean',
         'banned' => 'boolean',
+        'subscription_expires' => 'datetime',
+        'banned_date' => 'datetime',
+        'rules_agreed' => 'datetime',
+        'seen_at' => 'datetime',
+        'suspended_at' => 'datetime',
         'suppress_real_name' => 'boolean',
     ];
 
 
-    public function getDates()
-    {
-        return array('created_at', 'updated_at', 'subscription_expires', 'banned_date', 'rules_agreed', 'seen_at', 'suspended_at');
-    }
 
 
     public static function statuses()
@@ -495,7 +496,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function markAsSeen()
     {
-        $this->seen_at = date("Y-m-d H:i:s");
+        $this->seen_at = Carbon::now();
         $this->save();
     }
 

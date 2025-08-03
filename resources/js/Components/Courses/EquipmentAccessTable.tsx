@@ -150,7 +150,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                 gap: 0.5,
                                             }}
                                         >
-                                            {Boolean(equipmentItem.working) ? (
+                                            {equipmentItem.working ? (
                                                 <Chip
                                                     label="Working"
                                                     size="small"
@@ -165,7 +165,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                                                     variant="filled"
                                                 />
                                             )}
-                                            {Boolean(equipmentItem.permaloan) && (
+                                            {equipmentItem.permaloan && (
                                                 <Chip
                                                     label="Permaloan"
                                                     size="small"

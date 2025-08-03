@@ -129,7 +129,7 @@ class UserRepository extends DBRepository
 
     public function getTrustedMissingPhotos()
     {
-        return \DB::table('users')->join('profile_data', 'users.id', '=', 'profile_data.user_id')->where('key_holder', '1')->where('active', '1')->where('profile_data.profile_photo', 0)->get();
+        return \DB::table('users')->join('profile_data', 'users.id', '=', 'profile_data.user_id')->where('key_holder', true)->where('active', true)->where('profile_data.profile_photo', 0)->get();
     }
 
     /**
@@ -214,7 +214,7 @@ class UserRepository extends DBRepository
                 );
                 $user->cash_balance = $gift_record->credit * 100;
                 $user->status = 'active';
-                $user->active = '1';
+                $user->active = true;
                 $user->gift = $memberData['gift_code'];
                 $user->save();
 

@@ -58,12 +58,9 @@ class Induction extends Model
         'paid' => 'boolean',
         'active' => 'boolean',
         'is_trainer' => 'boolean',
+        'trained' => 'datetime',
+        'sign_off_requested_at' => 'datetime',
     ];
-
-    public function getDates()
-    {
-        return array('created_at', 'updated_at', 'trained', 'sign_off_requested_at');
-    }
 
 
     public function user()
@@ -78,7 +75,7 @@ class Induction extends Model
 
     public static function trainersFor($key)
     {
-        return self::where('key', $key)->where('is_trainer', 1)->get();
+        return self::where('key', $key)->where('is_trainer', true)->get();
     }
 
     public function course()
