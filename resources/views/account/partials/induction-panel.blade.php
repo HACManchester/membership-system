@@ -14,6 +14,7 @@
             <th>Name</th>
             <th>Cost</th>
             <th>Induction</th>
+            <th>Lone Working</th>
             <th>Access Code</th>
             @if (Auth::user()->isAdmin())
                 <th>
@@ -35,6 +36,11 @@
                 🕑 Pending
                 @else
                 <a href="{{ route('equipment.index') }}/{{ $item->slug }}">Book induction on tool page</a>
+                @endif
+            </td>
+            <td>
+                @if (!$item->lone_working)
+                    <span class="label label-danger">No lone working</span>
                 @endif
             </td>
             <td>

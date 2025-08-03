@@ -12,28 +12,12 @@ import PageTitle from "../../Components/PageTitle";
 import CourseForm from "../../Components/CourseForm";
 import CourseSummary from "../../Components/CourseSummary";
 import { useForm } from "@inertiajs/react";
-
-type Equipment = {
-    id: number;
-    name: string;
-    slug: string;
-    working: boolean;
-    permaloan: boolean;
-    dangerous: boolean;
-    room: string | null;
-    room_display: string | null;
-    ppe: string[];
-    photo_url: string | null;
-    induction_category: string | null;
-    urls: {
-        show: string;
-    };
-};
+import { EquipmentResource } from "@/types/resources";
 
 type Props = {
     formatOptions: Record<string, string>;
     frequencyOptions: Record<string, string>;
-    equipment: Equipment[];
+    equipment: EquipmentResource[];
     urls: {
         index: string;
         store: string;
@@ -60,7 +44,8 @@ const Create = ({
         quiz_url: "",
         request_induction_url: "",
         equipment: [] as number[],
-        paused: false
+        paused: false,
+        live: false,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -72,7 +57,11 @@ const Create = ({
         <>
             <PageTitle title="Add an induction" />
             <Container sx={{ mt: 4 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 3 }}
+                >
                     <Link href={urls.index} color="inherit" underline="hover">
                         Inductions
                     </Link>{" "}
@@ -83,13 +72,22 @@ const Create = ({
                     <Grid2 size={{ xs: 12, lg: 8 }}>
                         <Card>
                             <CardContent>
-                                <Typography variant="h5" component="h1" gutterBottom>
+                                <Typography
+                                    variant="h5"
+                                    component="h1"
+                                    gutterBottom
+                                >
                                     Create New Induction
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                                    Fill in the details below to create a new induction course.
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 3 }}
+                                >
+                                    Fill in the details below to create a new
+                                    induction course.
                                 </Typography>
-                                
+
                                 <CourseForm
                                     data={data}
                                     setData={setData}
@@ -113,12 +111,16 @@ const Create = ({
                                         name: data.name,
                                         description: data.description,
                                         format: data.format,
-                                        format_description: data.format_description,
+                                        format_description:
+                                            data.format_description,
                                         frequency: data.frequency,
-                                        frequency_description: data.frequency_description,
+                                        frequency_description:
+                                            data.frequency_description,
                                         wait_time: data.wait_time,
                                         is_paused: data.paused,
-                                        equipment: equipment.filter(eq => data.equipment.includes(eq.id))
+                                        equipment: equipment.filter((eq) =>
+                                            data.equipment.includes(eq.id)
+                                        ),
                                     }}
                                     formatOptions={formatOptions}
                                     frequencyOptions={frequencyOptions}

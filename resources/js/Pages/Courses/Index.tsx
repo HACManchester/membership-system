@@ -14,18 +14,22 @@ import {
     Select,
     MenuItem,
     Stack,
+    Collapse,
 } from "@mui/material";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import CourseSummary from "../../Components/CourseSummary";
-import { CourseResource } from "../../types/resources";
+import { CourseResource, EquipmentResource } from "../../types/resources";
+import { TransitionGroup } from "react-transition-group";
 
 const CourseGroup = ({
     title,
     courses,
+    canSeeNonLiveCourses,
 }: {
     title: string;
     courses: CourseResource[];
+    canSeeNonLiveCourses: boolean;
 }) => {
     if (courses.length === 0) return null;
 
@@ -41,6 +45,7 @@ const CourseGroup = ({
                             <CourseSummary
                                 course={course}
                                 height="100%"
+                                canSeeNonLiveCourses={canSeeNonLiveCourses}
                             />
                         </Grid2>
                     );
@@ -52,27 +57,34 @@ const CourseGroup = ({
 
 type Props = {
     courses: CourseResource[];
+    equipmentWithoutLiveCourse: EquipmentResource[];
+    canSeeNonLiveCourses: boolean;
     can?: {
         create: boolean;
     };
     urls: {
         create: string;
     };
-    isPreview?: boolean;
 };
 
 const Index = ({
     courses,
+    equipmentWithoutLiveCourse,
+    canSeeNonLiveCourses,
     can = { create: false },
     urls,
-    isPreview = false,
 }: Props) => {
     const [showPaused, setShowPaused] = useState(false);
     const [hideCompleted, setHideCompleted] = useState(false);
+    const [hidePending, setHidePending] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string>("all");
+    const [equipmentExpanded, setEquipmentExpanded] = useState<boolean>(false);
 
     const isUserTrainedForCourse = (course: CourseResource) => {
-        return course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
+        return (
+            course.user_course_induction?.trained != null &&
+            course.user_course_induction.trained !== ""
+        );
     };
 
     const allAvailableRooms = [
@@ -89,6 +101,7 @@ const Index = ({
         const pauseFilter = showPaused || !course.is_paused;
         const completionFilter =
             !hideCompleted || !isUserTrainedForCourse(course);
+        const liveFilter = !hidePending || course.live;
 
         let roomFilter = true;
         if (selectedRoom !== "all") {
@@ -103,7 +116,7 @@ const Index = ({
             }
         }
 
-        return pauseFilter && completionFilter && roomFilter;
+        return pauseFilter && completionFilter && roomFilter && liveFilter;
     });
 
     const allRooms = [
@@ -135,7 +148,8 @@ const Index = ({
     const pausedCount = courses.filter((course) => course.is_paused).length;
     const completedCount = courses.filter((course) =>
         isUserTrainedForCourse(course)
-    ).length;
+).length;
+    const pendingCount = courses.filter((course) => !course.live).length;
 
     const actionButtons = (
         <Stack direction="row" justifyContent="flex-end">
@@ -202,6 +216,19 @@ const Index = ({
                         label={`Hide completed (${completedCount})`}
                     />
                 )}
+                {pendingCount > 0 && (
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={hidePending}
+                                onChange={(e) =>
+                                    setHidePending(e.target.checked)
+                                }
+                            />
+                        }
+                        label={`Hide non-live (${pendingCount})`}
+                    />
+                )}
             </Stack>
         </Paper>
     );
@@ -209,39 +236,140 @@ const Index = ({
     return (
         <>
             <PageTitle title="Inductions" actionButtons={actionButtons} />
-            <Container sx={{ mt: 4 }}>
+            <Container sx={{ mt: 4, pb: 4 }}>
                 <Stack spacing={4}>
                     <Stack spacing={2}>
                         <Paper sx={{ p: 3, mb: 4 }}>
-                            <Typography sx={{ mb: 2 }}>
-                                Inductions are required before using certain
-                                equipment in the Hackspace. These cover safe
-                                operation according to our safety protocols.
-                            </Typography>
-                            <Typography color="text.secondary">
-                                For skills development, check our{" "}
-                                <a
-                                    href="https://list.hacman.org.uk/c/events/12"
-                                    target="_blank"
-                                >
-                                    events forum
-                                </a>{" "}
-                                for workshops and classes.
-                            </Typography>
+                            <Stack spacing={2}>
+                                <Typography>
+                                    Certain equipment in the Hackspace require
+                                    members to complete an induction before use.
+                                    These inductions will help you learn how to
+                                    use the equipment safely and effectively,
+                                    according to our risk assessments and safety
+                                    protocols.
+                                </Typography>
+                                <Typography>
+                                    <strong>
+                                        If you have prior experience with a
+                                        particular tool:
+                                    </strong>{" "}
+                                    You must still complete the induction to
+                                    ensure you are familiar with our procedures
+                                    and protocols. Due to insurance
+                                    requirements, we are unable to accept or
+                                    recognise external training or
+                                    certifications of any kind.
+                                </Typography>
+                                <Typography>
+                                    Our inductions are not intended to teach or
+                                    develop new skills; for skills development
+                                    please subscribe to our{" "}
+                                    <a
+                                        href="https://list.hacman.org.uk/c/events/12"
+                                        target="_blank"
+                                    >
+                                        events forum
+                                    </a>{" "}
+                                    to find out about future workshops and
+                                    classes.
+                                </Typography>
 
-                            {isPreview && (
-                                <Alert severity="info" sx={{ mt: 3 }}>
-                                    <Typography sx={{ mb: 1 }}>
-                                        <strong>Preview Feature:</strong> This
-                                        inductions section is currently only
-                                        visible to admins, area coordinators,
-                                        and equipment maintainers while we
-                                        develop the system.
-                                    </Typography>
-                                    <Typography>
-                                        It will be made available to all members
-                                        once fully tested and ready.
-                                    </Typography>
+                                {canSeeNonLiveCourses && (
+                                    <Alert severity="info">
+                                        <Typography variant="body2">
+                                            As an admin, area coordinator, or
+                                            maintainer, you can see courses that
+                                            are not yet live. These appear with
+                                            special indicators and are not
+                                            visible to regular members until
+                                            made live.
+                                        </Typography>
+                                    </Alert>
+                                )}
+                            </Stack>
+
+                            {equipmentWithoutLiveCourse.length > 0 && (
+                                <Alert severity="warning" sx={{ mt: 3 }}>
+                                    <Stack spacing={2}>
+                                        <Typography>
+                                            The following pieces of equipment
+                                            have not been migrated to the new
+                                            induction courses system. Please
+                                            visit their separate equipment pages
+                                            for induction information.
+                                        </Typography>
+                                        <Stack spacing={0.5}>
+                                            <TransitionGroup>
+                                                {equipmentWithoutLiveCourse
+                                                    .slice(
+                                                        0,
+                                                        equipmentExpanded
+                                                            ? Number.POSITIVE_INFINITY
+                                                            : 5
+                                                    )
+                                                    .map((equipment) => (
+                                                        <Collapse
+                                                            key={equipment.id}
+                                                        >
+                                                            <Typography
+                                                                key={
+                                                                    equipment.id
+                                                                }
+                                                            >
+                                                                •{" "}
+                                                                <Link
+                                                                    href={
+                                                                        equipment
+                                                                            .urls
+                                                                            .show
+                                                                    }
+                                                                    target="_blank"
+                                                                    rel="noopener"
+                                                                >
+                                                                    {
+                                                                        equipment.name
+                                                                    }
+                                                                </Link>
+                                                                {equipment.room_display && (
+                                                                    <Typography
+                                                                        component="span"
+                                                                        color="text.secondary"
+                                                                        sx={{
+                                                                            ml: 1,
+                                                                        }}
+                                                                    >
+                                                                        (
+                                                                        {
+                                                                            equipment.room_display
+                                                                        }
+                                                                        )
+                                                                    </Typography>
+                                                                )}
+                                                            </Typography>
+                                                        </Collapse>
+                                                    ))}
+                                            </TransitionGroup>
+                                        </Stack>
+
+                                        <Button
+                                            onClick={() =>
+                                                setEquipmentExpanded(
+                                                    !equipmentExpanded
+                                                )
+                                            }
+                                            variant="text"
+                                            color="secondary"
+                                            sx={{ alignSelf: "flex-start" }}
+                                        >
+                                            {equipmentExpanded
+                                                ? `Show less`
+                                                : `Show more (${
+                                                      equipmentWithoutLiveCourse.length -
+                                                      5
+                                                  })`}
+                                        </Button>
+                                    </Stack>
                                 </Alert>
                             )}
                         </Paper>
@@ -254,6 +382,7 @@ const Index = ({
                                 key={areaName}
                                 title={areaName}
                                 courses={areaCourses}
+                                canSeeNonLiveCourses={canSeeNonLiveCourses}
                             />
                         )
                     )}
@@ -261,6 +390,7 @@ const Index = ({
                     <CourseGroup
                         title="Ungrouped"
                         courses={ungroupedCourses}
+                        canSeeNonLiveCourses={canSeeNonLiveCourses}
                     />
                 </Stack>
             </Container>

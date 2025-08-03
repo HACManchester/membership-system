@@ -129,6 +129,7 @@
                         'name' => $navItem['label'],
                         'href' => $href,
                         'highlight' => $highlight,
+                        'badge' => $badge,
                     ])
                 @endif
             @endforeach

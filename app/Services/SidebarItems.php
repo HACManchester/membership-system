@@ -104,7 +104,7 @@ class SidebarItems
                 'href' => route('courses.index'),
                 'active' => self::isActive('courses.index'),
                 'visible' => $this->user->can('viewAny', Course::class),
-                'badge' => Course::isPreview() ? 'Preview' : null
+                'badge' => 'New'
             ],
             [
                 'label' => 'Stats',

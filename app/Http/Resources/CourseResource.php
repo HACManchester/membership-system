@@ -17,7 +17,7 @@ class CourseResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data = [
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
@@ -39,24 +39,29 @@ class CourseResource extends JsonResource
             'request_induction_url' => $this->request_induction_url,
             'paused_at' => $this->paused_at,
             'is_paused' => $this->isPaused(),
-            'equipment' => EquipmentResource::collection($this->whenLoaded('equipment')),
+            'live' => $this->live,
+            'equipment' => $this->whenLoaded('equipment', function () {
+                return EquipmentResource::collection($this->equipment);
+            }),
+            
+            // Include user course induction status when user is authenticated
+            'user_course_induction' => $this->when(auth()->check(), function () {
+                $inductionRepo = app(\BB\Repo\InductionRepository::class);
+                $userCourseInduction = $inductionRepo->getUserForCourse(auth()->user()->id, $this->id);
+                return $userCourseInduction ? new InductionResource($userCourseInduction) : null;
+            }),
+            
+            // Include trainers when user is authenticated
+            'trainers' => $this->when(auth()->check(), function () {
+                $inductionRepo = app(\BB\Repo\InductionRepository::class);
+                $trainers = $inductionRepo->getTrainersForCourse($this->id);
+                $trainers->load(['user.profile']);
+                return InductionResource::collection($trainers);
+            }),
+            
             'urls' => [
                 'show' => route('courses.show', $this->slug, false),
             ],
         ];
-        
-        // Include user course induction status when user is authenticated
-        if (auth()->check()) {
-            $inductionRepo = app(\BB\Repo\InductionRepository::class);
-            $userCourseInduction = $inductionRepo->getUserForCourse(auth()->user()->id, $this->id);
-            $data['user_course_induction'] = $userCourseInduction ? new InductionResource($userCourseInduction) : null;
-            
-            // Include trainers for this course
-            $trainers = $inductionRepo->getTrainersForCourse($this->id);
-            $trainers->load(['user.profile']);
-            $data['trainers'] = InductionResource::collection($trainers);
-        }
-        
-        return $data;
     }
 }

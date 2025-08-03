@@ -44,7 +44,7 @@ class InductionRepository extends DBRepository
     {
         return $this->model->where('user_id', $user->id)
             ->where('key', $deviceId)
-            ->where('is_trainer', 1)
+            ->where('is_trainer', true)
             ->count() > 0;
     }
 
@@ -178,7 +178,7 @@ class InductionRepository extends DBRepository
     {
         return $this->model->where('user_id', $user->id)
             ->where('course_id', $courseId)
-            ->where('is_trainer', 1)
+            ->where('is_trainer', true)
             ->count() > 0;
     }
     

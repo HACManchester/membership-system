@@ -12,23 +12,7 @@ import PageTitle from "../../Components/PageTitle";
 import CourseForm from "../../Components/CourseForm";
 import CourseSummary from "../../Components/CourseSummary";
 import { useForm } from "@inertiajs/react";
-
-type Equipment = {
-    id: number;
-    name: string;
-    slug: string;
-    working: boolean;
-    permaloan: boolean;
-    dangerous: boolean;
-    room: string | null;
-    room_display: string | null;
-    ppe: string[];
-    photo_url: string | null;
-    induction_category: string | null;
-    urls: {
-        show: string;
-    };
-};
+import { EquipmentResource } from "@/types/resources";
 
 type CourseData = {
     data: {
@@ -47,7 +31,8 @@ type CourseData = {
         request_induction_url: string | null;
         paused_at: string | null;
         is_paused: boolean;
-        equipment: Equipment[];
+        live: boolean;
+        equipment: EquipmentResource[];
         urls: {
             show: string;
         };
@@ -59,7 +44,7 @@ type Props = {
     course: CourseData;
     formatOptions: Record<string, string>;
     frequencyOptions: Record<string, string>;
-    equipment: Equipment[];
+    equipment: EquipmentResource[];
     urls: {
         update: string;
         show: string;
@@ -88,7 +73,8 @@ const Edit = ({
         quiz_url: course.data.quiz_url || "",
         request_induction_url: course.data.request_induction_url || "",
         equipment: course.equipment,
-        paused: course.data.is_paused || false
+        paused: course.data.is_paused || false,
+        live: course.data.live || false
     });
 
     const handleSubmit = (e: React.FormEvent) => {

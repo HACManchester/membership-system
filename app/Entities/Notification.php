@@ -18,13 +18,10 @@ class Notification extends Model
     protected $fillable = ['user_id', 'message', 'type', 'hash', 'unread', 'notified_method', 'notified_at'];
 
     protected $casts = [
-        'unread' => 'boolean'
+        'unread' => 'boolean',
+        'notified_at' => 'datetime',
     ];
 
-    public function getDates()
-    {
-        return array('created_at', 'updated_at', 'notified_at');
-    }
 
     /**
      * Record a notification for the user but make sure there are no duplicates first

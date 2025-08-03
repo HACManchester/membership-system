@@ -48,6 +48,7 @@ type FormData = {
     request_induction_url: string;
     equipment: number[];
     paused: boolean;
+    live: boolean;
 };
 
 type Props = {
@@ -327,6 +328,24 @@ const CourseForm = ({
                     />
                     {errors.paused && (
                         <FormHelperText error>{errors.paused}</FormHelperText>
+                    )}
+                </Grid2>
+
+                <Grid2 size={12}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={data.live}
+                                onChange={(e) => setData("live", e.target.checked)}
+                            />
+                        }
+                        label="Course is live"
+                    />
+                    <FormHelperText>
+                        When the course is made live, it takes over and becomes the primary way to manage inductions for the relevant pieces of equipment. The old induction-related fields on equipment pages will no longer be used.
+                    </FormHelperText>
+                    {errors.live && (
+                        <FormHelperText error>{errors.live}</FormHelperText>
                     )}
                 </Grid2>
 

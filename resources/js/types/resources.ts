@@ -37,11 +37,13 @@ export type EquipmentResource = {
     working: boolean;
     permaloan: boolean;
     dangerous: boolean;
+    lone_working: boolean;
     room: string | null;
     room_display: string | null;
     ppe: string[];
     photo_url: string | null;
     induction_category: string | null;
+    access_code?: string;
     urls: {
         show: string;
     };
@@ -69,6 +71,7 @@ export type CourseResource = {
     request_induction_url: string | null;
     paused_at: string | null;
     is_paused: boolean;
+    live: boolean;
     equipment: EquipmentResource[];
     user_course_induction?: InductionResource | null;
     trainers?: InductionResource[];

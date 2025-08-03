@@ -19,8 +19,8 @@ class InductionCompletedNotification extends AbstractInductionNotification
      */
     public function toMail($notifiable)
     {
-        // Use course-based messaging when courses are live and we have a course
-        if (\BB\Entities\Course::isLive() && $this->course) {
+        // Use course-based messaging when we have a course and it's live
+        if ($this->course && $this->course->live) {
             $mailMessage = (new MailMessage)
                 ->subject("You're trained for {$this->course->name}!")
                 ->line("You've been marked as trained for the {$this->course->name} course.")

@@ -24,8 +24,8 @@ class InductionRequestedNotification extends AbstractInductionNotification
     {
         $inductee = $this->induction->user;
 
-        // Use course-based messaging when courses are live and we have a course
-        if (\BB\Entities\Course::isLive() && $this->course) {
+        // Use course-based messaging when we have a course and it's live
+        if ($this->course && $this->course->live) {
             $mailMessage = (new MailMessage)
                 ->subject("{$inductee->name} has requested training for {$this->course->name}")
                 ->line("{$inductee->name} has requested training for the {$this->course->name} course.");

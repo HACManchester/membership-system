@@ -4,12 +4,15 @@ namespace BB\Entities;
 
 use BB\Entities\Equipment;
 use BB\Entities\Induction;
-use BB\Entities\Settings;
 use BB\Presenters\CoursePresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Equipment> $equipment
+ * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Induction> $inductions
+ */
 class Course extends Model
 {
     use SoftDeletes, PresentableTrait;
@@ -32,6 +35,16 @@ class Course extends Model
         'quiz_url',
         'request_induction_url',
         'paused_at',
+        'live',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'live' => 'boolean',
     ];
 
     public function getRouteKeyName()
@@ -68,31 +81,6 @@ class Course extends Model
         ]);
     }
 
-    /**
-     * Check if the inductions feature is live for everyone
-     *
-     * @return bool
-     */
-    public static function isLive()
-    {
-        try {
-            $inductionsLive = Settings::get('inductions_live');
-            return $inductionsLive === 'true';
-        } catch (\Exception $e) {
-            // If setting doesn't exist, feature is in preview mode
-            return false;
-        }
-    }
-
-    /**
-     * Check if the inductions feature is in preview mode
-     *
-     * @return bool
-     */
-    public static function isPreview()
-    {
-        return !static::isLive();
-    }
 
     /**
      * Check if the course is currently paused

@@ -31,6 +31,7 @@ type CourseProps = {
     wait_time: string;
     paused_at?: string | null;
     is_paused?: boolean;
+    live?: boolean;
     equipment: CourseResource['equipment'];
     user_course_induction?: CourseResource['user_course_induction'];
     urls?: {
@@ -44,6 +45,7 @@ type Props = ComponentProps<typeof Box> & {
     frequencyOptions?: Record<string, string>;
     clickable?: boolean;
     isPreview?: boolean;
+    canSeeNonLiveCourses?: boolean;
 };
 
 const CourseSummary = ({
@@ -52,6 +54,7 @@ const CourseSummary = ({
     frequencyOptions = {},
     clickable = true,
     isPreview = false,
+    canSeeNonLiveCourses = false,
     ...rest
 }: Props) => {
     // Handle format/frequency which might be strings or objects
@@ -126,6 +129,14 @@ const CourseSummary = ({
                                     size="small"
                                 />
                             </Box>
+                        )}
+                        
+                        {canSeeNonLiveCourses && !course.live && (
+                            <Alert severity="info" sx={{ py: 0.5 }}>
+                                <Typography variant="body2">
+                                    <strong>Not yet live:</strong> This course is in development. Regular members cannot see it yet.
+                                </Typography>
+                            </Alert>
                         )}
 
                         <Typography 

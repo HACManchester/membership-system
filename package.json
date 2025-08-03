@@ -18,6 +18,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
+    "react-transition-group": "^4.4.5",
     "select2": "^3.5.2-browserify"
   },
   "browser": {

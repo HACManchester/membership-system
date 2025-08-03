@@ -161,6 +161,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
+        $equipment->load('courses');
         $memberList = $this->userRepository->getAllAsDropdown();
         $maintainerGroupOptions = MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id');
 

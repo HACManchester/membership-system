@@ -8,7 +8,8 @@ use BB\Http\Requests\StoreCourseRequest;
 use BB\Http\Requests\UpdateCourseRequest;
 use BB\Http\Resources\CourseResource;
 use BB\Http\Resources\EquipmentResource;
-use BB\Http\Resources\InductionResource;
+use BB\Repo\CourseRepository;
+use BB\Repo\EquipmentRepository;
 use BB\Repo\InductionRepository;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
@@ -17,11 +18,18 @@ use Inertia\Inertia;
 class CourseController extends Controller
 {
     protected $inductionRepository;
+    protected $courseRepository;
+    protected $equipmentRepository;
 
-    public function __construct(InductionRepository $inductionRepository)
-    {
+    public function __construct(
+        InductionRepository $inductionRepository,
+        CourseRepository $courseRepository,
+        EquipmentRepository $equipmentRepository
+    ) {
         $this->authorizeResource(Course::class, 'course');
         $this->inductionRepository = $inductionRepository;
+        $this->courseRepository = $courseRepository;
+        $this->equipmentRepository = $equipmentRepository;
     }
 
     /**
@@ -31,17 +39,20 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with('equipment')->orderBy('name', 'ASC')->get();
-
+        $user = auth()->user();
+        $courses = $this->courseRepository->getCoursesForUser($user);
+        $equipmentWithoutLiveCourse = $this->equipmentRepository->getEquipmentWithoutLiveCourse();
+        
         return Inertia::render('Courses/Index', [
             'courses' => CourseResource::collection($courses),
+            'equipmentWithoutLiveCourse' => EquipmentResource::collection($equipmentWithoutLiveCourse),
+            'canSeeNonLiveCourses' => $this->courseRepository->canUserSeeNonLiveCourses($user),
             'can' => [
-                'create' => auth()->user()->can('create', Course::class),
+                'create' => $user->can('create', Course::class),
             ],
             'urls' => [
                 'create' => route('courses.create', [], false),
             ],
-            'isPreview' => Course::isPreview(),
         ]);
     }
 
@@ -52,13 +63,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $equipment = Equipment::whereDoesntHave('courses')
-            ->where(function ($query) {
-                $query->whereNull('induction_category')
-                    ->orWhere('induction_category', '');
-            })
-            ->orderBy('name')
-            ->get();
+        $equipment = $this->equipmentRepository->getEquipmentForCourseCreation();
 
         return Inertia::render('Courses/Create', [
             'formatOptions' => Course::formatOptions(),
@@ -111,20 +116,16 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        $course->load('equipment');
-
-        $userCourseInduction = $this->inductionRepository->getUserForCourse(
-            auth()->user()->id,
-            $course->id
-        );
+        $course->load('equipment.courses');
+        $user = auth()->user();
 
         return Inertia::render('Courses/Show', [
-            'course' => (new CourseResource($course)),
-            'userCourseInduction' => $userCourseInduction ? new InductionResource($userCourseInduction) : null,
+            'course' => new CourseResource($course),
+            'canSeeNonLiveCourses' => $this->courseRepository->canUserSeeNonLiveCourses($user),
             'can' => [
-                'update' => auth()->user()->can('update', $course),
-                'delete' => auth()->user()->can('delete', $course),
-                'viewTraining' => auth()->user()->can('viewTraining', $course),
+                'update' => $user->can('update', $course),
+                'delete' => $user->can('delete', $course),
+                'viewTraining' => $user->can('viewTraining', $course),
             ],
             'urls' => [
                 'index' => route('courses.index', [], false),
