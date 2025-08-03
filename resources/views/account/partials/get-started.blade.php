@@ -3,7 +3,7 @@ $conditions = [
     $user->email_verified,
     $user->payment_method,
     $user->induction_completed,
-    $user->keyFob()->exists(),
+    $user->keyFob() !== null,
     $user->visited_forum,
     $user->inductions()->trained()->count() > 0,
 ];
@@ -67,7 +67,7 @@ DESC
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '4',
                             'block_condition' => !$user->payment_method,
-                            'pass_condition' => $user->keyFob()->exists(),
+                            'pass_condition' => $user->keyFob() !== null,
                             'title' => 'Get an access method set up',
                             'link' => route('keyfobs.index', $user->id),
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.',
