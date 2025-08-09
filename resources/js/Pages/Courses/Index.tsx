@@ -78,6 +78,7 @@ const Index = ({
     const [hideCompleted, setHideCompleted] = useState(false);
     const [hidePending, setHidePending] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string>("all");
+    const [selectedFormat, setSelectedFormat] = useState<string>("all");
     const [equipmentExpanded, setEquipmentExpanded] = useState<boolean>(false);
 
     const isUserTrainedForCourse = (course: CourseResource) => {
@@ -94,6 +95,14 @@ const Index = ({
                     (e) => e.room_display || "Not assigned to a room"
                 )
             )
+        ),
+    ].sort();
+
+    const allFormats = [
+        ...new Set(
+            courses
+                .filter((course) => course.format?.value)
+                .map((course) => course.format.value)
         ),
     ].sort();
 
@@ -116,7 +125,11 @@ const Index = ({
             }
         }
 
-        return pauseFilter && completionFilter && roomFilter && liveFilter;
+        const formatFilter =
+            selectedFormat === "all" ||
+            course.format?.value === selectedFormat;
+
+        return pauseFilter && completionFilter && roomFilter && liveFilter && formatFilter;
     });
 
     const allRooms = [
@@ -187,6 +200,22 @@ const Index = ({
                             </MenuItem>
                         ))}
                         <MenuItem value="ungrouped">Ungrouped Courses</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel>Filter by Format</InputLabel>
+                    <Select
+                        value={selectedFormat}
+                        label="Filter by Format"
+                        onChange={(e) => setSelectedFormat(e.target.value)}
+                    >
+                        <MenuItem value="all">All Formats</MenuItem>
+                        {allFormats.map((format) => (
+                            <MenuItem key={format} value={format}>
+                                {courses.find(c => c.format?.value === format)?.format.label || format}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 
