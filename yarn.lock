@@ -1589,7 +1589,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jest: ^29.7.0
     jest-environment-jsdom: ^29.7.0
-    jquery: ^3.5.0
+    jquery: ^3.5.1
     laravel-mix: ^6.0.0
     less: ^4.2.2
     less-loader: ^7.3.0
@@ -7257,10 +7257,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.5.0":
-  version: 3.5.0
-  resolution: "jquery@npm:3.5.0"
-  checksum: 5085f2f2e26fe5cbab10b3d05aef1dd9980c6f01aa07bbb238fc7778695b21fa5c182e5dd9ea6e7852349edae3a203b96849fd86862c81fc1c49d5fd1281f886
+"jquery@npm:^3.5.1":
+  version: 3.7.1
+  resolution: "jquery@npm:3.7.1"
+  checksum: 4370b8139d6ae82867eb6f7f21d1edccf1d1bdf41c0840920ea80d366c2cd5dbe1ceebb110ee9772aa839b04400faa1572c5c560b507c688ed7b61cea26c0e27
   languageName: node
   linkType: hard
 

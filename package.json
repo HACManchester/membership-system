@@ -13,7 +13,7 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "bootstrap": "^3.3.4",
-    "jquery": "^3.5.0",
+    "jquery": "^3.5.1",
     "material-design-icons": "^2.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
