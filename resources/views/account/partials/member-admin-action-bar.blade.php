@@ -5,12 +5,12 @@
         <div class="panel panel-danger">
             <div class="panel-heading">
                 <h3 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#collapseMemberAdminActions" aria-expanded="true" aria-controls="collapseMemberAdminActions">
+                    <a role="button" data-toggle="collapse" href="#collapseMemberAdminActions" aria-expanded="false" aria-controls="collapseMemberAdminActions">
                         Admin Actions (not visible to non-admins)
                     </a>
                 </h3>
             </div>
-            <div id="collapseMemberAdminActions" role="tabpanel">
+            <div id="collapseMemberAdminActions" class="collapse" role="tabpanel">
                 <div class="infobox infobox__grid">
                     <div class="infobox__grid-item infobox__grid-item--header">
                         <h4>Particulars</h4>
