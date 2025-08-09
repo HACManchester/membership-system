@@ -7,18 +7,15 @@ import {
     Link,
     Alert,
     Grid2,
-    FormControlLabel,
-    Switch,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Stack,
     Collapse,
 } from "@mui/material";
 import MainLayout from "../../Layouts/MainLayout";
 import PageTitle from "../../Components/PageTitle";
 import CourseSummary from "../../Components/CourseSummary";
+import CourseFilters from "./components/CourseFilters";
+import { useCourseFilters } from "./hooks/useCourseFilters";
+import { useCourseGrouping } from "./hooks/useCourseGrouping";
 import { CourseResource, EquipmentResource } from "../../types/resources";
 import { TransitionGroup } from "react-transition-group";
 
@@ -74,95 +71,17 @@ const Index = ({
     can = { create: false },
     urls,
 }: Props) => {
-    const [showPaused, setShowPaused] = useState(false);
-    const [hideCompleted, setHideCompleted] = useState(false);
-    const [hidePending, setHidePending] = useState(false);
-    const [selectedRoom, setSelectedRoom] = useState<string>("all");
-    const [selectedFormat, setSelectedFormat] = useState<string>("all");
     const [equipmentExpanded, setEquipmentExpanded] = useState<boolean>(false);
+    
+    const {
+        filters,
+        filteredCourses,
+        filterOptions,
+        counts,
+        updateFilter,
+    } = useCourseFilters(courses);
 
-    const isUserTrainedForCourse = (course: CourseResource) => {
-        return (
-            course.user_course_induction?.trained != null &&
-            course.user_course_induction.trained !== ""
-        );
-    };
-
-    const allAvailableRooms = [
-        ...new Set(
-            courses.flatMap((course) =>
-                course.equipment.map(
-                    (e) => e.room_display || "Not assigned to a room"
-                )
-            )
-        ),
-    ].sort();
-
-    const allFormats = [
-        ...new Set(
-            courses
-                .filter((course) => course.format?.value)
-                .map((course) => course.format.value)
-        ),
-    ].sort();
-
-    const filteredCourses = courses.filter((course) => {
-        const pauseFilter = showPaused || !course.is_paused;
-        const completionFilter =
-            !hideCompleted || !isUserTrainedForCourse(course);
-        const liveFilter = !hidePending || course.live;
-
-        let roomFilter = true;
-        if (selectedRoom !== "all") {
-            if (course.equipment.length === 0) {
-                roomFilter = selectedRoom === "ungrouped";
-            } else {
-                roomFilter = course.equipment.some(
-                    (e) =>
-                        (e.room_display || "Not assigned to a room") ===
-                        selectedRoom
-                );
-            }
-        }
-
-        const formatFilter =
-            selectedFormat === "all" ||
-            course.format?.value === selectedFormat;
-
-        return pauseFilter && completionFilter && roomFilter && liveFilter && formatFilter;
-    });
-
-    const allRooms = [
-        ...new Set(
-            filteredCourses.flatMap((course) =>
-                course.equipment.map(
-                    (e) => e.room_display || "Not assigned to a room"
-                )
-            )
-        ),
-    ].sort();
-
-    const groupedCourses = allRooms.reduce<Record<string, CourseResource[]>>(
-        (acc, room) => {
-            acc[room] = filteredCourses.filter((course) =>
-                course.equipment.some(
-                    (e) => (e.room_display || "Not assigned to a room") === room
-                )
-            );
-            return acc;
-        },
-        {}
-    );
-
-    const ungroupedCourses = filteredCourses.filter(
-        (course) => !course.equipment || course.equipment.length === 0
-    );
-
-    const pausedCount = courses.filter((course) => course.is_paused).length;
-    const completedCount = courses.filter((course) =>
-        isUserTrainedForCourse(course)
-).length;
-    const pendingCount = courses.filter((course) => !course.live).length;
+    const { groupedByRoom, ungroupedCourses } = useCourseGrouping(filteredCourses);
 
     const actionButtons = (
         <Stack direction="row" justifyContent="flex-end">
@@ -174,92 +93,6 @@ const Index = ({
                 </Link>
             )}
         </Stack>
-    );
-
-    const filterControls = (
-        <Paper sx={{ p: 2, mb: 4 }}>
-            <Stack
-                direction="row"
-                spacing={2}
-                // justifyContent="center"
-                alignItems="center"
-                flexWrap="wrap"
-                useFlexGap
-            >
-                <FormControl size="small" sx={{ minWidth: 200 }}>
-                    <InputLabel>Filter by Room</InputLabel>
-                    <Select
-                        value={selectedRoom}
-                        label="Filter by Room"
-                        onChange={(e) => setSelectedRoom(e.target.value)}
-                    >
-                        <MenuItem value="all">All Rooms</MenuItem>
-                        {allAvailableRooms.map((room) => (
-                            <MenuItem key={room} value={room}>
-                                {room}
-                            </MenuItem>
-                        ))}
-                        <MenuItem value="ungrouped">Ungrouped Courses</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl size="small" sx={{ minWidth: 200 }}>
-                    <InputLabel>Filter by Format</InputLabel>
-                    <Select
-                        value={selectedFormat}
-                        label="Filter by Format"
-                        onChange={(e) => setSelectedFormat(e.target.value)}
-                    >
-                        <MenuItem value="all">All Formats</MenuItem>
-                        {allFormats.map((format) => (
-                            <MenuItem key={format} value={format}>
-                                {courses.find(c => c.format?.value === format)?.format.label || format}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                {pausedCount > 0 && (
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={showPaused}
-                                onChange={(e) =>
-                                    setShowPaused(e.target.checked)
-                                }
-                            />
-                        }
-                        label={`Show unavailable (${pausedCount})`}
-                    />
-                )}
-                {completedCount > 0 && (
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={hideCompleted}
-                                onChange={(e) =>
-                                    setHideCompleted(e.target.checked)
-                                }
-                            />
-                        }
-                        label={`Hide completed (${completedCount})`}
-                    />
-                )}
-                {pendingCount > 0 && (
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={hidePending}
-                                onChange={(e) =>
-                                    setHidePending(e.target.checked)
-                                }
-                            />
-                        }
-                        label={`Hide non-live (${pendingCount})`}
-                    />
-                )}
-            </Stack>
-        </Paper>
     );
 
     return (
@@ -403,9 +236,14 @@ const Index = ({
                             )}
                         </Paper>
 
-                        {filterControls}
+                        <CourseFilters
+                            filters={filters}
+                            options={filterOptions}
+                            counts={counts}
+                            onFilterChange={updateFilter}
+                        />
                     </Stack>
-                    {Object.entries(groupedCourses).map(
+                    {Object.entries(groupedByRoom).map(
                         ([areaName, areaCourses]) => (
                             <CourseGroup
                                 key={areaName}
