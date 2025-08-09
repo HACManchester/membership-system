@@ -38,8 +38,9 @@ const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
                                             size="small"
                                             onClick={() => router.post(trainer.urls!.demote)}
                                             title="Remove trainer status"
+                                            sx={{ p: 0.5 }}
                                         >
-                                            <CloseIcon />
+                                            <CloseIcon fontSize="small" />
                                         </IconButton>
                                     )
                                 }

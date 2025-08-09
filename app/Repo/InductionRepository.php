@@ -160,7 +160,7 @@ class InductionRepository extends DBRepository
      */
     public function getTrainersForCourse($courseId)
     {
-        $trainers = $this->model->with('user', 'user.profile')
+        $trainers = $this->model->with('user', 'user.profile', 'trainerUser')
             ->where('is_trainer', true)
             ->where('course_id', $courseId)
             ->get();

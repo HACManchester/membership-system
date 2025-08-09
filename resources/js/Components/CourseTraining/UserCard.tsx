@@ -1,12 +1,11 @@
 import React from "react";
 import {
-    Card,
-    CardContent,
-    Avatar,
     Box,
     Typography,
     Stack,
     Tooltip,
+    Paper,
+    Avatar,
 } from "@mui/material";
 import { InductionResource } from "../../types/resources";
 
@@ -17,94 +16,88 @@ type Props = {
 
 const UserCard: React.FC<Props> = ({ induction, actions }) => {
     if (!induction.user) {
-        return null; // Skip rendering if user data is missing
+        return null;
     }
 
-    const formatDateWithTooltip = (dateString: string) => {
+    const formatDateRelative = (dateString: string) => {
         const date = new Date(dateString);
         const now = new Date();
         const diffMs = now.getTime() - date.getTime();
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         
-        // Use relative dates if within the last week
-        let displayText: string;
-        if (diffDays === 0) {
-            displayText = "today";
-        } else if (diffDays === 1) {
-            displayText = "yesterday";
-        } else if (diffDays < 7) {
-            displayText = `${diffDays} days ago`;
-        } else {
-            // Use absolute date for older dates
-            displayText = date.toLocaleDateString();
-        }
-        
-        return {
-            display: displayText,
-            tooltip: date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-        };
+        if (diffDays === 0) return "today";
+        if (diffDays === 1) return "yesterday";
+        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+        if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+        return date.toLocaleDateString();
     };
 
     return (
-        <Card sx={{ height: "100%" }}>
-            <CardContent>
-                <Box display="flex" alignItems="center" gap={2}>
-                    <Avatar
-                        src={induction.user.profile_photo_url || undefined}
-                        alt={induction.user.name}
-                    >
-                        {induction.user.name?.charAt(0)}
-                    </Avatar>
-                    <Box flexGrow={1}>
-                        <Typography variant="subtitle1">
-                            {induction.user.name}
-                            {induction.user.pronouns && (
-                                <Typography
-                                    component="span"
-                                    variant="body2"
-                                    color="text.secondary"
-                                    ml={1}
-                                >
-                                    ({induction.user.pronouns})
-                                </Typography>
-                            )}
+        <Paper 
+            sx={{ 
+                p: 1.5, 
+                display: 'flex', 
+                alignItems: 'center',
+                gap: 1.5,
+                '&:hover': {
+                    bgcolor: 'action.hover',
+                }
+            }}
+            elevation={1}
+        >
+            <Avatar
+                src={induction.user.profile_photo_url || undefined}
+                alt={induction.user.name}
+                sx={{ width: 32, height: 32, fontSize: '0.875rem' }}
+            >
+                {induction.user.name?.charAt(0)}
+            </Avatar>
+            
+            <Box flexGrow={1} minWidth={0}>
+                <Stack direction="row" alignItems="baseline" spacing={1}>
+                    <Typography variant="body2" fontWeight={500} noWrap>
+                        {induction.user.name}
+                    </Typography>
+                    {induction.user.pronouns && (
+                        <Typography variant="caption" color="text.secondary">
+                            ({induction.user.pronouns})
                         </Typography>
-                        <Stack spacing={0.5}>
-                            {/* Show sign-off request date if set */}
-                            {induction.sign_off_requested_at && (
-                                <Tooltip title={formatDateWithTooltip(induction.sign_off_requested_at).tooltip}>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Sign-off requested {formatDateWithTooltip(induction.sign_off_requested_at).display}
-                                    </Typography>
-                                </Tooltip>
-                            )}
-                            
-                            {/* Show training completion date */}
-                            {induction.trained && (
-                                <Tooltip title={formatDateWithTooltip(induction.trained).tooltip}>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Trained {formatDateWithTooltip(induction.trained).display}
-                                        {induction.trainer && ` by ${induction.trainer.name}`}
-                                    </Typography>
-                                </Tooltip>
-                            )}
-                            
-                            {/* Show trainer status */}
-                            {induction.is_trainer && (
-                                <Typography variant="body2" color="text.secondary">
-                                    Trainer
-                                </Typography>
-                            )}
-                        </Stack>
-                    </Box>
+                    )}
+                </Stack>
+                
+                <Stack direction="row" spacing={1} alignItems="center">
+                    {induction.sign_off_requested_at && (
+                        <Tooltip title={new Date(induction.sign_off_requested_at).toLocaleString()}>
+                            <Typography variant="caption" color="warning.main">
+                                Requested {formatDateRelative(induction.sign_off_requested_at)}
+                            </Typography>
+                        </Tooltip>
+                    )}
+                    
+                    {induction.trained && (
+                        <Tooltip title={`Trained on ${new Date(induction.trained).toLocaleString()}`}>
+                            <Typography variant="caption" color="text.secondary">
+                                Trained {formatDateRelative(induction.trained)}
+                                {induction.trainer && ` by ${induction.trainer.name}`}
+                            </Typography>
+                        </Tooltip>
+                    )}
+                    
+                    {induction.is_trainer && (
+                        <Typography variant="caption" color="primary.main" fontWeight={600}>
+                            • Trainer
+                        </Typography>
+                    )}
+                </Stack>
+            </Box>
+            
+            {actions && (
+                <Box display="flex" gap={0.5}>
+                    {actions}
                 </Box>
-                {actions && (
-                    <Box mt={2} display="flex" justifyContent="flex-end" gap={1}>
-                        {actions}
-                    </Box>
-                )}
-            </CardContent>
-        </Card>
+            )}
+        </Paper>
     );
 };
 
