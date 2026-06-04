@@ -21,17 +21,13 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        // Laravel 5.5 removed everything in $dontReport... let's see what that does for us.
-        // HttpException::class,
-        // NotFoundHttpException::class,
-        // ModelNotFoundException::class,
-        // MethodNotAllowedHttpException::class,
-        // FormValidationException::class,
-        // AuthenticationException::class,         //These are logged separately below
-        // AuthorizationException::class,
-        // ModelNotFoundException::class,
-        // ValidationException::class,
-        // IlluminateValidationException::class,
+        // Laravel 5.5+ handles standard framework exceptions via $internalDontReport
+        // (AuthenticationException, HttpException, ModelNotFoundException, ValidationException, etc.)
+        // These are app-specific exceptions that are handled gracefully in render():
+        FormValidationException::class,
+        ValidationException::class,
+        NotImplementedException::class,
+        AuthenticationException::class,
     ];
 
     /**
