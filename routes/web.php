@@ -11,17 +11,17 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'));
 # Authentication
 ##########################
 
-Route::get('login', ['as' => 'login', 'uses' => 'SessionController@create']);
+Route::get('login', ['as' => 'login', 'uses' => 'SessionController@create', 'middleware' => 'throttle:10,1']);
 Route::get('logout', ['as' => 'logout', 'uses' => 'SessionController@destroy']);
 Route::get('gift', ['as' => 'gift', 'uses' => 'GiftController@index']);
 Route::get('admin', ['as' => 'admin', 'uses' => 'AdminController@index', 'middleware' => 'role:admin']);
-Route::resource('session', 'SessionController', ['only' => ['create', 'store', 'destroy']]);
-Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create']);
-Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store']);
-Route::get('password/reset/{token}', ['as' => 'password.reset', 'uses' => 'ReminderController@getReset']);
-Route::post('password/reset', ['as' => 'password.reset.complete', 'uses' => 'ReminderController@postReset']);
+Route::post('session', ['as' => 'session.store', 'uses' => 'SessionController@store', 'middleware' => 'throttle:5,1']);
+Route::get('password/forgotten', ['as' => 'password-reminder.create', 'uses' => 'ReminderController@create', 'middleware' => 'throttle:10,1']);
+Route::post('password/forgotten', ['as' => 'password-reminder.store', 'uses' => 'ReminderController@store', 'middleware' => 'throttle:5,1']);
+Route::get('password/reset/{token}', ['as' => 'password.reset', 'uses' => 'ReminderController@getReset', 'middleware' => 'throttle:10,1']);
+Route::post('password/reset', ['as' => 'password.reset.complete', 'uses' => 'ReminderController@postReset', 'middleware' => 'throttle:5,1']);
 
-Route::get('sso/login', ['uses' => 'SessionController@sso_login']);
+Route::get('sso/login', ['uses' => 'SessionController@sso_login', 'middleware' => 'throttle:10,1']);
 
 
 ##########################
@@ -36,20 +36,22 @@ Route::inertia('component-zoo', 'ComponentZoo/Index');
 ##########################
 
 Route::get('account/trusted_missing_photos', ['uses' => 'AccountController@trustedMissingPhotos', 'as' => 'account.trusted_missing_photos', 'middleware' => 'role:admin']);
-Route::resource('account', 'AccountController');
+Route::get('account/create', ['uses' => 'AccountController@create', 'as' => 'account.create', 'middleware' => 'throttle:10,1']);
+Route::post('account', ['uses' => 'AccountController@store', 'as' => 'account.store', 'middleware' => 'throttle:5,1']);
+Route::resource('account', 'AccountController', ['except' => ['create', 'store']]);
 
 //Editing the profile
 Route::get('account/{account}/profile/edit', ['uses' => 'ProfileController@edit', 'as' => 'account.profile.edit', 'middleware' => 'role:member']);
 Route::put('account/{account}/profile', ['uses' => 'ProfileController@update', 'as' => 'account.profile.update', 'middleware' => 'role:member']);
 
 //Short register url
-Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create']);
-Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@createOnlineOnly']);
+Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create', 'middleware' => 'throttle:10,1']);
+Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
 
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as' => 'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware' => 'role:admin']);
 Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware' => 'role:admin']);
-Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'AccountController@sendConfirmationEmail']);
+Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'AccountController@sendConfirmationEmail', 'middleware' => 'throttle:3,1']);
 Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'AccountController@confirmEmail']);
 
 //Balance
@@ -102,7 +104,7 @@ Route::group(array('middleware' => 'role:finance'), function () {
 });
 
 Route::post('account/{account}/payment/create', ['as' => 'account.payment.create', 'uses' => 'PaymentController@create']);
-Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountController@updateSubscriptionAmount']);
+Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountController@updateSubscriptionAmount', 'middleware' => 'throttle:3,1']);
 
 # Payment provider specific urls
 Route::post('account/{account}/payment/gocardless', ['as' => 'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);
