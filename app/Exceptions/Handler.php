@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Validation\ValidationException as IlluminateValidationException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
@@ -67,6 +68,22 @@ class Handler extends ExceptionHandler
     protected function telegramException(Throwable $e)
     {
         try {
+            // Rate-limit Telegram notifications per unique exception (same file, line, message).
+            // The first occurrence always sends. After that, we only send again when the
+            // count crosses an order-of-magnitude threshold (10, 100, 1000, ...) to signal
+            // increased urgency without spamming. The counter resets after 5 minutes of quiet.
+            $fingerprint = 'telegram_error:' . md5($e->getFile() . ':' . $e->getLine() . ':' . $e->getMessage());
+
+            $count = Cache::get($fingerprint, 0) + 1;
+            Cache::put($fingerprint, $count, 300);
+
+            $isFirstOccurrence = $count === 1;
+            $isOrderOfMagnitude = $count >= 10 && $count === (int)(10 ** floor(log10($count)));
+
+            if (!$isFirstOccurrence && !$isOrderOfMagnitude) {
+                return;
+            }
+
             $level = 'error';
             $title = 'Error';
             $suppress = false;
@@ -74,6 +91,10 @@ class Handler extends ExceptionHandler
             if ($e instanceof NotImplementedException) {
                 $level = 'info';
                 $title = 'Not Implemented';
+            }
+
+            if ($count > 1) {
+                $title .= " (x{$count})";
             }
 
             $this->notifyTelegram($level, $title, $suppress, $e);
