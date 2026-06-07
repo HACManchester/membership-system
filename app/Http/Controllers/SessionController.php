@@ -87,8 +87,8 @@ class SessionController extends Controller
          */
         $calculatedHash = hash_hmac('sha256', $input['sso'], config('discourse.secret'), false);
 
-        if ($calculatedHash != $input['sig']) {
-            Log::error("HMAC: $calculatedHash  !!!!Provided: " . $input['sig']);
+        if (!is_string($input['sig']) || !hash_equals($calculatedHash, $input['sig'])) {
+            Log::error("Discourse SSO signature mismatch");
 
             return \View::make('session.error')
                 ->with('code', '1');
