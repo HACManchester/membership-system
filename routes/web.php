@@ -35,7 +35,6 @@ Route::inertia('component-zoo', 'ComponentZoo/Index');
 # Account
 ##########################
 
-Route::get('account/trusted_missing_photos', ['uses' => 'AccountController@trustedMissingPhotos', 'as' => 'account.trusted_missing_photos', 'middleware' => 'role:admin']);
 Route::get('account/create', ['uses' => 'AccountController@create', 'as' => 'account.create', 'middleware' => 'throttle:10,1']);
 Route::post('account', ['uses' => 'AccountController@store', 'as' => 'account.store', 'middleware' => 'throttle:5,1']);
 Route::resource('account', 'AccountController', ['except' => ['create', 'store']]);
@@ -103,7 +102,6 @@ Route::group(array('middleware' => 'role:finance'), function () {
     Route::get('payments/possible-duplicates', ['as' => 'payments.possible-duplicates', 'uses' => 'PaymentController@possibleDuplicates']);
 });
 
-Route::post('account/{account}/payment/create', ['as' => 'account.payment.create', 'uses' => 'PaymentController@create']);
 Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountController@updateSubscriptionAmount', 'middleware' => 'throttle:3,1']);
 
 # Payment provider specific urls

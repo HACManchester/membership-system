@@ -90,10 +90,6 @@ class PaymentModule extends React.Component {
 
         this.setState({ requestInProgress: false });
 
-        if (xhr.status == 303) {
-          window.location.href = responseData.url;
-        }
-
         this.setState({ errorMessage: responseData.error })
       }.bind(this),
     });

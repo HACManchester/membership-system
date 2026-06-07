@@ -38,31 +38,26 @@ class GoCardlessPaymentController extends Controller
     {
         $user = User::findWithPermission($userId);
 
-        $requestData = \Request::only(['reason', 'amount', 'return_path']);
+        $requestData = \Request::only(['reason', 'amount']);
 
         $reason = $requestData['reason'];
         $amount = ($requestData['amount'] * 1) / 100;
-        $returnPath = $requestData['return_path'];
 
         if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
-            return $this->handleBill($amount, $reason, $user, $returnPath);
+            return $this->handleBill($amount, $reason, $user);
         } elseif ($user->payment_method == 'gocardless') {
 
-            return $this->ddMigratePrompt($returnPath);
+            return $this->ddMigratePrompt();
         } else {
 
             abort(500, 'Not supported');
         }
     }
 
-    private function ddMigratePrompt($returnPath)
+    private function ddMigratePrompt()
     {
-        if (\Request::wantsJson()) {
-            return \Response::json(['error' => 'Please visit the "Your Membership" page and migrate your Direct Debit first, then return and make the payment'], 400);
-        }
-        \FlashNotification::error("Please visit the \"Your Membership\" page and migrate your Direct Debit first, then return and make the payment");
-        return \Redirect::to($returnPath);
+        return \Response::json(['error' => 'Please visit the "Your Membership" page and migrate your Direct Debit first, then return and make the payment'], 400);
     }
 
     /**
@@ -71,11 +66,9 @@ class GoCardlessPaymentController extends Controller
      * @param $amount
      * @param $reason
      * @param User $user
-     * @param $ref
-     * @param $returnPath
      * @return mixed
      */
-    private function handleBill($amount, $reason, $user, $returnPath)
+    private function handleBill($amount, $reason, $user)
     {
         $ref = '';
 
@@ -93,23 +86,12 @@ class GoCardlessPaymentController extends Controller
             //The record payment process will make the necessary record updates
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', $paymentSourceId, $amount, $status, $fee, $ref);
 
-            if (\Request::wantsJson()) {
-                return \Response::json(['message' => 'The payment was submitted successfully']);
-            }
-
-            \FlashNotification::success("The payment was submitted successfully");
-
-            return \Redirect::to($returnPath);
+            return \Response::json(['message' => 'The payment was submitted successfully']);
         } catch (InvalidStateException | ValidationFailedException $e) {
             $status = 'failed';
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
-            if (\Request::wantsJson()) {
-                return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
-            }
-
-            \FlashNotification::error("We were unable to take payment from your account. Please try again.");
-            return \Redirect::to($returnPath);
+            return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
         } catch (Exception $e) {
             // Genuine app exception... needs investigation
             Log::info($e);
@@ -117,12 +99,7 @@ class GoCardlessPaymentController extends Controller
             $status = 'error';
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
-            if (\Request::wantsJson()) {
-                return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);
-            }
-
-            \FlashNotification::error("We encountered an error taking your payment.");
-            return \Redirect::to($returnPath);
+            return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);
         }
     }
 

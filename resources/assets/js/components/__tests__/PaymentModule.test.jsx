@@ -15,16 +15,6 @@ global.BB = {
   }
 };
 
-// Mock window.location
-const location = {
-  href: ''
-};
-
-Object.defineProperty(window, 'location', {
-  value: location,
-  writable: true
-});
-
 describe('PaymentModule', () => {
   const defaultProps = {
     userId: '123',
@@ -39,7 +29,6 @@ describe('PaymentModule', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    window.location.href = '';
   });
 
   it('renders with default props', () => {
@@ -136,27 +125,5 @@ describe('PaymentModule', () => {
     fireEvent.click(submitButton);
 
     expect(await screen.findByText('Payment failed')).toBeInTheDocument();
-  });
-
-  it('handles redirect responses', async () => {
-    const redirectResponse = {
-      responseText: JSON.stringify({ url: 'https://redirect.url' })
-    };
-
-    $.ajax.mockImplementation(({ error }) => {
-      error({ ...redirectResponse, status: 303 });
-    });
-
-    render(<PaymentModule {...defaultProps} />);
-    
-    const amountInput = screen.getByRole('spinbutton');
-    const submitButton = screen.getByRole('button');
-    
-    fireEvent.change(amountInput, { target: { value: '25.00' } });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(window.location.href).toBe('https://redirect.url');
-    });
   });
 });

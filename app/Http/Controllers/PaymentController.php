@@ -39,7 +39,7 @@ class PaymentController extends Controller
         $this->paymentRepository = $paymentRepository;
         $this->userRepository    = $userRepository;
 
-        $this->middleware('role:member', array('only' => ['create', 'destroy']));
+        $this->middleware('role:member', array('only' => ['destroy']));
     }
 
 
@@ -83,19 +83,6 @@ class PaymentController extends Controller
 
         return \View::make('payments.index')->with('payments', $payments)->with('dateRange', $dateRange)
             ->with('memberList', $memberList)->with('reasonList', $reasonList)->with('paymentTotal', $paymentTotal);
-    }
-
-
-    /**
-     * Start the creation of a new gocardless payment
-     *   Details get posted into this method and the redirected to gocardless
-     *
-     * @depreciated
-     * @param $userId
-     */
-    public function create($userId)
-    {
-        throw new \BB\Exceptions\NotImplementedException();
     }
 
 
