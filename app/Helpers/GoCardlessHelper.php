@@ -20,8 +20,8 @@ class GoCardlessHelper
     public function setup()
     {
         $this->client = new \GoCardlessPro\Client([
-            'access_token' => env('GOCARDLESS_ACCESS_TOKEN', ''),
-            'environment' => (env('NEW_GOCARDLESS_ENV', 'LIVE') == 'LIVE') ? \GoCardlessPro\Environment::LIVE : \GoCardlessPro\Environment::SANDBOX,
+            'access_token' => config('services.gocardless.access_token'),
+            'environment' => (config('services.gocardless.environment') == 'LIVE') ? \GoCardlessPro\Environment::LIVE : \GoCardlessPro\Environment::SANDBOX,
         ]);
     }
 

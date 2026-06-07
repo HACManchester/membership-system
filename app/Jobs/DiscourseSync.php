@@ -63,7 +63,7 @@ class DiscourseSync implements ShouldQueue
     protected function sign_payload($params)
     {
         $sso = base64_encode(http_build_query($params));
-        $sig = hash_hmac('sha256', $sso, env('DISCOURSE_SSO_SECRET'), false);
+        $sig = hash_hmac('sha256', $sso, config('discourse.secret'), false);
         return compact('sso', 'sig');
     }
 }

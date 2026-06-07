@@ -41,4 +41,10 @@ return [
 		'browser_dsn' => env('SENTRY_BROWSER_DSN'),
 	],
 
+	'gocardless' => [
+		'access_token' => env('GOCARDLESS_ACCESS_TOKEN', ''),
+		'environment' => env('NEW_GOCARDLESS_ENV', 'LIVE'),
+		'webhook_secret' => env('NEW_GOCARDLESS_WEBHOOK_SECRET'),
+	],
+
 ];
