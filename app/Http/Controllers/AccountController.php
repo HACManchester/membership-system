@@ -3,7 +3,6 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Gift;
-use BB\Entities\Notification;
 use BB\Entities\User;
 use BB\Entities\Settings;
 use BB\Events\MemberGivenTrustedStatus;
@@ -427,9 +426,6 @@ class AccountController extends Controller
         }
 
         if ($madeTrusted) {
-            $message = 'You have been made a trusted member at Hackspace Manchester';
-            $notificationHash = 'trusted_status';
-            Notification::logNew($user->id, $message, 'trusted_status', $notificationHash);
             event(new MemberGivenTrustedStatus($user));
         }
 

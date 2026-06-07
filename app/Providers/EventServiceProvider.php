@@ -49,7 +49,6 @@ class EventServiceProvider extends ServiceProvider
 		'BB\Events\MemberGivenTrustedStatus' => [
 			EmailMemberAboutTrustedStatus::class
 		],
-		'BB\Events\NewMemberNotification' => [],
 		InductionRequestedEvent::class => [
 			InductionRequestedListener::class
 		],

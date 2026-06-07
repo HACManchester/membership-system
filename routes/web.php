@@ -181,12 +181,6 @@ Route::group(['middleware' => 'role:member'], function() {
 });
 
 ##########################
-# Notifications
-##########################
-
-Route::resource('notifications', 'NotificationController', ['only' => ['index', 'update'], 'middleware' => 'role:member']);
-
-##########################
 # Key fobs
 ##########################
 
