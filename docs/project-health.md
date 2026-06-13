@@ -67,21 +67,25 @@ Dev packages: `fzaninotto/faker` is abandoned (replace with `fakerphp/faker`),
 Frontend: Node 16 in the Dockerfile (EOL), Laravel Mix 6 (consider Vite), Bootstrap 3.3.4 (2014)
 shipping alongside MUI 6.
 
-## Top-level cruft (safe to delete)
+## Dead code
 
-Verified dead during the June 2026 review:
+Removed in the June 2026 deletion pass:
 
 - `test.php` (empty), `npm-debug.log` (build artifact)
 - `automate.sh` — superseded by the scheduler in `app/Console/Kernel.php`
 - `phpspec.yml`, `scrutinizer.yml` — tools no longer in use (CI is GitHub Actions)
 - `elixir.json` — two build systems ago; the live one is `webpack.mix.js`
 - `app/Exceptions/DatabaseException.php`, `DeviceException.php`, `UserImageFailedException.php` — never thrown
-- `app/Events/PaymentCancelled.php` — dispatched but no listener registered in
-  `EventServiceProvider` (decide: dead event, or missing listener?)
 
-Needs a human decision: `PaymentController::store()` (`app/Http/Controllers/PaymentController.php:95`)
-is marked `@deprecated` but still routed (admin-only) and linked from the member admin action bar.
-Confirm with the finance team whether manual payment entry is still used before removing.
+Still open:
+
+- `app/Events/PaymentCancelled.php` — dispatched in `PaymentRepository` but no listener is
+  registered, so it fires into the void alongside the working `payment.cancelled` string event.
+  Either dead, or a half-started seed of the planned typed-events migration (see architecture.md).
+  Pending a decision.
+- `PaymentController::store()` (`app/Http/Controllers/PaymentController.php:95`) is marked
+  `@deprecated` but still routed (admin-only) and linked from the member admin action bar.
+  Confirm with the finance team whether manual payment entry is still used before removing.
 
 ## Prioritised improvements
 
