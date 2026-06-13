@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
 use Illuminate\Support\Facades\Password;
-use Illuminate\Mail\Message;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -26,10 +25,7 @@ class ReminderController extends Controller
 	{
         $this->validate($request, ['email' => 'required|email']);
 
-        $response = Password::sendResetLink($request->only('email'), function(Message $message)
-        {
-            $message->subject('Reset your password');
-        });
+        $response = Password::sendResetLink($request->only('email'));
 
         \FlashNotification::success(trans($response));
         return redirect()->back();
