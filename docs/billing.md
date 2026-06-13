@@ -163,8 +163,9 @@ Engineering work this subsystem would benefit from (see architecture.md for sequ
 2. **Typed events.** Convert the string-event handler chain (`PaymentEventHandler`,
    `SubChargeEventHandler`) to event classes with listeners — the money path deserves static
    analysis visibility.
-3. **Webhook test coverage.** The webhook endpoint has no feature tests (testing.md, phase 1) —
-   each event type and its state transitions should be pinned.
+3. **Webhook test fidelity.** The endpoint now has feature tests (`GoCardlessWebhookTest`) covering
+   each event type and signature verification, but they use hand-crafted payloads; capturing a few
+   real payloads as fixtures would close the format-fidelity gap (see testing.md).
 4. **Configurable grace period.** The payment-warning grace period is hardcoded in
    `User::setPaymentWarning()`; it should come from config.
 5. **A guarded state machine.** The `User.status` transitions are implemented as independent

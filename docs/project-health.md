@@ -40,8 +40,8 @@ tests/                Mixed: legacy BrowserKit (root), Feature/, integration/, u
 | Area | Rating | Summary |
 | --- | --- | --- |
 | Framework & dependencies | 2/5 | Laravel 7.30 (EOL early 2021), Dockerfile on PHP 7.2 (EOL 2020), Node 16 (EOL 2023). Several packages abandoned or absorbed into newer Laravel. |
-| Tests | 3/5 | ~38 files, ~295 tests. Excellent payment-lifecycle integration tests; several subsystems untested; 7 legacy BrowserKit files; no JS tests despite Jest being configured. See testing.md. |
-| Static analysis | 2/5 | PHPStan level 5 with a frozen ~130-entry baseline (`phpstan-baseline.neon`). Runs in CI but the baseline never shrinks. |
+| Tests | 3/5 | ~38 files, 259 tests. Excellent payment-lifecycle integration tests; the GoCardless webhook endpoint and authorization middleware are now covered; remaining gaps are admin flows, onboarding end-to-end, and the entire JS frontend; 7 legacy BrowserKit files await retirement. See testing.md. |
+| Static analysis | 3/5 | PHPStan level 5. Baseline reduced from ~200 to 26 and actively burned down; the remainder is mostly framework-typing friction (the `Authenticatable` tail) that the framework upgrade resolves. Not yet ratcheted in CI. See architecture.md. |
 | Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators/Presenters vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
 | Frontend | 3/5 | Healthy direction (Inertia + React + TS + MUI, ESLint flat config, Prettier) but the legacy Blade/jQuery/Bootstrap-3 stack still serves most pages. See frontend.md. |
 | Docs & dev experience | 4/5 | Strong README, complete `.env.example`, documented Docker setup, this docs folder. |

@@ -64,8 +64,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 ### Tooling milestones along the way
 
-- **Now**: delete `elixir.json`; bump Node; make the Jest CI step real (first tests) or remove it
-  until tests exist — a green "test" step that runs nothing is misleading.
+- **Now**: delete `elixir.json`; bump Node. (The no-op Jest CI step has been removed; reinstate a
+  JS test step once `resources/js` actually has tests.)
 - **With the Laravel 9 hop**: switch Mix → Vite (the natural moment, since Laravel 9 ships Vite).
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.

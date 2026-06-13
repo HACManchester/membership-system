@@ -106,9 +106,10 @@ In order of value:
 
 ### Step 4 — ratchet quality
 
-- Burn down `phpstan-baseline.neon` (~130 entries) in small tranches; many entries are controller
-  return-type and `Authenticatable` property noise that the framework upgrade fixes for free.
-  Raise to level 6–7 once under ~20 entries.
+- Continue burning down `phpstan-baseline.neon` (down from ~200 to 26): the stale-docblock and
+  genuine-bug tranches are done; the remainder is mostly `Authenticatable` property noise that the
+  framework upgrade fixes for free, plus a few larastan relation false-positives. Raise to level
+  6–7 once under ~20 entries, and add a CI ratchet so the baseline can't grow.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.
 
 ## How to sequence against other work

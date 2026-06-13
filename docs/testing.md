@@ -2,19 +2,20 @@
 
 ## Summary
 
-~38 test files / ~295 test methods, in four distinct generations and quality bands:
+~38 test files / 259 tests, in four distinct generations and quality bands:
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
-| Legacy BrowserKit | `tests/*.php` (root: AccountTest, FinanceTest, HomepageTest, InductionTest, KeyFobTest, LoginTest, SignupTest) | 7 files, ~20 tests | Outdated; some not even running; retire |
-| Modern feature tests | `tests/Feature/` | 6 files, ~75 tests | Good to excellent |
-| Integration tests | `tests/integration/` | 2 files, ~15 tests | Excellent — the crown jewels |
-| Unit tests | `tests/unit/` | ~20 files, ~120 tests | Good, especially billing |
+| Legacy BrowserKit | `tests/*.php` (root: AccountTest, FinanceTest, HomepageTest, InductionTest, KeyFobTest, LoginTest, SignupTest) | 7 files | Outdated form-interaction style; retire (SignupTest is the porting template) |
+| Modern feature tests | `tests/Feature/` | 8 files | Good to excellent |
+| Integration tests | `tests/integration/` | 2 files | Excellent — the crown jewels |
+| Unit tests | `tests/unit/` | 20 files | Good, especially billing |
 
 **Strongest coverage:** the payment/membership lifecycle (creation → billing → failure → warning →
-suspension → recovery → left) and the equipment/induction/course system.
-**Biggest gaps:** the GoCardless webhook endpoint, member signup end-to-end, several admin flows,
-and the entire JS frontend.
+suspension → recovery → left), the GoCardless webhook endpoint, and the equipment/induction/course
+system.
+**Biggest remaining gaps:** member email-confirmation/onboarding end-to-end, several admin flows
+(roles, disciplinary depth), storage-box and balance controllers, and the entire JS frontend.
 
 ## Infrastructure
 
@@ -26,8 +27,8 @@ and the entire JS frontend.
 - Factories: mixed generations. `database/factories/ModelFactory.php` uses the legacy
   `$factory->define()` closure style; newer factories (Payment, Course, Equipment…) are separate
   files. The Laravel upgrade will force conversion to class-based factories.
-- CI (`.github/workflows/ci.yml`): composer + yarn install, ESLint, production build, Jest
-  (configured but **zero JS test files exist**), PHPStan, PHPUnit.
+- CI (`.github/workflows/ci.yml`): composer + yarn install, ESLint, production build, PHPStan,
+  PHPUnit. (There is no JS test step — none exist yet; a no-op step was removed.)
 
 ## Quality conventions
 
@@ -35,8 +36,11 @@ and the entire JS frontend.
 
 - `tests/integration/PaymentFlowIntegrationTest.php` — end-to-end payment failure → grace period →
   suspension with time travel (`Carbon::setTestNow`) and DB-state assertions at every step.
-- `tests/unit/Services/MemberSubscriptionChargesTest.php` (~15 tests) — mocks `GoCardlessHelper`,
-  verifies Payment rows created with the right amounts/statuses/source IDs.
+- `tests/Feature/GoCardlessWebhookTest.php` — drives the real webhook endpoint with a valid HMAC
+  signature, asserts each event type's resulting Payment/SubscriptionCharge/User state, and pins
+  idempotency (duplicate delivery is harmless). Mocks only the outbound GoCardless API.
+- `tests/unit/Services/MemberSubscriptionChargesTest.php` — mocks `GoCardlessHelper`, verifies
+  Payment rows created with the right amounts/statuses/source IDs.
 - `tests/unit/Policies/CoursePolicyTest.php` — exercises the maintainer/area-coordinator
   authorization matrix with realistic relationships.
 - `tests/Feature/EquipmentTest.php` (30 tests) — access-state visibility, role-based
@@ -49,48 +53,48 @@ and the entire JS frontend.
 - Use `Carbon::setTestNow()` with a `tearDown` reset for anything time-sensitive.
 - One behavior per test; name as `test_<actor>_<can/cannot>_<action>[_<condition>]`.
 
-**Known weak spots to avoid imitating / worth fixing:**
+**Webhook payload fidelity:** the GoCardless webhook tests use hand-crafted payloads whose shape
+matches GoCardless's documented webhook envelope. That's robust for behavior and regression
+coverage, but a *new* event-type handler should be backed by a captured real payload (the format
+gap only bites for event shapes we've never received live traffic for).
 
-- Status-200-and-text-presence assertions with no DB/state verification (`HomepageTest`).
-- `tests/SignupTest.php` has test methods missing the `@test` annotation — **they don't run**.
-- `tests/unit/SubscriptionChargeTest.php` uses the deprecated `expectsEvents()` API and asserts
-  almost nothing.
-- A few `x_test_`-prefixed disabled tests in the legacy `InductionTest` — dead intent.
+**Known weak spots to avoid imitating:**
+
+- Status-200-and-text-presence assertions with no DB/state verification (`HomepageTest`, and most
+  of the legacy BrowserKit band).
 
 ## Per-subsystem coverage
 
 | Subsystem | Coverage | Notes |
 | --- | --- | --- |
 | Payment lifecycle & status transitions | ✅ Excellent | Integration + handler + process tests |
+| GoCardless webhook endpoint | ✅ Good | `GoCardlessWebhookTest`: signature verification, every event type's state chain, idempotency |
 | Scheduled billing commands | ✅ Good | `BillMembersTest`, `CreateTodaysSubChargesTest`, `CheckMembershipStatusTest` |
 | Equipment / inductions / courses | ✅ Excellent | Feature tests + policy tests |
+| Notification emails | ✅ Good | `NotificationEmailTest`: admin/trainer authorization, recipient resolution, body escaping |
+| Authorization middleware | ✅ Good | `HasRole` + `IsTrusted` unit tests pin current semantics |
 | Discourse sync | ✅ Good | Job payload + event→job dispatch tested |
 | Mail | ✅ Good | `UserMailerTest` (queue assertions; templates not rendered) |
 | Exception handling | ✅ Good | Telegram throttling tested |
-| Keyfobs | 🟡 Partial | Legacy BrowserKit tests + 1 CSV export test |
+| Keyfobs | 🟡 Partial | Legacy BrowserKit tests + 1 CSV export test; access-code generation untested |
 | Storage boxes | 🟡 Partial | Repository queries only; claim/release controller untested |
 | Balance / cash payments | 🟡 Partial | Recalculation tested; controllers untested |
-| Member signup & onboarding | 🟡 Weak | 2 legacy tests; no email-confirmation or full-flow test |
+| Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
 | Profile updates | 🟡 Weak | View-only legacy test |
 | Disciplinary | 🟡 Minimal | 2 tests; no authorization-denial or notification tests |
-| GoCardless webhook endpoint | 🔴 None | Event handling and state transitions need a test harness |
-| Middleware | 🔴 None | Covered only incidentally via feature tests |
 | Roles admin / RoleUsersController | 🔴 None | |
 | General induction | 🔴 None | |
-| Newsletter, gifts, stats, leaderboard | 🔴 None | Lower risk |
-| JS frontend | 🔴 None | Jest configured, zero tests |
+| Gifts, stats, leaderboard | 🔴 None | Lower risk |
+| JS frontend | 🔴 None | Jest is configured (`jest.config.js`) but no tests exist and it is not in CI |
 
 ## Improvement plan
 
-### Phase 1 — highest value first
+### Phase 1 — pin the risky behavior ✅ done (June 2026)
 
-1. **A GoCardless webhook feature test** (`tests/Feature/GoCardlessWebhookTest.php`): each event
-   type mutates the right Payment/SubscriptionCharge/User state, and re-delivery of the same event
-   is harmless. This is the money path — the most valuable missing test in the repo.
-2. Fix the silent failures: add missing `@test` annotations in `SignupTest` (or port it), delete
-   the `x_test_` corpses and `SubscriptionChargeTest::it_works`.
-3. Add middleware unit tests (`HasRole`, `IsTrusted`) pinning current behavior before any
-   refactoring of authorization.
+The GoCardless webhook feature test, the `HasRole`/`IsTrusted` middleware tests, and the
+test-honesty fixes (SignupTest now runs; `SubscriptionChargeTest` rebuilt on `Event::fake()`; the
+`x_test_` stubs and the no-op Jest CI step removed) all landed. The money path and the
+authorization middleware now have protective coverage ahead of the planned refactors.
 
 ### Phase 2 — retire the legacy band
 
@@ -107,9 +111,8 @@ and the entire JS frontend.
 1. Convert factories to class-based during the Laravel 8 upgrade step; add factory states for the
    common personas (active member, payment-warning member, trainer, admin) to cut setup noise.
 2. Add admin-flow tests: role assignment (including asserting non-admins are denied),
-   disciplinary authorization, notification email recipient resolution.
+   disciplinary authorization.
 3. Start JS testing where logic lives: begin with pure functions/hooks in `resources/js`, then
-   component tests for the course-training pages. Delete the Jest CI step or make it real — a
-   green "test" step that runs nothing is worse than none.
-4. Adopt a coverage floor in CI once the phase-1/2 tests land (e.g. fail under 60%, ratchet up),
-   so coverage only moves one direction.
+   component tests for the course-training pages, and reinstate a CI step once tests exist.
+4. Adopt a coverage floor in CI (e.g. fail under 60%, ratchet up), so coverage only moves one
+   direction.
