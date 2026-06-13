@@ -198,19 +198,11 @@ class UserRepository extends DBRepository
             $gift_record = Gift::where('code', $memberData['gift_code'])->first();
 
             if ($gift_record) {
-                $user->subscription_expires = date(
-                    'Y-m-d',
-                    strtotime(
-                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
-                    )
-                );
-                $user->gift_expires = date(
-                    'Y-m-d',
-                    strtotime(
-                        date('Y-m-d') . ' + ' . $gift_record->months . ' months'
-                    )
-                );
-                $user->cash_balance = $gift_record->credit * 100;
+                $giftExpiry = Carbon::now()->addMonths((int) $gift_record->months)->startOfDay();
+                $user->subscription_expires = $giftExpiry;
+                $user->gift_expires = $giftExpiry;
+                // credit is stored in pounds (as a float); cash_balance is integer pence
+                $user->cash_balance = (int) round($gift_record->credit * 100);
                 $user->status = 'active';
                 $user->active = true;
                 $user->gift = $memberData['gift_code'];

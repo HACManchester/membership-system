@@ -101,16 +101,6 @@ parameters:
 			path: app/Repo/UserRepository.php
 
 		-
-			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$cash_balance \\(int\\) does not accept float\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
-			message: "#^Property BB\\\\Entities\\\\User\\:\\:\\$subscription_expires \\(Carbon\\\\Carbon\\|null\\) does not accept string\\.$#"
-			count: 1
-			path: app/Repo/UserRepository.php
-
-		-
 			message: "#^Relation 'keyFobs' is not found in BB\\\\Entities\\\\User model\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php
