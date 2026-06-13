@@ -172,7 +172,6 @@ return [
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         BB\Providers\NotificationServiceProvider::class,
-        Clockwork\Support\Laravel\ClockworkServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,

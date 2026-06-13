@@ -57,7 +57,8 @@ Production packages needing attention:
 
 - `laravel/framework ^7.29` — EOL. The upgrade is the strategic priority (see architecture.md).
 - `fideloper/proxy`, `fruitcake/laravel-cors` — absorbed into Laravel 9+; deleted during upgrade.
-- `itsgoingd/clockwork ~1.8` — debug tool; should move to `require-dev`.
+- ~~`itsgoingd/clockwork`~~ — debug tool, removed in the June 2026 cleanup (unused, and a
+  production-dependency debug endpoint is an exposure risk).
 - `laracasts/presenter` — unmaintained pattern; replace with Eloquent accessors during refactors.
 - `guzzlehttp/guzzle ^6.3|^7.0` — pin to 7 once PHP is upgraded.
 
@@ -91,7 +92,7 @@ Still open:
 
 ### Quick wins (days)
 
-1. Delete the dead files listed above; move Clockwork to `require-dev`.
+1. Delete the dead files listed above.
 2. Bump Node in the Dockerfile to a current LTS.
 3. Remove the legacy BrowserKit tests (port the few with unique coverage to Feature tests first).
 

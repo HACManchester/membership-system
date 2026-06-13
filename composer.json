@@ -18,7 +18,6 @@
         "guzzlehttp/psr7": "^1.9",
         "inertiajs/inertia-laravel": "^0.6.11",
         "intervention/image": "2.*",
-        "itsgoingd/clockwork": "~1.8",
         "laracasts/presenter": "~0.2.7",
         "laravel-notification-channels/telegram": "^1.0.0",
         "laravel/framework": "^7.29",
