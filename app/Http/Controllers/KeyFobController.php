@@ -34,7 +34,9 @@ class KeyFobController extends Controller
         //If the fob begins with ff it's a request for an access code
         //Bin off any extra characters
         if ($request->input('type') == 'access_code') {
-            $keyId = "ff" . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+            do {
+                $keyId = 'ff' . str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+            } while (KeyFob::where('key_id', $keyId)->exists());
         } else {
             $keyId = $request->input('key_id');
         }
