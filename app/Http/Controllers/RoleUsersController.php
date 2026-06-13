@@ -18,11 +18,6 @@ class RoleUsersController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
     public function store($roleId)
     {
         $formData = \Request::only(['user_id']);
@@ -43,7 +38,6 @@ class RoleUsersController extends Controller
      *
      * @param $roleId
      * @param $userId
-     * @return Response
      */
     public function destroy($roleId, $userId)
     {

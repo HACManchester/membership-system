@@ -22,11 +22,6 @@ class StorageBoxController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $storageBoxes = $this->storageBoxRepository->getAll();
@@ -38,11 +33,6 @@ class StorageBoxController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $this->authorize('create', StorageBox::class);
@@ -51,12 +41,6 @@ class StorageBoxController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->authorize('create', StorageBox::class);
@@ -65,12 +49,6 @@ class StorageBoxController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  StorageBox  $storageBox
-     * @return \Illuminate\Http\Response
-     */
     public function show(StorageBox $storageBox)
     {
         $this->authorize('view', $storageBox);
@@ -88,12 +66,6 @@ class StorageBoxController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  StorageBox  $storageBox
-     * @return \Illuminate\Http\Response
-     */
     public function edit(StorageBox $storageBox)
     {
         $this->authorize('update', $storageBox);
@@ -102,13 +74,6 @@ class StorageBoxController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  StorageBox  $storageBox
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, StorageBox $storageBox)
     {
         $this->authorize('update', $storageBox);
@@ -118,12 +83,6 @@ class StorageBoxController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  StorageBox  $storageBox
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(StorageBox $storageBox)
     {
         $this->authorize('delete', $storageBox);

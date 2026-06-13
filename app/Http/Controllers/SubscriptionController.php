@@ -117,7 +117,6 @@ class SubscriptionController extends Controller
      * Cancel a users subscription, used for all DD's
      *
      * @param  int  $id
-     * @return Illuminate\Http\RedirectResponse
      */
     public function destroy($userId, $id = null)
     {

@@ -150,18 +150,4 @@ class MemberSubscriptionCharges
         }
     }
 
-
-    /**
-     * Get a users latest sub payment
-     * @param $userId
-     * @return bool
-     */
-    public function lastUserChargeExpires($userId)
-    {
-        $charge = User::where('user_id', $userId)->where('status', ['processing', 'paid'])->orderBy('charge_date', 'DESC')->first();
-        if ($charge) {
-            return $charge->charge_date->addMonth();
-        }
-        return false;
-    }
 }

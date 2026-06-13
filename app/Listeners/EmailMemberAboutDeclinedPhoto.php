@@ -10,21 +10,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EmailMemberAboutDeclinedPhoto
 {
-    /**
-     * Create the event listener.
-     *
-     * @param Mailer $mailer
-     */
+    protected $mailer;
+
     public function __construct(Mailer $mailer)
     {
         $this->mailer = $mailer;
     }
 
-    /**
-     * Handle the event.
-     *
-     * @param MemberPhotoWasDeclined $event
-     */
     public function handle(MemberPhotoWasDeclined $event)
     {
         $user = $event->user;

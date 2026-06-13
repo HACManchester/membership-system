@@ -19,14 +19,15 @@ abstract class FormValidator
 
 
     /**
-     * @var
+     * @var array
+     */
+    protected $rules = [];
+
+    /**
+     * @var bool
      */
     protected $adminOverrideSet;
 
-    /**
-     *
-     * @param Validator $validator
-     */
     function __construct(Validator $validator)
     {
         $this->validator = $validator;
@@ -35,7 +36,6 @@ abstract class FormValidator
     /**
      * Validate the form data
      *
-     * @param array $formData
      * @param null $id
      * @throws \BB\Exceptions\FormValidationException
      * @return boolean
@@ -54,7 +54,6 @@ abstract class FormValidator
     /**
      * Get the validation rules
      *
-     * @param array $replacements
      * @return array
      */
     protected function getValidationRules(array $replacements = [])

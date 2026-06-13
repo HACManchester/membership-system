@@ -15,9 +15,6 @@ class LeaderboardController extends Controller
         $this->inductionRepository = $inductionRepository;
     }
 
-    /**
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $threeMonths = $this->inductionRepository->getLeaderboard(InductionRepository::LEADERBOARD_THREE_MONTHS);

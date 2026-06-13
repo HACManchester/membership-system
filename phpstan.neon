@@ -7,6 +7,11 @@ parameters:
         - app
     # The level 9 is the highest level
     level: 5
+    ignoreErrors:
+        # GoCardlessPro SDK resources expose their data via __get() magic, so accessing
+        # "protected" properties like ->id and ->status works at runtime by design.
+        - '#^Access to protected property GoCardlessPro\\Resources\\#'
+
     excludePaths:
         - ./*/*/FileToBeExcluded.php
     checkMissingIterableValueType: false

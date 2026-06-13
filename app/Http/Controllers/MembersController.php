@@ -6,7 +6,7 @@ class MembersController extends Controller
 {
     
     /**
-     * @var
+     * @var \BB\Repo\ProfileDataRepository
      */
     private $profileRepo;
     /**
@@ -18,11 +18,6 @@ class MembersController extends Controller
      */
     private $userRepository;
 
-    /**
-     * @param \BB\Repo\ProfileDataRepository   $profileRepo
-     * @param \BB\Repo\ProfileSkillsRepository $profileSkillsRepository
-     * @param \BB\Repo\UserRepository          $userRepository
-     */
     function __construct(\BB\Repo\ProfileDataRepository $profileRepo, \BB\Repo\ProfileSkillsRepository $profileSkillsRepository, \BB\Repo\UserRepository $userRepository)
     {
         $this->profileRepo = $profileRepo;
@@ -42,7 +37,7 @@ class MembersController extends Controller
 
         // TODO: Is this privacy check necessary? This route is not accessible by guests
         if (\Auth::guest() && $user->profile_private) {
-            return abort(404);
+            abort(404);
         }
 
         if (!\Auth::user()->isAdmin() && !$user->active) {

@@ -30,7 +30,7 @@ class StatsController extends Controller
         }, []);
 
         usort($toReturn, function($a, $b){
-            return strtotime($a["date"]) > strtotime($b["date"]);
+            return strtotime($a["date"]) <=> strtotime($b["date"]);
         });
 
         return $toReturn;
@@ -58,11 +58,6 @@ class StatsController extends Controller
             ->with('historyData', $graph);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index()
     {
 

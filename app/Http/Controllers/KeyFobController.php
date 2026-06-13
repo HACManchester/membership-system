@@ -8,11 +8,6 @@ use BB\Http\Requests\StoreKeyFobRequest;
 
 class KeyFobController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index(User $user)
     {
         $this->authorize('view', [KeyFob::class, $user]);
@@ -21,11 +16,6 @@ class KeyFobController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
     public function store(User $user, StoreKeyFobRequest $request)
     {
         $this->authorize('create', [KeyFob::class, $user]);
@@ -58,12 +48,6 @@ class KeyFobController extends Controller
         return \Redirect::route('keyfobs.index', $user->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function destroy(User $user, KeyFob $fob)
     {
         $this->authorize('delete', $fob);

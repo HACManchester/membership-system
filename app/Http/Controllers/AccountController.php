@@ -24,17 +24,9 @@ class AccountController extends Controller
      */
     private $userImage;
     /**
-     * @var \BB\Validators\UserDetails
-     */
-    private $userDetailsForm;
-    /**
      * @var \BB\Repo\ProfileDataRepository
      */
     private $profileRepo;
-    /**
-     * @var \BB\Repo\InductionRepository
-     */
-    private $inductionRepository;
     /**
      * @var \BB\Repo\EquipmentRepository
      */
@@ -72,9 +64,7 @@ class AccountController extends Controller
         \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm,
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Helpers\UserImage $userImage,
-        \BB\Validators\UserDetails $userDetailsForm,
         \BB\Repo\ProfileDataRepository $profileRepo,
-        \BB\Repo\InductionRepository $inductionRepository,
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator,
@@ -86,9 +76,7 @@ class AccountController extends Controller
         $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
         $this->userImage = $userImage;
-        $this->userDetailsForm = $userDetailsForm;
         $this->profileRepo = $profileRepo;
-        $this->inductionRepository = $inductionRepository;
         $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->profileValidator = $profileValidator;
@@ -113,11 +101,6 @@ class AccountController extends Controller
         \View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index()
     {
         $filter = \Request::get('filter');
@@ -134,11 +117,6 @@ class AccountController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
     public function create()
     {
         //Is there a gift code?
@@ -180,22 +158,12 @@ class AccountController extends Controller
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
     public function createOnlineOnly()
     {
         \View::share('body_class', 'register_login');
         return \View::make('account.create-online-only');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Illuminate\Http\RedirectResponse
-     */
     public function store()
     {
         $input = \Request::only(
@@ -254,7 +222,6 @@ class AccountController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
      */
     public function show($id)
     {
@@ -302,14 +269,13 @@ class AccountController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
      */
     public function edit($id)
     {
         $user = User::findWithPermission($id);
 
-        //We need to access the address here so its available in the view
-        $user->address;
+        // Make the address available in the view
+        $user->load('address');
 
         return \View::make('account.edit')->with('user', $user);
     }

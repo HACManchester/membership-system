@@ -124,7 +124,7 @@ class Equipment extends Model
 
     public function role()
     {
-        return $this->belongsTo('\BB\Entities\Role', 'managing_role_id');
+        return $this->belongsTo(Role::class, 'managing_role_id');
     }
 
     public function maintainerGroup(): BelongsTo

@@ -25,8 +25,6 @@ class GeneralInductionController extends Controller
     /**
      * Show the peer induction page
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
     {
@@ -40,9 +38,6 @@ class GeneralInductionController extends Controller
             ->with('prefill_induction_code', $prefill_code);
     }
 
-    /**
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $request->validate([

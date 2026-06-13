@@ -10,8 +10,6 @@ class ReminderController extends Controller
 
 	/**
 	 * Display the password reminder view.
-	 *
-	 * @return Response
 	 */
 	public function create()
 	{
@@ -22,7 +20,6 @@ class ReminderController extends Controller
     /**
      * Handle a POST request to remind a user of their password.
      *
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|null
      */
 	public function store(Request $request)
@@ -42,7 +39,6 @@ class ReminderController extends Controller
 	 * Display the password reset view for the given token.
 	 *
 	 * @param  string  $token
-	 * @return Response
 	 */
     public function getReset(Request $request, $token = null)
     {
@@ -59,7 +55,6 @@ class ReminderController extends Controller
     /**
      * Handle a POST request to reset a user's password.
      *
-     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|null
      */
 	public function postReset(Request $request)

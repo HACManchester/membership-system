@@ -40,11 +40,6 @@ class EquipmentController extends Controller
     protected $disk;
 
 
-    /**
-     * @param InductionRepository                    $inductionRepository
-     * @param EquipmentRepository                    $equipmentRepository
-     * @param UserRepository                         $userRepository
-     */
     function __construct(
         InductionRepository $inductionRepository,
         EquipmentRepository $equipmentRepository,
@@ -58,11 +53,6 @@ class EquipmentController extends Controller
         //Only members of the equipment group can create/update records
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index()
     {
         $user = \Auth::user();
@@ -113,11 +103,6 @@ class EquipmentController extends Controller
             ->with('now', $now);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
     public function create()
     {
         $this->authorize('create', Equipment::class);
@@ -151,12 +136,6 @@ class EquipmentController extends Controller
     }
 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \BB\Entities\Equipment $equipment
-     * @return Response
-     */
     public function edit(Equipment $equipment)
     {
         $this->authorize('update', $equipment);
@@ -177,7 +156,6 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \BB\Entities\Equipment $equipment
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Equipment $equipment, UpdateEquipmentRequest $request)
@@ -190,12 +168,6 @@ class EquipmentController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
     public function destroy(Equipment $equipment)
     {
         $this->authorize('delete', $equipment);

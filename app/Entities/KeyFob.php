@@ -34,7 +34,7 @@ class KeyFob extends Model
 
     public function user()
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
     public function markLost()

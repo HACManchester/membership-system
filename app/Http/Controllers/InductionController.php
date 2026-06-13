@@ -80,12 +80,6 @@ class InductionController extends Controller
         return \Redirect::route('equipment.show', $equipment);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
     public function destroy(Equipment $equipment, Induction $induction)
     {
         $this->authorize('delete', $induction);
