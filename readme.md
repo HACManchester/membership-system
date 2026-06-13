@@ -2,28 +2,30 @@
 
 To manage many aspects of member's access & use of the space and its equipment, we maintain our own Hackspace Manchester Membership System. This began as a fork of [ArthurGuy/BBMembershipSystem](https://github.com/ArthurGuy/BBMembershipSystem), but has since diverged to suit the unique needs of our space & equipment.
 
+The system is built on PHP/Laravel (currently Laravel 7, being upgraded incrementally) with a
+frontend that is migrating from Blade/jQuery to Inertia.js + React + TypeScript. See the
+[`docs/`](./docs/README.md) folder for contributor documentation: project health, domain
+subsystems, architecture, frontend, testing, and a glossary of domain terms.
+
 ## Overview
 
 ### Features
 
-- Member signup form which collects full name and address, emergency contact and profile photo.
+- Member signup (full and online-only tiers) collecting profile details and a profile photo
 - Direct Debit setup and payment collection through GoCardless
-- Regular monthly direct debit payment runs for each user
-- The ability for the user to edit all their details allowing for self management
-- Various user statuses to cater for active members, members who have left or been banned as well as tracking founders and honorary members
-- Handling of the induction/equipment training procedures and collection of payments.
-- Tracking of who trains who
-- Member grid to see who is a member
+- Automated monthly billing runs and membership status transitions (warning/suspension/recovery)
+- Self-service member detail editing
+- Various user statuses to cater for active members, members who have left or been banned, as well as honorary members
+- Equipment catalogue with induction/training tracking — including the newer course-based training system with trainer sign-off
+- Tracking of who trains who, plus maintainer groups and equipment areas
+- Member directory and trainer leaderboard
 - The ability for members to cancel their subscription and leave
-- Logs who has a physical key
-- Manage member storage box assignments
-- RFID door entry control and tracking
-- Member credit system for paying for various services
-- Member credit topup using direct debit payments and credit/debit card payments
+- Key fob and door access code management, exported to the door entry system
+- Member storage box assignment and claiming
+- Member credit/balance system
 - Member role system for managing delegated duties
-- RFID access control for equipment and usage logging
-- Auto billing for equipment usage
-- Equipment/asset management
+- Discourse forum sync (membership status and SSO)
+- Admin and finance tooling (payment overview, balances, stats)
 
 ### Account tiers
 
@@ -61,12 +63,14 @@ There are a variety of member statuses which are used for various scenarios.
 The membership system handles subscription payments and automatic state transitions:
 
 #### Payment Success Flow
+
 1. Member sets up Direct Debit via GoCardless
 2. Monthly payments taken automatically on their chosen day
 3. Each successful payment extends membership by 1 month
 4. Member remains in `Active` status with full space access
 
 #### Payment Failure & Recovery
+
 1. **Payment fails** → Member enters `Payment Warning` status
    - 10-day grace period begins
    - Member retains full space access
@@ -83,11 +87,13 @@ The membership system handles subscription payments and automatic state transiti
    - No explicit "rejoin" process - just set up payment again
 
 #### Voluntary Leaving
+
 1. Member cancels subscription → enters `Leaving` status
 2. Retains access until current paid period expires
 3. Automatically transitions to `Left` when subscription expires
 
 #### Daily Automated Processes
+
 - `RecoverMemberships` - Checks for new payments and reactivates members
 - `CheckPaymentWarnings` - Moves expired warnings to suspended
 - `CheckSuspendedUsers` - Marks 30-day suspended members as left
@@ -109,86 +115,90 @@ These can be configured via environmental variables, or by setting up a `.env` f
 
 We don't use any third-party Cloud providers for storage of files.
 
-All user-uploaded content is stored via the public storage disk at `storage/app/public`. There is a symlink pointing to this directory at `/public/storage`. This replicates the [public storage disk](https://laravel.com/docs/5.2/filesystem#the-public-disk) introduced in Laravel 5.2 (the next version above us).
+All user-uploaded content is stored via the [public storage disk](https://laravel.com/docs/7.x/filesystem#the-public-disk) at `storage/app/public`. There is a symlink pointing to this directory at `/public/storage`.
 
 ## Development
 
-The system is built on the PHP Laravel 5 framework so familiarity with that would help.
+The system is built on the PHP Laravel framework (currently Laravel 7, with an incremental upgrade
+underway — see [`docs/architecture.md`](./docs/architecture.md)), backed by MySQL.
 
-A .env file needs to be setup, please take a look at the example one for the options that are needed.
-This file can be renamed by removing the .example from the end.
+A `.env` file needs to be set up — copy `.env.example` and adjust. Notes:
 
-Composer needs to be available and the install command run to load the required assets.
-
-The storage directory needs to be writable.
-
-Some of the config options wont be needed.
-
-AWS is used for file storage although a local option can be specified.
-
-The system is built for a MySQL DB but a similar system will work
-
-GoCardless for Direct Debit payments
-
-MailGun for sending email - completely optional
-
-The encryption key is essential and cannot be changed or lost once set
+- The encryption key (`APP_KEY`) is essential and cannot be changed or lost once set.
+- GoCardless credentials are needed for Direct Debit payment flows (sandbox keys work locally).
+- Mail, Discourse, Sentry and Telegram integrations are optional for local development.
+- User-uploaded files are stored locally on the public storage disk (no cloud storage is used).
 
 ### Getting started
 
-We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)), adjusted to run PHP 7.2 and Node 6 (our live environment is running 4.8.2, but it's too much faff downgrading far enough to run that).
+We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)),
+currently running PHP 7.2 and Node 16 to match the live environment.
 
 Prerequisites:
 
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/install/) (comes pre-installed with Docker Desktop)
+- [Docker](https://www.docker.com/) with Docker Compose
+- [Node.js](https://nodejs.org/) + [Yarn](https://yarnpkg.com/) on your host machine (frontend tooling runs on the host, not in the container)
 
 For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might be worth exploring as a more efficient alternative to Docker for Mac.
 
 1. Set up a .env file by copying `.env.example` to `.env`.
 
-2. Install dependencies with:
+2. Install PHP dependencies (in the container) and frontend dependencies (on the host):
 
    ```sh
-   docker-compose run laravel composer install
-   docker-compose run laravel npm install
+   docker compose run laravel composer install
+   yarn install
    ```
 
-3. Build frontend assets with:
+3. Build frontend assets (on the host):
 
    ```sh
-   docker-compose run laravel npm run build
+   yarn build
    ```
 
 4. Start the local runtime with:
 
    ```sh
-   docker-compose up -d
+   docker compose up -d
    ```
 
 5. Provision the development database
 
    ```sh
-   docker-compose run laravel php artisan migrate
+   docker compose exec laravel php artisan migrate
    ```
 
-6. Visit [https://localhost:8080](https://localhost:8080)
+6. Visit [http://localhost:8080](http://localhost:8080) (or whatever `APP_PORT` you configured)
 
 ### Running console commands
 
-If you need to run any console or `artisan` commands, you must do so within the Docker container.
+**PHP/artisan/composer commands run inside the Docker container; Node/yarn commands run on the
+host.**
 
 You can open a shell directly in the container with:
 
 ```sh
-docker-compose exec laravel bash
+docker compose exec laravel bash
 ```
 
-Or run your command from your host machine, prepended with:
+Or run a single command from your host machine, prepended with:
 
 ```sh
-docker-compose run laravel [command]
+docker compose exec laravel [command]
 ```
+
+### Running tests
+
+The test suite uses an in-memory SQLite database, so no extra setup is needed:
+
+```sh
+docker compose exec laravel vendor/bin/phpunit
+docker compose exec laravel vendor/bin/phpstan analyse
+yarn lint
+```
+
+See [`docs/testing.md`](./docs/testing.md) for the test suite layout, conventions, and where new
+tests are most valuable.
 
 ### Troubleshooting
 
@@ -206,60 +216,36 @@ tail -n 20 storage/logs/laravel-$(date -I).log
 
 ## Deployment & hosting environments
 
-We currently host the membership system ourselves on our Bikeshed server, using Docker to encapsulate the relevant runtime.
+The live system at <https://members.hacman.org.uk> is self-hosted on Hackspace Manchester
+infrastructure, using Docker Compose to encapsulate the runtime. The live runtime is entirely
+separate to the local development runtime.
 
-The live Docker runtime is entirely separate to the local development runtime.
-
-Production environment:
-
-|                      |                                            |
-| -------------------- | ------------------------------------------ |
-| URL                  | <https://members.hacman.org.uk>            |
-| Server               | `bikeshed.hacman.org.uk`                   |
-| Runtime              | `/var/members/` (Docker Compose)           |
-| Source code          | `/var/members/www/members`                 |
-| Server configuration | `/var/members/config/vhosts`               |
-| Crontab              | `/etc/cron.daily/membership-daily-updates` |
-
-### Deployment process
-
-We manually deploy code changes only at the moment, avoiding any post-deployment tasks until we gain confidence in the current hosting envronment's set up & resilience.
-
-```sh
-# On Bikeshed
-
-cd /var/members/www/members
-git pull origin master
-```
-
-If we need access to the PHP runtime, we can open a shell with:
-
-```sh
-# On Bikeshed
-
-cd /var/members/
-sudo docker-compose exec webserver bash
-```
+See [`docs/operations.md`](./docs/operations.md) for what the system does automatically when
+deployed (scheduled jobs, observability, integrations). For deployment access or server details,
+contact the membership committee.
 
 ### Database
 
-Database access information is kept private at the moment.
+Database access information is kept private.
 
-Ideally, database changes should be made via [Laravel Migrations](https://laravel.com/docs/5.1/migrations).
-
-If you believe any changes need making directly to the database, please contact the membership comittee.
+Database changes should be made via [Laravel Migrations](https://laravel.com/docs/7.x/migrations).
+If you believe any changes need making directly to the database, please contact the membership
+committee.
 
 ### Frontend assets
 
-The site uses Bootstrap and SCSS files which can be transpiled to CSS.
-However due to issues with transpiling that we haven't fixed, there's CSS hotfixes here and there.
-This isn't dangerous or a risk, but would be nicer if it could be integrated with the SCSS.
+The frontend is mid-migration: legacy pages use Blade templates with LESS/Bootstrap 3, while newer
+pages (courses, training, newsletter) use Inertia.js + React + TypeScript with Material-UI. Both
+are built by Laravel Mix (`webpack.mix.js`). New pages should use the modern stack — see
+[`docs/frontend.md`](./docs/frontend.md) for the migration plan.
 
 ### Routes
 
-`app/Http/routes.php` is the starting point. Note the middlewares which do things like make
-some things member only.
+[`routes/web.php`](./routes/web.php) is the starting point (plus [`routes/api.php`](./routes/api.php)
+for the door-system export). Note the middlewares which do things like make some things member
+only — though authorization decisions belong in policies, not middleware alone (see
+[`docs/architecture.md`](./docs/architecture.md)).
 
 ### Running jobs
 
-Get into the docker container (above) and you can then run `php artisan bb:check-memberships` to run the `check-memberships` job, or any of the other jobs.
+Get into the docker container (above) and you can then run `php artisan bb:check-memberships` to run the `check-memberships` job, or any of the other jobs. The scheduled jobs are defined in `app/Console/Kernel.php`.
