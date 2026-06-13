@@ -43,8 +43,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string $status
  * @property string $payment_method
  * @property string $subscription_id
- * @property Carbon $subscription_expires
- * @property Carbon $banned_date
+ * @property Carbon|null $subscription_expires
+ * @property Carbon|null $banned_date
  * @property string $phone
  * @property integer $storage_box_payment_id
  * @property ProfileData $profile
