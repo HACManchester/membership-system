@@ -170,9 +170,9 @@ class NotificationEmailController extends Controller
             foreach ($users as $user) {
                 $notification = new UserMailer($user);
                 if($isToolEmail){
-                    $notification->sendEquipmentNotificationEmail($input['subject'], nl2br($input['message']), $equipment->name, $status);
+                    $notification->sendEquipmentNotificationEmail($input['subject'], nl2br(e($input['message'])), $equipment->name, $status);
                 }else{
-                    $notification->sendNotificationEmail($input['subject'], nl2br($input['message']));
+                    $notification->sendNotificationEmail($input['subject'], nl2br(e($input['message'])));
                 }
             }
 
@@ -181,9 +181,9 @@ class NotificationEmailController extends Controller
             //Just send to the current user
             $notification = new UserMailer(\Auth::user());
             if($isToolEmail){
-                $notification->sendEquipmentNotificationEmail($input['subject'], nl2br($input['message']), $equipment->name, $status);
+                $notification->sendEquipmentNotificationEmail($input['subject'], nl2br(e($input['message'])), $equipment->name, $status);
             }else{
-                $notification->sendNotificationEmail($input['subject'], nl2br($input['message']));
+                $notification->sendNotificationEmail($input['subject'], nl2br(e($input['message'])));
             } 
         }
         
