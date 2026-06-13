@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\BrowserKitTestCase;
 
 class SignupTest extends BrowserKitTestCase
@@ -16,6 +14,7 @@ class SignupTest extends BrowserKitTestCase
     }
 
 
+    /** @test */
     public function i_can_sign_up_successfully()
     {
         $faker = Faker\Factory::create();
@@ -25,19 +24,25 @@ class SignupTest extends BrowserKitTestCase
 
         $this->visit('/register')
             ->see('Join')
-            ->type($firstName, 'given_name')
-            ->type($faker->lastName, 'family_name')
-            ->type($email, 'email')
-            ->type($faker->password, 'password')
-            ->type($faker->streetAddress, 'address[line_1]')
-            ->type('BN2 4AA', 'address[postcode]')
-            ->type($faker->phoneNumber, 'phone')
-            ->type($faker->text, 'emergency_contact')
-            ->attach($faker->image(), 'new_profile_photo')
-            ->press('Join')
-            ->see($firstName)
-            ->see('Setting up');
+            ->submitForm('Join Hackspace Manchester', [
+                'given_name'           => $firstName,
+                'family_name'          => $faker->lastName,
+                'email'                => $email,
+                'display_name'         => $faker->userName,
+                'suppress_real_name'   => '0',
+                'password'             => $faker->password(10),
+                'phone'                => '07700900123',
+                'address[line_1]'      => $faker->streetAddress,
+                'address[postcode]'    => 'M4 7HR',
+                'emergency_contact'    => $faker->name,
+                'monthly_subscription' => config('membership.prices.minimum'),
+                'rules_agreed'         => '1',
+            ]);
 
-        $this->seeInDatabase('users', ['email' => $email, 'given_name' => $firstName]);
+        $this->seeInDatabase('users', [
+            'email'      => $email,
+            'given_name' => $firstName,
+            'status'     => 'setting-up',
+        ]);
     }
 }

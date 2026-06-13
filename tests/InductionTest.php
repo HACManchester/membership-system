@@ -22,9 +22,5 @@ class InductionTest extends BrowserKitTestCase
             ->see("Training to be completed");
     }
 
-    public function x_test_trainers_can_request_inductions_for_others() {}
 
-    public function x_test_trainers_can_mark_as_trained() {}
-
-    public function x_test_trainers_can_promote_others_to_trainer() {}
 }

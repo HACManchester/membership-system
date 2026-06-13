@@ -1,32 +1,35 @@
 <?php
 
-use BB\Entities\User;
+use BB\Events\SubscriptionChargePaid;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-Class SubscriptionChargeTest extends TestCase
+class SubscriptionChargeTest extends TestCase
 {
     use DatabaseMigrations;
 
     /** @test */
-    public function it_works()
+    public function marking_a_charge_as_paid_updates_it_and_fires_an_event()
     {
         /** @var \BB\Repo\SubscriptionChargeRepository $repo */
         $repo = $this->app->make(\BB\Repo\SubscriptionChargeRepository::class);
 
         $user = factory('BB\Entities\User')->create();
-        $date = Carbon::now();
-        $amount = 10;
-        $charge = $repo->createCharge($user->id, $date, $amount);
+        $paymentDate = Carbon::now();
+        $charge = $repo->createCharge($user->id, Carbon::now(), 1700);
 
-        $this->expectsEvents('BB\Events\SubscriptionChargePaid');
+        Event::fake([SubscriptionChargePaid::class]);
 
-        //Mark a charge as being paid, this should fire an event
-        $repo->markChargeAsPaid($charge->id);
+        $repo->markChargeAsPaid($charge->id, $paymentDate);
+
+        $charge->refresh();
+        $this->assertEquals('paid', $charge->status);
+        $this->assertTrue($charge->payment_date->isSameDay($paymentDate));
+
+        Event::assertDispatched(SubscriptionChargePaid::class, function ($event) use ($charge) {
+            return $event->subscriptionCharge->id === $charge->id;
+        });
     }
-
-
 }
