@@ -102,6 +102,8 @@ class NotificationEmailController extends Controller
 
         $parts = explode('/', $input['recipient']);
         $isToolEmail = false;
+        $status = null;
+        $equipment = null;
 
         if(count($parts) == 3){
             if($parts[0] == "tool"){
@@ -141,31 +143,32 @@ class NotificationEmailController extends Controller
                     }
                 }
 
-                if($allowed){
-                    if($status == "trainer"){
-                        $users = $this->inductionRepository
-                            ->getTrainersForEquipment($equipment->induction_category)
-                            ->map(function($item){
-                                return $item->user;
-                            });
-                    }elseif($status == "trained"){
-                        $users = $this->inductionRepository
-                            ->getTrainedUsersForEquipment($equipment->induction_category)
-                            ->map(function($item){
-                                return $item->user;
-                            });
-                    }elseif($status == "awaiting_training"){
-                        $users = $this->inductionRepository
-                            ->getUsersPendingInductionForEquipment($equipment->induction_category)
-                            ->map(function($item){
-                                return $item->user;
-                            });
-                    }
+                if( ! $allowed){
+                    throw new AuthenticationException("You don't have permission to send to this group");
                 }
 
-                
+                if($status == "trainer"){
+                    $users = $this->inductionRepository
+                        ->getTrainersForEquipment($equipment->induction_category)
+                        ->map(function($item){
+                            return $item->user;
+                        });
+                }elseif($status == "trained"){
+                    $users = $this->inductionRepository
+                        ->getTrainedUsersForEquipment($equipment->induction_category)
+                        ->map(function($item){
+                            return $item->user;
+                        });
+                }else{
+                    $users = $this->inductionRepository
+                        ->getUsersPendingInductionForEquipment($equipment->induction_category)
+                        ->map(function($item){
+                            return $item->user;
+                        });
+                }
+            } else {
+                throw new NotImplementedException("Recipient not supported");
             }
-
 
             foreach ($users as $user) {
                 $notification = new UserMailer($user);

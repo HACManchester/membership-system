@@ -61,21 +61,6 @@ parameters:
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
-			message: "#^Variable \\$equipment might not be defined\\.$#"
-			count: 8
-			path: app/Http/Controllers/NotificationEmailController.php
-
-		-
-			message: "#^Variable \\$status might not be defined\\.$#"
-			count: 5
-			path: app/Http/Controllers/NotificationEmailController.php
-
-		-
-			message: "#^Variable \\$users might not be defined\\.$#"
-			count: 1
-			path: app/Http/Controllers/NotificationEmailController.php
-
-		-
 			message: "#^Static method Illuminate\\\\Support\\\\Facades\\\\Password\\:\\:sendResetLink\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: app/Http/Controllers/ReminderController.php
