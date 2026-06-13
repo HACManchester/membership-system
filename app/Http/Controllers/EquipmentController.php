@@ -87,9 +87,6 @@ class EquipmentController extends Controller
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
-        // Get info from the docs system
-        $docs = $equipment->docs || "";
-
         $now = new \DateTime("");
 
         return \View::make('equipment.show')
@@ -99,7 +96,6 @@ class EquipmentController extends Controller
             ->with('trainedUsers', $trainedUsers)
             ->with('usersPendingInduction', $usersPendingInduction)
             ->with('memberList', $memberList)
-            ->with('docs', $docs)
             ->with('now', $now);
     }
 
