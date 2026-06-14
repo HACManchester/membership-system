@@ -80,7 +80,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Balance / cash payments | 🟡 Partial | Recalculation + `CashPaymentTest` (admin records cash payment, non-admin denied); `BalanceController` view still untested |
 | Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
 | Profile updates | ✅ Good | `AccountAccessTest` covers the profile edit page + update |
-| Disciplinary | ✅ Good | Ban/unban happy paths (`DisciplinaryTest`) + authorization denials and self-ban guard (`DisciplinaryAuthorizationTest`) |
+| Disciplinary | ✅ Good | `DisciplinaryTest`: ban/unban happy paths + authorization denials and the self-ban guard |
 | Roles admin / RoleUsersController | ✅ Good | `RoleManagementTest`: assign/remove, admin-grants-admin (pinned), non-admin denied |
 | General induction | ✅ Good | `GeneralInductionTest`: correct/incorrect code, case-insensitivity, fob registration |
 | Gifts, stats, leaderboard | 🔴 None | Lower risk |
