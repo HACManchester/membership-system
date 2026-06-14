@@ -2,12 +2,12 @@
 
 ## Summary
 
-~38 test files / 259 tests, in four distinct generations and quality bands:
+~37 test files / 258 tests, in three quality bands (the legacy BrowserKit band was retired in
+June 2026 — its coverage was ported to `tests/Feature/`):
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
-| Legacy BrowserKit | `tests/*.php` (root: AccountTest, FinanceTest, HomepageTest, InductionTest, KeyFobTest, LoginTest, SignupTest) | 7 files | Outdated form-interaction style; retire (SignupTest is the porting template) |
-| Modern feature tests | `tests/Feature/` | 8 files | Good to excellent |
+| Modern feature tests | `tests/Feature/` | 14 files | Good to excellent |
 | Integration tests | `tests/integration/` | 2 files | Excellent — the crown jewels |
 | Unit tests | `tests/unit/` | 20 files | Good, especially billing |
 
@@ -22,8 +22,8 @@ system.
 - `phpunit.xml`: SQLite `:memory:`, array mail/cache, sync queue, Telegram disabled. Fast and
   isolated; `RefreshDatabase` migrates per test. No DB setup needed to run the suite.
 - Run via Docker: `docker compose exec laravel vendor/bin/phpunit`.
-- Base classes: `tests/TestCase.php` (modern) and `tests/BrowserKitTestCase.php` (legacy — its
-  existence is what keeps `laravel/browser-kit-testing` in composer).
+- Base class: `tests/TestCase.php`. (The legacy `BrowserKitTestCase` and the
+  `laravel/browser-kit-testing` + `symfony/dom-crawler` dev dependencies were removed in June 2026.)
 - Factories: mixed generations. `database/factories/ModelFactory.php` uses the legacy
   `$factory->define()` closure style; newer factories (Payment, Course, Equipment…) are separate
   files. The Laravel upgrade will force conversion to class-based factories.
@@ -76,7 +76,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Discourse sync | ✅ Good | Job payload + event→job dispatch tested |
 | Mail | ✅ Good | `UserMailerTest` (queue assertions; templates not rendered) |
 | Exception handling | ✅ Good | Telegram throttling tested |
-| Keyfobs | 🟡 Partial | Legacy BrowserKit tests + 1 CSV export test; access-code generation untested |
+| Keyfobs | ✅ Good | `KeyFobTest` covers the view/add/mark-lost authorization matrix (self/other/admin) + induction gate; `KeyFobCsvTest` covers export. Access-code generation still untested |
 | Storage boxes | 🟡 Partial | Repository queries only; claim/release controller untested |
 | Balance / cash payments | 🟡 Partial | Recalculation tested; controllers untested |
 | Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
@@ -96,15 +96,18 @@ test-honesty fixes (SignupTest now runs; `SubscriptionChargeTest` rebuilt on `Ev
 `x_test_` stubs and the no-op Jest CI step removed) all landed. The money path and the
 authorization middleware now have protective coverage ahead of the planned refactors.
 
-### Phase 2 — retire the legacy band
+### Phase 2 — retire the legacy band ✅ done (June 2026)
 
-1. Port the unique coverage from the 7 root BrowserKit tests into `tests/Feature/` (login,
-   signup, keyfob authorization, finance-page access control), then delete them,
-   `BrowserKitTestCase.php`, and the `laravel/browser-kit-testing` + `symfony/dom-crawler`
-   dev dependencies. This also unblocks the framework upgrade.
-2. Add feature tests for the untested member-facing flows: signup → confirm email → general
-   induction → fob registration (one end-to-end test buys a lot here), storage box claim/release,
-   profile update (asserting `MemberDiscourseParamsChanged` fires).
+The 7 root BrowserKit tests were ported to `tests/Feature/` (`KeyFobTest`, `AccountAccessTest`,
+`FinanceAccessTest`, `LoginTest`, `SignupTest`, `HomepageTest` — the induction one was already
+covered by `Feature/InductionTest`), and `BrowserKitTestCase.php` plus the
+`laravel/browser-kit-testing`, `symfony/dom-crawler`, and `symfony/css-selector` dev dependencies
+were removed. This clears a Laravel-8-upgrade blocker.
+
+Still open — feature tests for the untested member-facing flows: signup → confirm email → general
+induction → fob registration end-to-end (`SignupTest` covers the registration POST but not email
+confirmation), storage box claim/release, and a profile update asserting
+`MemberDiscourseParamsChanged` fires.
 
 ### Phase 3 — raise the bar (ongoing)
 
