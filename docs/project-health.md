@@ -78,15 +78,22 @@ Removed in the June 2026 deletion pass:
 - `elixir.json` — two build systems ago; the live one is `webpack.mix.js`
 - `app/Exceptions/DatabaseException.php`, `DeviceException.php`, `UserImageFailedException.php` — never thrown
 
+Kept by decision:
+
+- `app/Events/PaymentCancelled.php` — dispatched in `PaymentRepository` with no listener, but
+  **kept intentionally** (June 2026) as a typed event for the core payment flow, to be wired to
+  listeners during the typed-events migration (see architecture.md). Having events for the main
+  payment lifecycle is worth more than the cost of an unconsumed dispatch.
+
 Still open:
 
-- `app/Events/PaymentCancelled.php` — dispatched in `PaymentRepository` but no listener is
-  registered, so it fires into the void alongside the working `payment.cancelled` string event.
-  Either dead, or a half-started seed of the planned typed-events migration (see architecture.md).
-  Pending a decision.
-- `PaymentController::store()` (`app/Http/Controllers/PaymentController.php:95`) is marked
-  `@deprecated` but still routed (admin-only) and linked from the member admin action bar.
-  Confirm with the finance team whether manual payment entry is still used before removing.
+- `PaymentController::store()` (`app/Http/Controllers/PaymentController.php`) is marked
+  `@deprecated`, but only its `door-key` and `storage-box` branches are dead — the `subscription`
+  branch is **live**: the member admin page shows a "Record a £N Cash Subscription Payment" button
+  for members whose `payment_method == 'cash'` (`member-admin-action-bar.blade.php`), which records
+  a paid payment and extends membership a month. Removal depends on whether any cash-paying members
+  remain — a finance-team question. If none, the whole method + form go; if some, keep the
+  subscription branch and drop the two dead ones.
 
 ## Prioritised improvements
 
