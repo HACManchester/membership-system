@@ -84,16 +84,12 @@ Kept by decision:
   **kept intentionally** (June 2026) as a typed event for the core payment flow, to be wired to
   listeners during the typed-events migration (see architecture.md). Having events for the main
   payment lifecycle is worth more than the cost of an unconsumed dispatch.
-
-Still open:
-
-- `PaymentController::store()` (`app/Http/Controllers/PaymentController.php`) is marked
-  `@deprecated`, but only its `door-key` and `storage-box` branches are dead — the `subscription`
-  branch is **live**: the member admin page shows a "Record a £N Cash Subscription Payment" button
-  for members whose `payment_method == 'cash'` (`member-admin-action-bar.blade.php`), which records
-  a paid payment and extends membership a month. Removal depends on whether any cash-paying members
-  remain — a finance-team question. If none, the whole method + form go; if some, keep the
-  subscription branch and drop the two dead ones.
+- `PaymentController::store()` (`app/Http/Controllers/PaymentController.php`) — **kept** (June
+  2026). It is marked `@deprecated`, but its `subscription` branch is live: the member admin page
+  shows a "Record a £N Cash Subscription Payment" button for members whose
+  `payment_method == 'cash'` (`member-admin-action-bar.blade.php`), recording a paid payment and
+  extending membership a month. Its `door-key` and `storage-box` branches are unreachable dead
+  code but are left in place alongside the live branch.
 
 ## Prioritised improvements
 
