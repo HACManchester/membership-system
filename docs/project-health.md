@@ -5,7 +5,7 @@
 A membership management platform for Hackspace Manchester, adopted from Build Brighton's
 open-source member system (hence the `BB\` PHP namespace) and progressively modernised. It handles:
 member registration and profiles, GoCardless direct-debit subscriptions, equipment training and
-inductions, physical access credentials, storage boxes, disciplinary actions, Discourse forum
+inductions, physical access credentials, disciplinary actions, Discourse forum
 sync, and admin/finance tooling.
 
 ## Repository layout

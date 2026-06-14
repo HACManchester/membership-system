@@ -90,11 +90,6 @@ class SidebarItems
                 'active' => self::isActive('members.index')
             ],
             [
-                'label' => 'Member Storage',
-                'href' => route('storage_boxes.index'),
-                'active' => self::isActive('storage_boxes.index')
-            ],
-            [
                 'label' => 'Tools and Equipment',
                 'href' => route('equipment.index'),
                 'active' => self::isActive('equipment.index')

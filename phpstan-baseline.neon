@@ -56,16 +56,6 @@ parameters:
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/StorageBoxClaimController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/StorageBoxController.php
-
-		-
 			message: "#^Parameter \\#1 \\$user of job class BB\\\\Jobs\\\\DiscourseSync constructor expects BB\\\\Entities\\\\User in BB\\\\Jobs\\\\DiscourseSync\\:\\:dispatch\\(\\), Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable given\\.$#"
 			count: 1
 			path: app/Listeners/DiscourseSyncSubscriber.php

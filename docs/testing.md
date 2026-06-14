@@ -77,7 +77,6 @@ gap only bites for event shapes we've never received live traffic for).
 | Mail | ✅ Good | `UserMailerTest` (queue assertions; templates not rendered) |
 | Exception handling | ✅ Good | Telegram throttling tested |
 | Keyfobs | ✅ Good | `KeyFobTest` covers the view/add/mark-lost authorization matrix (self/other/admin) + induction gate; `KeyFobCsvTest` covers export. Access-code generation still untested |
-| Storage boxes | ✅ Good | `StorageBoxClaimTest` covers claim/release authorization (admin/storage vs member, owner-release, already-claimed) |
 | Balance / cash payments | 🟡 Partial | Recalculation + `CashPaymentTest` (admin records cash payment, non-admin denied); `BalanceController` view still untested |
 | Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
 | Profile updates | ✅ Good | `AccountAccessTest` covers the profile edit page + update |
@@ -106,8 +105,7 @@ were removed. This clears a Laravel-8-upgrade blocker.
 
 Still open — feature tests for the untested member-facing flows: signup → confirm email → general
 induction → fob registration end-to-end (`SignupTest` covers the registration POST but not email
-confirmation), storage box claim/release, and a profile update asserting
-`MemberDiscourseParamsChanged` fires.
+confirmation) and a profile update asserting `MemberDiscourseParamsChanged` fires.
 
 ### Phase 3 — raise the bar (ongoing)
 

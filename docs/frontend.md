@@ -51,8 +51,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 ### Suggested order (value ÷ effort)
 
-1. **Member-facing, high-traffic, simple**: members directory, leaderboard, storage boxes — small
-   read-mostly pages, good warm-ups.
+1. **Member-facing, high-traffic, simple**: members directory, leaderboard — small read-mostly
+   pages, good warm-ups.
 2. **Account/profile cluster**: registration, profile edit, account settings. Biggest UX win;
    pairs with splitting `AccountController` (architecture.md). Includes the photo-upload/approval
    flow.

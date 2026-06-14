@@ -117,22 +117,7 @@ both code and humans); equipment soft-delete doesn't cascade to inductions.
 
 ---
 
-## 5. Storage boxes
-
-**Purpose:** members claim physical storage boxes.
-
-**Key code:** `app/Entities/StorageBox.php` (the only model using the `owen-it/laravel-auditing`
-`Auditable` trait), `StorageBoxController` (admin CRUD), `StorageBoxClaimController` (claim/release).
-
-**Flow:** member claims an unclaimed box (`user_id` set); releases it (`user_id = 0` — TODO in code
-says this should be `null`). Admin manages the box inventory.
-
-**Good:** fully audited; clean `authorizeResource` authorization.
-**Could improve:** `user_id = 0` sentinel instead of null; no waiting list.
-
----
-
-## 6. Disciplinary / bans
+## 5. Disciplinary / bans
 
 **Purpose:** ban and unban members.
 
@@ -149,7 +134,7 @@ the `banned` flag).
 
 ---
 
-## 7. Roles & ad-hoc notifications
+## 6. Roles & ad-hoc notifications
 
 **Purpose:** team/role management and bulk email to member groups.
 
@@ -174,7 +159,7 @@ architecture.md) makes it easier to maintain.
 
 ---
 
-## 8. Discourse integration
+## 7. Discourse integration
 
 **Purpose:** keep the Discourse forum in sync with membership status.
 
@@ -193,7 +178,7 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
 
 ---
 
-## 9. Stats, leaderboard, directory
+## 8. Stats, leaderboard, directory
 
 **Key code:** `StatsController`, `LeaderboardController`, `MembersController`, `LinksController`.
 
@@ -206,13 +191,14 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
 
 ---
 
-## 10. Cross-cutting
+## 9. Cross-cutting
 
 - **`UserObserver`** (`app/Observer/UserObserver.php`) — the heart of lifecycle side effects:
   status-transition events, welcome/warning/suspension/leaving emails, Telegram notices, Discourse
   param tracking. Powerful but increasingly crowded; candidates for extraction into listeners.
-- **Auditing** — two parallel mechanisms: `owen-it/laravel-auditing` (only `StorageBox`) and a
-  custom `UserAuditObserver` writing to an `AuditLog` table for three User flags
+- **Auditing** — `owen-it/laravel-auditing` is installed but no model uses its `Auditable` trait
+  (so the package is currently dormant). The live audit mechanism
+  is the custom `UserAuditObserver` writing to an `AuditLog` table for three User flags
   (`induction_completed`, `trusted`, `key_holder`). Worth unifying.
 - **TelegramHelper** — leveled notifications (job/log/render/error/warning) to an operational
   chat; gracefully no-ops when unconfigured. Exception notifications are rate-limited

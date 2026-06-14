@@ -214,11 +214,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasOne(Address::class)->orderBy('approved', 'asc');
     }
 
-    public function storageBoxes()
-    {
-        return $this->hasMany(StorageBox::class)->where('active', true);
-    }
-
     public function equipmentAreas(): BelongsToMany
     {
         return $this->belongsToMany(EquipmentArea::class);

@@ -2,7 +2,6 @@
 
 namespace BB\Mail;
 
-use BB\Entities\StorageBox;
 use BB\Entities\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

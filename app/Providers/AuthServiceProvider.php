@@ -9,7 +9,6 @@ use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\Induction;
 use BB\Entities\KeyFob;
-use BB\Entities\StorageBox;
 use BB\Entities\User;
 use BB\Entities\MaintainerGroup;
 use BB\Policies\EquipmentAreaPolicy;
@@ -18,7 +17,6 @@ use BB\Policies\InductionPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
 use BB\Policies\CoursePolicy;
-use BB\Policies\StorageBoxPolicy;
 use BB\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -33,7 +31,6 @@ class AuthServiceProvider extends ServiceProvider
         Equipment::class => EquipmentPolicy::class,
         KeyFob::class => KeyFobPolicy::class,
         User::class => UserPolicy::class,
-        StorageBox::class => StorageBoxPolicy::class,
         EquipmentArea::class => EquipmentAreaPolicy::class,
         Induction::class => InductionPolicy::class,
         MaintainerGroup::class => MaintainerGroupPolicy::class,
