@@ -2,20 +2,20 @@
 
 ## Summary
 
-~37 test files / 258 tests, in three quality bands (the legacy BrowserKit band was retired in
+~42 test files / 276 tests, in three quality bands (the legacy BrowserKit band was retired in
 June 2026 — its coverage was ported to `tests/Feature/`):
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
-| Modern feature tests | `tests/Feature/` | 14 files | Good to excellent |
+| Modern feature tests | `tests/Feature/` | 19 files | Good to excellent |
 | Integration tests | `tests/integration/` | 2 files | Excellent — the crown jewels |
 | Unit tests | `tests/unit/` | 20 files | Good, especially billing |
 
 **Strongest coverage:** the payment/membership lifecycle (creation → billing → failure → warning →
-suspension → recovery → left), the GoCardless webhook endpoint, and the equipment/induction/course
-system.
-**Biggest remaining gaps:** member email-confirmation/onboarding end-to-end, several admin flows
-(roles, disciplinary depth), storage-box and balance controllers, and the entire JS frontend.
+suspension → recovery → left), the GoCardless webhook endpoint, the equipment/induction/course
+system, and the admin authorization flows (roles, disciplinary, storage, cash).
+**Biggest remaining gaps:** member email-confirmation/onboarding end-to-end, the `BalanceController`
+view, gifts/stats/leaderboard (lower risk), and the entire JS frontend.
 
 ## Infrastructure
 
@@ -77,13 +77,13 @@ gap only bites for event shapes we've never received live traffic for).
 | Mail | ✅ Good | `UserMailerTest` (queue assertions; templates not rendered) |
 | Exception handling | ✅ Good | Telegram throttling tested |
 | Keyfobs | ✅ Good | `KeyFobTest` covers the view/add/mark-lost authorization matrix (self/other/admin) + induction gate; `KeyFobCsvTest` covers export. Access-code generation still untested |
-| Storage boxes | 🟡 Partial | Repository queries only; claim/release controller untested |
-| Balance / cash payments | 🟡 Partial | Recalculation tested; controllers untested |
+| Storage boxes | ✅ Good | `StorageBoxClaimTest` covers claim/release authorization (admin/storage vs member, owner-release, already-claimed) |
+| Balance / cash payments | 🟡 Partial | Recalculation + `CashPaymentTest` (admin records cash payment, non-admin denied); `BalanceController` view still untested |
 | Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
-| Profile updates | 🟡 Weak | View-only legacy test |
-| Disciplinary | 🟡 Minimal | 2 tests; no authorization-denial or notification tests |
-| Roles admin / RoleUsersController | 🔴 None | |
-| General induction | 🔴 None | |
+| Profile updates | ✅ Good | `AccountAccessTest` covers the profile edit page + update |
+| Disciplinary | ✅ Good | Ban/unban happy paths (`DisciplinaryTest`) + authorization denials and self-ban guard (`DisciplinaryAuthorizationTest`) |
+| Roles admin / RoleUsersController | ✅ Good | `RoleManagementTest`: assign/remove, admin-grants-admin (pinned), non-admin denied |
+| General induction | ✅ Good | `GeneralInductionTest`: correct/incorrect code, case-insensitivity, fob registration |
 | Gifts, stats, leaderboard | 🔴 None | Lower risk |
 | JS frontend | 🔴 None | Jest is configured (`jest.config.js`) but no tests exist and it is not in CI |
 
