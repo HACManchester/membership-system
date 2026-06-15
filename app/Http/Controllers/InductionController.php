@@ -32,7 +32,7 @@ class InductionController extends Controller
 
     public function train(Equipment $equipment, Induction $induction, TrainInductionRequest $request)
     {
-        $trainer = User::find($request->input('trainer_user_id'));
+        $trainer = User::findOrFail($request->input('trainer_user_id'));
 
         $induction->update([
             'trained' => \Carbon\Carbon::now(),

@@ -42,7 +42,7 @@ class InductionRequestedNotification extends AbstractInductionNotification
             $inductionInstructions = $this->equipment
                 ->unique('induction_instructions')
                 ->filter(function (Equipment $equipment) {
-                    return trim($equipment->induction_instructions);
+                    return trim($equipment->induction_instructions ?? '');
                 });
 
             $mailMessage = (new MailMessage)

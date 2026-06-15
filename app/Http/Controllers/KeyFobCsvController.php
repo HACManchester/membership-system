@@ -35,7 +35,13 @@ class KeyFobCsvController extends Controller
 
         return response()->streamDownload(function () use ($keyfobs) {
             $out = fopen('php://output', 'w');
-            fputcsv($out, array_keys($keyfobs[0]));
+            if ($out === false) {
+                return;
+            }
+            $firstRow = $keyfobs->first();
+            if ($firstRow !== null) {
+                fputcsv($out, array_keys($firstRow));
+            }
             foreach ($keyfobs as $line) {
                 fputcsv($out, $line);
             }

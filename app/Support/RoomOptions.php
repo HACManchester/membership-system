@@ -41,7 +41,7 @@ class RoomOptions
      * Get a formatted display name for a room
      * This handles cases where the room might not be in our predefined list
      * 
-     * @param string $room
+     * @param string|null $room
      * @return string
      */
     public static function getDisplayName($room)

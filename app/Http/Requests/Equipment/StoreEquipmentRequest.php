@@ -49,6 +49,10 @@ class StoreEquipmentRequest extends FormRequest
                     }
 
                     $maintainerGroup = MaintainerGroup::find($value);
+                    if (! $maintainerGroup instanceof MaintainerGroup) {
+                        // A non-existent group is already reported by the exists rule.
+                        return;
+                    }
                     $inMaintainerGroup = $this->user()->maintainerGroups->contains($maintainerGroup);
                     $isAreaCoordinator = $this->user()->equipmentAreas->contains($maintainerGroup->equipmentArea);
 

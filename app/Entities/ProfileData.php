@@ -53,7 +53,7 @@ class ProfileData extends Model
 
     public function getSkillsAttribute()
     {
-        return (array)json_decode($this->skills_array);
+        return (array)json_decode($this->skills_array ?? '[]');
     }
 
     public function user()

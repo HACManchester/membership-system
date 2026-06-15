@@ -51,7 +51,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param \DateTime $date
      * @param integer   $amount
      * @param string    $status
-     * @param string    $DDAuthId
+     * @param string|null $DDAuthId
      * @return SubscriptionCharge
      */
     public function createChargeAndBillDD($userId, $date, $amount, $status, $DDAuthId)

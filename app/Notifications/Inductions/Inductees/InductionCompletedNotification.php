@@ -33,7 +33,7 @@ class InductionCompletedNotification extends AbstractInductionNotification
             $equipmentNames = $this->equipment->pluck('name')->implode(', ');
             $trainedInstructions = $this->equipment
                 ->filter(function (Equipment $equipment) {
-                    return trim($equipment->trained_instructions);
+                    return trim($equipment->trained_instructions ?? '');
                 });
 
             $mailMessage = (new MailMessage)
