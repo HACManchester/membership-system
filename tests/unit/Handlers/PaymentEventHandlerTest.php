@@ -35,8 +35,12 @@ class PaymentEventHandlerTest extends TestCase
             'cash_balance' => 1000,
         ]);
 
-        // Previous payment for the initial balance
+        // Previous payment for the initial balance. The source must be pinned to a
+        // non-'balance' value: recalculate() treats source='balance' payments as
+        // spends (negative), and the factory's random source otherwise picks 'balance'
+        // ~1 in 6 runs, which would subtract this top-up and make the test flaky.
         factory(Payment::class)->create([
+            'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
             'amount' => 10,
