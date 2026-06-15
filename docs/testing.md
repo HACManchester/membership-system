@@ -78,7 +78,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Exception handling | ✅ Good | Telegram throttling tested |
 | Keyfobs | ✅ Good | `KeyFobTest` covers the view/add/mark-lost authorization matrix (self/other/admin) + induction gate; `KeyFobCsvTest` covers export. Access-code generation still untested |
 | Balance / cash payments | 🟡 Partial | Recalculation + `CashPaymentTest` (admin records cash payment, non-admin denied); `BalanceController` view still untested |
-| Member signup & onboarding | 🟡 Partial | `SignupTest` exercises the registration POST; email-confirmation and the full onboarding flow still untested |
+| Member signup & onboarding | ✅ Good | `SignupTest` (registration POST) + `OnboardingTest` (end-to-end: register → confirm email → general induction → fob registration) |
 | Profile updates | ✅ Good | `AccountAccessTest` covers the profile edit page + update |
 | Disciplinary | ✅ Good | `DisciplinaryTest`: ban/unban happy paths + authorization denials and the self-ban guard |
 | Roles admin / RoleUsersController | ✅ Good | `RoleManagementTest`: assign/remove, admin-grants-admin (pinned), non-admin denied |
