@@ -109,7 +109,9 @@ In order of value:
 - Continue burning down `phpstan-baseline.neon` (down from ~200 to 26): the stale-docblock and
   genuine-bug tranches are done; the remainder is mostly `Authenticatable` property noise that the
   framework upgrade fixes for free, plus a few larastan relation false-positives. Raise to level
-  6–7 once under ~20 entries, and add a CI ratchet so the baseline can't grow.
+  6–7 once under ~20 entries. New errors must be baselined *deliberately* (CI's `phpstan analyse`
+  fails on un-baselined errors, so silencing one is a visible, reviewable change to the baseline
+  file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.
 
 ## How to sequence against other work
