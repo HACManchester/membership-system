@@ -297,7 +297,7 @@ Join Hackspace Manchester
             <p>
                 We want Hackspace Manchester to be a welcoming and inclusive environment, where everybody feels comfortable and
                 behaves safely. Please familiarise yourself with
-                <a href="https://hacman.org.uk/rules" target="_blank">our rules and code of conduct</a>.
+                <a href="https://docs.hacman.org.uk/governance/rules/ target="_blank">our rules and code of conduct</a>.
             </p>
 
             <div class="form-group {{ FlashNotification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
