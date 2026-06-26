@@ -72,7 +72,7 @@ class NotificationEmailController extends Controller
         }
 
         // Check the user is an admin or a trainer of the tool they specified
-        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
         $allowed = false;
 
         if(\Auth::user()->isAdmin()){
@@ -130,7 +130,7 @@ class NotificationEmailController extends Controller
                 }
 
                 //TODO: look at how to tidy this up, as it's duplicated above
-                $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
+                $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
                 $allowed = false;
 
                 if(\Auth::user()->isAdmin()){
@@ -149,19 +149,19 @@ class NotificationEmailController extends Controller
 
                 if($status == "trainer"){
                     $users = $this->trainingRecordRepository
-                        ->getTrainersForEquipment($equipment->induction_category)
+                        ->getTrainersForEquipment($equipment)
                         ->map(function($item){
                             return $item->user;
                         });
                 }elseif($status == "trained"){
                     $users = $this->trainingRecordRepository
-                        ->getTrainedUsersForEquipment($equipment->induction_category)
+                        ->getTrainedUsersForEquipment($equipment)
                         ->map(function($item){
                             return $item->user;
                         });
                 }else{
                     $users = $this->trainingRecordRepository
-                        ->getUsersPendingTrainingForEquipment($equipment->induction_category)
+                        ->getUsersPendingTrainingForEquipment($equipment)
                         ->map(function($item){
                             return $item->user;
                         });

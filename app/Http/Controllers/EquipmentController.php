@@ -57,9 +57,10 @@ class EquipmentController extends Controller
     {
         $user = \Auth::user();
         $allTools = $this->equipmentRepository->getAll();
+        $allTools->load('courses');
 
         $equipmentWithTrainingStatus = $allTools->map(function (Equipment $equipment) use ($user) {
-            $trained = $this->trainingRecordRepository->isUserTrained($user->id, $equipment->induction_category);
+            $trained = $this->trainingRecordRepository->isUserTrained($equipment, $user->id);
 
             return [
                 'equipment' => $equipment,
@@ -77,13 +78,13 @@ class EquipmentController extends Controller
     {
         $this->authorize('view', $equipment);
 
-        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
 
-        $userTrainingRecord = $this->trainingRecordRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
+        $userTrainingRecord = $this->trainingRecordRepository->getUserForEquipment($equipment, \Auth::user()->id);
 
-        $trainedUsers = $this->trainingRecordRepository->getTrainedUsersForEquipment($equipment->induction_category);
+        $trainedUsers = $this->trainingRecordRepository->getTrainedUsersForEquipment($equipment);
 
-        $usersPendingTraining = $this->trainingRecordRepository->getUsersPendingTrainingForEquipment($equipment->induction_category);
+        $usersPendingTraining = $this->trainingRecordRepository->getUsersPendingTrainingForEquipment($equipment);
 
         $memberList = $this->userRepository->getAllAsDropdown();
 

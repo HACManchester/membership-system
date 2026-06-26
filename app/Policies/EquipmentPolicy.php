@@ -88,6 +88,6 @@ class EquipmentPolicy
 
     public function train(User $user, Equipment $equipment)
     {
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $equipment->induction_category);
+        return $this->trainingRecordRepository->isTrainerForEquipment($user, $equipment);
     }
 }

@@ -31,7 +31,7 @@ Note: yarn/node commands run directly on the host; PHP commands run inside the D
 
 `resources/views/app.blade.php` loads the Mix-built `react-app.js`, sets up browser-side Sentry,
 and renders the `@inertia` root. Controllers return `Inertia::render('Page', [...props])`; props
-are serialized via `app/Http/Resources/*` (e.g. `InductionResource`, `CourseResource`).
+are serialized via `app/Http/Resources/*` (e.g. `TrainingRecordResource`, `CourseResource`).
 
 **Important convention:** Inertia sends *all* props to the browser as JSON whether or not the
 component renders them — so over-fetching in a resource ships data to the client unnecessarily.

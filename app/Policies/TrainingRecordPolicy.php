@@ -31,7 +31,7 @@ class TrainingRecordPolicy
 
     public function view(User $user, TrainingRecord $trainingRecord)
     {
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 
     /**
@@ -47,51 +47,31 @@ class TrainingRecordPolicy
         }
 
         // Requesting for others
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $equipment->induction_category);
+        return $this->trainingRecordRepository->isTrainerForEquipment($user, $equipment);
     }
 
     public function train(User $user, TrainingRecord $trainingRecord)
     {
-        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
-        if ($trainingRecord->course_id) {
-            return $this->trainingRecordRepository->isTrainerForCourse($user, $trainingRecord->course_id);
-        }
-        
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 
     public function untrain(User $user, TrainingRecord $trainingRecord)
     {
-        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
-        if ($trainingRecord->course_id) {
-            return $this->trainingRecordRepository->isTrainerForCourse($user, $trainingRecord->course_id);
-        }
-        
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 
     public function promote(User $user, TrainingRecord $trainingRecord)
     {
-        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
-        if ($trainingRecord->course_id) {
-            return $this->trainingRecordRepository->isTrainerForCourse($user, $trainingRecord->course_id);
-        }
-        
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 
     public function demote(User $user, TrainingRecord $trainingRecord)
     {
-        // Use course-based authorization if course_id is set, otherwise fall back to equipment-based
-        if ($trainingRecord->course_id) {
-            return $this->trainingRecordRepository->isTrainerForCourse($user, $trainingRecord->course_id);
-        }
-        
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 
     public function delete(User $user, TrainingRecord $trainingRecord)
     {
-        return $this->trainingRecordRepository->isTrainerForEquipment($user, $trainingRecord->key);
+        return $this->trainingRecordRepository->isTrainerForRecord($user, $trainingRecord);
     }
 }

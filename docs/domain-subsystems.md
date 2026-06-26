@@ -64,26 +64,31 @@ records completion and who inducted them.
 **Purpose:** equipment catalogue, induction/training requirements, trainers, and the newer
 course-based training system.
 
-**Key code:** `app/Entities/Equipment.php`, `Induction.php`, `Course.php`, `EquipmentArea.php`,
-`MaintainerGroup.php`; controllers `EquipmentController`, `InductionController`,
-`CourseController`, `CourseInductionController`, `CourseTrainingController`.
+**Key code:** `app/Entities/Equipment.php`, `TrainingRecord.php`, `Course.php`, `EquipmentArea.php`,
+`MaintainerGroup.php`; controllers `EquipmentController`, `TrainingRecordController`,
+`CourseController`, `CourseTrainingRecordController`, `CourseTrainingController`.
 
 **Two systems run in parallel:**
 
-- **Legacy:** `Equipment.induction_category` ↔ `Induction.key` string matching. Still used by
-  `NotificationEmailController` to find trainers/trained users.
-- **Modern:** `Course` ↔ `Equipment` many-to-many (`course_equipment`), `Induction.course_id`,
-  sign-off requests with 7-day expiry (`Induction.php` `sign_off_requested_at`), bulk training
+- **Legacy:** `Equipment.induction_category` ↔ `TrainingRecord.key` string matching.
+- **Modern:** `Course` ↔ `Equipment` many-to-many (`course_equipment`), `TrainingRecord.course_id`,
+  sign-off requests with 7-day expiry (`TrainingRecord.php` `sign_off_requested_at`), bulk training
   (`CourseTrainingController@bulkTrain`). A migration command
   (`MigrateCourseEquipmentData`, tested) moves data across.
 
-**Concepts:** *trainer* = `Induction.is_trainer` for a piece of equipment; *maintainer* = member of
+**Concepts:** *trainer* = `TrainingRecord.is_trainer` for a piece of equipment; *maintainer* = member of
 a `MaintainerGroup` linked to equipment; *area coordinator* = member of an `EquipmentArea`. Policies
-(`InductionPolicy`, `EquipmentPolicy`, `CoursePolicy`) grant these groups management rights, with
-authorization carried by FormRequests (`TrainInductionRequest::authorize()` etc.).
+(`TrainingRecordPolicy`, `EquipmentPolicy`, `CoursePolicy`) grant these groups management rights, with
+authorization carried by FormRequests (`TrainTrainingRecordRequest::authorize()` etc.).
+
+**Resolving training status:** "is this member trained / a trainer on this equipment?" must consider
+**both** linkage paths — the legacy `induction_category`↔`key` match and the modern course link.
+`TrainingRecordRepository` centralises this (`recordsForEquipmentQuery()` + the `*ForEquipment`
+methods, and `isTrainerForRecord()` for per-record authz). A key-only check silently under-reports
+course-trained members, since their `key` is the course slug rather than the equipment category.
 
 **Flows:** member requests induction → trainer marks trained (fires
-`InductionCompletedEvent`) → optionally promoted to trainer. Course flow adds a member-initiated
+`TrainingRecordCompletedEvent`) → optionally promoted to trainer. Course flow adds a member-initiated
 sign-off request step.
 
 **Good:** the course system is the best-engineered area of the codebase — policy-driven
@@ -146,8 +151,9 @@ finance, membership, comms, safety, storage, equipment, laser, acs, metalworking
 3dprinting, welding…). Assignment is admin-only.
 
 **Notification emails** (`NotificationEmailController`): admins can email all members; equipment
-trainers can email people trained / awaiting training on their tool. Recipient resolution still
-uses the legacy `Induction.key` system.
+trainers can email people trained / awaiting training on their tool. Recipient resolution goes
+through `TrainingRecordRepository`'s equipment-aware methods, so it covers both the legacy
+`key` match and the modern course link.
 
 **Newsletter** (`NewsletterController`): admin-only Inertia page for exporting recipient lists
 into an external mail tool.

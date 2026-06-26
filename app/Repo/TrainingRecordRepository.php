@@ -2,7 +2,9 @@
 
 namespace BB\Repo;
 
+use BB\Entities\Equipment;
 use BB\Entities\TrainingRecord;
+use BB\Entities\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,82 +27,141 @@ class TrainingRecordRepository extends DBRepository
     }
 
     /**
-     * @param $deviceId
+     * Build a query matching every training record tied to a piece of equipment,
+     * covering both linkage paths: the legacy induction_category↔key string match
+     * and the modern course_equipment↔course_id relationship. Records trained under
+     * the course system would otherwise be missed by a key-only match (their key is
+     * the course slug, not necessarily the equipment's induction_category).
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function recordsForEquipmentQuery(Equipment $equipment)
+    {
+        $courseIds = $equipment->courses->pluck('id');
+        $hasCategory = ! empty($equipment->induction_category);
+
+        // Equipment with no course links and no induction_category has nothing to
+        // match against — return a query that yields no records (an unguarded empty
+        // where() closure would otherwise match every training record).
+        if ($courseIds->isEmpty() && ! $hasCategory) {
+            return $this->model->whereRaw('1 = 0');
+        }
+
+        return $this->model->where(function ($query) use ($equipment, $courseIds, $hasCategory) {
+            if ($courseIds->isNotEmpty()) {
+                $query->orWhereIn('course_id', $courseIds);
+            }
+            if ($hasCategory) {
+                $query->orWhere('key', $equipment->induction_category);
+            }
+        });
+    }
+
+    /**
      * @return Collection
      */
-    public function getTrainersForEquipment($deviceId)
+    public function getTrainersForEquipment(Equipment $equipment)
     {
-        $trainers = $this->model->with('user', 'user.profile')->where('is_trainer', true)->where('key', $deviceId)->get();
+        $trainers = $this->recordsForEquipmentQuery($equipment)
+            ->with('user', 'user.profile')
+            ->where('is_trainer', true)
+            ->get();
         return $trainers->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
         });
     }
 
     /**
-     * @param $userID
-     * @return bool
+     * Trainers matched by the legacy induction key alone. Used by the
+     * training-request listener when notifying trainers for a legacy
+     * (course-less) record.
+     *
+     * @return Collection
      */
-    public function isTrainerForEquipment($user, $deviceId)
+    public function getTrainersForKey($key)
+    {
+        $trainers = $this->model->with('user', 'user.profile')
+            ->where('is_trainer', true)
+            ->where('key', $key)
+            ->get();
+        return $trainers->filter(function ($trainer) {
+            return $trainer->user && $trainer->user->active;
+        });
+    }
+
+    public function isTrainerForEquipment(User $user, Equipment $equipment): bool
+    {
+        return $this->recordsForEquipmentQuery($equipment)
+            ->where('user_id', $user->id)
+            ->where('is_trainer', true)
+            ->exists();
+    }
+
+    /**
+     * Trainer check by legacy induction key alone.
+     */
+    public function isTrainerForKey(User $user, $key): bool
     {
         return $this->model->where('user_id', $user->id)
-            ->where('key', $deviceId)
+            ->where('key', $key)
             ->where('is_trainer', true)
-            ->count() > 0;
+            ->exists();
     }
 
-
     /**
-     * @param string $device
-     * @return mixed
+     * Whether the user is a trainer for the same equipment/course as the given
+     * training record — course-based when the record has a course, falling back
+     * to the legacy key match otherwise. Mirrors the dual linkage so a trainer
+     * signed off under the modern system isn't missed.
      */
-    public function getTrainedUsersForEquipment($device)
+    public function isTrainerForRecord(User $user, TrainingRecord $record): bool
     {
-        $users = $this->model->with('user', 'user.profile')->whereNotNull('trained')->where('key', $device)->get();
+        if ($record->course_id) {
+            return $this->isTrainerForCourse($user, $record->course_id);
+        }
+
+        return $this->isTrainerForKey($user, $record->key);
+    }
+
+    public function getTrainedUsersForEquipment(Equipment $equipment)
+    {
+        $users = $this->recordsForEquipmentQuery($equipment)
+            ->with('user', 'user.profile')
+            ->whereNotNull('trained')
+            ->get();
         return $users->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
         });
     }
 
-    /**
-     * @param string $device
-     * @return mixed
-     */
-    public function getUsersPendingTrainingForEquipment($device)
+    public function getUsersPendingTrainingForEquipment(Equipment $equipment)
     {
-        $users = $this->model->with('user', 'user.profile')->where('key', $device)->whereNull('trained')->get();
+        $users = $this->recordsForEquipmentQuery($equipment)
+            ->with('user', 'user.profile')
+            ->whereNull('trained')
+            ->get();
         return $users->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
         });
     }
 
-    /**
-     * @param $userId
-     * @param string $device
-     * @return bool
-     */
-    public function isUserTrained($userId, $device)
+    public function isUserTrained(Equipment $equipment, int $userId): bool
     {
-        $record = $this->model->with('user', 'user.profile')->whereNotNull('trained')->where('user_id', $userId)->where('key', $device)->first();
-        if ($record) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->recordsForEquipmentQuery($equipment)
+            ->whereNotNull('trained')
+            ->where('user_id', $userId)
+            ->exists();
     }
 
-
     /**
-     * @param $userId
-     * @param string $device
-     * @return mixed
+     * @return TrainingRecord|false
      */
-    public function getUserForEquipment($userId, $device)
+    public function getUserForEquipment(Equipment $equipment, int $userId)
     {
-        $record = $this->model->with('user', 'user.profile')->where('user_id', $userId)->where('key', $device)->first();
-        if ($record) {
-            return $record;
-        }
-        return false;
+        return $this->recordsForEquipmentQuery($equipment)
+            ->with('user', 'user.profile')
+            ->where('user_id', $userId)
+            ->first() ?? false;
     }
 
     public function getLeaderboard($timePeriod)

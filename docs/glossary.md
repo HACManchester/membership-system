@@ -1,7 +1,9 @@
 # Glossary
 
-Domain terms as used in this codebase. Several are confusable — the *Induction* entity alone has
-three meanings in casual speech. When writing code or docs, prefer the precise terms below.
+Domain terms as used in this codebase. Several are confusable — "induction" alone has three
+meanings in casual speech. The training-record entity was historically named `Induction` for this
+reason; it is now `TrainingRecord` (the DB table is still `inductions`). When writing code or docs,
+prefer the precise terms below.
 
 ## Membership & lifecycle
 
@@ -21,13 +23,13 @@ three meanings in casual speech. When writing code or docs, prefer the precise t
 
 | Term | Meaning |
 | --- | --- |
-| **General induction** | The one-time health-and-safety onboarding (code entered at `/general_induction`). Sets `User.induction_completed`. Prerequisite for fobs/access codes. *Not* related to the `Induction` entity. |
-| **Induction (entity)** | `app/Entities/Induction.php` — one member's training record for one piece of equipment/course. Despite the name, it's a *training record*, including trainer status. |
-| **Equipment induction** | The process of being trained on a specific machine, producing an `Induction` row with `trained` set. |
-| **Course** | The modern grouping of training (`Course` ↔ many `Equipment`); replaces the legacy `induction_category` string-matching. An `Induction` row links to a course via `course_id`. |
-| **Induction category** (legacy) | String key on `Equipment` matched against `Induction.key`. Being retired in favour of Courses; still used by the notification email tool. |
+| **General induction** | The one-time health-and-safety onboarding (code entered at `/general_induction`). Sets `User.induction_completed`. Prerequisite for fobs/access codes. *Not* related to the `TrainingRecord` entity. |
+| **Training record (entity)** | `app/Entities/TrainingRecord.php` (table `inductions`) — one member's training record for one piece of equipment/course, including trainer status. Formerly named `Induction`. |
+| **Equipment induction** | The process of being trained on a specific machine, producing a `TrainingRecord` row with `trained` set. |
+| **Course** | The modern grouping of training (`Course` ↔ many `Equipment`); replaces the legacy `induction_category` string-matching. A `TrainingRecord` links to a course via `course_id`. |
+| **Induction category** (legacy) | String key on `Equipment` matched against `TrainingRecord.key`. Being retired in favour of Courses, but still honoured as a fallback wherever training status is resolved (alongside the course link). |
 | **Sign-off request** | Course-flow step: member requests trainer sign-off (`sign_off_requested_at`, expires after 7 days). |
-| **Trainer** | A member with `is_trainer=true` on their `Induction` for that equipment — may train others, gets a leaderboard entry, can email trainees. |
+| **Trainer** | A member with `is_trainer=true` on their `TrainingRecord` for that equipment — may train others, gets a leaderboard entry, can email trainees. |
 | **Maintainer** | Member of a `MaintainerGroup` linked to equipment — maintains the machine; gets management rights via policies. Not necessarily a trainer. |
 | **Area coordinator** | Member attached to an `EquipmentArea` (e.g. woodshop) — coordinates an area; policy-level management rights over its equipment. |
 

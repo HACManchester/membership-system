@@ -57,8 +57,11 @@ class TrainingRecordRequestedListener
 
     protected function notifyTrainers(TrainingRecordRequestedEvent $event, Collection $equipment)
     {
-        $key = $event->trainingRecord->key;
-        $trainers = $this->trainingRecordRepository->getTrainersForEquipment($key);
+        $record = $event->trainingRecord;
+        // Course-based records match trainers via the course; legacy records via the key.
+        $trainers = $record->course_id
+            ? $this->trainingRecordRepository->getTrainersForCourse($record->course_id)
+            : $this->trainingRecordRepository->getTrainersForKey($record->key);
 
         $trainers->each(function (TrainingRecord $trainer) use ($event, $equipment) {
             $trainer->user->notify(new TrainersInductionRequestedNotification($event->trainingRecord, $equipment));

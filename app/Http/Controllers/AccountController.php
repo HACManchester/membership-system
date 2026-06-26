@@ -228,16 +228,18 @@ class AccountController extends Controller
         $user = User::findWithPermission($id);
 
         $equipmentRequiringInduction = $this->equipmentRepository->getRequiresInduction();
+        $equipmentRequiringInduction->load('courses');
 
-        // todo: make these variable names make sense
+        // Attach the member's training record (if any) for each piece of equipment.
+        // A record counts if it matches either training-linkage path: the modern
+        // course relationship (course_id) or the legacy induction_category↔key match.
         $userTrainingRecords = $user->trainingRecords()->get();
         foreach ($equipmentRequiringInduction as $equipment) {
-            $equipment->userTrainingRecord = false;
-            foreach ($userTrainingRecords as $record) {
-                if ($record->key == $equipment->induction_category) {
-                    $equipment->userTrainingRecord = $record;
-                }
-            }
+            $courseIds = $equipment->courses->pluck('id');
+            $equipment->userTrainingRecord = $userTrainingRecords->first(function ($record) use ($equipment, $courseIds) {
+                return ($record->course_id !== null && $courseIds->contains($record->course_id))
+                    || (! empty($equipment->induction_category) && $record->key === $equipment->induction_category);
+            }) ?? false;
         }
 
         //get pending address if any
