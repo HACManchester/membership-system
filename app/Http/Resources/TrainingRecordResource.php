@@ -6,12 +6,12 @@ use BB\Helpers\UserImage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \BB\Entities\Induction
+ * @mixin \BB\Entities\TrainingRecord
  * @property \BB\Entities\User|null $user
  * @property \BB\Entities\User|null $trainerUser
  * @property \BB\Entities\Course|null $course
  */
-class InductionResource extends JsonResource
+class TrainingRecordResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

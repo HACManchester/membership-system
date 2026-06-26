@@ -1,8 +1,8 @@
 <?php
 
-namespace BB\Notifications\Inductions;
+namespace BB\Notifications\TrainingRecords;
 
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\Course;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -10,12 +10,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Collection;
 
-abstract class AbstractInductionNotification extends Notification
+abstract class AbstractTrainingRecordNotification extends Notification
 {
     use Queueable;
 
-    /** @var Induction */
-    protected $induction;
+    /** @var TrainingRecord */
+    protected $trainingRecord;
 
     /** @var Collection */
     protected $equipment;
@@ -28,11 +28,11 @@ abstract class AbstractInductionNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Induction $induction, Collection $equipment)
+    public function __construct(TrainingRecord $trainingRecord, Collection $equipment)
     {
-        $this->induction = $induction;
+        $this->trainingRecord = $trainingRecord;
         $this->equipment = $equipment;
-        $this->course = $induction->course;
+        $this->course = $trainingRecord->course;
     }
 
     /**
@@ -63,7 +63,7 @@ abstract class AbstractInductionNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'induction_id' => $this->induction->id,
+            'induction_id' => $this->trainingRecord->id,
         ];
     }
 }

@@ -5,13 +5,13 @@ import PageTitle from '../../Components/PageTitle';
 import PendingSignOffSection from '../../Components/CourseTraining/PendingSignOffSection';
 import TrainersManagementSection from '../../Components/CourseTraining/TrainersManagementSection';
 import TrainedMembersSection from '../../Components/CourseTraining/TrainedMembersSection';
-import { InductionResource, CourseResource, Member } from '../../types/resources';
+import { TrainingRecordResource, CourseResource, Member } from '../../types/resources';
 
 type Props = {
   course: CourseResource;
-  trainers: InductionResource[];
-  trainedUsers: InductionResource[];
-  usersPendingSignOff: InductionResource[];
+  trainers: TrainingRecordResource[];
+  trainedUsers: TrainingRecordResource[];
+  usersPendingSignOff: TrainingRecordResource[];
   memberList: Member[];
   urls: {
     bulkTrain: string;

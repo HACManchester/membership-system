@@ -3,17 +3,17 @@ import { Card, CardContent, Typography, Box, Button, Stack } from '@mui/material
 import LaunchIcon from '@mui/icons-material/Launch';
 import MarkdownRenderer from '../MarkdownRenderer';
 import RequestSignOffButton from '../RequestSignOffButton';
-import { CourseResource, InductionResource } from '../../types/resources';
+import { CourseResource, TrainingRecordResource } from '../../types/resources';
 
 type Props = {
   course: CourseResource;
-  userCourseInduction: InductionResource | null;
+  userCourseTrainingRecord: TrainingRecordResource | null;
   requestSignOffUrl: string | null;
 };
 
 const TrainingInstructionsSection: React.FC<Props> = ({
   course,
-  userCourseInduction,
+  userCourseTrainingRecord,
   requestSignOffUrl,
 }) => {
   const hasTrainingContent =
@@ -78,7 +78,7 @@ const TrainingInstructionsSection: React.FC<Props> = ({
           )}
 
           <RequestSignOffButton
-            userCourseInduction={userCourseInduction}
+            userCourseTrainingRecord={userCourseTrainingRecord}
             requestSignOffUrl={requestSignOffUrl}
           />
         </Stack>

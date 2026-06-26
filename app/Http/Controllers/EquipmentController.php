@@ -8,7 +8,7 @@ use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
 use BB\Repo\EquipmentRepository;
-use BB\Repo\InductionRepository;
+use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\PpeOptions;
 use BB\Support\RoomOptions;
@@ -22,9 +22,9 @@ class EquipmentController extends Controller
 {
 
     /**
-     * @var InductionRepository
+     * @var TrainingRecordRepository
      */
-    private $inductionRepository;
+    private $trainingRecordRepository;
 
     /**
      * @var EquipmentRepository
@@ -41,11 +41,11 @@ class EquipmentController extends Controller
 
 
     function __construct(
-        InductionRepository $inductionRepository,
+        TrainingRecordRepository $trainingRecordRepository,
         EquipmentRepository $equipmentRepository,
         UserRepository $userRepository
     ) {
-        $this->inductionRepository    = $inductionRepository;
+        $this->trainingRecordRepository    = $trainingRecordRepository;
         $this->equipmentRepository    = $equipmentRepository;
         $this->userRepository         = $userRepository;
         $this->disk = Storage::disk('public');
@@ -59,7 +59,7 @@ class EquipmentController extends Controller
         $allTools = $this->equipmentRepository->getAll();
 
         $equipmentWithTrainingStatus = $allTools->map(function (Equipment $equipment) use ($user) {
-            $trained = $this->inductionRepository->isUserTrained($user->id, $equipment->induction_category);
+            $trained = $this->trainingRecordRepository->isUserTrained($user->id, $equipment->induction_category);
 
             return [
                 'equipment' => $equipment,
@@ -77,13 +77,13 @@ class EquipmentController extends Controller
     {
         $this->authorize('view', $equipment);
 
-        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
 
-        $userInduction = $this->inductionRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
+        $userTrainingRecord = $this->trainingRecordRepository->getUserForEquipment(\Auth::user()->id, $equipment->induction_category);
 
-        $trainedUsers = $this->inductionRepository->getTrainedUsersForEquipment($equipment->induction_category);
+        $trainedUsers = $this->trainingRecordRepository->getTrainedUsersForEquipment($equipment->induction_category);
 
-        $usersPendingInduction = $this->inductionRepository->getUsersPendingInductionForEquipment($equipment->induction_category);
+        $usersPendingTraining = $this->trainingRecordRepository->getUsersPendingTrainingForEquipment($equipment->induction_category);
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
@@ -92,9 +92,9 @@ class EquipmentController extends Controller
         return \View::make('equipment.show')
             ->with('equipment', $equipment)
             ->with('trainers', $trainers)
-            ->with('userInduction', $userInduction)
+            ->with('userTrainingRecord', $userTrainingRecord)
             ->with('trainedUsers', $trainedUsers)
-            ->with('usersPendingInduction', $usersPendingInduction)
+            ->with('usersPendingTraining', $usersPendingTraining)
             ->with('memberList', $memberList)
             ->with('now', $now);
     }

@@ -106,14 +106,14 @@ class CoursePolicy
 
     public function viewTraining(User $user, Course $course)
     {
-        $inductionRepo = app(\BB\Repo\InductionRepository::class);
-        return $inductionRepo->isTrainerForCourse($user, $course->id);
+        $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
+        return $trainingRecordRepo->isTrainerForCourse($user, $course->id);
     }
 
     public function train(User $user, Course $course)
     {
-        $inductionRepo = app(\BB\Repo\InductionRepository::class);
-        return $inductionRepo->isTrainerForCourse($user, $course->id);
+        $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
+        return $trainingRecordRepo->isTrainerForCourse($user, $course->id);
     }
 
     public function requestSignOff(User $user, Course $course)

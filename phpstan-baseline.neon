@@ -33,7 +33,7 @@ parameters:
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
-			path: app/Http/Controllers/InductionController.php
+			path: app/Http/Controllers/TrainingRecordController.php
 
 		-
 			message: "#^Relation 'user' is not found in BB\\\\Entities\\\\KeyFob model\\.$#"

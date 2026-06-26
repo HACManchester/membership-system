@@ -127,12 +127,12 @@ Route::post('account/payment/migrate-direct-debit', ['as' => 'account.payment.go
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
-    Route::post('equipment/{equipment}/induction', ['uses' => 'InductionController@store', 'as' => 'equipment_training.create']);
-    Route::post('equipment/{equipment}/induction/{induction}/train', ['uses' => 'InductionController@train', 'as' => 'equipment_training.train']);
-    Route::post('equipment/{equipment}/induction/{induction}/untrain', ['uses' => 'InductionController@untrain', 'as' => 'equipment_training.untrain']);
-    Route::post('equipment/{equipment}/induction/{induction}/promote', ['uses' => 'InductionController@promote', 'as' => 'equipment_training.promote']);
-    Route::post('equipment/{equipment}/induction/{induction}/demote', ['uses' => 'InductionController@demote', 'as' => 'equipment_training.demote']);
-    Route::delete('equipment/{equipment}/induction/{induction}', ['uses' => 'InductionController@destroy', 'as' => 'equipment_training.destroy']);
+    Route::post('equipment/{equipment}/induction', ['uses' => 'TrainingRecordController@store', 'as' => 'equipment_training.create']);
+    Route::post('equipment/{equipment}/induction/{trainingRecord}/train', ['uses' => 'TrainingRecordController@train', 'as' => 'equipment_training.train']);
+    Route::post('equipment/{equipment}/induction/{trainingRecord}/untrain', ['uses' => 'TrainingRecordController@untrain', 'as' => 'equipment_training.untrain']);
+    Route::post('equipment/{equipment}/induction/{trainingRecord}/promote', ['uses' => 'TrainingRecordController@promote', 'as' => 'equipment_training.promote']);
+    Route::post('equipment/{equipment}/induction/{trainingRecord}/demote', ['uses' => 'TrainingRecordController@demote', 'as' => 'equipment_training.demote']);
+    Route::delete('equipment/{equipment}/induction/{trainingRecord}', ['uses' => 'TrainingRecordController@destroy', 'as' => 'equipment_training.destroy']);
 });
 
 ##########################
@@ -167,7 +167,7 @@ Route::group(['middleware' => 'role:member'], function() {
     Route::resource('courses', 'CourseController');
 
     Route::group(['prefix' => 'courses/{course}', 'as' => 'courses.'], function() {
-        Route::post('/request-sign-off', ['uses' => 'CourseInductionController@store', 'as' => 'request-sign-off']);
+        Route::post('/request-sign-off', ['uses' => 'CourseTrainingRecordController@store', 'as' => 'request-sign-off']);
     });
 
     Route::group(['prefix' => 'courses/{course}/training', 'as' => 'courses.training.'], function() {

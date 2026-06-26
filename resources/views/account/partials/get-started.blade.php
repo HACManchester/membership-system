@@ -5,7 +5,7 @@ $conditions = [
     $user->induction_completed,
     $user->keyFob() !== null,
     $user->visited_forum,
-    $user->inductions()->trained()->count() > 0,
+    $user->trainingRecords()->trained()->count() > 0,
 ];
 
 $countOfConditions = count($conditions);
@@ -83,7 +83,7 @@ DESC
                         ])
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '6',
-                            'pass_condition' => $user->inductions()->trained()->count() > 0,
+                            'pass_condition' => $user->trainingRecords()->trained()->count() > 0,
                             'title' => 'Get trained on the tools you want to use',
                             'link' => route('courses.index'),
                             'description' => 'Some equipment requires training before you can use it. Please check the inductions page for more information.'

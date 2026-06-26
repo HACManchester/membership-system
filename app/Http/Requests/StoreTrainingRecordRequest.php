@@ -2,11 +2,11 @@
 
 namespace BB\Http\Requests;
 
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreInductionRequest extends FormRequest
+class StoreTrainingRecordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,7 @@ class StoreInductionRequest extends FormRequest
         }
 
         return $this->user()->can('create', [
-            Induction::class,
+            TrainingRecord::class,
             $this->route('equipment'),
             $userAwaitingTraining
         ]);

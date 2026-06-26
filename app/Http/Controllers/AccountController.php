@@ -227,15 +227,15 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
 
-        $inductions = $this->equipmentRepository->getRequiresInduction();
+        $equipmentRequiringInduction = $this->equipmentRepository->getRequiresInduction();
 
         // todo: make these variable names make sense
-        $userInductions = $user->inductions()->get();
-        foreach ($inductions as $i => $induction) {
-            $inductions[$i]->userInduction = false;
-            foreach ($userInductions as $userInduction) {
-                if ($userInduction->key == $induction->induction_category) {
-                    $inductions[$i]->userInduction = $userInduction;
+        $userTrainingRecords = $user->trainingRecords()->get();
+        foreach ($equipmentRequiringInduction as $equipment) {
+            $equipment->userTrainingRecord = false;
+            foreach ($userTrainingRecords as $record) {
+                if ($record->key == $equipment->induction_category) {
+                    $equipment->userTrainingRecord = $record;
                 }
             }
         }
@@ -257,7 +257,7 @@ class AccountController extends Controller
         return \View::make('account.show')
             ->with('user', $user)
             ->with('doorCode', $doorCode)
-            ->with('inductions', $inductions)
+            ->with('equipmentRequiringInduction', $equipmentRequiringInduction)
             ->with('newAddress', $newAddress)
             ->with('subscriptionCharges', $subscriptionCharges)
             ->with('memberBalance', $memberBalance)

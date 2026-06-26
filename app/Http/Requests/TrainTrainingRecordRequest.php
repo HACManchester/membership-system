@@ -2,10 +2,10 @@
 
 namespace BB\Http\Requests;
 
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TrainInductionRequest extends FormRequest
+class TrainTrainingRecordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class TrainInductionRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('train', [Induction::class, $this->route('induction')]);
+        return $this->user()->can('train', [TrainingRecord::class, $this->route('trainingRecord')]);
     }
 
     /**

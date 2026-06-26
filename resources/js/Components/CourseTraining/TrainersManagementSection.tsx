@@ -4,10 +4,10 @@ import { router } from '@inertiajs/react';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolIcon from '@mui/icons-material/School';
 import UserCard from './UserCard';
-import { InductionResource } from '../../types/resources';
+import { TrainingRecordResource } from '../../types/resources';
 
 type Props = {
-  trainers: InductionResource[];
+  trainers: TrainingRecordResource[];
 };
 
 const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
@@ -25,7 +25,7 @@ const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
           {trainers.map((trainer) => (
             <Grid2 key={trainer.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
-                induction={trainer}
+                trainingRecord={trainer}
                 actions={
                   trainer.urls && (
                     <IconButton

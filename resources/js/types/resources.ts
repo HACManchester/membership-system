@@ -1,10 +1,10 @@
 // Resource types that exactly match the backend Resource classes
 // These should be kept in sync with:
-// - app/Http/Resources/InductionResource.php
+// - app/Http/Resources/TrainingRecordResource.php
 // - app/Http/Resources/CourseResource.php
 // - app/Http/Resources/EquipmentResource.php
 
-export type InductionResource = {
+export type TrainingRecordResource = {
   id: number;
   key: string;
   trained: string | null;
@@ -73,8 +73,8 @@ export type CourseResource = {
   is_paused: boolean;
   live: boolean;
   equipment: EquipmentResource[];
-  user_course_induction?: InductionResource | null;
-  trainers?: InductionResource[];
+  user_course_training_record?: TrainingRecordResource | null;
+  trainers?: TrainingRecordResource[];
   urls: {
     show: string;
     training: string;

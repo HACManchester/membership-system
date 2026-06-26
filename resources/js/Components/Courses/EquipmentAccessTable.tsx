@@ -17,17 +17,17 @@ import {
   Stack,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { EquipmentResource, InductionResource } from '../../types/resources';
+import { EquipmentResource, TrainingRecordResource } from '../../types/resources';
 
 type Props = {
   equipment: EquipmentResource[];
-  userCourseInduction: InductionResource | null;
+  userCourseTrainingRecord: TrainingRecordResource | null;
   isUserTrained: boolean;
 };
 
 const EquipmentAccessTable: React.FC<Props> = ({
   equipment,
-  userCourseInduction,
+  userCourseTrainingRecord,
   isUserTrained,
 }) => {
   if (equipment.length === 0) {
@@ -199,7 +199,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                       >
                         <CheckCircleIcon color="success" />
                         <Typography variant="caption" color="text.secondary">
-                          {new Date(userCourseInduction!.trained!).toLocaleDateString()}
+                          {new Date(userCourseTrainingRecord!.trained!).toLocaleDateString()}
                         </Typography>
                       </Box>
                     )}

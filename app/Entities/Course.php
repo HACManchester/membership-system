@@ -3,7 +3,7 @@
 namespace BB\Entities;
 
 use BB\Entities\Equipment;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Presenters\CoursePresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +11,7 @@ use Laracasts\Presenter\PresentableTrait;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Equipment> $equipment
- * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Induction> $inductions
+ * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\TrainingRecord> $trainingRecords
  */
 class Course extends Model
 {
@@ -58,9 +58,9 @@ class Course extends Model
             ->withTimestamps();
     }
 
-    public function inductions()
+    public function trainingRecords()
     {
-        return $this->hasMany(Induction::class);
+        return $this->hasMany(TrainingRecord::class);
     }
 
     public static function formatOptions()

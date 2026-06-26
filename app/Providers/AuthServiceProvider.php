@@ -7,13 +7,13 @@ namespace BB\Providers;
 use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\KeyFob;
 use BB\Entities\User;
 use BB\Entities\MaintainerGroup;
 use BB\Policies\EquipmentAreaPolicy;
 use BB\Policies\EquipmentPolicy;
-use BB\Policies\InductionPolicy;
+use BB\Policies\TrainingRecordPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
 use BB\Policies\CoursePolicy;
@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         KeyFob::class => KeyFobPolicy::class,
         User::class => UserPolicy::class,
         EquipmentArea::class => EquipmentAreaPolicy::class,
-        Induction::class => InductionPolicy::class,
+        TrainingRecord::class => TrainingRecordPolicy::class,
         MaintainerGroup::class => MaintainerGroupPolicy::class,
         Course::class => CoursePolicy::class,
     ];

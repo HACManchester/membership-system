@@ -2,16 +2,16 @@
 
 namespace BB\Providers;
 
-use BB\Events\Inductions\InductionCompletedEvent;
-use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
-use BB\Events\Inductions\InductionRequestedEvent;
+use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
+use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
+use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use BB\Listeners\DiscourseSyncSubscriber;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\ExtendMembership;
-use BB\Listeners\Notifications\Inductions\InductionCompletedListener;
-use BB\Listeners\Notifications\Inductions\InductionMarkedAsTrainerListener;
-use BB\Listeners\Notifications\Inductions\InductionRequestedListener;
+use BB\Listeners\Notifications\TrainingRecords\TrainingRecordCompletedListener;
+use BB\Listeners\Notifications\TrainingRecords\TrainingRecordMarkedAsTrainerListener;
+use BB\Listeners\Notifications\TrainingRecords\TrainingRecordRequestedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -49,14 +49,14 @@ class EventServiceProvider extends ServiceProvider
 		'BB\Events\MemberGivenTrustedStatus' => [
 			EmailMemberAboutTrustedStatus::class
 		],
-		InductionRequestedEvent::class => [
-			InductionRequestedListener::class
+		TrainingRecordRequestedEvent::class => [
+			TrainingRecordRequestedListener::class
 		],
-		InductionCompletedEvent::class => [
-			InductionCompletedListener::class
+		TrainingRecordCompletedEvent::class => [
+			TrainingRecordCompletedListener::class
 		],
-		InductionMarkedAsTrainerEvent::class => [
-			InductionMarkedAsTrainerListener::class
+		TrainingRecordMarkedAsTrainerEvent::class => [
+			TrainingRecordMarkedAsTrainerListener::class
 		]
 	];
 

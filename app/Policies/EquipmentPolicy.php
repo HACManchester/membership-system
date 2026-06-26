@@ -4,18 +4,18 @@ namespace BB\Policies;
 
 use BB\Entities\User;
 use BB\Entities\Equipment;
-use BB\Repo\InductionRepository;
+use BB\Repo\TrainingRecordRepository;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EquipmentPolicy
 {
     use HandlesAuthorization;
 
-    protected $inductionRepository;
+    protected $trainingRecordRepository;
 
-    public function __construct(InductionRepository $inductionRepository)
+    public function __construct(TrainingRecordRepository $trainingRecordRepository)
     {
-        $this->inductionRepository = $inductionRepository;
+        $this->trainingRecordRepository = $trainingRecordRepository;
     }
 
     public function before($user, $ability)
@@ -88,6 +88,6 @@ class EquipmentPolicy
 
     public function train(User $user, Equipment $equipment)
     {
-        return $this->inductionRepository->isTrainerForEquipment($user, $equipment->induction_category);
+        return $this->trainingRecordRepository->isTrainerForEquipment($user, $equipment->induction_category);
     }
 }

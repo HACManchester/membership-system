@@ -189,9 +189,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(Payment::class)->orderBy('created_at', 'desc');
     }
 
-    public function inductions()
+    public function trainingRecords()
     {
-        return $this->hasMany(Induction::class);
+        return $this->hasMany(TrainingRecord::class);
     }
 
     public function keyFob()

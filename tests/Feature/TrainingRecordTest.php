@@ -3,16 +3,16 @@
 namespace Tests\Feature;
 
 use BB\Entities\Equipment;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\User;
-use BB\Events\Inductions\InductionCompletedEvent;
-use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
-use BB\Events\Inductions\InductionRequestedEvent;
+use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
+use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
+use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-class InductionTest extends TestCase
+class TrainingRecordTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,9 +21,9 @@ class InductionTest extends TestCase
     protected $regularUser;
     protected $anotherUser;
     protected $equipment;
-    protected $pendingInduction;
-    protected $trainedInduction;
-    protected $trainerInduction;
+    protected $pendingTrainingRecord;
+    protected $trainedTrainingRecord;
+    protected $trainerTrainingRecord;
 
     protected function setUp(): void
     {
@@ -49,7 +49,7 @@ class InductionTest extends TestCase
         ]);
 
         // Create trainer induction
-        $this->trainerInduction = new Induction([
+        $this->trainerInduction = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->trainer->id,
             'trained' => now(),
@@ -60,7 +60,7 @@ class InductionTest extends TestCase
         $this->trainerInduction->save();
 
         // Create pending induction
-        $this->pendingInduction = new Induction([
+        $this->pendingInduction = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->regularUser->id,
             'trained' => null,
@@ -71,7 +71,7 @@ class InductionTest extends TestCase
         $this->pendingInduction->save();
 
         // Create trained induction
-        $this->trainedInduction = new Induction([
+        $this->trainedInduction = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->anotherUser->id,
             'trained' => now(),
@@ -101,9 +101,9 @@ class InductionTest extends TestCase
             'is_trainer' => false,
         ]);
 
-        Event::assertDispatched(InductionRequestedEvent::class, function ($event) use ($newUser) {
-            return $event->induction->user_id === $newUser->id &&
-                   $event->induction->key === 'test-equipment';
+        Event::assertDispatched(TrainingRecordRequestedEvent::class, function ($event) use ($newUser) {
+            return $event->trainingRecord->user_id === $newUser->id &&
+                   $event->trainingRecord->key === 'test-equipment';
         });
     }
 
@@ -128,7 +128,7 @@ class InductionTest extends TestCase
             'is_trainer' => false,
         ]);
 
-        Event::assertDispatched(InductionRequestedEvent::class);
+        Event::assertDispatched(TrainingRecordRequestedEvent::class);
     }
 
     /** @test */
@@ -150,7 +150,7 @@ class InductionTest extends TestCase
             'key' => 'test-equipment',
         ]);
 
-        Event::assertDispatched(InductionRequestedEvent::class);
+        Event::assertDispatched(TrainingRecordRequestedEvent::class);
     }
 
     /** @test */
@@ -187,8 +187,8 @@ class InductionTest extends TestCase
         $this->assertNotNull($this->pendingInduction->trained);
         $this->assertEquals($this->trainer->id, $this->pendingInduction->trainer_user_id);
 
-        Event::assertDispatched(InductionCompletedEvent::class, function ($event) {
-            return $event->induction->id === $this->pendingInduction->id;
+        Event::assertDispatched(TrainingRecordCompletedEvent::class, function ($event) {
+            return $event->trainingRecord->id === $this->pendingInduction->id;
         });
     }
 
@@ -208,7 +208,7 @@ class InductionTest extends TestCase
         $this->assertNotNull($this->pendingInduction->trained);
         $this->assertEquals($this->admin->id, $this->pendingInduction->trainer_user_id);
 
-        Event::assertDispatched(InductionCompletedEvent::class);
+        Event::assertDispatched(TrainingRecordCompletedEvent::class);
     }
 
     /** @test */
@@ -275,8 +275,8 @@ class InductionTest extends TestCase
         $this->trainedInduction->refresh();
         $this->assertTrue($this->trainedInduction->is_trainer);
 
-        Event::assertDispatched(InductionMarkedAsTrainerEvent::class, function ($event) {
-            return $event->induction->id === $this->trainedInduction->id;
+        Event::assertDispatched(TrainingRecordMarkedAsTrainerEvent::class, function ($event) {
+            return $event->trainingRecord->id === $this->trainedInduction->id;
         });
     }
 
@@ -293,7 +293,7 @@ class InductionTest extends TestCase
         $this->trainedInduction->refresh();
         $this->assertTrue($this->trainedInduction->is_trainer);
 
-        Event::assertDispatched(InductionMarkedAsTrainerEvent::class);
+        Event::assertDispatched(TrainingRecordMarkedAsTrainerEvent::class);
     }
 
     /** @test */
@@ -397,7 +397,7 @@ class InductionTest extends TestCase
     {
         // Create trainer for different equipment
         $otherTrainer = factory(User::class)->create();
-        $otherTrainerInduction = new Induction([
+        $otherTrainerTrainingRecord = new TrainingRecord([
             'key' => 'other-equipment',
             'user_id' => $otherTrainer->id,
             'trained' => now(),
@@ -405,7 +405,7 @@ class InductionTest extends TestCase
             'is_trainer' => true,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $otherTrainerInduction->save();
+        $otherTrainerTrainingRecord->save();
 
         // Other trainer should not be able to train for our equipment
         $response = $this->actingAs($otherTrainer)

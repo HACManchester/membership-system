@@ -4,22 +4,22 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\User;
 use BB\Entities\Equipment;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\Course;
-use BB\Notifications\Inductions\Inductees\InductionCompletedNotification;
-use BB\Notifications\Inductions\Inductees\InductionMarkedAsTrainerNotification;
-use BB\Notifications\Inductions\Inductees\InductionRequestedNotification as InducteeInductionRequestedNotification;
-use BB\Notifications\Inductions\Trainers\InductionRequestedNotification as TrainerInductionRequestedNotification;
+use BB\Notifications\TrainingRecords\Inductees\TrainingRecordCompletedNotification;
+use BB\Notifications\TrainingRecords\Inductees\TrainingRecordMarkedAsTrainerNotification;
+use BB\Notifications\TrainingRecords\Inductees\TrainingRecordRequestedNotification as InducteeInductionRequestedNotification;
+use BB\Notifications\TrainingRecords\Trainers\TrainingRecordRequestedNotification as TrainerInductionRequestedNotification;
 
 class NotificationPreviewController extends Controller
 {
     public function inductionCompleted()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyInduction($user);
+        $trainingRecord = $this->getDummyTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InductionCompletedNotification($induction, $equipment);
+        $notification = new TrainingRecordCompletedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -27,10 +27,10 @@ class NotificationPreviewController extends Controller
     public function inductionMarkedAsTrainer()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyInduction($user);
+        $trainingRecord = $this->getDummyTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InductionMarkedAsTrainerNotification($induction, $equipment);
+        $notification = new TrainingRecordMarkedAsTrainerNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -38,10 +38,10 @@ class NotificationPreviewController extends Controller
     public function inducteeInductionRequested()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyInduction($user);
+        $trainingRecord = $this->getDummyTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InducteeInductionRequestedNotification($induction, $equipment);
+        $notification = new InducteeInductionRequestedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -57,10 +57,10 @@ class NotificationPreviewController extends Controller
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
-        $induction = $this->getDummyInduction($inductee);
+        $trainingRecord = $this->getDummyTrainingRecord($inductee);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new TrainerInductionRequestedNotification($induction, $equipment);
+        $notification = new TrainerInductionRequestedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($trainer);
     }
@@ -69,10 +69,10 @@ class NotificationPreviewController extends Controller
     public function courseInductionCompleted()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyCourseInduction($user);
+        $trainingRecord = $this->getDummyCourseTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InductionCompletedNotification($induction, $equipment);
+        $notification = new TrainingRecordCompletedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -80,10 +80,10 @@ class NotificationPreviewController extends Controller
     public function courseInductionMarkedAsTrainer()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyCourseInduction($user);
+        $trainingRecord = $this->getDummyCourseTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InductionMarkedAsTrainerNotification($induction, $equipment);
+        $notification = new TrainingRecordMarkedAsTrainerNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -91,10 +91,10 @@ class NotificationPreviewController extends Controller
     public function courseInducteeInductionRequested()
     {
         $user = $this->getDummyUser();
-        $induction = $this->getDummyCourseInduction($user);
+        $trainingRecord = $this->getDummyCourseTrainingRecord($user);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new InducteeInductionRequestedNotification($induction, $equipment);
+        $notification = new InducteeInductionRequestedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($user);
     }
@@ -110,10 +110,10 @@ class NotificationPreviewController extends Controller
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
-        $induction = $this->getDummyCourseInduction($inductee);
+        $trainingRecord = $this->getDummyCourseTrainingRecord($inductee);
         $equipment = $this->getDummyEquipment();
         
-        $notification = new TrainerInductionRequestedNotification($induction, $equipment);
+        $notification = new TrainerInductionRequestedNotification($trainingRecord, $equipment);
         
         return $notification->toMail($trainer);
     }
@@ -128,17 +128,17 @@ class NotificationPreviewController extends Controller
         ]);
     }
 
-    private function getDummyInduction(User $user)
+    private function getDummyTrainingRecord(User $user)
     {
-        $induction = new Induction([
+        $trainingRecord = new TrainingRecord([
             'id' => 1,
             'user_id' => $user->id,
             'inducted_by' => null,
             'is_trainer' => false,
             'inducted_at' => null,
         ]);
-        $induction->setRelation('user', $user);
-        return $induction;
+        $trainingRecord->setRelation('user', $user);
+        return $trainingRecord;
     }
 
     private function getDummyEquipment()
@@ -162,7 +162,7 @@ class NotificationPreviewController extends Controller
         return collect([$laserCutter, $printer3d]);
     }
 
-    private function getDummyCourseInduction(User $user)
+    private function getDummyCourseTrainingRecord(User $user)
     {
         $course = factory(Course::class)->make([
             'id' => 1,
@@ -176,7 +176,7 @@ class NotificationPreviewController extends Controller
             'wait_time' => '1-2 weeks',
         ]);
 
-        $induction = new Induction([
+        $trainingRecord = new TrainingRecord([
             'id' => 1,
             'user_id' => $user->id,
             'course_id' => $course->id,
@@ -184,9 +184,9 @@ class NotificationPreviewController extends Controller
             'is_trainer' => false,
             'inducted_at' => null,
         ]);
-        $induction->setRelation('user', $user);
-        $induction->setRelation('course', $course);
+        $trainingRecord->setRelation('user', $user);
+        $trainingRecord->setRelation('course', $course);
         
-        return $induction;
+        return $trainingRecord;
     }
 }

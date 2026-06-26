@@ -3,11 +3,11 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Course;
-use BB\Entities\Induction;
-use BB\Events\Inductions\InductionRequestedEvent;
+use BB\Entities\TrainingRecord;
+use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use Illuminate\Support\Facades\DB;
 
-class CourseInductionController extends Controller
+class CourseTrainingRecordController extends Controller
 {
     /**
      * Used when members request sign off after completing a quiz or in-person training session
@@ -26,7 +26,7 @@ class CourseInductionController extends Controller
 
         // Use database transaction to prevent race conditions
         $result = DB::transaction(function () use ($user, $course) {
-            $induction = Induction::firstOrCreate(
+            $trainingRecord = TrainingRecord::firstOrCreate(
                 [
                     'user_id' => $user->id,
                     'course_id' => $course->id,
@@ -36,16 +36,16 @@ class CourseInductionController extends Controller
                 ]
             );
 
-            if ($induction->trained) {
+            if ($trainingRecord->trained) {
                 return ['error' => 'You are already trained for this course'];
             }
 
-            $induction->update([
+            $trainingRecord->update([
                 'sign_off_requested_at' => now()
             ]);
 
-            if ($induction->wasRecentlyCreated || $induction->isSignOffExpired()) {
-                \Event::dispatch(new InductionRequestedEvent($induction));
+            if ($trainingRecord->wasRecentlyCreated || $trainingRecord->isSignOffExpired()) {
+                \Event::dispatch(new TrainingRecordRequestedEvent($trainingRecord));
             }
 
             return ['success' => true];

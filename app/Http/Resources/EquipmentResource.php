@@ -21,11 +21,11 @@ class EquipmentResource extends JsonResource
         // Check if user is trained for this equipment (through any associated course)
         $isUserTrained = false;
         if (auth()->check() && $this->relationLoaded('courses')) {
-            $inductionRepo = app(\BB\Repo\InductionRepository::class);
+            $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
             
             foreach ($this->courses as $course) {
-                $userInduction = $inductionRepo->getUserForCourse(auth()->user()->id, $course->id);
-                if ($userInduction && $userInduction->trained) {
+                $userTrainingRecord = $trainingRecordRepo->getUserForCourse(auth()->user()->id, $course->id);
+                if ($userTrainingRecord && $userTrainingRecord->trained) {
                     $isUserTrained = true;
                     break;
                 }

@@ -2,12 +2,12 @@
 
 namespace BB\Repo;
 
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class InductionRepository extends DBRepository
+class TrainingRecordRepository extends DBRepository
 {
     const LEADERBOARD_THREE_MONTHS = "LEADERBOARD_THREE_MONTHS";
     const LEADERBOARD_YEAR = "LEADERBOARD_YEAR";
@@ -15,11 +15,11 @@ class InductionRepository extends DBRepository
     const LEADERBOARD_ALL_TIME = "LEADERBOARD_ALL_TIME";
 
     /**
-     * @var Induction
+     * @var TrainingRecord
      */
     protected $model;
 
-    public function __construct(Induction $model)
+    public function __construct(TrainingRecord $model)
     {
         $this->model = $model;
     }
@@ -65,7 +65,7 @@ class InductionRepository extends DBRepository
      * @param string $device
      * @return mixed
      */
-    public function getUsersPendingInductionForEquipment($device)
+    public function getUsersPendingTrainingForEquipment($device)
     {
         $users = $this->model->with('user', 'user.profile')->where('key', $device)->whereNull('trained')->get();
         return $users->filter(function ($trainer) {
@@ -137,20 +137,6 @@ class InductionRepository extends DBRepository
     }
 
     /**
-     * Get all inductions for a user (for frontend comparison with equipment)
-     * 
-     * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getUserInductions($userId)
-    {
-        return $this->model
-            ->where('user_id', $userId)
-            ->whereNotNull('trained')
-            ->get();
-    }
-    
-    /**
      * Course-based methods for new system
      */
     
@@ -202,7 +188,7 @@ class InductionRepository extends DBRepository
      * @param int $courseId
      * @return mixed
      */
-    public function getUsersPendingInductionForCourse($courseId)
+    public function getUsersPendingTrainingForCourse($courseId)
     {
         $users = $this->model->with('user', 'user.profile')
             ->where('course_id', $courseId)
@@ -254,7 +240,7 @@ class InductionRepository extends DBRepository
      */
     public function getUsersPendingSignOffForCourse($courseId)
     {
-        $expirationHours = Induction::SIGN_OFF_EXPIRATION_HOURS;
+        $expirationHours = TrainingRecord::SIGN_OFF_EXPIRATION_HOURS;
         
         $users = $this->model->with('user', 'user.profile')
             ->where('course_id', $courseId)
@@ -263,8 +249,8 @@ class InductionRepository extends DBRepository
             ->whereNull('trained')
             ->orderBy('sign_off_requested_at', 'asc')
             ->get();
-        return $users->filter(function ($induction) {
-            return $induction->user && $induction->user->active;
+        return $users->filter(function ($trainingRecord) {
+            return $trainingRecord->user && $trainingRecord->user->active;
         });
     }
 }

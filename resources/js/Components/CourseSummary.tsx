@@ -24,7 +24,7 @@ type CourseProps = {
   is_paused?: boolean;
   live?: boolean;
   equipment: CourseResource['equipment'];
-  user_course_induction?: CourseResource['user_course_induction'];
+  user_course_training_record?: CourseResource['user_course_training_record'];
   urls?: {
     show: string;
     training: string;
@@ -61,9 +61,9 @@ const CourseSummary = ({
       : frequencyOptions[course.frequency] || course.frequency;
 
   const isUserTrained =
-    course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
+    course.user_course_training_record?.trained != null && course.user_course_training_record.trained !== '';
 
-  const isUserTrainer = course.user_course_induction?.is_trainer || false;
+  const isUserTrainer = course.user_course_training_record?.is_trainer || false;
 
   const courseUrl = isUserTrainer ? course.urls?.training : course.urls?.show;
 
@@ -212,7 +212,7 @@ const CourseSummary = ({
                     key={equipment.id}
                     label={equipment.name}
                     size="small"
-                    icon={course.user_course_induction?.trained ? <CheckCircleIcon /> : undefined}
+                    icon={course.user_course_training_record?.trained ? <CheckCircleIcon /> : undefined}
                   />
                 ))}
               </Stack>

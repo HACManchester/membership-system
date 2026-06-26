@@ -31,17 +31,17 @@
                                 <th>Inductions completed</th>
                             </tr>
                         </thead>
-                        @foreach ($timePeriodData as $dodgyInductionRecord)
+                        @foreach ($timePeriodData as $trainingRecord)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <a href="{{ route('members.show', $dodgyInductionRecord->trainerUser) }}">
-                                    {{ $dodgyInductionRecord->trainerUser->given_name }}
-                                    ({{ $dodgyInductionRecord->trainerUser->display_name }})
+                                    <a href="{{ route('members.show', $trainingRecord->trainerUser) }}">
+                                    {{ $trainingRecord->trainerUser->given_name }}
+                                    ({{ $trainingRecord->trainerUser->display_name }})
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $dodgyInductionRecord->total }}
+                                    {{ $trainingRecord->total }}
                                 </td>
                             </tr>
                         @endforeach

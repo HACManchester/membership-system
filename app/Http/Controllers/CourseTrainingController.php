@@ -3,26 +3,26 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Course;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\User;
-use BB\Events\Inductions\InductionCompletedEvent;
-use BB\Events\Inductions\InductionMarkedAsTrainerEvent;
-use BB\Repo\InductionRepository;
+use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
+use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
+use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
-use BB\Http\Resources\InductionResource;
+use BB\Http\Resources\TrainingRecordResource;
 use BB\Http\Resources\CourseResource;
 
 class CourseTrainingController extends Controller
 {
-    protected $inductionRepository;
+    protected $trainingRecordRepository;
     protected $userRepository;
 
-    public function __construct(InductionRepository $inductionRepository, UserRepository $userRepository)
+    public function __construct(TrainingRecordRepository $trainingRecordRepository, UserRepository $userRepository)
     {
-        $this->inductionRepository = $inductionRepository;
+        $this->trainingRecordRepository = $trainingRecordRepository;
         $this->userRepository = $userRepository;
     }
 
@@ -30,22 +30,22 @@ class CourseTrainingController extends Controller
     {
         $this->authorize('viewTraining', $course);
 
-        $trainers = $this->inductionRepository->getTrainersForCourse($course->id);
+        $trainers = $this->trainingRecordRepository->getTrainersForCourse($course->id);
         $trainers->load(['course', 'user.profile']);
 
-        $trainedUsers = $this->inductionRepository->getTrainedUsersForCourse($course->id);
+        $trainedUsers = $this->trainingRecordRepository->getTrainedUsersForCourse($course->id);
         $trainedUsers->load(['course', 'user.profile']);
 
-        $usersPendingSignOff = $this->inductionRepository->getUsersPendingSignOffForCourse($course->id);
+        $usersPendingSignOff = $this->trainingRecordRepository->getUsersPendingSignOffForCourse($course->id);
         $usersPendingSignOff->load(['course', 'user.profile']);
 
         $memberList = $this->userRepository->getAllAsDropdown();
 
         return Inertia::render('CourseTraining/Index', [
             'course' => new CourseResource($course),
-            'trainers' => InductionResource::collection($trainers),
-            'trainedUsers' => InductionResource::collection($trainedUsers),
-            'usersPendingSignOff' => InductionResource::collection($usersPendingSignOff),
+            'trainers' => TrainingRecordResource::collection($trainers),
+            'trainedUsers' => TrainingRecordResource::collection($trainedUsers),
+            'usersPendingSignOff' => TrainingRecordResource::collection($usersPendingSignOff),
             'memberList' => collect($memberList)->map(function($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
@@ -59,24 +59,24 @@ class CourseTrainingController extends Controller
 
     public function train(Course $course, User $user, Request $request)
     {
-        $induction = $this->inductionRepository->getUserForCourse($user->id, $course->id);
+        $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
         
-        if (!$induction) {
+        if (!$trainingRecord) {
             return redirect()->route('courses.training.index', $course)
                 ->with('error', 'User does not have an induction record for this course');
         }
 
-        $this->authorize('train', $induction);
+        $this->authorize('train', $trainingRecord);
 
         $trainer = User::findOrFail($request->input('trainer_user_id', auth()->user()->id));
 
-        $induction->update([
+        $trainingRecord->update([
             'trained' => Carbon::now(),
             'trainer_user_id' => $trainer->id,
             'sign_off_requested_at' => null,
         ]);
 
-        \Event::dispatch(new InductionCompletedEvent($induction));
+        \Event::dispatch(new TrainingRecordCompletedEvent($trainingRecord));
 
         return redirect()->route('courses.training.index', $course)
             ->with('success', 'User marked as trained');
@@ -95,25 +95,25 @@ class CourseTrainingController extends Controller
         $trained = [];
 
         foreach ($request->input('user_ids') as $userId) {
-            $induction = $this->inductionRepository->getUserForCourse($userId, $course->id);
+            $trainingRecord = $this->trainingRecordRepository->getUserForCourse($userId, $course->id);
             
-            if (!$induction) {
-                $induction = Induction::create([
+            if (!$trainingRecord) {
+                $trainingRecord = TrainingRecord::create([
                     'user_id' => $userId,
                     'key' => $course->slug,
                     'course_id' => $course->id,
                 ]);
             }
 
-            if (!$induction->trained) {
-                $induction->update([
+            if (!$trainingRecord->trained) {
+                $trainingRecord->update([
                     'trained' => Carbon::now(),
                     'trainer_user_id' => $trainer->id,
                     'sign_off_requested_at' => null,
                 ]);
 
-                \Event::dispatch(new InductionCompletedEvent($induction));
-                $trained[] = $induction->user->name;
+                \Event::dispatch(new TrainingRecordCompletedEvent($trainingRecord));
+                $trained[] = $trainingRecord->user->name;
             }
         }
 
@@ -127,16 +127,16 @@ class CourseTrainingController extends Controller
 
     public function untrain(Course $course, User $user)
     {
-        $induction = $this->inductionRepository->getUserForCourse($user->id, $course->id);
+        $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
         
-        if (!$induction) {
+        if (!$trainingRecord) {
             return redirect()->route('courses.training.index', $course)
                 ->with('error', 'User does not have an induction record for this course');
         }
 
-        $this->authorize('untrain', $induction);
+        $this->authorize('untrain', $trainingRecord);
 
-        $induction->update([
+        $trainingRecord->update([
             'trained' => null,
             'trainer_user_id' => null,
             'is_trainer' => false, // Also remove trainer status
@@ -148,25 +148,25 @@ class CourseTrainingController extends Controller
 
     public function promote(Course $course, User $user)
     {
-        $induction = $this->inductionRepository->getUserForCourse($user->id, $course->id);
+        $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
         
-        if (!$induction) {
+        if (!$trainingRecord) {
             return redirect()->route('courses.training.index', $course)
                 ->with('error', 'User does not have an induction record for this course');
         }
 
-        $this->authorize('promote', $induction);
+        $this->authorize('promote', $trainingRecord);
 
-        if (!$induction->trained) {
+        if (!$trainingRecord->trained) {
             return redirect()->route('courses.training.index', $course)
                 ->with('error', 'User must be trained before becoming a trainer');
         }
 
-        $induction->update([
+        $trainingRecord->update([
             'is_trainer' => true
         ]);
 
-        \Event::dispatch(new InductionMarkedAsTrainerEvent($induction));
+        \Event::dispatch(new TrainingRecordMarkedAsTrainerEvent($trainingRecord));
 
         return redirect()->route('courses.training.index', $course)
             ->with('success', 'User promoted to trainer');
@@ -174,16 +174,16 @@ class CourseTrainingController extends Controller
 
     public function demote(Course $course, User $user)
     {
-        $induction = $this->inductionRepository->getUserForCourse($user->id, $course->id);
+        $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
         
-        if (!$induction) {
+        if (!$trainingRecord) {
             return redirect()->route('courses.training.index', $course)
                 ->with('error', 'User does not have an induction record for this course');
         }
 
-        $this->authorize('demote', $induction);
+        $this->authorize('demote', $trainingRecord);
 
-        $induction->update([
+        $trainingRecord->update([
             'is_trainer' => false
         ]);
 

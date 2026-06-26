@@ -3,11 +3,11 @@
 namespace BB\Console\Commands;
 
 use Illuminate\Console\Command;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\Course;
 use BB\Entities\Equipment;
 
-class PopulateCourseIdInInductions extends Command
+class PopulateCourseIdInTrainingRecords extends Command
 {
     /**
      * The name and signature of the console command.
@@ -36,7 +36,7 @@ class PopulateCourseIdInInductions extends Command
         }
         
         // Get all unique induction keys
-        $inductionKeys = Induction::distinct()->pluck('key')->filter();
+        $inductionKeys = TrainingRecord::distinct()->pluck('key')->filter();
         $this->info("Found {$inductionKeys->count()} unique induction keys");
         
         // Get all courses
@@ -56,13 +56,13 @@ class PopulateCourseIdInInductions extends Command
         foreach ($inductionKeys as $key) {
             if ($courses->has($key)) {
                 $course = $courses->get($key);
-                $count = Induction::where('key', $key)->whereNull('course_id')->count();
+                $count = TrainingRecord::where('key', $key)->whereNull('course_id')->count();
                 
                 if ($count > 0) {
                     $this->line("✓ Key '{$key}' matches course '{$course->name}' - {$count} inductions to update");
                     
                     if (!$isDryRun) {
-                        Induction::where('key', $key)
+                        TrainingRecord::where('key', $key)
                             ->whereNull('course_id')
                             ->update(['course_id' => $course->id]);
                     }
@@ -70,7 +70,7 @@ class PopulateCourseIdInInductions extends Command
                     $matched += $count;
                 }
             } else {
-                $count = Induction::where('key', $key)->count();
+                $count = TrainingRecord::where('key', $key)->count();
                 $equipment = $equipmentByKey->get($key, collect())->pluck('name')->implode(', ');
                 $unmatched[] = [
                     'key' => $key,

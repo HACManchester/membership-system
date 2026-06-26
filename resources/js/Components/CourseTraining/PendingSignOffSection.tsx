@@ -4,10 +4,10 @@ import { router } from '@inertiajs/react';
 import CheckIcon from '@mui/icons-material/Check';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import UserCard from './UserCard';
-import { InductionResource } from '../../types/resources';
+import { TrainingRecordResource } from '../../types/resources';
 
 type Props = {
-  usersPendingSignOff: InductionResource[];
+  usersPendingSignOff: TrainingRecordResource[];
 };
 
 const PendingSignOffSection: React.FC<Props> = ({ usersPendingSignOff }) => {
@@ -27,18 +27,18 @@ const PendingSignOffSection: React.FC<Props> = ({ usersPendingSignOff }) => {
           7 days are automatically hidden and must be re-submitted.
         </Typography>
         <Grid2 container spacing={2}>
-          {usersPendingSignOff.map((induction) => (
-            <Grid2 key={induction.id} size={{ xs: 12, sm: 6, md: 4 }}>
+          {usersPendingSignOff.map((trainingRecord) => (
+            <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
-                induction={induction}
+                trainingRecord={trainingRecord}
                 actions={
-                  induction.urls && (
+                  trainingRecord.urls && (
                     <Button
                       variant="contained"
                       color="success"
                       size="small"
                       startIcon={<CheckIcon />}
-                      onClick={() => router.post(induction.urls!.train)}
+                      onClick={() => router.post(trainingRecord.urls!.train)}
                     >
                       Sign Off
                     </Button>

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Box, Typography, Stack, Tooltip, Paper, Avatar } from '@mui/material';
-import { InductionResource } from '../../types/resources';
+import { TrainingRecordResource } from '../../types/resources';
 
 type Props = {
-  induction: InductionResource;
+  trainingRecord: TrainingRecordResource;
   actions?: React.ReactNode;
 };
 
-const UserCard: React.FC<Props> = ({ induction, actions }) => {
-  if (!induction.user) {
+const UserCard: React.FC<Props> = ({ trainingRecord, actions }) => {
+  if (!trainingRecord.user) {
     return null;
   }
 
@@ -40,44 +40,44 @@ const UserCard: React.FC<Props> = ({ induction, actions }) => {
       elevation={1}
     >
       <Avatar
-        src={induction.user.profile_photo_url || undefined}
-        alt={induction.user.name}
+        src={trainingRecord.user.profile_photo_url || undefined}
+        alt={trainingRecord.user.name}
         sx={{ width: 32, height: 32, fontSize: '0.875rem' }}
       >
-        {induction.user.name?.charAt(0)}
+        {trainingRecord.user.name?.charAt(0)}
       </Avatar>
 
       <Box flexGrow={1} minWidth={0}>
         <Stack direction="row" alignItems="baseline" spacing={1}>
           <Typography variant="body2" fontWeight={500} noWrap>
-            {induction.user.name}
+            {trainingRecord.user.name}
           </Typography>
-          {induction.user.pronouns && (
+          {trainingRecord.user.pronouns && (
             <Typography variant="caption" color="text.secondary">
-              ({induction.user.pronouns})
+              ({trainingRecord.user.pronouns})
             </Typography>
           )}
         </Stack>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          {induction.sign_off_requested_at && (
-            <Tooltip title={new Date(induction.sign_off_requested_at).toLocaleString()}>
+          {trainingRecord.sign_off_requested_at && (
+            <Tooltip title={new Date(trainingRecord.sign_off_requested_at).toLocaleString()}>
               <Typography variant="caption" color="warning.main">
-                Requested {formatDateRelative(induction.sign_off_requested_at)}
+                Requested {formatDateRelative(trainingRecord.sign_off_requested_at)}
               </Typography>
             </Tooltip>
           )}
 
-          {induction.trained && (
-            <Tooltip title={`Trained on ${new Date(induction.trained).toLocaleString()}`}>
+          {trainingRecord.trained && (
+            <Tooltip title={`Trained on ${new Date(trainingRecord.trained).toLocaleString()}`}>
               <Typography variant="caption" color="text.secondary">
-                Trained {formatDateRelative(induction.trained)}
-                {induction.trainer && ` by ${induction.trainer.name}`}
+                Trained {formatDateRelative(trainingRecord.trained)}
+                {trainingRecord.trainer && ` by ${trainingRecord.trainer.name}`}
               </Typography>
             </Tooltip>
           )}
 
-          {induction.is_trainer && (
+          {trainingRecord.is_trainer && (
             <Typography variant="caption" color="primary.main" fontWeight={600}>
               • Trainer
             </Typography>

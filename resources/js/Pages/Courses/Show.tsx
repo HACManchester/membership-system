@@ -50,7 +50,7 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
   const { delete: destroy } = useForm();
 
   const isUserTrainedForCourse =
-    course.user_course_induction?.trained != null && course.user_course_induction.trained !== '';
+    course.user_course_training_record?.trained != null && course.user_course_training_record.trained !== '';
 
   const handleDelete = () => {
     destroy(urls.destroy);
@@ -179,13 +179,13 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
 
         <TrainingInstructionsSection
           course={course}
-          userCourseInduction={course.user_course_induction || null}
+          userCourseTrainingRecord={course.user_course_training_record || null}
           requestSignOffUrl={urls.requestSignOff}
         />
 
         <EquipmentAccessTable
           equipment={course.equipment}
-          userCourseInduction={course.user_course_induction || null}
+          userCourseTrainingRecord={course.user_course_training_record || null}
           isUserTrained={isUserTrainedForCourse}
         />
 

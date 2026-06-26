@@ -34,14 +34,14 @@
         <div class="col-sm-12">
             <div class="member-status-bar">
                 @if ($equipment->requiresInduction())
-                    @if (!$userInduction)
+                    @if (!$userTrainingRecord)
                         <h4><span class="label label-danger">Training is required</span></h4>
-                    @elseif ($userInduction->trained)
+                    @elseif ($userTrainingRecord->trained)
                         <h4><span class="label label-success">You have been inducted and can use this equipment</span></h4>
                         @if ($equipment->access_code)
                             <h4><span class="label label-info">Access code: {{ $equipment->access_code }}</span></h4>
                         @endif
-                    @elseif ($userInduction)
+                    @elseif ($userTrainingRecord)
                         <h4><span class="label label-warning">Training to be completed</span></h4>
                     @endif
                 @endif
@@ -77,8 +77,8 @@
                             </div>
                         @endif
                         @if ($equipment->requiresInduction())
-                            @if ($userInduction)
-                                @if (!$userInduction->trained)
+                            @if ($userTrainingRecord)
+                                @if (!$userTrainingRecord->trained)
                                     <div class="well infobox">
                                         <h3>Training to be completed</h3>
                                         @if ($equipment->induction_instructions)
@@ -117,9 +117,9 @@
                             @endif
                         @endif
 
-                        @if ($userInduction)
-                            @if ($userInduction->trained)
-                                @if ($userInduction->is_trainer && $equipment->trainer_instructions)
+                        @if ($userTrainingRecord)
+                            @if ($userTrainingRecord->trained)
+                                @if ($userTrainingRecord->is_trainer && $equipment->trainer_instructions)
                                     <h3>Trainer Instructions</h3>
                                     <div class="infobox well">
                                         <p>{!! $equipment->present()->trainer_instructions !!}</p>
@@ -346,7 +346,7 @@
                                 <div>
                                     @can('demote', $trainer)
                                         <form method="POST" style="display:inline;float:right;"
-                                            action="{{ route('equipment_training.demote', ['equipment' => $equipment, 'induction' => $trainer]) }}">
+                                            action="{{ route('equipment_training.demote', ['equipment' => $equipment, 'trainingRecord' => $trainer]) }}">
                                             @csrf
                                             <button type="submit" class="btn btn-default btn-sm">❌</button>
                                         </form>
@@ -375,39 +375,39 @@
                     <p>There are currently <strong>{{ count($trainedUsers) }}</strong> members who are trained to use this
                         tool.</p>
                     <div class="infobox__grid">
-                        @foreach ($trainedUsers as $inductionRecord)
+                        @foreach ($trainedUsers as $trainingRecord)
                             <div class="infobox__grid-item infobox__grid-item--user">
                                 <div>
-                                    <a href="{{ route('members.show', $inductionRecord->user->id) }}">
+                                    <a href="{{ route('members.show', $trainingRecord->user->id) }}">
                                         @include('partials.components.member-photo', [
-                                            'profileData' => $inductionRecord->user->profile,
-                                            'userHash' => $inductionRecord->user->hash,
+                                            'profileData' => $trainingRecord->user->profile,
+                                            'userHash' => $trainingRecord->user->hash,
                                             'size' => 25,
                                             'class' => 'hidden-sm hidden-xs',
                                         ])
-                                        {{ $inductionRecord->user->name }}
+                                        {{ $trainingRecord->user->name }}
                                     </a>
-                                    @if ($inductionRecord->user->pronouns)
-                                        <span>({{ $inductionRecord->user->pronouns }})</span>
+                                    @if ($trainingRecord->user->pronouns)
+                                        <span>({{ $trainingRecord->user->pronouns }})</span>
                                     @endif
                                 </div>
                                 <p><strong>Trained:</strong>
-                                    <span>{{ $inductionRecord->trained->toFormattedDateString() }}</span></p>
+                                    <span>{{ $trainingRecord->trained->toFormattedDateString() }}</span></p>
                                 <div>
-                                    @can('untrain', $inductionRecord)
+                                    @can('untrain', $trainingRecord)
                                         <form method="POST" style="display:inline;float:right;"
-                                            action="{{ route('equipment_training.untrain', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                            action="{{ route('equipment_training.untrain', ['equipment' => $equipment, 'trainingRecord' => $trainingRecord]) }}">
                                             @csrf
                                             <button type="submit" class="btn btn-default btn-sm">❌</button>
                                         </form>
                                     @endcan
 
-                                    @can('promote', $inductionRecord)
+                                    @can('promote', $trainingRecord)
                                         <form method="POST" style="display:inline;float:right;"
-                                            action="{{ route('equipment_training.promote', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                            action="{{ route('equipment_training.promote', ['equipment' => $equipment, 'trainingRecord' => $trainingRecord]) }}">
                                             @csrf
                                             <button type="submit"
-                                                class="{{ $inductionRecord->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default' }}">🎓</button>
+                                                class="{{ $trainingRecord->is_trainer ? 'btn btn-sm disabled' : 'btn btn-sm btn-default' }}">🎓</button>
                                         </form>
                                     @endcan
                                 </div>
@@ -430,10 +430,10 @@
                 <div class="well infobox">
                     <h3>Awaiting Training</h3>
 
-                    <p>There are currently <strong>{{ count($usersPendingInduction) }}</strong> member(s) who are awaiting
+                    <p>There are currently <strong>{{ count($usersPendingTraining) }}</strong> member(s) who are awaiting
                         training for this tool.</p>
 
-                    @if ($userInduction && !$userInduction->trained)
+                    @if ($userTrainingRecord && !$userTrainingRecord->trained)
                         <div class="alert alert-info">
                             <h3>🔴 Training Next Steps</h3>
                             @if ($equipment->induction_instructions)
@@ -445,41 +445,41 @@
                     @endif
                     <div class="infobox__grid">
 
-                        @foreach ($usersPendingInduction as $inductionRecord)
-                            @if (Auth::user()->can('view', $inductionRecord) || $inductionRecord->user->id == Auth::user()->id)
+                        @foreach ($usersPendingTraining as $trainingRecord)
+                            @if (Auth::user()->can('view', $trainingRecord) || $trainingRecord->user->id == Auth::user()->id)
                                 <div class="infobox__grid-item infobox__grid-item--user">
                                     <div>
-                                        <a href="{{ route('members.show', $inductionRecord->user->id) }}">
+                                        <a href="{{ route('members.show', $trainingRecord->user->id) }}">
                                             @include('partials.components.member-photo', [
-                                                'profileData' => $inductionRecord->user->profile,
-                                                'userHash' => $inductionRecord->user->hash,
+                                                'profileData' => $trainingRecord->user->profile,
+                                                'userHash' => $trainingRecord->user->hash,
                                                 'size' => 25,
                                                 'class' => 'hidden-sm hidden-xs',
                                             ])
-                                            {{ $inductionRecord->user->name }}
+                                            {{ $trainingRecord->user->name }}
                                         </a>
-                                        @if ($inductionRecord->user->pronouns)
-                                            <span>({{ $inductionRecord->user->pronouns }})</span>
+                                        @if ($trainingRecord->user->pronouns)
+                                            <span>({{ $trainingRecord->user->pronouns }})</span>
                                         @endif
                                         <p><strong>Requested:</strong>
-                                            <span>{{ $inductionRecord->created_at->toFormattedDateString() }}
-                                                ({{ $inductionRecord->created_at->diff($now)->format('%yy, %mm, %dd') }})</span>
+                                            <span>{{ $trainingRecord->created_at->toFormattedDateString() }}
+                                                ({{ $trainingRecord->created_at->diff($now)->format('%yy, %mm, %dd') }})</span>
                                         </p>
                                     </div>
 
                                     <div>
-                                        @can('delete', $inductionRecord)
+                                        @can('delete', $trainingRecord)
                                             <form method="POST" style="display:inline;float:right;"
-                                                action="{{ route('equipment_training.destroy', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                                action="{{ route('equipment_training.destroy', ['equipment' => $equipment, 'trainingRecord' => $trainingRecord]) }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-default btn-sm">❌</button>
                                             </form>
                                         @endcan
 
-                                        @can('train', $inductionRecord)
+                                        @can('train', $trainingRecord)
                                             <form method="POST" style="display:inline;float:right;"
-                                                action="{{ route('equipment_training.train', ['equipment' => $equipment, 'induction' => $inductionRecord]) }}">
+                                                action="{{ route('equipment_training.train', ['equipment' => $equipment, 'trainingRecord' => $trainingRecord]) }}">
                                                 @csrf
                                                 <input type="hidden" name="trainer_user_id" value="{{ Auth::user()->id }}">
                                                 <input type="hidden" name="mark_trained" value="1">

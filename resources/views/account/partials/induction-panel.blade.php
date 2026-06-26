@@ -25,14 +25,14 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($inductions as $item)
+        @foreach ($equipmentRequiringInduction as $item)
         <tr>
             <td><a href="{{ route('equipment.index') }}/{{ $item->slug }}">{{ $item->name }}</a></td>
             <td>&pound;{{ $item->access_fee }}</td>
             <td>
-                @if ($item->userInduction && ($item->userInduction->trained))
-                ✔️ {{ $item->userInduction->trained->toFormattedDateString() }}
-                @elseif ($item->userInduction && $item->userInduction->paid)
+                @if ($item->userTrainingRecord && ($item->userTrainingRecord->trained))
+                ✔️ {{ $item->userTrainingRecord->trained->toFormattedDateString() }}
+                @elseif ($item->userTrainingRecord && $item->userTrainingRecord->paid)
                 🕑 Pending
                 @else
                 <a href="{{ route('equipment.index') }}/{{ $item->slug }}">Book induction on tool page</a>
@@ -45,7 +45,7 @@
             </td>
             <td>
                 @if ($item->access_code)
-                    @if ($item->userInduction && ($item->userInduction->trained))
+                    @if ($item->userTrainingRecord && ($item->userTrainingRecord->trained))
                         <code>{{ $item->access_code }}</code>
                     @else
                         <span>🔒</span>
@@ -54,10 +54,10 @@
             </td>
             @if (Auth::user()->isAdmin())
                 <td>
-                    @if ($item->userInduction && !$item->userInduction->trained)
+                    @if ($item->userTrainingRecord && !$item->userTrainingRecord->trained)
                         Awaiting training
-                    @elseif ($item->userInduction && $item->userInduction->trained)
-                        {{ $item->userInduction->trainer_user->name ?? 'Inducted' }}
+                    @elseif ($item->userTrainingRecord && $item->userTrainingRecord->trained)
+                        {{ $item->userTrainingRecord->trainer_user->name ?? 'Inducted' }}
                     @endif
                 </td>
             @endif

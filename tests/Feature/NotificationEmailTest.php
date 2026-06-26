@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\Equipment;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
 use BB\Mail\EquipmentNotificationEmail;
@@ -30,7 +30,7 @@ class NotificationEmailTest extends TestCase
         ]);
 
         $trainer = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        (new Induction([
+        (new TrainingRecord([
             'key' => 'test-tool',
             'user_id' => $trainer->id,
             'trained' => now(),
@@ -40,7 +40,7 @@ class NotificationEmailTest extends TestCase
         ]))->save();
 
         $trainedUser = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        (new Induction([
+        (new TrainingRecord([
             'key' => 'test-tool',
             'user_id' => $trainedUser->id,
             'trained' => now(),

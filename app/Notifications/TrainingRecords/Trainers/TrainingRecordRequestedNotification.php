@@ -1,10 +1,10 @@
 <?php
 
-namespace BB\Notifications\Inductions\Trainers;
+namespace BB\Notifications\TrainingRecords\Trainers;
 
 use BB\Entities\Equipment;
 use BB\Entities\User;
-use BB\Notifications\Inductions\AbstractInductionNotification;
+use BB\Notifications\TrainingRecords\AbstractTrainingRecordNotification;
 use BB\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Html\HtmlFacade;
 use Illuminate\Support\HtmlString;
 
-class InductionRequestedNotification extends AbstractInductionNotification
+class TrainingRecordRequestedNotification extends AbstractTrainingRecordNotification
 {
     /**
      * Get the mail representation of the notification.
@@ -22,7 +22,7 @@ class InductionRequestedNotification extends AbstractInductionNotification
      */
     public function toMail($notifiable)
     {
-        $inductee = $this->induction->user;
+        $inductee = $this->trainingRecord->user;
 
         // Use course-based messaging when we have a course and it's live
         if ($this->course && $this->course->live) {

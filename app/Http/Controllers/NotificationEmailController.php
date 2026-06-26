@@ -4,7 +4,7 @@ use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\NotImplementedException;
 use BB\Http\Requests\StoreNotificationEmailRequest;
 use BB\Mailer\UserMailer;
-use BB\Repo\InductionRepository;
+use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Repo\EquipmentRepository;
 
@@ -16,10 +16,10 @@ class NotificationEmailController extends Controller
     private $userRepository;
     
     /**
-     * @var InductionRepository
+     * @var TrainingRecordRepository
      */
 
-    private $inductionRepository;
+    private $trainingRecordRepository;
     /**
      * 
      * @var EquipmentRepository
@@ -28,17 +28,17 @@ class NotificationEmailController extends Controller
 
     /**
      * @param UserRepository               $userRepository
-     * @param InductionRepository $inductionRepository
+     * @param TrainingRecordRepository $trainingRecordRepository
      * @throws AuthenticationException
      */
     public function __construct(
         UserRepository $userRepository,
         EquipmentRepository $equipmentRepository,
-        InductionRepository $inductionRepository
+        TrainingRecordRepository $trainingRecordRepository
     ) {
         $this->userRepository             = $userRepository;
         $this->equipmentRepository        = $equipmentRepository;
-        $this->inductionRepository        = $inductionRepository;
+        $this->trainingRecordRepository        = $trainingRecordRepository;
     }
 
     public function create()
@@ -72,7 +72,7 @@ class NotificationEmailController extends Controller
         }
 
         // Check the user is an admin or a trainer of the tool they specified
-        $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
+        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
         $allowed = false;
 
         if(\Auth::user()->isAdmin()){
@@ -130,7 +130,7 @@ class NotificationEmailController extends Controller
                 }
 
                 //TODO: look at how to tidy this up, as it's duplicated above
-                $trainers  = $this->inductionRepository->getTrainersForEquipment($equipment->induction_category);
+                $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment->induction_category);
                 $allowed = false;
 
                 if(\Auth::user()->isAdmin()){
@@ -148,20 +148,20 @@ class NotificationEmailController extends Controller
                 }
 
                 if($status == "trainer"){
-                    $users = $this->inductionRepository
+                    $users = $this->trainingRecordRepository
                         ->getTrainersForEquipment($equipment->induction_category)
                         ->map(function($item){
                             return $item->user;
                         });
                 }elseif($status == "trained"){
-                    $users = $this->inductionRepository
+                    $users = $this->trainingRecordRepository
                         ->getTrainedUsersForEquipment($equipment->induction_category)
                         ->map(function($item){
                             return $item->user;
                         });
                 }else{
-                    $users = $this->inductionRepository
-                        ->getUsersPendingInductionForEquipment($equipment->induction_category)
+                    $users = $this->trainingRecordRepository
+                        ->getUsersPendingTrainingForEquipment($equipment->induction_category)
                         ->map(function($item){
                             return $item->user;
                         });

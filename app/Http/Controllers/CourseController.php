@@ -10,24 +10,24 @@ use BB\Http\Resources\CourseResource;
 use BB\Http\Resources\EquipmentResource;
 use BB\Repo\CourseRepository;
 use BB\Repo\EquipmentRepository;
-use BB\Repo\InductionRepository;
+use BB\Repo\TrainingRecordRepository;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CourseController extends Controller
 {
-    protected $inductionRepository;
+    protected $trainingRecordRepository;
     protected $courseRepository;
     protected $equipmentRepository;
 
     public function __construct(
-        InductionRepository $inductionRepository,
+        TrainingRecordRepository $trainingRecordRepository,
         CourseRepository $courseRepository,
         EquipmentRepository $equipmentRepository
     ) {
         $this->authorizeResource(Course::class, 'course');
-        $this->inductionRepository = $inductionRepository;
+        $this->trainingRecordRepository = $trainingRecordRepository;
         $this->courseRepository = $courseRepository;
         $this->equipmentRepository = $equipmentRepository;
     }

@@ -1,14 +1,14 @@
 <?php
 
-namespace BB\Notifications\Inductions\Inductees;
+namespace BB\Notifications\TrainingRecords\Inductees;
 
-use BB\Notifications\Inductions\AbstractInductionNotification;
+use BB\Notifications\TrainingRecords\AbstractTrainingRecordNotification;
 use BB\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InductionMarkedAsTrainerNotification extends AbstractInductionNotification
+class TrainingRecordMarkedAsTrainerNotification extends AbstractTrainingRecordNotification
 {
     /**
      * Get the mail representation of the notification.

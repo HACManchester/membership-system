@@ -7,10 +7,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UserCard from './UserCard';
 import BulkTrainingForm from './BulkTrainingForm';
-import { InductionResource, Member } from '../../types/resources';
+import { TrainingRecordResource, Member } from '../../types/resources';
 
 type Props = {
-  trainedUsers: InductionResource[];
+  trainedUsers: TrainingRecordResource[];
   memberList: Member[];
   bulkTrainUrl: string;
 };
@@ -50,16 +50,16 @@ const TrainedMembersSection: React.FC<Props> = ({ trainedUsers, memberList, bulk
           <Collapse in={expanded} timeout="auto">
             <Box>
               <Grid2 container spacing={2}>
-                {nonTrainerTrainedUsers.map((induction) => (
-                  <Grid2 key={induction.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                {nonTrainerTrainedUsers.map((trainingRecord) => (
+                  <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <UserCard
-                      induction={induction}
+                      trainingRecord={trainingRecord}
                       actions={
-                        induction.urls && (
+                        trainingRecord.urls && (
                           <>
                             <IconButton
                               size="small"
-                              onClick={() => router.post(induction.urls!.untrain)}
+                              onClick={() => router.post(trainingRecord.urls!.untrain)}
                               title="Remove training"
                               sx={{ p: 0.5 }}
                             >
@@ -67,7 +67,7 @@ const TrainedMembersSection: React.FC<Props> = ({ trainedUsers, memberList, bulk
                             </IconButton>
                             <IconButton
                               size="small"
-                              onClick={() => router.post(induction.urls!.promote)}
+                              onClick={() => router.post(trainingRecord.urls!.promote)}
                               title="Promote to trainer"
                               sx={{ p: 0.5 }}
                             >

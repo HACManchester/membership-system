@@ -45,18 +45,18 @@ class CourseResource extends JsonResource
             }),
 
             // Include user course induction status when user is authenticated
-            'user_course_induction' => $this->when(auth()->check(), function () {
-                $inductionRepo = app(\BB\Repo\InductionRepository::class);
-                $userCourseInduction = $inductionRepo->getUserForCourse(auth()->user()->id, $this->id);
-                return $userCourseInduction ? new InductionResource($userCourseInduction) : null;
+            'user_course_training_record' => $this->when(auth()->check(), function () {
+                $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
+                $userCourseTrainingRecord = $trainingRecordRepo->getUserForCourse(auth()->user()->id, $this->id);
+                return $userCourseTrainingRecord ? new TrainingRecordResource($userCourseTrainingRecord) : null;
             }),
 
             // Include trainers when user is authenticated
             'trainers' => $this->when(auth()->check(), function () {
-                $inductionRepo = app(\BB\Repo\InductionRepository::class);
-                $trainers = $inductionRepo->getTrainersForCourse($this->id);
+                $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
+                $trainers = $trainingRecordRepo->getTrainersForCourse($this->id);
                 $trainers->load(['user.profile']);
-                return InductionResource::collection($trainers);
+                return TrainingRecordResource::collection($trainers);
             }),
 
             'urls' => [

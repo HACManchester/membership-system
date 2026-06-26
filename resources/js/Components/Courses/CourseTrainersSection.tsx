@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid2, Box, Avatar } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
-import { InductionResource } from '../../types/resources';
+import { TrainingRecordResource } from '../../types/resources';
 
 type Props = {
-  trainers: InductionResource[];
+  trainers: TrainingRecordResource[];
 };
 
 const CourseTrainersSection: React.FC<Props> = ({ trainers }) => {

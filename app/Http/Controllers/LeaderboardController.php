@@ -2,25 +2,25 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Repo\InductionRepository;
+use BB\Repo\TrainingRecordRepository;
 use Illuminate\Http\Request;
 
 class LeaderboardController extends Controller
 {
-    /** @var InductionRepository */
-    protected $inductionRepository;
+    /** @var TrainingRecordRepository */
+    protected $trainingRecordRepository;
 
-    function __construct(InductionRepository $inductionRepository)
+    function __construct(TrainingRecordRepository $trainingRecordRepository)
     {
-        $this->inductionRepository = $inductionRepository;
+        $this->trainingRecordRepository = $trainingRecordRepository;
     }
 
     public function index(Request $request)
     {
-        $threeMonths = $this->inductionRepository->getLeaderboard(InductionRepository::LEADERBOARD_THREE_MONTHS);
-        $thisYear = $this->inductionRepository->getLeaderboard(InductionRepository::LEADERBOARD_YEAR);
-        $lastYear = $this->inductionRepository->getLeaderboard(InductionRepository::LEADERBOARD_LAST_YEAR);
-        $allTime = $this->inductionRepository->getLeaderboard(InductionRepository::LEADERBOARD_ALL_TIME);
+        $threeMonths = $this->trainingRecordRepository->getLeaderboard(TrainingRecordRepository::LEADERBOARD_THREE_MONTHS);
+        $thisYear = $this->trainingRecordRepository->getLeaderboard(TrainingRecordRepository::LEADERBOARD_YEAR);
+        $lastYear = $this->trainingRecordRepository->getLeaderboard(TrainingRecordRepository::LEADERBOARD_LAST_YEAR);
+        $allTime = $this->trainingRecordRepository->getLeaderboard(TrainingRecordRepository::LEADERBOARD_ALL_TIME);
         
         return view('leaderboard.index', compact('threeMonths', 'thisYear', 'lastYear', 'allTime'));
     }

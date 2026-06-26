@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
-use BB\Entities\Induction;
+use BB\Entities\TrainingRecord;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Role;
 use BB\Entities\User;
@@ -86,7 +86,7 @@ class EquipmentTest extends TestCase
         $this->areaCoordinatorUser->equipmentAreas()->attach($this->equipmentArea);
 
         // Create trainer induction
-        $trainerInduction = new Induction([
+        $trainerTrainingRecord = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->trainerUser->id,
             'trained' => now(),
@@ -94,7 +94,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => true,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $trainerInduction->save();
+        $trainerTrainingRecord->save();
     }
 
     /** @test */
@@ -212,7 +212,7 @@ class EquipmentTest extends TestCase
     {
         // Create a trained user
         $trainedUser = factory(User::class)->create();
-        $induction = new Induction([
+        $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
             'trained' => now(),
@@ -220,7 +220,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $induction->save();
+        $trainingRecord->save();
 
         $response = $this->actingAs($trainedUser)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
@@ -233,7 +233,7 @@ class EquipmentTest extends TestCase
     {
         // Create trainer for secure equipment
         $trainer = factory(User::class)->create();
-        $trainerInduction = new Induction([
+        $trainerTrainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainer->id,
             'trained' => now(),
@@ -241,7 +241,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => true,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $trainerInduction->save();
+        $trainerTrainingRecord->save();
 
         $response = $this->actingAs($trainer)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
@@ -254,7 +254,7 @@ class EquipmentTest extends TestCase
     {
         // Create a trained user
         $trainedUser = factory(User::class)->create();
-        $induction = new Induction([
+        $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
             'trained' => now(),
@@ -262,7 +262,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $induction->save();
+        $trainingRecord->save();
 
         $response = $this->actingAs($trainedUser)->get(route('equipment.index'));
         $response->assertStatus(200);
@@ -310,7 +310,7 @@ class EquipmentTest extends TestCase
     public function trainer_can_mark_user_as_trained()
     {
         // Create pending induction
-        $pendingInduction = new Induction([
+        $pendingTrainingRecord = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->regularUser->id,
             'trained' => null,
@@ -318,28 +318,28 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => null,
         ]);
-        $pendingInduction->save();
+        $pendingTrainingRecord->save();
 
         $response = $this->actingAs($this->trainerUser)
-            ->post(route('equipment_training.train', [$this->equipment, $pendingInduction]), [
+            ->post(route('equipment_training.train', [$this->equipment, $pendingTrainingRecord]), [
                 'trainer_user_id' => $this->trainerUser->id,
             ]);
 
         $response->assertRedirect(route('equipment.show', $this->equipment));
         $this->assertDatabaseHas('inductions', [
-            'id' => $pendingInduction->id,
+            'id' => $pendingTrainingRecord->id,
             'trainer_user_id' => $this->trainerUser->id,
         ]);
         
-        $pendingInduction->refresh();
-        $this->assertNotNull($pendingInduction->trained);
+        $pendingTrainingRecord->refresh();
+        $this->assertNotNull($pendingTrainingRecord->trained);
     }
 
     /** @test */
     public function regular_user_cannot_mark_user_as_trained()
     {
         // Create pending induction
-        $pendingInduction = new Induction([
+        $pendingTrainingRecord = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->regularUser->id,
             'trained' => null,
@@ -347,11 +347,11 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => null,
         ]);
-        $pendingInduction->save();
+        $pendingTrainingRecord->save();
 
         $anotherUser = factory(User::class)->create();
         $response = $this->actingAs($anotherUser)
-            ->post(route('equipment_training.train', [$this->equipment, $pendingInduction]), [
+            ->post(route('equipment_training.train', [$this->equipment, $pendingTrainingRecord]), [
                 'trainer_user_id' => $anotherUser->id,
             ]);
 
@@ -386,7 +386,7 @@ class EquipmentTest extends TestCase
     public function pending_induction_shows_appropriate_status()
     {
         // Create pending induction
-        $pendingInduction = new Induction([
+        $pendingTrainingRecord = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->regularUser->id,
             'trained' => null,
@@ -394,7 +394,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => null,
         ]);
-        $pendingInduction->save();
+        $pendingTrainingRecord->save();
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
         $response->assertStatus(200);
@@ -405,7 +405,7 @@ class EquipmentTest extends TestCase
     public function completed_induction_shows_appropriate_status()
     {
         // Create completed induction
-        $completedInduction = new Induction([
+        $completedTrainingRecord = new TrainingRecord([
             'key' => 'test-equipment',
             'user_id' => $this->regularUser->id,
             'trained' => now(),
@@ -413,7 +413,7 @@ class EquipmentTest extends TestCase
             'is_trainer' => false,
             'trainer_user_id' => $this->admin->id,
         ]);
-        $completedInduction->save();
+        $completedTrainingRecord->save();
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
         $response->assertStatus(200);
