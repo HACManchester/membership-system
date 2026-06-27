@@ -31,7 +31,8 @@ export const useCourseFilters = (courses: CourseResource[]) => {
 
   const isUserTrainedForCourse = (course: CourseResource) => {
     return (
-      course.user_course_training_record?.trained != null && course.user_course_training_record.trained !== ''
+      course.user_course_training_record?.trained != null &&
+      course.user_course_training_record.trained !== ''
     );
   };
 

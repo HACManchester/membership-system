@@ -61,7 +61,8 @@ const CourseSummary = ({
       : frequencyOptions[course.frequency] || course.frequency;
 
   const isUserTrained =
-    course.user_course_training_record?.trained != null && course.user_course_training_record.trained !== '';
+    course.user_course_training_record?.trained != null &&
+    course.user_course_training_record.trained !== '';
 
   const isUserTrainer = course.user_course_training_record?.is_trainer || false;
 
@@ -212,7 +213,9 @@ const CourseSummary = ({
                     key={equipment.id}
                     label={equipment.name}
                     size="small"
-                    icon={course.user_course_training_record?.trained ? <CheckCircleIcon /> : undefined}
+                    icon={
+                      course.user_course_training_record?.trained ? <CheckCircleIcon /> : undefined
+                    }
                   />
                 ))}
               </Stack>

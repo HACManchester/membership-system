@@ -50,7 +50,8 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
   const { delete: destroy } = useForm();
 
   const isUserTrainedForCourse =
-    course.user_course_training_record?.trained != null && course.user_course_training_record.trained !== '';
+    course.user_course_training_record?.trained != null &&
+    course.user_course_training_record.trained !== '';
 
   const handleDelete = () => {
     destroy(urls.destroy);

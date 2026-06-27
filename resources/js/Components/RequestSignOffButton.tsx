@@ -31,7 +31,8 @@ const RequestSignOffButton: React.FC<Props> = ({ userCourseTrainingRecord, reque
 
   // Show pending state if request is active and not expired
   if (userCourseTrainingRecord?.sign_off_requested_at && !signOffExpired) {
-    const timeText = getTimeRemainingText(userCourseTrainingRecord.sign_off_expires_at) || 'pending';
+    const timeText =
+      getTimeRemainingText(userCourseTrainingRecord.sign_off_expires_at) || 'pending';
 
     return (
       <Button variant="outlined" disabled startIcon={<HourglassTopIcon />} color="warning">
