@@ -59,7 +59,7 @@ project-health.md.
 | --- | --- |
 | `CreateTodaysSubCharges` | Creates `SubscriptionCharge` rows **7 days ahead**: for each billable active user whose `payment_day` matches (today + 7), create a `pending` charge (`MemberSubscriptionCharges::createSubscriptionCharges`) |
 | `BillMembers` | (a) `makeChargesDue()`: flip `pending` charges whose `charge_date` has arrived to `due`; (b) `billMembers()`: for each `due` charge with **no existing payment for that charge**, submit a GoCardless bill and record a `pending` Payment |
-| `CheckMembershipStatus` | Runs four processes: `RecoverMemberships` (re-activate anyone whose recent payment covers them), `CheckPaymentWarnings` (warning expired → suspend), `CheckSuspendedUsers` (suspended > 30 days → left), `CheckLeavingUsers` (leaving + expired → left) |
+| `CheckMembershipStatus` | Runs five processes: `RecoverMemberships` (re-activate anyone whose recent payment covers them), `CheckPaymentWarnings` (warning expired → suspend), `CheckSuspendedUsers` (suspended > 30 days → left), `CheckLeavingUsers` (leaving + expired → left), `CheckExpiredActiveUsers` (active but expired > 7 days, or no expiry at all → payment-warning — the backstop for failures that never produced a webhook) |
 | `CheckForPossibleDuplicates` | Flags duplicate-looking pending payments for manual review (Telegram notification); no auto-dedup |
 
 These run daily on the Laravel scheduler — see `app/Console/Kernel.php` for the exact times and
@@ -115,7 +115,11 @@ working days webhooks walk it `submitted` → `confirmed`, the charge flips to `
 `subscription_expires` extends one month from the payment date.
 
 **Failure.** A `payments.failed` webhook cancels the charge and puts the member in
-`payment-warning` with a grace period (currently 10 days). They keep access during the warning.
+`payment-warning` with a grace period (currently 10 days). If the payment can't even be *created*
+at GoCardless (e.g. an unusable mandate), no webhook will ever arrive, so the billing run itself
+puts the member through the same path — and `CheckExpiredActiveUsers` backstops anyone who slips
+through by catching active members whose paid-up date lapsed anyway. They keep access during the
+warning.
 If they pay (e.g. a manual one-off via `GoCardlessPaymentController`),
 `PaymentEventHandler::updateSubPayment()` links the payment to the oldest unpaid charge, and the
 daily `RecoverMemberships` re-activates them. If the warning expires: `suspended` (access revoked

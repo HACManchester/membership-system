@@ -42,6 +42,11 @@ class CheckMembershipStatus extends Command
     private $checkSuspendedUsers;
 
     /**
+     * @var \BB\Process\CheckExpiredActiveUsers
+     */
+    private $checkExpiredActiveUsers;
+
+    /**
      * Create a new command instance.
      *
      */
@@ -49,13 +54,15 @@ class CheckMembershipStatus extends Command
         \BB\Process\RecoverMemberships $recoverMemberships,
         \BB\Process\CheckPaymentWarnings $checkPaymentWarnings,
         \BB\Process\CheckSuspendedUsers $checkSuspendedUsers,
-        \BB\Process\CheckLeavingUsers $checkLeavingUsers
+        \BB\Process\CheckLeavingUsers $checkLeavingUsers,
+        \BB\Process\CheckExpiredActiveUsers $checkExpiredActiveUsers
     ) {
         parent::__construct();
         $this->recoverMemberships = $recoverMemberships;
         $this->checkPaymentWarnings = $checkPaymentWarnings;
         $this->checkSuspendedUsers = $checkSuspendedUsers;
         $this->checkLeavingUsers = $checkLeavingUsers;
+        $this->checkExpiredActiveUsers = $checkExpiredActiveUsers;
     }
 
     /**
@@ -77,5 +84,8 @@ class CheckMembershipStatus extends Command
 
         $this->info("Checking users with payment warnings");
         $this->checkPaymentWarnings->run();
+
+        $this->info("Checking active users with lapsed memberships");
+        $this->checkExpiredActiveUsers->run();
     }
 }
