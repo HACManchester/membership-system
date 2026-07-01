@@ -71,7 +71,7 @@ class SubscriptionChargeRepository extends DBRepository
             $status = 'error';
         }
 
-        $this->paymentRepository->recordSubscriptionPayment(
+        $paymentId = $this->paymentRepository->recordSubscriptionPayment(
             $userId,
             'gocardless-variable',
             $bill->id ?? null,
@@ -80,6 +80,13 @@ class SubscriptionChargeRepository extends DBRepository
             0,
             (string) $charge->id
         );
+
+        if ($status == 'failed') {
+            // GoCardless rejected the payment outright, so no failure webhook will
+            // ever arrive; run the same path one would trigger (cancel the charge
+            // and put the member into payment-warning)
+            $this->paymentRepository->recordPaymentFailure($paymentId, 'failed');
+        }
 
         return $charge;
     }

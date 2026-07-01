@@ -338,7 +338,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        $charge = factory(SubscriptionCharge::class)->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -360,6 +360,147 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->assertEquals('failed', $payment->status);
         $this->assertNull($payment->source_id);
         $this->assertEquals(22, $payment->amount);
+
+        // No GoCardless payment exists so no failure webhook will ever arrive - the
+        // run itself must put the member through the failure flow
+        $charge->refresh();
+        $this->assertEquals('cancelled', $charge->status);
+
+        $user->refresh();
+        $this->assertEquals('payment-warning', $user->status);
+        $this->assertTrue($user->active);
+    }
+
+    public function testBillMembersContinuesAfterFailureWithoutReusingPreviousBillId()
+    {
+        $goodUser1 = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD111',
+        ]);
+        $failingUser = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD222',
+        ]);
+        $goodUser2 = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD333',
+        ]);
+
+        foreach ([$goodUser1, $failingUser, $goodUser2] as $user) {
+            factory(SubscriptionCharge::class)->create([
+                'user_id' => $user->id,
+                'charge_date' => Carbon::now(),
+                'amount' => 0,
+                'status' => 'due',
+            ]);
+        }
+
+        $this->mockGoCardless->expects($this->exactly(3))
+            ->method('newBill')
+            ->will($this->onConsecutiveCalls(
+                (object)['id' => 'PM111', 'status' => 'pending_submission'],
+                $this->throwException(new \GoCardlessPro\Core\Exception\ValidationFailedException('currency must be EUR for a sepa_core mandate')),
+                (object)['id' => 'PM333', 'status' => 'pending_submission']
+            ));
+
+        $this->mockGoCardless->expects($this->exactly(3))
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // The failed payment must not pick up the previous member's GoCardless payment ID
+        $failedPayment = Payment::where('user_id', $failingUser->id)->first();
+        $this->assertNotNull($failedPayment);
+        $this->assertEquals('failed', $failedPayment->status);
+        $this->assertNull($failedPayment->source_id);
+
+        // Members after the failure still get billed
+        $payment2 = Payment::where('user_id', $goodUser2->id)->first();
+        $this->assertNotNull($payment2);
+        $this->assertEquals('PM333', $payment2->source_id);
+        $this->assertEquals('pending', $payment2->status);
+    }
+
+    public function testBillMembersSurvivesFailureForMemberWithOlderOutstandingCharge()
+    {
+        // The 2026-07-01 incident: a member whose billing fails while they already
+        // have an older unpaid charge must not abort the whole run
+        $failingUser = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD222',
+        ]);
+        $laterUser = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 17,
+            'mandate_id' => 'MD333',
+        ]);
+
+        // Older charge from a previous failed month, with its failed payment attached
+        // so the retry filter skips it
+        $oldCharge = factory(SubscriptionCharge::class)->create([
+            'user_id' => $failingUser->id,
+            'charge_date' => Carbon::now()->subMonth(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+        factory(Payment::class)->create([
+            'user_id' => $failingUser->id,
+            'source' => 'gocardless-variable',
+            'source_id' => null,
+            'reason' => 'subscription',
+            'status' => 'failed',
+            'reference' => (string)$oldCharge->id,
+        ]);
+
+        $newCharge = factory(SubscriptionCharge::class)->create([
+            'user_id' => $failingUser->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+        $laterCharge = factory(SubscriptionCharge::class)->create([
+            'user_id' => $laterUser->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('newBill')
+            ->will($this->onConsecutiveCalls(
+                $this->throwException(new \GoCardlessPro\Core\Exception\ValidationFailedException('currency must be EUR for a sepa_core mandate')),
+                (object)['id' => 'PM333', 'status' => 'pending_submission']
+            ));
+
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // The new charge went through the failure flow; the old one is untouched
+        $newCharge->refresh();
+        $this->assertEquals('cancelled', $newCharge->status);
+        $oldCharge->refresh();
+        $this->assertEquals('due', $oldCharge->status);
+
+        // The member processed after the failure was still billed
+        $laterCharge->refresh();
+        $laterPayment = Payment::where('user_id', $laterUser->id)
+            ->where('reference', $laterCharge->id)
+            ->first();
+        $this->assertNotNull($laterPayment);
+        $this->assertEquals('PM333', $laterPayment->source_id);
     }
 
     public function testBillMembersSkipsChargesWithExistingPayments()
@@ -405,7 +546,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        $charge = factory(SubscriptionCharge::class)->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -424,5 +565,11 @@ class MemberSubscriptionChargesTest extends TestCase
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
         $this->assertEquals('failed', $payment->status);
+
+        $charge->refresh();
+        $this->assertEquals('cancelled', $charge->status);
+
+        $user->refresh();
+        $this->assertEquals('payment-warning', $user->status);
     }
 }

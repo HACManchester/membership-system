@@ -1,6 +1,5 @@
 <?php namespace BB\Services;
 
-use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Helpers\TelegramHelper;
 use BB\Repo\PaymentRepository;
@@ -32,6 +31,9 @@ class MemberSubscriptionCharges
      */
     private $paymentRepository;
 
+    /**
+     * @var TelegramHelper
+     */
     private $telegramHelper;
 
     function __construct(UserRepository $userRepository, SubscriptionChargeRepository $subscriptionChargeRepository, GoCardlessHelper $goCardless, PaymentRepository $paymentRepository)
@@ -112,25 +114,43 @@ class MemberSubscriptionCharges
         $membersWeCouldntBill = [];
         foreach ($goCardlessUsers as $charge) {
             $amount = $charge->amount > 0 ? $charge->amount : $charge->user->monthly_subscription;
+            $bill = null;
             try {
-                $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
-                $members[] = $charge->user->name;
-                $status = $bill->status;
-                if ($status == 'pending_submission') {
-                    $status = 'pending';
+                try {
+                    $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
+                    $status = $bill->status;
+                    if ($status == 'pending_submission') {
+                        $status = 'pending';
+                    }
+                }
+                catch (InvalidStateException | ValidationFailedException $e) {
+                    $status = 'failed';
+                }
+                catch (Exception $e) {
+                    $status = 'error';
+                }
+
+                $paymentId = $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id ?? null, $amount, $status, 0, $charge->id);
+
+                if ($bill) {
+                    $members[] = $charge->user->name;
+                } else {
+                    $membersWeCouldntBill[] = $charge->user->name;
+                }
+
+                if ($status == 'failed') {
+                    // GoCardless rejected the payment outright, so no failure webhook will
+                    // ever arrive; run the same path one would trigger (cancel the charge
+                    // and put the member into payment-warning)
+                    $this->paymentRepository->recordPaymentFailure($paymentId, 'failed');
                 }
             }
-            catch (InvalidStateException | ValidationFailedException $e) {
-                // TODO: Notify member somehow? If not, they'll eventually be picked up by CheckMembershipStatus
-                $status = 'failed';
-                $membersWeCouldntBill[] = $charge->user->name;
-            }
             catch (Exception $e) {
-                $status = 'error';
+                // One member's bad data must not abort billing for everyone after them
                 $membersWeCouldntBill[] = $charge->user->name;
+                Log::error('Billing failed for user ' . $charge->user->id . ' (sub charge ' . $charge->id . ')');
+                Log::error($e);
             }
-
-            $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id ?? null, $amount, $status, 0, $charge->id);
         };
 
         $message = "Created bills for: " . implode(", ", $members);
