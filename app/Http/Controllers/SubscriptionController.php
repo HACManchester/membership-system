@@ -4,6 +4,8 @@ use Carbon\Carbon;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
+use GoCardlessPro\Core\Exception\InvalidStateException;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -120,31 +122,31 @@ class SubscriptionController extends Controller
      */
     public function destroy($userId, $id = null)
     {
-        /**
-         * TODO: Check for and cancel pending sub charges
-         */
         $user = User::findWithPermission($userId);
         if ($user->payment_method == 'gocardless') {
             try {
                 $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
-                if ($subscription->status == 'cancelled') {
-                    $user->cancelSubscription();
-                    \FlashNotification::success('Your subscription has been cancelled');
-                    return \Redirect::back();
-                }
+                $cancelled = ($subscription->status == 'cancelled');
+            } catch (InvalidStateException $e) {
+                // Already cancelled at GoCardless; bring our record in line
+                $cancelled = true;
             } catch (\Exception $e) {
+                // GoCardless would keep collecting, so we can't record a cancellation
+                Log::error($e);
+                $cancelled = false;
+            }
+
+            if ($cancelled) {
                 $user->cancelSubscription();
+                $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+
                 \FlashNotification::success('Your subscription has been cancelled');
                 return \Redirect::back();
             }
         } elseif ($user->payment_method == 'gocardless-variable') {
             $status = $this->goCardless->cancelPreAuth($user->mandate_id);
             if ($status) {
-                $user->mandate_id = null;
-                $user->payment_method = '';
-                $user->save();
-
-                $user->setLeaving();
+                $user->cancelSubscription();
 
                 $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
 
