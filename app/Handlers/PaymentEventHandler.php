@@ -134,6 +134,13 @@ class PaymentEventHandler
                 return;
             }
         } else {
+            if (in_array($status, ['failed', 'error', 'cancelled'])) {
+                // A dead payment must not attach itself to a live charge: the nightly
+                // biller skips any charge that has a payment against it, so linking
+                // here would permanently block the charge from being collected
+                return;
+            }
+
             $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
 
             if ( ! $subCharge) {

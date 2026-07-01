@@ -30,4 +30,10 @@ class UserPolicy
     {
         return $authedUser->isAdmin();
     }
+
+    public function makePayment(User $authedUser, User $user)
+    {
+        // Members pay against their own account; admins can act for anyone
+        return $authedUser->id === $user->id || $authedUser->isAdmin();
+    }
 }

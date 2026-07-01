@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\Payment;
 use BB\Entities\User;
+use BB\Http\Requests\StoreGoCardlessPaymentRequest;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
@@ -32,16 +33,15 @@ class GoCardlessPaymentController extends Controller
      * Main entry point for all gocardless payments - not subscriptions
      * @param $userId
      * @return mixed
-     * @throws \BB\Exceptions\AuthenticationException
      */
-    public function create($userId)
+    public function create($userId, StoreGoCardlessPaymentRequest $request)
     {
-        $user = User::findWithPermission($userId);
+        $user = $request->targetUser();
 
-        $requestData = \Request::only(['reason', 'amount']);
+        $data = $request->validated();
 
-        $reason = $requestData['reason'];
-        $amount = ($requestData['amount'] * 1) / 100;
+        $reason = $data['reason'];
+        $amount = $data['amount'] / 100;
 
         if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
