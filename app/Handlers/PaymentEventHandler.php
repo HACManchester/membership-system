@@ -1,10 +1,11 @@
 <?php namespace BB\Handlers;
 
 use BB\Entities\Payment;
+use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
-use BB\Exceptions\PaymentException;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
 class PaymentEventHandler
@@ -119,20 +120,30 @@ class PaymentEventHandler
     private function updateSubPayment($paymentId, $userId, $status)
     {
         /** @var Payment */
-        $payment   = $this->paymentRepository->getById($paymentId);
-        $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
+        $payment = $this->paymentRepository->getById($paymentId);
 
-        if ( ! $subCharge) {
-            Log::warning('Subscription payment without a sub charge. Payment ID:' . $paymentId);
-            return;
-        }
+        if ( ! empty($payment->reference)) {
+            // The payment was recorded against a specific charge - always use that one;
+            // findCharge() would return the user's oldest outstanding charge instead,
+            // which is a different charge for anyone with a payment failure history
+            try {
+                /** @var SubscriptionCharge $subCharge */
+                $subCharge = $this->subscriptionChargeRepository->getById($payment->reference);
+            } catch (ModelNotFoundException $e) {
+                Log::warning('Subscription payment references a missing sub charge. Payment ID: ' . $paymentId);
+                return;
+            }
+        } else {
+            $subCharge = $this->subscriptionChargeRepository->findCharge($userId);
 
-        //The sub charge record id gets saved onto the payment
-        if (empty($payment->reference)) {
+            if ( ! $subCharge) {
+                Log::warning('Subscription payment without a sub charge. Payment ID:' . $paymentId);
+                return;
+            }
+
+            //The sub charge record id gets saved onto the payment
             $payment->reference = strval($subCharge->id);
             $payment->save();
-        } else if ($payment->reference != $subCharge->id) {
-            throw new PaymentException('Attempting to update sub charge (' . $subCharge->id . ') but payment (' . $payment->id . ') doesn\'t match. Sub charge has an existing reference on it.');
         }
 
         if ($status == 'paid') {

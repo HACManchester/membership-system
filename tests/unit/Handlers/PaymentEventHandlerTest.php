@@ -3,7 +3,6 @@
 use BB\Entities\User;
 use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
-use BB\Exceptions\PaymentException;
 use BB\Handlers\PaymentEventHandler;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
@@ -174,15 +173,16 @@ class PaymentEventHandlerTest extends TestCase
         $this->assertEquals('processing', $charge->status);
     }
 
-    public function testOnCreateWithMismatchedReferenceThrowsException()
+    public function testOnCreateWithExistingReferenceUsesTheReferencedCharge()
     {
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
 
-        // Create charge with earlier date (will be found first by findCharge)
-        factory(SubscriptionCharge::class)->create([
+        // An older outstanding charge, e.g. from a previous failed billing month -
+        // it must not be picked up in place of the charge the payment was made for
+        $olderCharge = factory(SubscriptionCharge::class)->create([
             'user_id' => $user->id,
             'status' => 'due',
             'charge_date' => Carbon::now()->subDays(2),
@@ -194,7 +194,6 @@ class PaymentEventHandlerTest extends TestCase
             'charge_date' => Carbon::now()->subDays(1),
         ]);
 
-        // Create payment with reference to laterCharge, but findCharge will return charge1 (earlier date)
         $payment = factory(Payment::class)->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
@@ -204,9 +203,6 @@ class PaymentEventHandlerTest extends TestCase
             'reference' => $laterCharge->id,
         ]);
 
-        $this->expectException(PaymentException::class);
-        $this->expectExceptionMessage('Attempting to update sub charge');
-
         $this->handler->onCreate(
             $user->id,
             'subscription',
@@ -214,6 +210,42 @@ class PaymentEventHandlerTest extends TestCase
             $payment->id,
             'pending'
         );
+
+        $laterCharge->refresh();
+        $this->assertEquals('processing', $laterCharge->status);
+
+        $olderCharge->refresh();
+        $this->assertEquals('due', $olderCharge->status);
+    }
+
+    public function testOnCreateWithReferenceToMissingChargeIsIgnored()
+    {
+        $user = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+        ]);
+
+        $payment = factory(Payment::class)->create([
+            'source' => 'gocardless-variable',
+            'user_id' => $user->id,
+            'reason' => 'subscription',
+            'amount' => 2200,
+            'status' => 'pending',
+            'reference' => '999999',
+        ]);
+
+        // No exception should be thrown
+        $this->handler->onCreate(
+            $user->id,
+            'subscription',
+            '',
+            $payment->id,
+            'pending'
+        );
+
+        $payment->refresh();
+        $this->assertEquals('999999', $payment->reference);
+        $this->assertEquals('pending', $payment->status);
     }
 
     public function testOnCancelMarksSubscriptionChargeAsCancelled()
