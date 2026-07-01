@@ -30,9 +30,18 @@ class CheckSuspendedUsers
         // Fetch and check over active users which have a status of suspended
         $users = User::suspended()->get();
         foreach ($users as $user) {
+            if ( ! $user->suspended_at) {
+                // Without a date the 30-day rule below can never fire and the user
+                // would stay suspended forever - start the clock today
+                $user->suspended_at = $today;
+                $user->save();
+                Log::warning($user->name . ' was suspended with no suspension date - starting the 30-day period today');
+                continue;
+            }
+
             // Check if user has been suspended for 30+ days
-            $suspendedFor30Days = $user->suspended_at && $user->suspended_at->lt($today->copy()->subDays(30));
-            
+            $suspendedFor30Days = $user->suspended_at->lt($today->copy()->subDays(30));
+
             if ($suspendedFor30Days) {
                 //User has been suspended for 30+ days, mark as left
                 Log::info($user->name . ' has been suspended for 30+ days, marking as left');
