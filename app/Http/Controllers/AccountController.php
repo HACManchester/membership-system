@@ -491,6 +491,11 @@ class AccountController extends Controller
     {
         $amount = \Request::input('monthly_subscription');
 
+        if (!is_numeric($amount) || $amount < 0) {
+            throw new ValidationException('Please enter a valid amount in pounds.');
+        }
+        $amount = (float) $amount;
+
         $minAmountPence = MembershipPayments::getMinimumPrice();
         $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
         $minAmountPounds = $minAmountPence / 100;
@@ -503,7 +508,7 @@ class AccountController extends Controller
         }
 
         $user = User::findWithPermission($id);
-        $user->updateSubAmount(\Request::input('monthly_subscription'));
+        $user->updateSubAmount($amount);
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
