@@ -97,12 +97,23 @@ class PaymentRepository extends DBRepository
      * @param Carbon        $paidDate
      *
      * @return int The ID of the payment record
+     * @throws PaymentException if the source ID is already recorded against another user
      */
     public function recordPayment($reason, $userId, $source, $sourceId = null, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
     {
         if ($paidDate == null) {
             $paidDate = new Carbon();
         }
+
+        //A source id identifies one payment at the provider; a second record under a different
+        // user would let webhooks for that payment update the wrong member
+        if (!empty($sourceId)) {
+            $conflictingRecord = $this->model->where('source_id', $sourceId)->where('user_id', '!=', $userId)->first();
+            if ($conflictingRecord) {
+                throw new PaymentException('Refusing to record payment with source ID ' . $sourceId . ' for user ' . $userId . ': payment ' . $conflictingRecord->id . ' already uses it for user ' . $conflictingRecord->user_id);
+            }
+        }
+
         //If we have an existing similer record dont create another, except for when there is no source id
         $existingRecord = $this->model->where('source', $source)->where('source_id', $sourceId)->where('user_id', $userId)->first();
         if (!$existingRecord || empty($sourceId)) {
@@ -365,7 +376,7 @@ class PaymentRepository extends DBRepository
      */
     public function getPaymentBySourceId($sourceId)
     {
-        return $this->model->where('source_id', $sourceId)->first();
+        return $this->model->where('source_id', $sourceId)->orderBy('id')->first();
     }
 
     public function getPossibleDuplicates()
