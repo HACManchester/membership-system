@@ -127,6 +127,46 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->assertEquals(0, $leftCharge);
     }
 
+    public function testCreateSubscriptionChargesContinuesWhenOneUserFails()
+    {
+        $paymentDay = 15;
+        $targetDate = Carbon::now()->setDay($paymentDay);
+
+        factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+        factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 17,
+        ]);
+
+        $mockChargeRepo = $this->createMock(SubscriptionChargeRepository::class);
+        $mockChargeRepo->method('chargeExists')->willReturn(false);
+        $mockChargeRepo->expects($this->exactly(2))
+            ->method('createCharge')
+            ->will($this->onConsecutiveCalls(
+                $this->throwException(new \Exception('database error')),
+                factory(SubscriptionCharge::class)->make(['user_id' => 1])
+            ));
+
+        $service = new MemberSubscriptionCharges(
+            $this->userRepository,
+            $mockChargeRepo,
+            $this->mockGoCardless,
+            $this->paymentRepository
+        );
+
+        $result = $service->createSubscriptionCharges($targetDate);
+
+        $this->assertCount(1, $result['created']);
+        $this->assertCount(1, $result['failed']);
+    }
+
     public function testCreateSubscriptionChargesPreventsDuplicates()
     {
         $paymentDay = 15; // Use a day that exists in all months

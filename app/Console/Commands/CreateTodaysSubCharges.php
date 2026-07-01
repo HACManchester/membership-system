@@ -1,7 +1,9 @@
 <?php namespace BB\Console\Commands;
 
+use BB\Helpers\TelegramHelper;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CreateTodaysSubCharges extends Command
 {
@@ -26,6 +28,11 @@ class CreateTodaysSubCharges extends Command
     private $subscriptionChargeService;
 
     /**
+     * @var TelegramHelper
+     */
+    private $telegramHelper;
+
+    /**
      * Create a new command instance.
      *
      */
@@ -34,32 +41,50 @@ class CreateTodaysSubCharges extends Command
         parent::__construct();
 
         $this->subscriptionChargeService = \App::make('\BB\Services\MemberSubscriptionCharges');
+        $this->telegramHelper = new TelegramHelper("createSubscriptionCharges");
     }
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
         $dayOffset = intval($this->argument('dayOffset'));
 
-        $targetDate = Carbon::now()->addDays($dayOffset);
+        $failed = [];
 
-        $this->info("Generating charges for " . $targetDate);
+        // As well as the target day, re-run every day between it and today so a
+        // missed or failed run self-heals; chargeExists() makes repeat runs a no-op.
+        // A negative offset (a manual backfill) walks the past days the same way.
+        for ($offset = max(0, $dayOffset); $offset >= min(0, $dayOffset); $offset--) {
+            $targetDate = Carbon::now()->addDays($offset);
 
-        $this->subscriptionChargeService->createSubscriptionCharges($targetDate);
+            $this->info("Generating charges for " . $targetDate);
+            $result = $this->subscriptionChargeService->createSubscriptionCharges($targetDate);
 
-        // TODO: Rebuild a better way of catching stragglers. This can result in multiple, duplicate, attempts to charge
+            if ($offset < $dayOffset && count($result['created']) > 0) {
+                $message = "Created " . count($result['created']) . " catch-up sub charges for " . $targetDate->format('Y-m-d') . " - a previous run was missed or failed";
+                Log::warning($message);
+                $this->telegramHelper->notify(TelegramHelper::WARNING, $message);
+            }
 
-        // in case yesterdays process failed we will rerun the past seven days, this should pickup any stragglers
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-1 day
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-2 days
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-3 days
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-4 days
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-5 days
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-6 days
-        // $this->subscriptionChargeService->createSubscriptionCharges($targetDate->subDay()); //-7 days
+            $failed = array_merge($failed, $result['failed']);
+        }
+
+        $message = "Charges ran for " . Carbon::now()->addDays($dayOffset)->format('Y-m-d');
+        Log::info($message);
+        $this->telegramHelper->notify(TelegramHelper::JOB, $message);
+
+        if (count($failed) > 0) {
+            $message = "Could not create sub charges for: " . implode(', ', array_unique($failed));
+            Log::error($message);
+            $this->telegramHelper->notify(TelegramHelper::ERROR, $message);
+
+            return 1;
+        }
+
+        return 0;
     }
 }

@@ -142,6 +142,33 @@ class CreateTodaysSubChargesTest extends TestCase
         Carbon::setTestNow(); // Reset
     }
 
+    public function testCatchesUpChargesMissedByEarlierRuns()
+    {
+        $paymentDay = 15;
+
+        $user = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        // 3 days before the payment day: this charge should have been created 4 days
+        // ago (7 days ahead of the payment day) but wasn't - e.g. that run failed
+        Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->subDays(3));
+
+        $this->artisan('bb:create-todays-sub-charges')->assertExitCode(0);
+
+        $charge = SubscriptionCharge::where('user_id', $user->id)
+            ->whereDate('charge_date', Carbon::now()->addDays(3))
+            ->first();
+
+        $this->assertNotNull($charge);
+        $this->assertEquals(22, $charge->amount);
+
+        Carbon::setTestNow(); // Reset
+    }
+
     public function testNoChargesCreatedForInactiveUsers()
     {
         $targetDate = Carbon::now()->addDays(7);

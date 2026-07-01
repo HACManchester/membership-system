@@ -49,33 +49,29 @@ class MemberSubscriptionCharges
      * Create the sub charge for each member, only do this for members with dates matching the supplied date
      *
      * @param Carbon $targetDate
+     * @return array{created: string[], failed: string[]} names of members a charge was created or failed for
      */
     public function createSubscriptionCharges($targetDate)
     {
-        try {
-            $users = $this->userRepository->getBillableActive();
-            foreach ($users as $user) {
-                if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
+        $created = [];
+        $failed = [];
+
+        $users = $this->userRepository->getBillableActive();
+        foreach ($users as $user) {
+            if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
+                try {
                     $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);
+                    $created[] = $user->name;
+                } catch (Exception $e) {
+                    // One member's bad data must not stop charge creation for everyone after them
+                    $failed[] = $user->name;
+                    Log::error('Failed to create sub charge for user ' . $user->id . ' (' . date_format($targetDate, 'Y-m-d') . ')');
+                    Log::error($e);
                 }
             }
+        }
 
-            $message = "Charges ran for " . date_format($targetDate,"Y-m-d");
-            Log::info($message);
-            $this->telegramHelper->notify(
-                TelegramHelper::JOB, 
-                $message
-            );
-        }
-        catch(Exception $e) {
-            $message = "Exception running" . date_format($targetDate,"Y-m-d");
-            Log::error($message);
-            $this->telegramHelper->notify(
-                TelegramHelper::ERROR, 
-                $message
-            );
-            Log::error($e);
-        }
+        return ['created' => $created, 'failed' => $failed];
     }
 
     /**

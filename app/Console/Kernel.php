@@ -48,11 +48,19 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\CreateTodaysSubCharges::class)
             ->dailyAt('01:00')
-            ->then(function () use ($telegram) {
+            ->onSuccess(function () use ($telegram) {
                 $message = "✔️ Created today's subscription charges";
                 Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
+                    $message
+                );
+            })
+            ->onFailure(function () use ($telegram) {
+                $message = "🛑 Creating subscription charges failed - check the logs.";
+                Log::error($message);
+                $telegram->notify(
+                    TelegramHelper::ERROR,
                     $message
                 );
             });
