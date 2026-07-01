@@ -60,11 +60,19 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command(Commands\BillMembers::class)
             ->dailyAt('01:30')
-            ->then(function () use ($telegram) {
+            ->onSuccess(function () use ($telegram) {
                 $message = "✅ Billed members.";
                 Log::info($message);
                 $telegram->notify(
                     TelegramHelper::JOB,
+                    $message
+                );
+            })
+            ->onFailure(function () use ($telegram) {
+                $message = "🛑 Billing members failed - check the logs.";
+                Log::error($message);
+                $telegram->notify(
+                    TelegramHelper::ERROR,
                     $message
                 );
             });

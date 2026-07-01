@@ -42,7 +42,7 @@ class BillMembers extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
@@ -77,15 +77,19 @@ class BillMembers extends Command
 
             $this->info('Finished');
 
+            return 0;
+
         }catch(\Exception $e){
             $message = "billMembers encountered an exception";
             Log::info($message);
             $this->telegramHelper->notify(
-                TelegramHelper::ERROR, 
+                TelegramHelper::ERROR,
                 $message
             );
 
             Log::error($e);
+
+            return 1;
         }
     }
 }
