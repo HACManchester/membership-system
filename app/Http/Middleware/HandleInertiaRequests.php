@@ -56,7 +56,13 @@ class HandleInertiaRequests extends Middleware
             },
             'navRoutes' => function () {
                 return (new SidebarItems)->getItems();
-            }
+            },
+            'flash' => function () use ($request) {
+                return [
+                    'success' => $request->session()->get('success'),
+                    'error' => $request->session()->get('error'),
+                ];
+            },
         ]);
     }
 }

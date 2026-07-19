@@ -3,6 +3,7 @@ import { usePage } from '@inertiajs/react';
 import { Box, Stack } from '@mui/material';
 import SideNav from '../Components/SideNav';
 import TopNav from '../Components/TopNav';
+import FlashSnackbar from '../Components/FlashSnackbar';
 
 const drawerWidth = 240;
 
@@ -67,6 +68,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           {children}
         </Box>
       </Stack>
+      <FlashSnackbar />
     </Stack>
   );
 }
