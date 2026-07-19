@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Typography, IconButton, Grid2, Box, Button, Collapse, Stack } from '@mui/material';
+import {
+  Card,
+  Typography,
+  IconButton,
+  Grid2,
+  Box,
+  Button,
+  Collapse,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import { router } from '@inertiajs/react';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolIcon from '@mui/icons-material/School';
@@ -57,22 +67,24 @@ const TrainedMembersSection: React.FC<Props> = ({ trainedUsers, memberList, bulk
                       actions={
                         trainingRecord.urls && (
                           <>
-                            <IconButton
-                              size="small"
-                              onClick={() => router.post(trainingRecord.urls!.untrain)}
-                              title="Remove training"
-                              sx={{ p: 0.5 }}
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => router.post(trainingRecord.urls!.promote)}
-                              title="Promote to trainer"
-                              sx={{ p: 0.5 }}
-                            >
-                              <SchoolIcon fontSize="small" />
-                            </IconButton>
+                            <Tooltip title="Remove training">
+                              <IconButton
+                                size="small"
+                                onClick={() => router.post(trainingRecord.urls!.untrain)}
+                                sx={{ p: 0.5 }}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Promote to trainer">
+                              <IconButton
+                                size="small"
+                                onClick={() => router.post(trainingRecord.urls!.promote)}
+                                sx={{ p: 0.5 }}
+                              >
+                                <SchoolIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
                           </>
                         )
                       }

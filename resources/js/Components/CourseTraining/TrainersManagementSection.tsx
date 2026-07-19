@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Grid2, IconButton, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolIcon from '@mui/icons-material/School';
@@ -28,14 +28,15 @@ const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
                 trainingRecord={trainer}
                 actions={
                   trainer.urls && (
-                    <IconButton
-                      size="small"
-                      onClick={() => router.post(trainer.urls!.demote)}
-                      title="Remove trainer status"
-                      sx={{ p: 0.5 }}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title="Remove trainer status">
+                      <IconButton
+                        size="small"
+                        onClick={() => router.post(trainer.urls!.demote)}
+                        sx={{ p: 0.5 }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   )
                 }
               />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, Button, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Grid2, IconButton, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CheckIcon from '@mui/icons-material/Check';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -51,24 +51,24 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
                 actions={
                   trainingRecord.urls && (
                     <>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        size="small"
-                        startIcon={<CheckIcon />}
-                        onClick={() => router.post(trainingRecord.urls!.train)}
-                      >
-                        Mark Trained
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        startIcon={<PersonRemoveIcon />}
-                        onClick={() => handleRemove(trainingRecord)}
-                      >
-                        Remove
-                      </Button>
+                      <Tooltip title="Mark as trained">
+                        <IconButton
+                          size="small"
+                          onClick={() => router.post(trainingRecord.urls!.train)}
+                          sx={{ p: 0.5 }}
+                        >
+                          <CheckIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Remove from this list">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemove(trainingRecord)}
+                          sx={{ p: 0.5 }}
+                        >
+                          <PersonRemoveIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </>
                   )
                 }
