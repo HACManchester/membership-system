@@ -122,6 +122,20 @@ class CoursePolicy
         return !$course->isPaused();
     }
 
+    public function registerInterest(User $user, Course $course)
+    {
+        // A waitlist is meaningless for self-serve courses. Deliberately
+        // allowed while paused, unlike requestSignOff — the waitlist is most
+        // useful precisely when training isn't currently running.
+        return $course->frequency !== 'self-serve';
+    }
+
+    public function withdrawInterest(User $user, Course $course)
+    {
+        // Record-state guards (trained/trainer/pending sign-off) live in the controller
+        return true;
+    }
+
 
     protected function isMaintainerOrCoordinator(User $user, Course $course)
     {

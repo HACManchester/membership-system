@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Course;
 use BB\Entities\TrainingRecord;
 use BB\Entities\User;
+use BB\Events\TrainingRecords\TrainingInterestWithdrawnEvent;
 use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
 use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Repo\TrainingRecordRepository;
@@ -39,6 +40,9 @@ class CourseTrainingController extends Controller
         $usersPendingSignOff = $this->trainingRecordRepository->getUsersPendingSignOffForCourse($course->id);
         $usersPendingSignOff->load(['course', 'user.profile']);
 
+        $waitlist = $this->trainingRecordRepository->getWaitlistForCourse($course->id);
+        $waitlist->load(['course', 'user.profile']);
+
         $memberList = $this->userRepository->getAllAsDropdown();
 
         return Inertia::render('CourseTraining/Index', [
@@ -46,6 +50,7 @@ class CourseTrainingController extends Controller
             'trainers' => TrainingRecordResource::collection($trainers),
             'trainedUsers' => TrainingRecordResource::collection($trainedUsers),
             'usersPendingSignOff' => TrainingRecordResource::collection($usersPendingSignOff),
+            'waitlist' => TrainingRecordResource::collection($waitlist),
             'memberList' => collect($memberList)->map(function($name, $id) {
                 return ['id' => $id, 'name' => $name];
             })->values(),
@@ -144,6 +149,40 @@ class CourseTrainingController extends Controller
 
         return redirect()->route('courses.training.index', $course)
             ->with('success', 'Training status removed');
+    }
+
+    public function removeFromWaitlist(Course $course, User $user)
+    {
+        $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
+
+        if (!$trainingRecord) {
+            return redirect()->route('courses.training.index', $course)
+                ->with('error', 'User has not registered interest in this course');
+        }
+
+        $this->authorize('delete', $trainingRecord);
+
+        if ($trainingRecord->trained) {
+            return redirect()->route('courses.training.index', $course)
+                ->with('error', 'User is already trained for this course');
+        }
+
+        if ($trainingRecord->is_trainer) {
+            return redirect()->route('courses.training.index', $course)
+                ->with('error', 'Trainers cannot be removed from the interested members list');
+        }
+
+        if ($trainingRecord->sign_off_requested_at && !$trainingRecord->isSignOffExpired()) {
+            return redirect()->route('courses.training.index', $course)
+                ->with('error', 'User has a pending sign-off request for this course');
+        }
+
+        $trainingRecord->delete();
+
+        \Event::dispatch(new TrainingInterestWithdrawnEvent($user, $course));
+
+        return redirect()->route('courses.training.index', $course)
+            ->with('success', 'User removed from the interested members list');
     }
 
     public function promote(Course $course, User $user)

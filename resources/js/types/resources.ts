@@ -27,6 +27,7 @@ export type TrainingRecordResource = {
     untrain: string;
     promote: string;
     demote: string;
+    removeFromWaitlist: string;
   };
 };
 

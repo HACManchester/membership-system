@@ -126,6 +126,7 @@ class CourseController extends Controller
                 'update' => $user->can('update', $course),
                 'delete' => $user->can('delete', $course),
                 'viewTraining' => $user->can('viewTraining', $course),
+                'registerInterest' => $user->can('registerInterest', $course),
             ],
             'urls' => [
                 'index' => route('courses.index', [], false),
@@ -133,6 +134,7 @@ class CourseController extends Controller
                 'destroy' => route('courses.destroy', $course, false),
                 'training' => route('courses.training.index', $course, false),
                 'requestSignOff' => route('courses.request-sign-off', $course, false),
+                'interest' => route('courses.interest.store', $course, false),
             ],
         ]);
     }

@@ -146,6 +146,36 @@ class CoursePolicyTest extends TestCase
         $this->assertFalse($this->policy->forceDelete($user, $course));
     }
 
+    public function test_any_member_can_register_interest_in_trainer_led_courses()
+    {
+        $user = factory(User::class)->create();
+
+        $regular = factory(Course::class)->create(['frequency' => 'regular']);
+        $adHoc = factory(Course::class)->create(['frequency' => 'ad-hoc']);
+        $paused = factory(Course::class)->create(['frequency' => 'regular', 'paused_at' => now()]);
+
+        $this->assertTrue($this->policy->registerInterest($user, $regular));
+        $this->assertTrue($this->policy->registerInterest($user, $adHoc));
+        // The waitlist stays open while a course is paused, unlike sign-off
+        $this->assertTrue($this->policy->registerInterest($user, $paused));
+    }
+
+    public function test_members_cannot_register_interest_in_self_serve_courses()
+    {
+        $user = factory(User::class)->create();
+        $selfServe = factory(Course::class)->create(['frequency' => 'self-serve']);
+
+        $this->assertFalse($this->policy->registerInterest($user, $selfServe));
+    }
+
+    public function test_any_member_can_withdraw_interest()
+    {
+        $user = factory(User::class)->create();
+        $course = factory(Course::class)->create(['frequency' => 'regular']);
+
+        $this->assertTrue($this->policy->withdrawInterest($user, $course));
+    }
+
     public function test_is_maintainer_or_coordinator_with_multiple_equipment()
     {
         $user = factory(User::class)->create();

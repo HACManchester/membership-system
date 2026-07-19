@@ -63,6 +63,7 @@ class TrainingRecordResource extends JsonResource
                     'untrain' => route('courses.training.untrain', ['course' => $this->course, 'user' => $this->user], false),
                     'promote' => route('courses.training.promote', ['course' => $this->course, 'user' => $this->user], false),
                     'demote' => route('courses.training.demote', ['course' => $this->course, 'user' => $this->user], false),
+                    'removeFromWaitlist' => route('courses.training.remove-from-waitlist', ['course' => $this->course, 'user' => $this->user], false),
                 ];
             }
         );

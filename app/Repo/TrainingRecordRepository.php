@@ -246,18 +246,29 @@ class TrainingRecordRepository extends DBRepository
     }
     
     /**
+     * The training waitlist: members who have registered interest and are not
+     * yet trained, longest-waiting first (`created_at` is the waiting-since
+     * timestamp). Members with an unexpired sign-off request are excluded —
+     * they appear in the pending sign-off list instead, and drop back to their
+     * original waitlist position if the request expires.
+     *
      * @param int $courseId
-     * @return mixed
+     * @return Collection
      */
-    public function getUsersPendingTrainingForCourse($courseId)
+    public function getWaitlistForCourse($courseId)
     {
         $users = $this->model->with('user', 'user.profile')
             ->where('course_id', $courseId)
             ->whereNull('trained')
-            ->orderBy('created_at', 'desc')
+            ->where('is_trainer', false)
+            ->where(function ($query) {
+                $query->whereNull('sign_off_requested_at')
+                    ->orWhere('sign_off_requested_at', '<', Carbon::now()->subHours(TrainingRecord::SIGN_OFF_EXPIRATION_HOURS));
+            })
+            ->orderBy('created_at', 'asc')
             ->get();
-        return $users->filter(function ($trainer) {
-            return $trainer->user && $trainer->user->active;
+        return $users->filter(function ($record) {
+            return $record->user && $record->user->active;
         });
     }
     

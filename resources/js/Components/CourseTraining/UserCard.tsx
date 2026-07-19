@@ -1,30 +1,20 @@
 import React from 'react';
 import { Box, Typography, Stack, Tooltip, Paper, Avatar } from '@mui/material';
 import { TrainingRecordResource } from '../../types/resources';
+import { formatDateRelative } from '../../utils/formatDateRelative';
 
 type Props = {
   trainingRecord: TrainingRecordResource;
   actions?: React.ReactNode;
+  // Replaces the default date captions (an expired sign-off request date would
+  // be misleading in contexts like the waitlist); the Trainer badge remains.
+  caption?: React.ReactNode;
 };
 
-const UserCard: React.FC<Props> = ({ trainingRecord, actions }) => {
+const UserCard: React.FC<Props> = ({ trainingRecord, actions, caption }) => {
   if (!trainingRecord.user) {
     return null;
   }
-
-  const formatDateRelative = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'today';
-    if (diffDays === 1) return 'yesterday';
-    if (diffDays < 7) return `${diffDays}d ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
-    return date.toLocaleDateString();
-  };
 
   return (
     <Paper
@@ -60,7 +50,9 @@ const UserCard: React.FC<Props> = ({ trainingRecord, actions }) => {
         </Stack>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          {trainingRecord.sign_off_requested_at && (
+          {caption}
+
+          {!caption && trainingRecord.sign_off_requested_at && (
             <Tooltip title={new Date(trainingRecord.sign_off_requested_at).toLocaleString()}>
               <Typography variant="caption" color="warning.main">
                 Requested {formatDateRelative(trainingRecord.sign_off_requested_at)}
@@ -68,7 +60,7 @@ const UserCard: React.FC<Props> = ({ trainingRecord, actions }) => {
             </Tooltip>
           )}
 
-          {trainingRecord.trained && (
+          {!caption && trainingRecord.trained && (
             <Tooltip title={`Trained on ${new Date(trainingRecord.trained).toLocaleString()}`}>
               <Typography variant="caption" color="text.secondary">
                 Trained {formatDateRelative(trainingRecord.trained)}

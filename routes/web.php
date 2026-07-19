@@ -168,6 +168,8 @@ Route::group(['middleware' => 'role:member'], function() {
 
     Route::group(['prefix' => 'courses/{course}', 'as' => 'courses.'], function() {
         Route::post('/request-sign-off', ['uses' => 'CourseTrainingRecordController@store', 'as' => 'request-sign-off']);
+        Route::post('/interest', ['uses' => 'CourseInterestController@store', 'as' => 'interest.store']);
+        Route::delete('/interest', ['uses' => 'CourseInterestController@destroy', 'as' => 'interest.destroy']);
     });
 
     Route::group(['prefix' => 'courses/{course}/training', 'as' => 'courses.training.'], function() {
@@ -177,6 +179,7 @@ Route::group(['middleware' => 'role:member'], function() {
         Route::post('/untrain/{user}', ['uses' => 'CourseTrainingController@untrain', 'as' => 'untrain']);
         Route::post('/promote/{user}', ['uses' => 'CourseTrainingController@promote', 'as' => 'promote']);
         Route::post('/demote/{user}', ['uses' => 'CourseTrainingController@demote', 'as' => 'demote']);
+        Route::delete('/waitlist/{user}', ['uses' => 'CourseTrainingController@removeFromWaitlist', 'as' => 'remove-from-waitlist']);
     });
 });
 

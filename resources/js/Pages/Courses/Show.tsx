@@ -35,6 +35,7 @@ type Props = {
     update: boolean;
     delete: boolean;
     viewTraining: boolean;
+    registerInterest: boolean;
   };
   urls: {
     index: string;
@@ -42,6 +43,7 @@ type Props = {
     destroy: string;
     training: string;
     requestSignOff: string | null;
+    interest: string;
   };
 };
 
@@ -182,6 +184,8 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
           course={course}
           userCourseTrainingRecord={course.user_course_training_record || null}
           requestSignOffUrl={urls.requestSignOff}
+          interestUrl={urls.interest}
+          canRegisterInterest={can.registerInterest}
         />
 
         <EquipmentAccessTable
