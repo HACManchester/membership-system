@@ -82,6 +82,29 @@ export type CourseResource = {
   };
 };
 
+export type EquipmentListResource = {
+  id: number;
+  name: string;
+  slug: string;
+  requires_induction: boolean;
+  accepting_inductions: boolean;
+  working: boolean;
+  permaloan: boolean;
+  dangerous: boolean;
+  lone_working: boolean;
+  photo_url: string | null;
+  room_display: string | null;
+  trained: boolean;
+  access_code?: string;
+  can: {
+    update: boolean;
+  };
+  urls: {
+    show: string;
+    edit: string;
+  };
+};
+
 export type RoomResource = {
   id: number;
   name: string;

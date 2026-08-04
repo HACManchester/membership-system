@@ -2,7 +2,6 @@
 
 namespace BB\Http\Resources;
 
-use BB\Support\RoomOptions;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -40,8 +39,8 @@ class EquipmentResource extends JsonResource
             'permaloan' => $this->permaloan,
             'dangerous' => $this->dangerous,
             'lone_working' => $this->lone_working,
-            'room' => $this->room,
-            'room_display' => RoomOptions::getDisplayName($this->room),
+            'room' => optional($this->roomModel)->slug,
+            'room_display' => optional($this->roomModel)->name,
             'ppe' => $this->present()->ppeLabels(),
             'photo_url' => $this->hasPhoto() ? $this->getPhotoUrl(0) : null,
             'induction_category' => $this->induction_category,

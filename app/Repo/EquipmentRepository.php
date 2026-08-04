@@ -73,7 +73,8 @@ class EquipmentRepository extends DBRepository
      */
     public function getEquipmentWithoutLiveCourse()
     {
-        return $this->model->where('requires_induction', true)
+        return $this->model->with('roomModel')
+            ->where('requires_induction', true)
             ->where(function ($query) {
                 // Equipment without any courses
                 $query->whereDoesntHave('courses')
@@ -97,7 +98,8 @@ class EquipmentRepository extends DBRepository
      */
     public function getEquipmentForCourseCreation()
     {
-        return $this->model->whereDoesntHave('courses')
+        return $this->model->with('roomModel')
+            ->whereDoesntHave('courses')
             ->where(function ($query) {
                 $query->whereNull('induction_category')
                     ->orWhere('induction_category', '');

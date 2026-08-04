@@ -7,6 +7,7 @@ use BB\Entities\EquipmentArea;
 use BB\Entities\TrainingRecord;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Role;
+use BB\Entities\Room;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -102,7 +103,22 @@ class EquipmentTest extends TestCase
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
         $response->assertStatus(200);
-        $response->assertViewHas('equipmentByRoom');
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Index')->has('equipment');
+        });
+    }
+
+    /** @test */
+    public function equipment_index_exposes_room_display_from_the_related_room()
+    {
+        $room = factory(Room::class)->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
+        $equipment = factory(Equipment::class)->create(['room_id' => $room->id]);
+
+        $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
+
+        $items = collect($response->viewData('page')['props']['equipment']);
+        $item = $items->firstWhere('id', $equipment->id);
+        $this->assertSame('The Workshop', $item['room_display']);
     }
 
     /** @test */
@@ -266,8 +282,13 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($trainedUser)->get(route('equipment.index'));
         $response->assertStatus(200);
-        $response->assertSee('SECRET123');
-        $response->assertSee('Access Code');
+
+        $equipment = collect($response->viewData('page')['props']['equipment']);
+        $this->assertTrue(
+            $equipment->contains(function ($item) {
+                return ($item['access_code'] ?? null) === 'SECRET123';
+            })
+        );
     }
 
     /** @test */
@@ -275,7 +296,13 @@ class EquipmentTest extends TestCase
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
         $response->assertStatus(200);
-        $response->assertDontSee('SECRET123');
+
+        $equipment = collect($response->viewData('page')['props']['equipment']);
+        $this->assertFalse(
+            $equipment->contains(function ($item) {
+                return array_key_exists('access_code', $item);
+            })
+        );
     }
 
     /** @test */

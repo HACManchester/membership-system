@@ -116,7 +116,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        $course->load('equipment.courses');
+        $course->load('equipment.courses', 'equipment.roomModel');
         $user = auth()->user();
 
         return Inertia::render('Courses/Show', [
@@ -148,7 +148,7 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $course->load('equipment');
-        $equipment = Equipment::orderBy('name')->get();
+        $equipment = Equipment::with('roomModel')->orderBy('name')->get();
 
         return Inertia::render('Courses/Edit', [
             'course' => (new CourseResource($course))->additional([

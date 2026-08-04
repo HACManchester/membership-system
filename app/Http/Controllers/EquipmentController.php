@@ -5,9 +5,11 @@ namespace BB\Http\Controllers;
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Room;
+use BB\Entities\TrainingRecord;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
+use BB\Http\Resources\EquipmentListResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
@@ -16,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 use Input;
 
 class EquipmentController extends Controller
@@ -55,24 +58,36 @@ class EquipmentController extends Controller
 
     public function index()
     {
+        /** @var \BB\Entities\User $user */
         $user = \Auth::user();
-        $allTools = $this->equipmentRepository->getAll();
-        $allTools->load('courses');
+        $equipment = $this->equipmentRepository->getAll();
+        $equipment->load(['courses', 'roomModel']);
 
-        $equipmentWithTrainingStatus = $allTools->map(function (Equipment $equipment) use ($user) {
-            $trained = $this->trainingRecordRepository->isUserTrained($equipment, $user->id);
+        // Resolve the viewer's training status for the whole catalogue up front,
+        // rather than one query per item, honouring both the course and legacy-key
+        // linkage.
+        $trained = TrainingRecord::where('user_id', $user->id)
+            ->whereNotNull('trained')
+            ->get(['course_id', 'key']);
+        $trainedCourseIds = $trained->pluck('course_id')->filter()->unique();
+        $trainedKeys = $trained->pluck('key')->filter()->unique();
 
-            return [
-                'equipment' => $equipment,
-                'trained' => $equipment->requires_induction && $trained
-            ];
+        $equipment->each(function (Equipment $item) use ($trainedCourseIds, $trainedKeys) {
+            $viaCourse = $item->courses->pluck('id')->intersect($trainedCourseIds)->isNotEmpty();
+            $viaKey = ! empty($item->induction_category)
+                && $trainedKeys->contains($item->induction_category);
+            $item->setAttribute('trained_for_user', $item->requires_induction && ($viaCourse || $viaKey));
         });
 
-        $equipmentByRoom = $equipmentWithTrainingStatus->groupBy('equipment.room')->sort();
-
-        return \View::make('equipment.index')
-            ->with('equipmentByRoom', $equipmentByRoom)
-            ->with('roomList', $this->roomList());
+        return Inertia::render('Equipment/Index', [
+            'equipment' => EquipmentListResource::collection($equipment),
+            'can' => [
+                'create' => $user->can('create', Equipment::class),
+            ],
+            'urls' => [
+                'create' => route('equipment.create', [], false),
+            ],
+        ]);
     }
 
     /**
