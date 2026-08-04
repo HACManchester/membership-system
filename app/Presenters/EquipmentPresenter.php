@@ -1,7 +1,6 @@
 <?php namespace BB\Presenters;
 
 use BB\Support\PpeOptions;
-use BB\Support\RoomOptions;
 use Carbon\Carbon;
 use Laracasts\Presenter\Presenter;
 use Michelf\Markdown;
@@ -11,7 +10,7 @@ class EquipmentPresenter extends Presenter
 
     public function livesIn()
     {
-        $string = RoomOptions::getDisplayName($this->entity->room);
+        $string = optional($this->entity->roomModel)->name ?? '';
         if ($this->entity->detail) {
             $string .= ' (' . $this->entity->detail . ')';
         }

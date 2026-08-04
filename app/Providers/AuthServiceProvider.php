@@ -9,10 +9,12 @@ use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\TrainingRecord;
 use BB\Entities\KeyFob;
+use BB\Entities\Room;
 use BB\Entities\User;
 use BB\Entities\MaintainerGroup;
 use BB\Policies\EquipmentAreaPolicy;
 use BB\Policies\EquipmentPolicy;
+use BB\Policies\RoomPolicy;
 use BB\Policies\TrainingRecordPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
@@ -35,6 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         TrainingRecord::class => TrainingRecordPolicy::class,
         MaintainerGroup::class => MaintainerGroupPolicy::class,
         Course::class => CoursePolicy::class,
+        Room::class => RoomPolicy::class,
     ];
 
     /**

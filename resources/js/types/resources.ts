@@ -82,6 +82,17 @@ export type CourseResource = {
   };
 };
 
+export type RoomResource = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  equipment_count: number;
+  urls: {
+    show: string;
+  };
+};
+
 // Additional types for page props
 export type Member = {
   id: number;

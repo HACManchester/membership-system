@@ -107,6 +107,12 @@ class SidebarItems
                 'active' => self::isActive('stats.index')
             ],
             [
+                'label' => 'Rooms',
+                'href' => route('room.index'),
+                'active' => self::isActive('room.index'),
+                'visible' => $this->user->can('create', \BB\Entities\Room::class)
+            ],
+            [
                 'label' => 'Area Coordinators',
                 'href' => route('equipment_area.index'),
                 'active' => self::isActive('equipment_area.index')

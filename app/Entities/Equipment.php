@@ -42,7 +42,7 @@ class Equipment extends Model
         'model_number',
         'serial_number',
         'colour',
-        'room',
+        'room_id',
         'detail',
         'slug',
         'description',
@@ -130,6 +130,18 @@ class Equipment extends Model
     public function maintainerGroup(): BelongsTo
     {
         return $this->belongsTo(MaintainerGroup::class);
+    }
+
+    /**
+     * The room this equipment lives in.
+     *
+     * Named `roomModel` rather than `room` because the legacy `room` string
+     * column still exists and would shadow a relation of the same name. Rename
+     * to `room()` once that column is dropped (Phase 5).
+     */
+    public function roomModel(): BelongsTo
+    {
+        return $this->belongsTo(Room::class, 'room_id');
     }
 
     /**

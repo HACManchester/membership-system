@@ -33,7 +33,7 @@ class StoreEquipmentRequest extends FormRequest
             'model_number'              => '',
             'serial_number'             => '',
             'colour'                    => '',
-            'room'                      => 'required',
+            'room'                      => 'required|exists:rooms,slug',
             'detail'                    => '',
             'slug'                      => 'required|alpha_dash|unique:equipment,slug',
             'description'               => '',

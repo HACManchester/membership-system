@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
+use BB\Entities\Room;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
@@ -11,7 +12,6 @@ use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\PpeOptions;
-use BB\Support\RoomOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -71,7 +71,19 @@ class EquipmentController extends Controller
         $equipmentByRoom = $equipmentWithTrainingStatus->groupBy('equipment.room')->sort();
 
         return \View::make('equipment.index')
-            ->with('equipmentByRoom', $equipmentByRoom);
+            ->with('equipmentByRoom', $equipmentByRoom)
+            ->with('roomList', $this->roomList());
+    }
+
+    /**
+     * The admin-editable room list as a slug => name map, for the equipment
+     * form's room dropdown and the listing's group headings.
+     *
+     * @return array<string, string>
+     */
+    private function roomList(): array
+    {
+        return Room::orderBy('name')->pluck('name', 'slug')->toArray();
     }
 
     public function show(Equipment $equipment)
@@ -111,7 +123,7 @@ class EquipmentController extends Controller
             ->with('memberList', $memberList)
             ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
             ->with('ppeList', PpeOptions::all())
-            ->with('roomList', RoomOptions::all())
+            ->with('roomList', $this->roomList())
             ->with('trusted', true)
             ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
     }
@@ -146,7 +158,7 @@ class EquipmentController extends Controller
             ->with('memberList', $memberList)
             ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
             ->with('ppeList', PpeOptions::all())
-            ->with('roomList', RoomOptions::all());
+            ->with('roomList', $this->roomList());
     }
 
 

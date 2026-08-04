@@ -29,7 +29,7 @@
     @foreach ($equipmentByRoom as $k => $tools)
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title">Tools in {{ \BB\Support\RoomOptions::getLabel($k) }}</h3>
+                <h3 class="panel-title">Tools in {{ $roomList[$k] ?? \BB\Support\RoomOptions::getDisplayName($k) }}</h3>
             </div>
             <table class="table">
                 <thead>

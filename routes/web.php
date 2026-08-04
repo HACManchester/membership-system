@@ -148,6 +148,12 @@ Route::group(array('middleware' => 'role:member'), function () {
 
 
 ##########################
+# Rooms
+##########################
+
+Route::resource('room', 'RoomController');
+
+##########################
 # Equipment areas
 ##########################
 
