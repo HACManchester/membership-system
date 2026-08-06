@@ -13,6 +13,7 @@ type Props = {
   };
   urls: {
     create: string;
+    bulkCreate: string;
   };
 };
 
@@ -22,11 +23,18 @@ const Index = ({ equipment, can = { create: false }, urls }: Props) => {
   const actionButtons = (
     <Stack direction="row" spacing={1} justifyContent="flex-end">
       {can.create && (
-        <Link href={urls.create} underline="none">
-          <Button variant="contained" color="primary">
-            Record a new item
-          </Button>
-        </Link>
+        <>
+          <Link href={urls.bulkCreate} underline="none">
+            <Button variant="outlined" color="secondary">
+              Bulk add
+            </Button>
+          </Link>
+          <Link href={urls.create} underline="none">
+            <Button variant="contained" color="primary">
+              Record a new item
+            </Button>
+          </Link>
+        </>
       )}
     </Stack>
   );

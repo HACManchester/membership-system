@@ -8,6 +8,7 @@ use BB\Entities\MaintainerGroup;
 use BB\Entities\Room;
 use BB\Entities\TrainingRecord;
 use BB\Exceptions\ImageFailedException;
+use BB\Http\Requests\Equipment\BulkStoreEquipmentRequest;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
 use BB\Http\Resources\EquipmentFormResource;
@@ -89,6 +90,7 @@ class EquipmentController extends Controller
             ],
             'urls' => [
                 'create' => route('equipment.create', [], false),
+                'bulkCreate' => route('equipment.bulk-create', [], false),
             ],
         ]);
     }
@@ -236,6 +238,59 @@ class EquipmentController extends Controller
         return \Redirect::route('equipment.show', $equipment);
     }
 
+
+    public function bulkCreate()
+    {
+        $this->authorize('create', Equipment::class);
+
+        $shared = $this->formSharedProps();
+
+        return Inertia::render('Equipment/BulkCreate', [
+            'rooms' => $shared['rooms'],
+            'maintainerGroupOptions' => $shared['maintainerGroupOptions'],
+            'courseOptions' => $shared['courseOptions'],
+            'canManageGlobally' => $shared['canManageGlobally'],
+            'urls' => [
+                'index' => route('equipment.index', [], false),
+                'store' => route('equipment.bulk-store', [], false),
+            ],
+        ]);
+    }
+
+    public function bulkStore(BulkStoreEquipmentRequest $request)
+    {
+        $this->authorize('create', Equipment::class);
+
+        $validated = $request->validated();
+        $courseId = $validated['course_id'] ?? null;
+        $shared = [
+            'room_id' => $validated['room_id'],
+            'maintainer_group_id' => $validated['maintainer_group_id'] ?? null,
+        ];
+
+        $count = DB::transaction(function () use ($validated, $shared, $courseId) {
+            foreach ($validated['items'] as $item) {
+                $data = array_merge($shared, [
+                    'name' => $item['name'],
+                    'slug' => $item['slug'],
+                ]);
+                if ($courseId) {
+                    $data['requires_induction'] = true;
+                }
+
+                $equipment = Equipment::create($data);
+                if ($courseId) {
+                    $equipment->courses()->sync([$courseId]);
+                }
+            }
+
+            return count($validated['items']);
+        });
+
+        \FlashNotification::success("Created {$count} equipment item(s).");
+
+        return \Redirect::route('equipment.index');
+    }
 
     public function destroy(Equipment $equipment)
     {

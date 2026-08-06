@@ -140,6 +140,10 @@ Route::group(array('middleware' => 'role:member'), function () {
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
+    // Bulk-add routes are declared before the resource so `equipment/bulk`
+    // isn't captured by the `equipment/{equipment}` show route.
+    Route::get('equipment/bulk', ['uses' => 'EquipmentController@bulkCreate', 'as' => 'equipment.bulk-create']);
+    Route::post('equipment/bulk', ['uses' => 'EquipmentController@bulkStore', 'as' => 'equipment.bulk-store']);
     Route::resource('equipment', 'EquipmentController');
     Route::post('equipment/{equipment}/photo', ['uses' => 'EquipmentController@addPhoto', 'as' => 'equipment.photo.store']);
     Route::delete('equipment/{equipment}/photo/{key}', ['uses' => 'EquipmentController@destroyPhoto', 'as' => 'equipment.photo.destroy']);
