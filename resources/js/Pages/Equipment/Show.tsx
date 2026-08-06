@@ -29,6 +29,8 @@ import MarkdownRenderer from '../../Components/MarkdownRenderer';
 import EquipmentTrainingSections, {
   EquipmentTraining,
 } from '../../Components/Equipment/EquipmentTrainingSections';
+import EmbeddedCourseInduction from '../../Components/Equipment/EmbeddedCourseInduction';
+import { CourseResource, TrainingRecordResource } from '../../types/resources';
 import { router } from '@inertiajs/react';
 
 type Ppe = { key: string; label: string; image: string };
@@ -68,6 +70,13 @@ type Props = {
   userStatus: { hasRecord: boolean; trained: boolean; isTrainer: boolean };
   canRequestInduction: boolean;
   training: EquipmentTraining | null;
+  // Present only when a live course is attached (flags.liveCourse). The record
+  // and trainers are the equipment's dual-linkage results, so legacy-trained
+  // members read as trained.
+  course?: CourseResource;
+  courseUserRecord?: TrainingRecordResource | null;
+  courseTrainers?: TrainingRecordResource[];
+  courseCan?: { registerInterest: boolean; viewTraining: boolean };
   authUserId: number;
   can: { update: boolean; delete: boolean; train: boolean };
   urls: {
@@ -79,6 +88,10 @@ type Props = {
     emailTrainers: string;
     emailTrained: string;
     emailAwaiting: string;
+    courseShow?: string;
+    courseTraining?: string;
+    requestSignOff?: string;
+    courseInterest?: string;
   };
 };
 
@@ -97,11 +110,14 @@ const InfoRow = ({ label, children }: { label: string; children: React.ReactNode
 
 const Show = ({
   equipment,
-  courses,
   flags,
   userStatus,
   canRequestInduction,
   training,
+  course,
+  courseUserRecord,
+  courseTrainers,
+  courseCan,
   authUserId,
   can,
   urls,
@@ -131,20 +147,6 @@ const Show = ({
   // Induction status blocks — shown below the main equipment info, not above it.
   const inductionBlocks = (
     <>
-      {flags.liveCourse && (
-        <Alert severity="info">
-          <Typography gutterBottom>Training for this equipment is managed by:</Typography>
-          <ul style={{ margin: 0, paddingLeft: 18 }}>
-            {courses.map((course) => (
-              <li key={course.url}>
-                <Link href={course.url}>{course.name}</Link>
-              </li>
-            ))}
-          </ul>
-          <Typography sx={{ mt: 1 }}>Please visit the induction page to book training.</Typography>
-        </Alert>
-      )}
-
       {canRequestInduction && (
         <Alert
           severity="warning"
@@ -403,10 +405,27 @@ const Show = ({
           )}
         </Grid2>
 
-        {/* Induction & training — below the main information, deliberately secondary */}
-        <Stack spacing={2} sx={{ mt: 4 }}>
-          {inductionBlocks}
-        </Stack>
+        {/* Induction & training — below the main information, deliberately secondary.
+            A live course supersedes the legacy induction blocks with its embedded interface. */}
+        {flags.liveCourse && course ? (
+          <Box sx={{ mt: 4 }}>
+            <EmbeddedCourseInduction
+              course={course}
+              userRecord={courseUserRecord ?? null}
+              trainers={courseTrainers ?? []}
+              canRegisterInterest={courseCan?.registerInterest ?? false}
+              urls={{
+                courseShow: urls.courseShow ?? '',
+                requestSignOff: urls.requestSignOff ?? '',
+                courseInterest: urls.courseInterest ?? '',
+              }}
+            />
+          </Box>
+        ) : (
+          <Stack spacing={2} sx={{ mt: 4 }}>
+            {inductionBlocks}
+          </Stack>
+        )}
 
         {training && (
           <EquipmentTrainingSections

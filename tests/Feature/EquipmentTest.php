@@ -726,6 +726,82 @@ class EquipmentTest extends TestCase
             $page->component('Equipment/Show')->where('userStatus.trained', true);
         });
     }
+
+    /** @test */
+    public function show_embeds_a_live_course_interface_and_suppresses_legacy_training()
+    {
+        $course = factory(Course::class)->create([
+            'slug' => 'laser-cutting',
+            'frequency' => 'regular',
+            'live' => true,
+        ]);
+        $this->equipment->courses()->attach($course->id);
+
+        $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
+
+        $response->assertInertia(function ($page) use ($course) {
+            $page->component('Equipment/Show')
+                ->where('flags.liveCourse', true)
+                ->where('course.id', $course->id)
+                ->where('courseCan.registerInterest', true)
+                ->where('urls.courseShow', route('courses.show', 'laser-cutting', false))
+                ->where('urls.requestSignOff', route('courses.request-sign-off', 'laser-cutting', false))
+                ->where('urls.courseInterest', route('courses.interest.store', 'laser-cutting', false))
+                ->has('courseTrainers')
+                // The legacy trainer/trained/pending management payload is not built
+                // for course-managed equipment.
+                ->where('training', null);
+        });
+    }
+
+    /** @test */
+    public function show_keeps_a_legacy_trained_member_trained_after_a_live_course_is_attached()
+    {
+        // A member trained under the legacy system has a record keyed by the
+        // equipment's induction_category with no course_id. Attaching a live
+        // course whose slug differs from that key must not make them look
+        // untrained: the equipment's dual-linkage query still finds the record.
+        $legacyRecord = new TrainingRecord([
+            'key' => 'test-equipment',
+            'user_id' => $this->regularUser->id,
+            'trained' => now(),
+            'active' => true,
+            'is_trainer' => false,
+            'trainer_user_id' => $this->admin->id,
+        ]);
+        $legacyRecord->course_id = null;
+        $legacyRecord->save();
+
+        $course = factory(Course::class)->create(['slug' => 'a-different-slug', 'live' => true]);
+        $this->equipment->courses()->attach($course->id);
+
+        $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
+
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')
+                ->where('userStatus.trained', true)
+                ->where('courseUserRecord.trained', function ($trained) {
+                    return $trained !== null;
+                });
+        });
+    }
+
+    /** @test */
+    public function show_does_not_embed_a_non_live_course()
+    {
+        $course = factory(Course::class)->create(['slug' => 'draft-course', 'live' => false]);
+        $this->equipment->courses()->attach($course->id);
+
+        $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
+
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')
+                ->where('flags.liveCourse', false)
+                ->missing('course')
+                ->missing('courseUserRecord');
+        });
+    }
+
     /** @test */
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {

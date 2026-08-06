@@ -11,9 +11,11 @@ use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\BulkStoreEquipmentRequest;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
+use BB\Http\Resources\CourseResource;
 use BB\Http\Resources\EquipmentFormResource;
 use BB\Http\Resources\EquipmentListResource;
 use BB\Http\Resources\EquipmentShowResource;
+use BB\Http\Resources\TrainingRecordResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Support\PpeOptions;
@@ -118,7 +120,27 @@ class EquipmentController extends Controller
 
         $canTrain = $user->can('train', $equipment);
 
-        return Inertia::render('Equipment/Show', [
+        $liveCourseModel = $liveCourse ? $equipment->courses->first() : null;
+
+        $urls = [
+            'index' => route('equipment.index', [], false),
+            'edit' => route('equipment.edit', $equipment->slug, false),
+            'destroy' => route('equipment.destroy', $equipment->slug, false),
+            'requestInduction' => route('equipment_training.create', $equipment->slug, false),
+            'memberSearch' => route('members.search', [], false),
+            'emailTrainers' => route('notificationemail.equipment', [$equipment->slug, 'trainer'], false),
+            'emailTrained' => route('notificationemail.equipment', [$equipment->slug, 'trained'], false),
+            'emailAwaiting' => route('notificationemail.equipment', [$equipment->slug, 'awaiting_training'], false),
+        ];
+
+        if ($liveCourseModel) {
+            $urls['courseShow'] = route('courses.show', $liveCourseModel->slug, false);
+            $urls['courseTraining'] = route('courses.training.index', $liveCourseModel->slug, false);
+            $urls['requestSignOff'] = route('courses.request-sign-off', $liveCourseModel->slug, false);
+            $urls['courseInterest'] = route('courses.interest.store', $liveCourseModel->slug, false);
+        }
+
+        return Inertia::render('Equipment/Show', array_merge([
             'equipment' => new EquipmentShowResource($equipment),
             'courses' => $equipment->courses->map(function ($course) {
                 return [
@@ -152,17 +174,38 @@ class EquipmentController extends Controller
                 'delete' => $user->can('delete', $equipment),
                 'train' => $canTrain,
             ],
-            'urls' => [
-                'index' => route('equipment.index', [], false),
-                'edit' => route('equipment.edit', $equipment->slug, false),
-                'destroy' => route('equipment.destroy', $equipment->slug, false),
-                'requestInduction' => route('equipment_training.create', $equipment->slug, false),
-                'memberSearch' => route('members.search', [], false),
-                'emailTrainers' => route('notificationemail.equipment', [$equipment->slug, 'trainer'], false),
-                'emailTrained' => route('notificationemail.equipment', [$equipment->slug, 'trained'], false),
-                'emailAwaiting' => route('notificationemail.equipment', [$equipment->slug, 'awaiting_training'], false),
+            'urls' => $urls,
+        ], $liveCourseModel ? $this->liveCourseData($equipment, $liveCourseModel, $user, $userRecord) : []));
+    }
+
+    /**
+     * Shape the embedded live-course induction props for the show page.
+     *
+     * The member's own record and the trainers list are sourced from the
+     * equipment's dual-linkage query (course_id OR legacy induction key), NOT
+     * from CourseResource's course_id-only lookups — otherwise a member trained
+     * under the legacy system (whose record may carry no course_id) would wrongly
+     * appear untrained.
+     *
+     * @param  \BB\Entities\User  $user
+     * @param  \BB\Entities\TrainingRecord|false  $userRecord
+     * @return array
+     */
+    private function liveCourseData(Equipment $equipment, Course $course, $user, $userRecord): array
+    {
+        $course->load('equipment.courses', 'equipment.roomModel');
+
+        $trainers = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
+
+        return [
+            'course' => new CourseResource($course),
+            'courseUserRecord' => $userRecord ? new TrainingRecordResource($userRecord) : null,
+            'courseTrainers' => TrainingRecordResource::collection($trainers),
+            'courseCan' => [
+                'registerInterest' => $user->can('registerInterest', $course),
+                'viewTraining' => $user->can('viewTraining', $course),
             ],
-        ]);
+        ];
     }
 
     /**
