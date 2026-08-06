@@ -6,68 +6,129 @@ use BB\Entities\EquipmentArea;
 use BB\Entities\MaintainerGroup;
 use BB\Http\Requests\StoreMaintainerGroupRequest;
 use BB\Http\Requests\UpdateMaintainerGroupRequest;
-use BB\Repo\UserRepository;
+use BB\Http\Resources\MaintainerGroupResource;
 use FlashNotification;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class MaintainerGroupController extends Controller
 {
-    /** @var UserRepository */
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
-        $this->userRepository = $userRepository;
         $this->authorizeResource(MaintainerGroup::class, 'maintainer_group');
     }
 
     public function index()
     {
-        $maintainerGroups = MaintainerGroup::with('maintainers')->orderBy('name', 'ASC')->get();
-        return view('maintainer_groups.index', compact('maintainerGroups'));
+        $maintainerGroups = MaintainerGroup::with('maintainers.profile', 'equipmentArea')
+            ->withCount('equipment')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('MaintainerGroups/Index', [
+            'maintainerGroups' => MaintainerGroupResource::collection($maintainerGroups),
+            'can' => [
+                'create' => auth()->user()->can('create', MaintainerGroup::class),
+            ],
+            'urls' => [
+                'create' => route('maintainer_groups.create', [], false),
+            ],
+        ]);
     }
 
     public function create()
     {
-        $memberList = $this->userRepository->getAllAsDropdown();
-        $equipmentAreaOptions = EquipmentArea::orderBy('name', 'ASC')->pluck('name', 'id');
-
-        return view('maintainer_groups.create', compact('memberList', 'equipmentAreaOptions'));
+        return Inertia::render('MaintainerGroups/Create', [
+            'equipmentAreaOptions' => $this->areaOptions(),
+            'urls' => [
+                'index' => route('maintainer_groups.index', [], false),
+                'store' => route('maintainer_groups.store', [], false),
+            ],
+            'searchUrl' => route('members.search', [], false),
+        ]);
     }
 
     public function store(StoreMaintainerGroupRequest $request)
     {
-        $maintainerGroup = MaintainerGroup::create($request->all());
-        $maintainerGroup->maintainers()->sync($request->input('maintainers'));
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        return redirect()->route('maintainer_groups.show', $maintainerGroup);
+            // The description column is NOT NULL; default it when omitted.
+            $maintainerGroup = MaintainerGroup::create(array_merge(['description' => ''], $validated));
+            $maintainerGroup->maintainers()->sync($validated['maintainers'] ?? []);
+
+            FlashNotification::success("Maintainer Group, {$maintainerGroup->name}, created successfully.");
+
+            return redirect()->route('maintainer_groups.show', $maintainerGroup);
+        });
     }
 
     public function show(MaintainerGroup $maintainerGroup)
     {
-        return view('maintainer_groups.show', compact('maintainerGroup'));
+        $maintainerGroup->load('maintainers.profile', 'equipmentArea', 'equipment');
+        $user = auth()->user();
+
+        return Inertia::render('MaintainerGroups/Show', [
+            'maintainerGroup' => new MaintainerGroupResource($maintainerGroup),
+            'can' => [
+                'update' => $user->can('update', $maintainerGroup),
+                'delete' => $user->can('delete', $maintainerGroup),
+            ],
+            'urls' => [
+                'index' => route('maintainer_groups.index', [], false),
+                'edit' => route('maintainer_groups.edit', $maintainerGroup, false),
+                'destroy' => route('maintainer_groups.destroy', $maintainerGroup, false),
+            ],
+        ]);
     }
 
     public function edit(MaintainerGroup $maintainerGroup)
     {
-        $memberList = $this->userRepository->getAllAsDropdown();
-        $equipmentAreaOptions = EquipmentArea::orderBy('name', 'ASC')->pluck('name', 'id');
+        $maintainerGroup->load('maintainers.profile', 'equipmentArea');
 
-        return view('maintainer_groups.edit', compact('maintainerGroup', 'memberList', 'equipmentAreaOptions'));
+        return Inertia::render('MaintainerGroups/Edit', [
+            'maintainerGroup' => new MaintainerGroupResource($maintainerGroup),
+            'equipmentAreaOptions' => $this->areaOptions(),
+            'urls' => [
+                'index' => route('maintainer_groups.index', [], false),
+                'show' => route('maintainer_groups.show', $maintainerGroup, false),
+                'update' => route('maintainer_groups.update', $maintainerGroup, false),
+            ],
+            'searchUrl' => route('members.search', [], false),
+        ]);
     }
 
     public function update(UpdateMaintainerGroupRequest $request, MaintainerGroup $maintainerGroup)
     {
-        $maintainerGroup->update($request->all());
-        $maintainerGroup->maintainers()->sync($request->input('maintainers'));
+        return DB::transaction(function () use ($request, $maintainerGroup) {
+            $validated = $request->validated();
 
-        return redirect()->route('maintainer_groups.show', $maintainerGroup);
+            $maintainerGroup->update($validated);
+            $maintainerGroup->maintainers()->sync($validated['maintainers'] ?? []);
+
+            FlashNotification::success("Maintainer Group, {$maintainerGroup->name}, updated successfully.");
+
+            return redirect()->route('maintainer_groups.show', $maintainerGroup);
+        });
     }
 
     public function destroy(MaintainerGroup $maintainerGroup)
     {
         $maintainerGroup->delete();
-        FlashNotification::success("Equipment Area, {$maintainerGroup->name}, deleted successfully.");
+        FlashNotification::success("Maintainer Group, {$maintainerGroup->name}, deleted successfully.");
 
         return redirect()->route('maintainer_groups.index');
+    }
+
+    /**
+     * The equipment areas offered in the group's area selector.
+     *
+     * @return array<int, array{id: int, name: string}>
+     */
+    private function areaOptions(): array
+    {
+        return EquipmentArea::orderBy('name')->get()->map(function ($area) {
+            return ['id' => $area->id, 'name' => $area->name];
+        })->all();
     }
 }

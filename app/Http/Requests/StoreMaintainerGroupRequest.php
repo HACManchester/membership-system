@@ -4,6 +4,7 @@ namespace BB\Http\Requests;
 
 use BB\Entities\MaintainerGroup;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreMaintainerGroupRequest extends FormRequest
 {
@@ -18,6 +19,16 @@ class StoreMaintainerGroupRequest extends FormRequest
     }
 
     /**
+     * Derive a slug from the name when one isn't provided.
+     */
+    protected function prepareForValidation()
+    {
+        if (! $this->filled('slug') && $this->filled('name')) {
+            $this->merge(['slug' => Str::slug($this->input('name'))]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -26,10 +37,11 @@ class StoreMaintainerGroupRequest extends FormRequest
     {
         return [
             'name' => ['required', 'unique:maintainer_groups'],
-            'slug' => ['required', 'unique:maintainer_groups'],
-            'description' => [],
+            'slug' => ['required', 'alpha_dash', 'unique:maintainer_groups'],
+            'description' => ['nullable'],
             'equipment_area_id' => ['required', 'integer', 'exists:equipment_areas,id'],
-            'maintainers' => ['array', 'exists:users,id'],
+            'maintainers' => ['nullable', 'array'],
+            'maintainers.*' => ['exists:users,id'],
         ];
     }
 }

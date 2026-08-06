@@ -34,7 +34,7 @@ class UpdateMaintainerGroupRequest extends StoreMaintainerGroupRequest
             parent::rules(),
             [
                 'name' => ['required', Rule::unique('maintainer_groups')->ignore($maintainerGroup->id)],
-                'slug' => ['required', Rule::unique('maintainer_groups')->ignore($maintainerGroup->id)],
+                'slug' => ['required', 'alpha_dash', Rule::unique('maintainer_groups')->ignore($maintainerGroup->id)],
             ]
         );
     }
