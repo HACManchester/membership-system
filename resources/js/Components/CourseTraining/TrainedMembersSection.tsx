@@ -17,21 +17,26 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UserCard from './UserCard';
 import BulkTrainingForm from './BulkTrainingForm';
-import { TrainingRecordResource, Member } from '../../types/resources';
+import { TrainingRecordResource } from '../../types/resources';
 
 type Props = {
   trainedUsers: TrainingRecordResource[];
-  memberList: Member[];
+  memberSearchUrl: string;
   bulkTrainUrl: string;
 };
 
-const TrainedMembersSection: React.FC<Props> = ({ trainedUsers, memberList, bulkTrainUrl }) => {
+const TrainedMembersSection: React.FC<Props> = ({
+  trainedUsers,
+  memberSearchUrl,
+  bulkTrainUrl,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const nonTrainerTrainedUsers = trainedUsers.filter((user) => !user.is_trainer);
 
-  // Filter out already trained members from the member list
-  const trainedUserIds = new Set(trainedUsers.map((user) => user.user?.id).filter(Boolean));
-  const availableMembers = memberList.filter((member) => !trainedUserIds.has(member.id));
+  // Already-trained members are excluded from the bulk-add search results.
+  const trainedUserIds = trainedUsers
+    .map((user) => user.user?.id)
+    .filter((id): id is number => typeof id === 'number');
 
   return (
     <Card>
@@ -96,7 +101,11 @@ const TrainedMembersSection: React.FC<Props> = ({ trainedUsers, memberList, bulk
           </Collapse>
         </Box>
 
-        <BulkTrainingForm memberList={availableMembers} bulkTrainUrl={bulkTrainUrl} />
+        <BulkTrainingForm
+          memberSearchUrl={memberSearchUrl}
+          excludeIds={trainedUserIds}
+          bulkTrainUrl={bulkTrainUrl}
+        />
       </Stack>
     </Card>
   );

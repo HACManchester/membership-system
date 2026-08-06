@@ -31,6 +31,37 @@ class MembersController extends Controller
         return \View::make('members.index')->with('users', $users);
     }
 
+    /**
+     * Lightweight active-member search for async pickers — returns id + display
+     * label matching the member dropdown, so nothing has to be shipped up front.
+     */
+    public function search(\Illuminate\Http\Request $request)
+    {
+        $q = trim((string) $request->input('q', ''));
+
+        $members = User::where('active', true)
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('display_name', 'like', "%{$q}%")
+                        ->orWhere('given_name', 'like', "%{$q}%")
+                        ->orWhere('family_name', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('display_name')
+            ->limit(20)
+            ->get()
+            ->map(function (User $member) {
+                $label = $member->name;
+                if (! $member->suppress_real_name) {
+                    $label .= " ({$member->given_name} {$member->family_name})";
+                }
+
+                return ['id' => $member->id, 'name' => $label];
+            });
+
+        return response()->json($members);
+    }
+
     public function show($id)
     {
         $user = User::findOrFail($id);

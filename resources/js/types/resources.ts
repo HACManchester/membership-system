@@ -120,6 +120,7 @@ export type EquipmentFormResource = {
   working: boolean;
   permaloan: boolean;
   permaloan_user_id: number | null;
+  permaloan_user: Member | null;
   dangerous: boolean;
   lone_working: boolean;
   ppe: string[];

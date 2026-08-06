@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TextField,
   Button,
@@ -16,8 +16,11 @@ import {
   Autocomplete,
   Stack,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import MarkdownTextField from './MarkdownTextField';
+import { Member } from '../types/resources';
+import { useMemberSearch } from '../hooks/useMemberSearch';
 
 export type EquipmentFormData = {
   name: string;
@@ -63,7 +66,8 @@ type Props = {
   rooms: Record<string, string>;
   maintainerGroupOptions: Record<string, string>;
   ppeOptions: Record<string, string>;
-  memberList: Record<string, string>;
+  memberSearchUrl: string;
+  initialPermaloanHolder: Member | null;
   usageCostPerOptions: Record<string, string>;
   courseOptions: { id: number; name: string; live: boolean }[];
   canManageGlobally: boolean;
@@ -96,13 +100,18 @@ const EquipmentForm = ({
   rooms,
   maintainerGroupOptions,
   ppeOptions,
-  memberList,
+  memberSearchUrl,
+  initialPermaloanHolder,
   usageCostPerOptions,
   courseOptions,
   canManageGlobally,
 }: Props) => {
-  const members = Object.entries(memberList).map(([id, name]) => ({ id: Number(id), name }));
-  const selectedMember = members.find((m) => m.id === data.permaloan_user_id) || null;
+  const [selectedMember, setSelectedMember] = useState<Member | null>(initialPermaloanHolder);
+  const {
+    members: memberOptions,
+    searching: searchingMembers,
+    search: searchMembers,
+  } = useMemberSearch(memberSearchUrl);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
@@ -259,6 +268,7 @@ const EquipmentForm = ({
                   // Clear the holder when permaloan is switched off so a stale
                   // selection isn't kept (and later submitted).
                   if (!enabled) {
+                    setSelectedMember(null);
                     setData('permaloan_user_id', '');
                   }
                 }}
@@ -271,16 +281,33 @@ const EquipmentForm = ({
         {data.permaloan && (
           <Grid2 size={12}>
             <Autocomplete
-              options={members}
+              options={memberOptions}
               getOptionLabel={(option) => option.name}
+              filterOptions={(x) => x}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              loading={searchingMembers}
               value={selectedMember}
-              onChange={(_, option) => setData('permaloan_user_id', option ? option.id : '')}
+              onChange={(_, option) => {
+                setSelectedMember(option);
+                setData('permaloan_user_id', option ? option.id : '');
+              }}
+              onInputChange={(_, value) => searchMembers(value)}
+              noOptionsText="Type to search members"
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Permaloan holder"
                   error={!!errors.permaloan_user_id}
                   helperText={errors.permaloan_user_id}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {searchingMembers ? <CircularProgress size={18} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
                 />
               )}
             />

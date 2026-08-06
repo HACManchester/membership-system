@@ -10,7 +10,7 @@ type Props = {
   rooms: Record<string, string>;
   maintainerGroupOptions: Record<string, string>;
   ppeOptions: Record<string, string>;
-  memberList: Record<string, string>;
+  memberSearch: string;
   usageCostPerOptions: Record<string, string>;
   courseOptions: { id: number; name: string; live: boolean }[];
   canManageGlobally: boolean;
@@ -55,7 +55,7 @@ const Create = ({
   rooms,
   maintainerGroupOptions,
   ppeOptions,
-  memberList,
+  memberSearch,
   usageCostPerOptions,
   courseOptions,
   canManageGlobally,
@@ -95,7 +95,8 @@ const Create = ({
                   rooms={rooms}
                   maintainerGroupOptions={maintainerGroupOptions}
                   ppeOptions={ppeOptions}
-                  memberList={memberList}
+                  memberSearchUrl={memberSearch}
+                  initialPermaloanHolder={null}
                   usageCostPerOptions={usageCostPerOptions}
                   courseOptions={courseOptions}
                   canManageGlobally={canManageGlobally}

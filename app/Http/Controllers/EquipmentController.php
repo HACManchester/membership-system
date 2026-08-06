@@ -16,7 +16,6 @@ use BB\Http\Resources\EquipmentListResource;
 use BB\Http\Resources\EquipmentShowResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
-use BB\Repo\UserRepository;
 use BB\Support\PpeOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,23 +38,16 @@ class EquipmentController extends Controller
      */
     private $equipmentRepository;
 
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
     /** @var \Illuminate\Filesystem\FilesystemAdapter */
     protected $disk;
 
 
     function __construct(
         TrainingRecordRepository $trainingRecordRepository,
-        EquipmentRepository $equipmentRepository,
-        UserRepository $userRepository
+        EquipmentRepository $equipmentRepository
     ) {
         $this->trainingRecordRepository    = $trainingRecordRepository;
         $this->equipmentRepository    = $equipmentRepository;
-        $this->userRepository         = $userRepository;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
@@ -154,7 +146,6 @@ class EquipmentController extends Controller
             'training' => ($useLegacyInduction && $canTrain)
                 ? $this->legacyTrainingData($equipment, $user)
                 : null,
-            'memberList' => $canTrain ? $this->userRepository->getAllAsDropdown() : (object) [],
             'authUserId' => $user->id,
             'can' => [
                 'update' => $user->can('update', $equipment),
@@ -166,6 +157,7 @@ class EquipmentController extends Controller
                 'edit' => route('equipment.edit', $equipment->slug, false),
                 'destroy' => route('equipment.destroy', $equipment->slug, false),
                 'requestInduction' => route('equipment_training.create', $equipment->slug, false),
+                'memberSearch' => route('members.search', [], false),
                 'emailTrainers' => route('notificationemail.equipment', [$equipment->slug, 'trainer'], false),
                 'emailTrained' => route('notificationemail.equipment', [$equipment->slug, 'trained'], false),
                 'emailAwaiting' => route('notificationemail.equipment', [$equipment->slug, 'awaiting_training'], false),
@@ -268,7 +260,7 @@ class EquipmentController extends Controller
             'rooms' => $this->roomList(),
             'maintainerGroupOptions' => MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id'),
             'ppeOptions' => PpeOptions::all(),
-            'memberList' => $this->userRepository->getAllAsDropdown(),
+            'memberSearch' => route('members.search', [], false),
             'usageCostPerOptions' => ['hour' => 'hour', 'gram' => 'gram', 'page' => 'page'],
             'courseOptions' => Course::orderBy('name')->get(['id', 'name', 'live'])
                 ->map(function (Course $course) {
@@ -315,7 +307,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        $equipment->load('roomModel', 'courses');
+        $equipment->load('roomModel', 'courses', 'permaloanUser');
 
         return Inertia::render('Equipment/Edit', array_merge($this->formSharedProps(), [
             'equipment' => new EquipmentFormResource($equipment),

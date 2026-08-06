@@ -145,6 +145,11 @@ class Equipment extends Model
         return $this->belongsTo(Room::class, 'room_id');
     }
 
+    public function permaloanUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'permaloan_user_id');
+    }
+
     /**
      * Does the equipment need an induction to use it
      *

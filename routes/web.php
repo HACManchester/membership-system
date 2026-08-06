@@ -71,6 +71,9 @@ Route::get('links/forum', ['uses' => 'LinksController@forum', 'as' => 'links.for
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
+    // Declared before the resource so `members/search` isn't captured by show.
+    Route::get('members/search', ['uses' => 'MembersController@search', 'as' => 'members.search'])
+        ->middleware('can:search-members');
     Route::resource('members', 'MembersController', ['only' => ['index', 'show',]]);
 });
 

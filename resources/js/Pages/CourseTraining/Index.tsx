@@ -6,7 +6,7 @@ import PendingSignOffSection from '../../Components/CourseTraining/PendingSignOf
 import WaitlistSection from '../../Components/CourseTraining/WaitlistSection';
 import TrainersManagementSection from '../../Components/CourseTraining/TrainersManagementSection';
 import TrainedMembersSection from '../../Components/CourseTraining/TrainedMembersSection';
-import { TrainingRecordResource, CourseResource, Member } from '../../types/resources';
+import { TrainingRecordResource, CourseResource } from '../../types/resources';
 
 type Props = {
   course: CourseResource;
@@ -14,9 +14,9 @@ type Props = {
   trainedUsers: TrainingRecordResource[];
   usersPendingSignOff: TrainingRecordResource[];
   waitlist: TrainingRecordResource[];
-  memberList: Member[];
   urls: {
     bulkTrain: string;
+    memberSearch: string;
     back: string;
   };
 };
@@ -27,7 +27,6 @@ const TrainingIndex = ({
   trainedUsers,
   usersPendingSignOff,
   waitlist,
-  memberList,
   urls,
 }: Props) => {
   const actionButtons = (
@@ -69,7 +68,7 @@ const TrainingIndex = ({
 
         <TrainedMembersSection
           trainedUsers={trainedUsers}
-          memberList={memberList}
+          memberSearchUrl={urls.memberSearch}
           bulkTrainUrl={urls.bulkTrain}
         />
       </Container>

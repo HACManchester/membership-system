@@ -43,19 +43,15 @@ class CourseTrainingController extends Controller
         $waitlist = $this->trainingRecordRepository->getWaitlistForCourse($course->id);
         $waitlist->load(['course', 'user.profile']);
 
-        $memberList = $this->userRepository->getAllAsDropdown();
-
         return Inertia::render('CourseTraining/Index', [
             'course' => new CourseResource($course),
             'trainers' => TrainingRecordResource::collection($trainers),
             'trainedUsers' => TrainingRecordResource::collection($trainedUsers),
             'usersPendingSignOff' => TrainingRecordResource::collection($usersPendingSignOff),
             'waitlist' => TrainingRecordResource::collection($waitlist),
-            'memberList' => collect($memberList)->map(function($name, $id) {
-                return ['id' => $id, 'name' => $name];
-            })->values(),
             'urls' => [
                 'bulkTrain' => route('courses.training.bulk-train', $course, false),
+                'memberSearch' => route('members.search', [], false),
                 'back' => route('courses.show', $course, false),
             ],
         ]);

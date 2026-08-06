@@ -29,6 +29,12 @@ class EquipmentFormResource extends JsonResource
             'working' => (bool) $this->working,
             'permaloan' => (bool) $this->permaloan,
             'permaloan_user_id' => $this->permaloan_user_id,
+
+            // The current permaloan holder, so the form can label the async member
+            // picker without shipping the whole member list.
+            'permaloan_user' => $this->permaloanUser
+                ? ['id' => $this->permaloanUser->id, 'name' => $this->permaloanUser->name]
+                : null,
             'dangerous' => (bool) $this->dangerous,
             'lone_working' => (bool) $this->lone_working,
             'ppe' => $this->ppe,

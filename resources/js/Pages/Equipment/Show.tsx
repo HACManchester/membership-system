@@ -68,7 +68,6 @@ type Props = {
   userStatus: { hasRecord: boolean; trained: boolean; isTrainer: boolean };
   canRequestInduction: boolean;
   training: EquipmentTraining | null;
-  memberList: Record<string, string>;
   authUserId: number;
   can: { update: boolean; delete: boolean; train: boolean };
   urls: {
@@ -76,6 +75,7 @@ type Props = {
     edit: string;
     destroy: string;
     requestInduction: string;
+    memberSearch: string;
     emailTrainers: string;
     emailTrained: string;
     emailAwaiting: string;
@@ -102,7 +102,6 @@ const Show = ({
   userStatus,
   canRequestInduction,
   training,
-  memberList,
   authUserId,
   can,
   urls,
@@ -413,10 +412,10 @@ const Show = ({
           <EquipmentTrainingSections
             training={training}
             can={{ train: can.train }}
-            memberList={memberList}
             authUserId={authUserId}
             urls={{
               requestInduction: urls.requestInduction,
+              memberSearch: urls.memberSearch,
               emailTrainers: urls.emailTrainers,
               emailTrained: urls.emailTrained,
               emailAwaiting: urls.emailAwaiting,

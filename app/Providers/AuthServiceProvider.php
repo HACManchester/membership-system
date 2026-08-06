@@ -21,6 +21,7 @@ use BB\Policies\MaintainerGroupPolicy;
 use BB\Policies\CoursePolicy;
 use BB\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -46,5 +47,15 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        // The member-search endpoint backs the training pickers, so restrict it to
+        // the people who manage inductions rather than every logged-in member.
+        Gate::define('search-members', function (User $user) {
+            return $user->isAdmin()
+                || $user->hasRole('equipment')
+                || $user->maintainerGroups()->exists()
+                || $user->equipmentAreas()->exists()
+                || TrainingRecord::where('user_id', $user->id)->where('is_trainer', true)->exists();
+        });
     }
 }

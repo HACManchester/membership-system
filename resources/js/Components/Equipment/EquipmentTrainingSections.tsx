@@ -12,12 +12,15 @@ import {
   Tooltip,
   Autocomplete,
   TextField,
+  CircularProgress,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import SchoolIcon from '@mui/icons-material/School';
 import EmailIcon from '@mui/icons-material/Email';
 import { router } from '@inertiajs/react';
+import { useMemberSearch } from '../../hooks/useMemberSearch';
+import { Member } from '../../types/resources';
 
 type TrainingUser = {
   id: number;
@@ -59,10 +62,10 @@ export type EquipmentTraining = {
 type Props = {
   training: EquipmentTraining;
   can: { train: boolean };
-  memberList: Record<string, string>;
   authUserId: number;
   urls: {
     requestInduction: string;
+    memberSearch: string;
     emailTrainers: string;
     emailTrained: string;
     emailAwaiting: string;
@@ -91,10 +94,13 @@ const EmailButton = ({ href }: { href: string }) => (
   </Button>
 );
 
-const EquipmentTrainingSections = ({ training, can, memberList, authUserId, urls }: Props) => {
-  const [memberToAdd, setMemberToAdd] = useState<{ id: number; name: string } | null>(null);
-
-  const members = Object.entries(memberList).map(([id, name]) => ({ id: Number(id), name }));
+const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) => {
+  const [memberToAdd, setMemberToAdd] = useState<Member | null>(null);
+  const {
+    members: memberOptions,
+    searching,
+    search: searchMembers,
+  } = useMemberSearch(urls.memberSearch);
 
   const post = (url: string, data: Record<string, number> = {}) =>
     router.post(url, data, { preserveScroll: true });
@@ -267,13 +273,31 @@ const EquipmentTrainingSections = ({ training, can, memberList, authUserId, urls
           {can.train && (
             <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 3 }}>
               <Autocomplete
-                options={members}
+                options={memberOptions}
                 getOptionLabel={(option) => option.name}
+                filterOptions={(x) => x}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                loading={searching}
                 value={memberToAdd}
                 onChange={(_, option) => setMemberToAdd(option)}
-                sx={{ minWidth: 260 }}
+                onInputChange={(_, value) => searchMembers(value)}
+                noOptionsText="Type to search members"
+                sx={{ minWidth: 280 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Add a member" size="small" />
+                  <TextField
+                    {...params}
+                    label="Add a member"
+                    size="small"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {searching ? <CircularProgress size={18} /> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
                 )}
               />
               <Button variant="outlined" onClick={addMember} disabled={!memberToAdd}>

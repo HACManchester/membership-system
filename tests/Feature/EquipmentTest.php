@@ -275,6 +275,23 @@ class EquipmentTest extends TestCase
     }
 
     /** @test */
+    public function edit_exposes_the_permaloan_holder_and_a_member_search_url()
+    {
+        $holder = factory(User::class)->create();
+        $this->equipment->forceFill([
+            'permaloan' => true,
+            'permaloan_user_id' => $holder->id,
+        ])->save();
+
+        $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
+            ->assertInertia(function ($page) use ($holder) {
+                $page->component('Equipment/Edit')
+                    ->where('equipment.permaloan_user.id', $holder->id)
+                    ->where('memberSearch', route('members.search', [], false));
+            });
+    }
+
+    /** @test */
     public function edit_of_a_legacy_record_has_no_course_but_keeps_its_category()
     {
         $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
@@ -709,7 +726,6 @@ class EquipmentTest extends TestCase
             $page->component('Equipment/Show')->where('userStatus.trained', true);
         });
     }
-
     /** @test */
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {
@@ -842,7 +858,6 @@ class EquipmentTest extends TestCase
         $response->assertRedirect(route('equipment.show', 'orphan'));
         $this->assertDatabaseHas('equipment', ['slug' => 'orphan', 'name' => 'Orphan Renamed']);
     }
-
 
     /** @test */
     public function updating_the_slug_redirects_to_the_new_slug()
