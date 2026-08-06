@@ -4,6 +4,7 @@ namespace BB\Http\Requests;
 
 use BB\Entities\EquipmentArea;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreEquipmentAreaRequest extends FormRequest
 {
@@ -18,6 +19,16 @@ class StoreEquipmentAreaRequest extends FormRequest
     }
 
     /**
+     * Derive a slug from the name when one isn't provided.
+     */
+    protected function prepareForValidation()
+    {
+        if (! $this->filled('slug') && $this->filled('name')) {
+            $this->merge(['slug' => Str::slug($this->input('name'))]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -26,9 +37,10 @@ class StoreEquipmentAreaRequest extends FormRequest
     {
         return [
             'name' => ['required', 'unique:equipment_areas'],
-            'slug' => ['required', 'unique:equipment_areas'],
-            'description' => [],
-            'area_coordinators' => ['array', 'exists:users,id'],
+            'slug' => ['required', 'alpha_dash', 'unique:equipment_areas'],
+            'description' => ['nullable'],
+            'area_coordinators' => ['nullable', 'array'],
+            'area_coordinators.*' => ['exists:users,id'],
         ];
     }
 }

@@ -5,57 +5,105 @@ namespace BB\Http\Controllers;
 use BB\Entities\EquipmentArea;
 use BB\Http\Requests\StoreEquipmentAreaRequest;
 use BB\Http\Requests\UpdateEquipmentAreaRequest;
-use BB\Repo\UserRepository;
+use BB\Http\Resources\EquipmentAreaResource;
 use FlashNotification;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class EquipmentAreaController extends Controller
 {
-    /** @var UserRepository */
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
-        $this->userRepository = $userRepository;
         $this->authorizeResource(EquipmentArea::class, 'equipment_area');
     }
 
     public function index()
     {
-        $areas = EquipmentArea::with('areaCoordinators')->orderBy('name', 'ASC')->get();
-        return view('equipment_areas.index', compact('areas'));
+        $areas = EquipmentArea::with('areaCoordinators.profile')->orderBy('name')->get();
+
+        return Inertia::render('EquipmentAreas/Index', [
+            'areas' => EquipmentAreaResource::collection($areas),
+            'can' => [
+                'create' => auth()->user()->can('create', EquipmentArea::class),
+            ],
+            'urls' => [
+                'create' => route('equipment_area.create', [], false),
+            ],
+        ]);
     }
 
     public function create()
     {
-        $memberList = $this->userRepository->getAllAsDropdown();
-        return view('equipment_areas.create', compact('memberList'));
+        return Inertia::render('EquipmentAreas/Create', [
+            'urls' => [
+                'index' => route('equipment_area.index', [], false),
+                'store' => route('equipment_area.store', [], false),
+            ],
+            'searchUrl' => route('members.search', [], false),
+        ]);
     }
 
     public function store(StoreEquipmentAreaRequest $request)
     {
-        $equipmentArea = EquipmentArea::create($request->all());
-        $equipmentArea->areaCoordinators()->sync($request->input('area_coordinators'));
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        return redirect()->route('equipment_area.show', $equipmentArea);
+            // The description column is NOT NULL; default it when omitted.
+            $equipmentArea = EquipmentArea::create(array_merge(['description' => ''], $validated));
+            $equipmentArea->areaCoordinators()->sync($validated['area_coordinators'] ?? []);
+
+            FlashNotification::success("Equipment Area, {$equipmentArea->name}, created successfully.");
+
+            return redirect()->route('equipment_area.show', $equipmentArea);
+        });
     }
 
     public function show(EquipmentArea $equipmentArea)
     {
-        return view('equipment_areas.show', compact('equipmentArea'));
+        $equipmentArea->load('areaCoordinators.profile');
+        $user = auth()->user();
+
+        return Inertia::render('EquipmentAreas/Show', [
+            'area' => new EquipmentAreaResource($equipmentArea),
+            'can' => [
+                'update' => $user->can('update', $equipmentArea),
+                'delete' => $user->can('delete', $equipmentArea),
+            ],
+            'urls' => [
+                'index' => route('equipment_area.index', [], false),
+                'edit' => route('equipment_area.edit', $equipmentArea, false),
+                'destroy' => route('equipment_area.destroy', $equipmentArea, false),
+            ],
+        ]);
     }
 
     public function edit(EquipmentArea $equipmentArea)
     {
-        $memberList = $this->userRepository->getAllAsDropdown();
-        return view('equipment_areas.edit', compact('equipmentArea', 'memberList'));
+        $equipmentArea->load('areaCoordinators.profile');
+
+        return Inertia::render('EquipmentAreas/Edit', [
+            'area' => new EquipmentAreaResource($equipmentArea),
+            'urls' => [
+                'index' => route('equipment_area.index', [], false),
+                'show' => route('equipment_area.show', $equipmentArea, false),
+                'update' => route('equipment_area.update', $equipmentArea, false),
+            ],
+            'searchUrl' => route('members.search', [], false),
+        ]);
     }
 
     public function update(UpdateEquipmentAreaRequest $request, EquipmentArea $equipmentArea)
     {
-        $equipmentArea->update($request->all());
-        $equipmentArea->areaCoordinators()->sync($request->input('area_coordinators'));
+        return DB::transaction(function () use ($request, $equipmentArea) {
+            $validated = $request->validated();
 
-        return redirect()->route('equipment_area.show', $equipmentArea);
+            $equipmentArea->update($validated);
+            $equipmentArea->areaCoordinators()->sync($validated['area_coordinators'] ?? []);
+
+            FlashNotification::success("Equipment Area, {$equipmentArea->name}, updated successfully.");
+
+            return redirect()->route('equipment_area.show', $equipmentArea);
+        });
     }
 
     public function destroy(EquipmentArea $equipmentArea)

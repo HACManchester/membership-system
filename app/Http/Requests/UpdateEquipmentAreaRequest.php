@@ -35,7 +35,7 @@ class UpdateEquipmentAreaRequest extends StoreEquipmentAreaRequest
             parent::rules(),
             [
                 'name' => ['required', Rule::unique('equipment_areas')->ignore($equipmentArea->id)],
-                'slug' => ['required', Rule::unique('equipment_areas')->ignore($equipmentArea->id)],
+                'slug' => ['required', 'alpha_dash', Rule::unique('equipment_areas')->ignore($equipmentArea->id)],
             ]
         );
     }

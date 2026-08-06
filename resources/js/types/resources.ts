@@ -155,6 +155,38 @@ export type RoomResource = {
   };
 };
 
+export type MemberAvatar = {
+  id: number;
+  name: string;
+  profile_photo_url: string | null;
+  url: string;
+};
+
+export type EquipmentAreaResource = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  area_coordinators: MemberAvatar[];
+  urls: {
+    show: string;
+  };
+};
+
+export type MaintainerGroupResource = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  equipment_area: { id: number; name: string; url: string } | null;
+  maintainers: MemberAvatar[];
+  equipment?: { name: string; url: string }[];
+  equipment_count: number;
+  urls: {
+    show: string;
+  };
+};
+
 // Additional types for page props
 export type Member = {
   id: number;
