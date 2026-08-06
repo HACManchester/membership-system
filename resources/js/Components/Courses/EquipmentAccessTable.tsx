@@ -86,7 +86,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    <Link href={equipmentItem.urls.show} underline="hover">
+                    <Link href={equipmentItem.urls.show}>
                       <Typography variant="body2" fontWeight="medium">
                         {equipmentItem.name}
                       </Typography>

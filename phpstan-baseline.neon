@@ -22,7 +22,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/EquipmentController.php
 
 		-
@@ -77,7 +77,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
-			count: 2
+			count: 1
 			path: app/Policies/EquipmentPolicy.php
 
 		-

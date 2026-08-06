@@ -54,33 +54,28 @@ class EquipmentPolicy
         return $isMaintainer || $isAreaCoordinator;
     }
 
-    /**
-     * Determine whether the user can update the equipment.
-     *
-     * @param  \BB\Entities\User  $user
-     * @param  \BB\Entities\Equipment  $equipment
-     * @return mixed
-     */
     public function update(User $user, Equipment $equipment)
     {
-        $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
-        $isAreaCoordinator = $user->equipmentAreas->contains($equipment->maintainerGroup->equipmentArea);
-        $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
+        return $this->manages($user, $equipment);
+    }
 
-        return $inMaintainerGroup || $isAreaCoordinator || $inManagingRole;
+    public function delete(User $user, Equipment $equipment)
+    {
+        return $this->manages($user, $equipment);
     }
 
     /**
-     * Determine whether the user can delete the equipment.
-     *
-     * @param  \BB\Entities\User  $user
-     * @param  \BB\Entities\Equipment  $equipment
-     * @return mixed
+     * Whether the user manages this equipment through its maintainer group, that
+     * group's area, or a managing role. Group-less equipment has no such managers,
+     * so it's editable only by the admins / equipment role handled in before().
      */
-    public function delete(User $user, Equipment $equipment)
+    private function manages(User $user, Equipment $equipment): bool
     {
-        $inMaintainerGroup = $user->maintainerGroups->contains($equipment->maintainerGroup);
-        $isAreaCoordinator = $user->equipmentAreas->contains($equipment->maintainerGroup->equipmentArea);
+        $group = $equipment->maintainerGroup;
+
+        $inMaintainerGroup = $group && $user->maintainerGroups->contains($group);
+        $isAreaCoordinator = $group && $group->equipmentArea
+            && $user->equipmentAreas->contains($group->equipmentArea);
         $inManagingRole = $equipment->role ? $user->hasRole($equipment->role->name) : false;
 
         return $inMaintainerGroup || $isAreaCoordinator || $inManagingRole;

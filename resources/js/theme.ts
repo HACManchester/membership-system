@@ -58,7 +58,9 @@ const theme = createTheme({
     MuiLink: {
       defaultProps: {
         color: 'secondary',
-        underline: 'hover',
+        // Links are clearly underlined by default; opt out with underline="none"
+        // (nav / button-style links) or underline="hover" (breadcrumbs).
+        underline: 'always',
       },
     },
   },

@@ -105,6 +105,43 @@ export type EquipmentListResource = {
   };
 };
 
+export type EquipmentFormResource = {
+  id: number;
+  name: string;
+  slug: string;
+  manufacturer: string | null;
+  model_number: string | null;
+  room_id: number | null;
+  detail: string | null;
+  description: string | null;
+  help_text: string | null;
+  docs: string | null;
+  maintainer_group_id: number | null;
+  working: boolean;
+  permaloan: boolean;
+  permaloan_user_id: number | null;
+  dangerous: boolean;
+  lone_working: boolean;
+  ppe: string[];
+  access_fee: number;
+  usage_cost: number;
+  usage_cost_per: string | null;
+  access_code: string | null;
+  admin_notes: string | null;
+  requires_induction: boolean;
+  induction_category: string | null;
+  accepting_inductions: boolean;
+  induction_instructions: string | null;
+  trainer_instructions: string | null;
+  trained_instructions: string | null;
+  photos: { index: number; url: string; destroy_url: string }[];
+  urls: {
+    update: string;
+    show: string;
+    photo_store: string;
+  };
+};
+
 export type RoomResource = {
   id: number;
   name: string;

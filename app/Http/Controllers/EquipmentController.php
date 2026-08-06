@@ -9,6 +9,7 @@ use BB\Entities\TrainingRecord;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
+use BB\Http\Resources\EquipmentFormResource;
 use BB\Http\Resources\EquipmentListResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
@@ -91,14 +92,14 @@ class EquipmentController extends Controller
     }
 
     /**
-     * The admin-editable room list as a slug => name map, for the equipment
-     * form's room dropdown and the listing's group headings.
+     * The admin-editable room list as an id => name map for the equipment form's
+     * room dropdown.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     private function roomList(): array
     {
-        return Room::orderBy('name')->pluck('name', 'slug')->toArray();
+        return Room::orderBy('name')->pluck('name', 'id')->toArray();
     }
 
     public function show(Equipment $equipment)
@@ -131,16 +132,29 @@ class EquipmentController extends Controller
     {
         $this->authorize('create', Equipment::class);
 
-        $memberList = $this->userRepository->getAllAsDropdown();
-        $maintainerGroupOptions = MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id');
+        return Inertia::render('Equipment/Create', array_merge($this->formSharedProps(), [
+            'urls' => [
+                'index' => route('equipment.index', [], false),
+                'store' => route('equipment.store', [], false),
+            ],
+        ]));
+    }
 
-        return \View::make('equipment.create')
-            ->with('memberList', $memberList)
-            ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
-            ->with('ppeList', PpeOptions::all())
-            ->with('roomList', $this->roomList())
-            ->with('trusted', true)
-            ->with('isTrainerOrAdmin', \Auth::user()->isAdmin());
+    /**
+     * Shared option lists for the equipment create/edit form.
+     *
+     * @return array
+     */
+    private function formSharedProps(): array
+    {
+        return [
+            'rooms' => $this->roomList(),
+            'maintainerGroupOptions' => MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id'),
+            'ppeOptions' => PpeOptions::all(),
+            'memberList' => $this->userRepository->getAllAsDropdown(),
+            'usageCostPerOptions' => ['hour' => 'hour', 'gram' => 'gram', 'page' => 'page'],
+            'canManageGlobally' => \Auth::user()->isAdmin() || \Auth::user()->hasRole('equipment'),
+        ];
     }
 
 
@@ -154,7 +168,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('create', Equipment::class);
 
-        $this->equipmentRepository->create($request->validated());
+        Equipment::create($request->validated());
 
         return \Redirect::route('equipment.show', $request->get('slug'));
     }
@@ -164,16 +178,14 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        $equipment->load('courses');
-        $memberList = $this->userRepository->getAllAsDropdown();
-        $maintainerGroupOptions = MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id');
+        $equipment->load('roomModel');
 
-        return \View::make('equipment.edit')
-            ->with('equipment', $equipment)
-            ->with('memberList', $memberList)
-            ->with('maintainerGroupOptions', $maintainerGroupOptions->toArray())
-            ->with('ppeList', PpeOptions::all())
-            ->with('roomList', $this->roomList());
+        return Inertia::render('Equipment/Edit', array_merge($this->formSharedProps(), [
+            'equipment' => new EquipmentFormResource($equipment),
+            'urls' => [
+                'index' => route('equipment.index', [], false),
+            ],
+        ]));
     }
 
 
@@ -186,7 +198,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        $this->equipmentRepository->update($equipment->id, $request->validated());
+        $equipment->update($request->validated());
 
         return \Redirect::route('equipment.show', $equipment);
     }

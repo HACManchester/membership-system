@@ -43,6 +43,7 @@ class Equipment extends Model
         'serial_number',
         'colour',
         'room_id',
+        'admin_notes',
         'detail',
         'slug',
         'description',

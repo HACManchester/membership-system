@@ -50,6 +50,7 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
             href="https://hacman.org.uk"
             target="_blank"
             rel="noopener"
+            underline="hover"
             sx={{
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -63,6 +64,7 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
             href="https://list.hacman.org.uk"
             target="_blank"
             rel="noopener"
+            underline="hover"
             sx={{
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -76,6 +78,7 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
             href="https://docs.hacman.org.uk"
             target="_blank"
             rel="noopener"
+            underline="hover"
             sx={{
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -95,15 +98,21 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
         >
           {auth ? (
             <>
-              <Link href={auth.user.account_path}>{auth.user.name}</Link>
-              <Link href="/logout" fontSize="small">
+              <Link href={auth.user.account_path} underline="hover">
+                {auth.user.name}
+              </Link>
+              <Link href="/logout" fontSize="small" underline="hover">
                 Logout
               </Link>
             </>
           ) : (
             <>
-              <Link href="/login">🔑 Login</Link>
-              <Link href="/register">✔️ Become a Member</Link>
+              <Link href="/login" underline="hover">
+                🔑 Login
+              </Link>
+              <Link href="/register" underline="hover">
+                ✔️ Become a Member
+              </Link>
             </>
           )}
         </Stack>

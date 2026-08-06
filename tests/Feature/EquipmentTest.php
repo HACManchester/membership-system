@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\TrainingRecord;
@@ -119,6 +120,83 @@ class EquipmentTest extends TestCase
         $items = collect($response->viewData('page')['props']['equipment']);
         $item = $items->firstWhere('id', $equipment->id);
         $this->assertSame('The Workshop', $item['room_display']);
+    }
+
+    /** @test */
+    public function create_and_edit_pages_render_inertia()
+    {
+        $this->actingAs($this->admin)->get(route('equipment.create'))
+            ->assertInertia(function ($page) {
+                $page->component('Equipment/Create')->has('rooms');
+            });
+
+        $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->component('Equipment/Edit')->where('equipment.slug', $this->equipment->slug);
+            });
+    }
+
+    /** @test */
+    public function admin_can_create_equipment_with_room()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'New Drill',
+            'room_id' => $room->id,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('equipment', [
+            'slug' => 'new-drill',
+            'room_id' => $room->id,
+        ]);
+    }
+
+    /** @test */
+    public function slug_is_generated_from_name_when_omitted()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Big Lathe',
+            'room_id' => $room->id,
+        ]);
+
+        $this->assertDatabaseHas('equipment', ['slug' => 'big-lathe']);
+    }
+
+    /** @test */
+    public function empty_optional_foreign_keys_are_stored_as_null()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Sparse Tool',
+            'room_id' => $room->id,
+            'maintainer_group_id' => '',
+            'permaloan_user_id' => '',
+        ]);
+
+        $this->assertDatabaseHas('equipment', [
+            'slug' => 'sparse-tool',
+            'maintainer_group_id' => null,
+            'permaloan_user_id' => null,
+        ]);
+    }
+
+    /** @test */
+    public function usage_cost_is_no_longer_required()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Free Tool',
+            'room_id' => $room->id,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('equipment', ['slug' => 'free-tool']);
     }
 
     /** @test */
@@ -446,4 +524,161 @@ class EquipmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('You have been inducted and can use this equipment');
     }
+
+    /** @test */
+    public function a_course_managed_item_without_a_legacy_category_can_be_edited()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = factory(Course::class)->create();
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Course Item',
+            'slug' => 'course-item',
+            'room_id' => $room->id,
+            'requires_induction' => true,
+            'induction_category' => null,
+        ]);
+        $equipment->courses()->attach($course->id);
+
+        $response = $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'Course Item Renamed',
+            'slug' => 'course-item',
+            'room_id' => $room->id,
+            'course_id' => $course->id,
+            'requires_induction' => true,
+            'accepting_inductions' => false,
+            'induction_category' => '',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('equipment.show', 'course-item'));
+        $this->assertDatabaseHas('equipment', ['slug' => 'course-item', 'name' => 'Course Item Renamed']);
+    }
+
+    /** @test */
+    public function a_non_induction_item_with_a_stale_legacy_category_can_be_edited()
+    {
+        // A hidden legacy category that predates alpha_dash validation must not
+        // silently block editing an item that no longer requires an induction.
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Bandsaw',
+            'slug' => 'bandsaw',
+            'room_id' => $room->id,
+            'requires_induction' => false,
+            'induction_category' => 'band saw',
+        ]);
+
+        $response = $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'Bandsaw Renamed',
+            'slug' => 'bandsaw',
+            'room_id' => $room->id,
+            'requires_induction' => false,
+            'induction_category' => 'band saw',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('equipment.show', 'bandsaw'));
+        $this->assertDatabaseHas('equipment', ['slug' => 'bandsaw', 'name' => 'Bandsaw Renamed']);
+    }
+    /** @test */
+    public function a_non_permaloan_item_ignores_a_stale_permaloan_holder()
+    {
+        // A former holder who has since left leaves a now-invalid id on a hidden
+        // field; switching off permaloan must not be blocked by it, and it must be
+        // cleared rather than stored.
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $holder = factory(User::class)->create();
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Drill',
+            'slug' => 'drill',
+            'room_id' => $room->id,
+            'permaloan' => true,
+            'permaloan_user_id' => $holder->id,
+        ]);
+        $holder->delete();
+
+        $response = $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'Drill',
+            'slug' => 'drill',
+            'room_id' => $room->id,
+            'permaloan' => false,
+            'permaloan_user_id' => $holder->id,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('equipment.show', 'drill'));
+        $this->assertDatabaseHas('equipment', [
+            'slug' => 'drill',
+            'permaloan' => false,
+            'permaloan_user_id' => null,
+        ]);
+    }
+    /** @test */
+    public function the_update_policy_handles_equipment_without_a_maintainer_group()
+    {
+        // A group-less item has no maintainer/area to manage it, so a maintainer of
+        // some other group is simply denied — without tripping over the null group.
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Loose Tool',
+            'slug' => 'loose-tool',
+            'room_id' => $room->id,
+            'maintainer_group_id' => null,
+        ]);
+
+        $this->assertFalse($this->maintainerUser->can('update', $equipment));
+        $this->assertFalse($this->maintainerUser->can('delete', $equipment));
+        $this->assertTrue($this->admin->can('update', $equipment));
+    }
+
+    /** @test */
+    public function a_course_less_item_that_still_flags_requires_induction_can_be_edited()
+    {
+        // e.g. a course was detached, leaving requires_induction set with no legacy
+        // category — the (hidden) legacy fields must not block the save.
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Orphan',
+            'slug' => 'orphan',
+            'room_id' => $room->id,
+            'requires_induction' => true,
+            'induction_category' => null,
+        ]);
+
+        $response = $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'Orphan Renamed',
+            'slug' => 'orphan',
+            'room_id' => $room->id,
+            'requires_induction' => true,
+            'induction_category' => '',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('equipment.show', 'orphan'));
+        $this->assertDatabaseHas('equipment', ['slug' => 'orphan', 'name' => 'Orphan Renamed']);
+    }
+
+
+    /** @test */
+    public function updating_the_slug_redirects_to_the_new_slug()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Old Name',
+            'slug' => 'old-slug',
+            'room_id' => $room->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'New Name',
+            'slug' => 'new-slug',
+            'room_id' => $room->id,
+        ]);
+
+        $response->assertRedirect(route('equipment.show', 'new-slug'));
+        $this->assertDatabaseHas('equipment', ['id' => $equipment->id, 'slug' => 'new-slug']);
+        // the redirect target must actually resolve, not 404
+        $this->actingAs($this->admin)->get(route('equipment.show', 'new-slug'))->assertStatus(200);
+    }
+
 }

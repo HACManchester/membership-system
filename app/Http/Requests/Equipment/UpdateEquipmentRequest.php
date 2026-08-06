@@ -31,8 +31,7 @@ class UpdateEquipmentRequest extends StoreEquipmentRequest
         return array_merge(
             parent::rules(),
             [
-                'slug' => ['required', Rule::unique('equipment')->ignore($equipment->id)],
-                'asset_tag_id' => [Rule::unique('equipment')->ignore($equipment->id)],
+                'slug' => ['required', 'alpha_dash', Rule::unique('equipment')->ignore($equipment->id)],
             ]
         );
     }

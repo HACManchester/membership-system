@@ -13,6 +13,7 @@ class UpdateRoomRequest extends StoreRoomRequest
 
     public function rules()
     {
+        /** @var \BB\Entities\Room $room */
         $room = $this->route('room');
 
         return array_merge(parent::rules(), [
