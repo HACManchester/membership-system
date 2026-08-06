@@ -124,9 +124,12 @@ class SidebarItems
             ]
         ];
 
-        return array_filter($resourcesItems, function ($item) {
+        // array_values re-indexes after filtering: a filter that removes a middle
+        // item leaves gaps in the keys, which json_encode would emit as an object
+        // rather than an array — breaking the frontend's `.map` over the group.
+        return array_values(array_filter($resourcesItems, function ($item) {
             return !isset($item['visible']) || $item['visible'];
-        });
+        }));
     }
 
     protected function adminNav()
@@ -164,9 +167,9 @@ class SidebarItems
             ]
         ];
 
-        return array_filter($adminItems, function ($item) {
+        return array_values(array_filter($adminItems, function ($item) {
             return $item['visible'];
-        });
+        }));
     }
 
     /**
