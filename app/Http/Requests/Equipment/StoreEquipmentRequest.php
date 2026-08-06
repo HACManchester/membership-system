@@ -31,7 +31,7 @@ class StoreEquipmentRequest extends FormRequest
         // The Inertia form always submits these optional foreign keys, so a blank
         // selection arrives as '' and would otherwise be written to the database
         // (a non-existent id / FK violation). Normalise blanks to null.
-        foreach (['maintainer_group_id', 'permaloan_user_id'] as $key) {
+        foreach (['course_id', 'maintainer_group_id', 'permaloan_user_id'] as $key) {
             if ($this->input($key) === '') {
                 $this->merge([$key => null]);
             }
@@ -101,6 +101,7 @@ class StoreEquipmentRequest extends FormRequest
             'usage_cost'                => 'nullable|numeric',
             'usage_cost_per'            => 'nullable|in:hour,gram,page',
             'admin_notes'               => 'nullable',
+            'course_id'                 => 'nullable|exists:courses,id',
             'obtained_at'               => 'date_format:Y-m-d|before:tomorrow|nullable',
             'removed_at'                => 'date_format:Y-m-d|before:tomorrow|nullable',
             'induction_instructions'    => '',

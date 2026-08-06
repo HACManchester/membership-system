@@ -38,6 +38,10 @@ class EquipmentFormResource extends JsonResource
             'access_code' => $this->access_code,
             'admin_notes' => $this->admin_notes,
 
+            // The associated induction course (equipment is one-course-per-page in practice).
+            'course_id' => optional($this->courses->first())->id,
+
+            // Legacy induction fields — retained only for records not yet on a course.
             'requires_induction' => (bool) $this->requires_induction,
             'induction_category' => $this->induction_category,
             'accepting_inductions' => (bool) $this->accepting_inductions,

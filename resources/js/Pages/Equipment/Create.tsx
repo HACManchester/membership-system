@@ -12,6 +12,7 @@ type Props = {
   ppeOptions: Record<string, string>;
   memberList: Record<string, string>;
   usageCostPerOptions: Record<string, string>;
+  courseOptions: { id: number; name: string; live: boolean }[];
   canManageGlobally: boolean;
   urls: {
     index: string;
@@ -32,6 +33,7 @@ const defaultData: EquipmentFormData = {
   dangerous: false,
   lone_working: true,
   ppe: [],
+  course_id: '',
   requires_induction: false,
   accepting_inductions: false,
   induction_category: '',
@@ -55,6 +57,7 @@ const Create = ({
   ppeOptions,
   memberList,
   usageCostPerOptions,
+  courseOptions,
   canManageGlobally,
   urls,
 }: Props) => {
@@ -94,6 +97,7 @@ const Create = ({
                   ppeOptions={ppeOptions}
                   memberList={memberList}
                   usageCostPerOptions={usageCostPerOptions}
+                  courseOptions={courseOptions}
                   canManageGlobally={canManageGlobally}
                 />
               </CardContent>

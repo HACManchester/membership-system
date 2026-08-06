@@ -24,6 +24,15 @@
 
 @section('content')
 
+    @php
+        $hasCourse = $equipment->courses->count() > 0;
+        $liveCourse = $hasCourse && $equipment->courses->first()->live;
+        $hasLegacyInduction = !empty($equipment->induction_category);
+        // The legacy induction UI stays until a live course takes over, and only
+        // for equipment that actually has legacy data (pure course pages skip it).
+        $useLegacyInduction = $equipment->requiresInduction() && !$liveCourse && ($hasLegacyInduction || !$hasCourse);
+    @endphp
+
     <div class="row">
         <div class="col-sm-12">
             <h2>{{ $equipment->name }}</h2>
@@ -64,10 +73,10 @@
                 <div class="row">
                     <div class="col-sm-6">
 
-                        @if ($equipment->courses->count() > 0 && $equipment->courses->first()->live)
+                        @if ($liveCourse)
                             <div class="well infobox">
                                 <h3>This tool requires training</h3>
-                                <p>Training for this equipment is managed by the following inductions(s):</p>
+                                <p>Training for this equipment is managed by the following induction(s):</p>
                                 <ul>
                                     @foreach ($equipment->courses as $course)
                                         <li><a href="{{ route('courses.show', $course) }}">{{ $course->name }}</a></li>
@@ -76,7 +85,7 @@
                                 <p>Please visit the induction page to book your training.</p>
                             </div>
                         @endif
-                        @if ($equipment->requiresInduction())
+                        @if ($useLegacyInduction)
                             @if ($userTrainingRecord)
                                 @if (!$userTrainingRecord->trained)
                                     <div class="well infobox">
@@ -318,7 +327,7 @@
         </div>
     </div>
 
-    @if ($equipment->requiresInduction() && !($equipment->courses->count() > 0 && $equipment->courses->first()->live))
+    @if ($useLegacyInduction)
         <h2>Member statuses for this tool</h2>
         <div class="row">
             <div class="col-sm-12">

@@ -128,6 +128,7 @@ export type EquipmentFormResource = {
   usage_cost_per: string | null;
   access_code: string | null;
   admin_notes: string | null;
+  course_id: number | null;
   requires_induction: boolean;
   induction_category: string | null;
   accepting_inductions: boolean;

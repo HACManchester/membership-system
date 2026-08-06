@@ -200,6 +200,91 @@ class EquipmentTest extends TestCase
     }
 
     /** @test */
+    public function attaching_a_course_links_it_and_marks_induction_required()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = factory(Course::class)->create();
+
+        $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Course Tool',
+            'room_id' => $room->id,            'course_id' => $course->id,
+        ]);
+
+        $equipment = Equipment::where('slug', 'course-tool')->first();
+        $this->assertNotNull($equipment);
+        $this->assertTrue((bool) $equipment->requires_induction);
+        $this->assertEquals(1, $equipment->courses()->count());
+        $this->assertTrue($equipment->courses->contains($course->id));
+    }
+
+    /** @test */
+    public function attaching_a_course_does_not_detach_its_other_equipment()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = factory(Course::class)->create();
+        $existing = factory(Equipment::class)->create(['slug' => 'existing-tool']);
+        $course->equipment()->attach($existing->id);
+
+        $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'New Course Tool',
+            'room_id' => $room->id,
+            'course_id' => $course->id,
+        ]);
+
+        $course->refresh();
+        $this->assertEquals(2, $course->equipment()->count());
+        $this->assertTrue(
+            $course->equipment()->where('equipment.id', $existing->id)->exists(),
+            'Existing equipment should stay linked to the course'
+        );
+    }
+
+    /** @test */
+    public function detaching_a_course_on_update_removes_the_link()
+    {
+        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = factory(Course::class)->create();
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Linked Tool',
+            'slug' => 'linked-tool',
+            'room_id' => $room->id,
+            'requires_induction' => true,
+        ]);
+        $equipment->courses()->attach($course->id);
+
+        $this->actingAs($this->admin)->put(route('equipment.update', $equipment), [
+            'name' => 'Linked Tool',
+            'slug' => 'linked-tool',
+            'room_id' => $room->id,            'course_id' => '',
+        ]);
+
+        $this->assertEquals(0, $equipment->fresh()->courses()->count());
+    }
+
+    /** @test */
+    public function edit_exposes_the_attached_course_id()
+    {
+        $course = factory(Course::class)->create();
+        $this->equipment->courses()->attach($course->id);
+
+        $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
+            ->assertInertia(function ($page) use ($course) {
+                $page->component('Equipment/Edit')->where('equipment.course_id', $course->id);
+            });
+    }
+
+    /** @test */
+    public function edit_of_a_legacy_record_has_no_course_but_keeps_its_category()
+    {
+        $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->component('Equipment/Edit')
+                    ->where('equipment.course_id', null)
+                    ->where('equipment.induction_category', 'test-equipment');
+            });
+    }
+
+    /** @test */
     public function anyone_can_view_equipment_show()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));

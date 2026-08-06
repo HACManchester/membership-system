@@ -26,6 +26,7 @@ type Props = {
   ppeOptions: Record<string, string>;
   memberList: Record<string, string>;
   usageCostPerOptions: Record<string, string>;
+  courseOptions: { id: number; name: string; live: boolean }[];
   canManageGlobally: boolean;
   urls: {
     index: string;
@@ -39,6 +40,7 @@ const Edit = ({
   ppeOptions,
   memberList,
   usageCostPerOptions,
+  courseOptions,
   canManageGlobally,
   urls,
 }: Props) => {
@@ -55,6 +57,7 @@ const Edit = ({
     dangerous: equipment.dangerous,
     lone_working: equipment.lone_working,
     ppe: equipment.ppe,
+    course_id: equipment.course_id ?? '',
     requires_induction: equipment.requires_induction,
     accepting_inductions: equipment.accepting_inductions,
     induction_category: equipment.induction_category || '',
@@ -126,6 +129,7 @@ const Edit = ({
                   ppeOptions={ppeOptions}
                   memberList={memberList}
                   usageCostPerOptions={usageCostPerOptions}
+                  courseOptions={courseOptions}
                   canManageGlobally={canManageGlobally}
                 />
               </CardContent>

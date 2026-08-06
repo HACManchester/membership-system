@@ -15,6 +15,7 @@ import {
   Box,
   Autocomplete,
   Stack,
+  Alert,
 } from '@mui/material';
 import MarkdownTextField from './MarkdownTextField';
 
@@ -31,6 +32,7 @@ export type EquipmentFormData = {
   dangerous: boolean;
   lone_working: boolean;
   ppe: string[];
+  course_id: number | '';
   requires_induction: boolean;
   accepting_inductions: boolean;
   induction_category: string;
@@ -63,6 +65,7 @@ type Props = {
   ppeOptions: Record<string, string>;
   memberList: Record<string, string>;
   usageCostPerOptions: Record<string, string>;
+  courseOptions: { id: number; name: string; live: boolean }[];
   canManageGlobally: boolean;
 };
 
@@ -95,6 +98,7 @@ const EquipmentForm = ({
   ppeOptions,
   memberList,
   usageCostPerOptions,
+  courseOptions,
   canManageGlobally,
 }: Props) => {
   const members = Object.entries(memberList).map(([id, name]) => ({ id: Number(id), name }));
@@ -306,6 +310,42 @@ const EquipmentForm = ({
         {/* Training & inductions */}
         <SectionHeading>Training &amp; inductions</SectionHeading>
 
+        <Grid2 size={12}>
+          <FormControl fullWidth error={!!errors.course_id}>
+            <InputLabel id="course-label">Induction course</InputLabel>
+            <Select
+              labelId="course-label"
+              label="Induction course"
+              value={data.course_id}
+              onChange={(e) =>
+                setData('course_id', e.target.value === '' ? '' : Number(e.target.value))
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {courseOptions.map((course) => (
+                <MenuItem key={course.id} value={course.id}>
+                  {course.name}
+                  {course.live ? '' : ' (not yet live)'}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>
+              {errors.course_id ||
+                'Associate an induction course. This marks the equipment as requiring induction; training is managed on the course page.'}
+            </FormHelperText>
+          </FormControl>
+        </Grid2>
+
+        <Grid2 size={12}>
+          <Alert severity="info">
+            <strong>Legacy induction</strong> — prefer attaching an induction course above. These
+            fields only apply to equipment not yet migrated to a course, and are superseded once a
+            live course manages its training.
+          </Alert>
+        </Grid2>
+
         <Grid2 size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
@@ -314,7 +354,7 @@ const EquipmentForm = ({
                 onChange={(e) => setData('requires_induction', e.target.checked)}
               />
             }
-            label="Requires an induction"
+            label="Requires an induction (legacy)"
           />
         </Grid2>
 
@@ -326,13 +366,13 @@ const EquipmentForm = ({
                 onChange={(e) => setData('accepting_inductions', e.target.checked)}
               />
             }
-            label="Currently accepting inductions"
+            label="Currently accepting inductions (legacy)"
           />
         </Grid2>
 
         <Grid2 size={12}>
           <TextField
-            label="Induction category"
+            label="Induction category (legacy)"
             value={data.induction_category}
             onChange={(e) => setData('induction_category', e.target.value)}
             fullWidth
@@ -345,7 +385,7 @@ const EquipmentForm = ({
 
         <Grid2 size={12}>
           <MarkdownTextField
-            label="Induction instructions"
+            label="Induction instructions (legacy)"
             value={data.induction_instructions}
             onChange={(e) => setData('induction_instructions', e.target.value)}
             error={!!errors.induction_instructions}
@@ -356,7 +396,7 @@ const EquipmentForm = ({
 
         <Grid2 size={12}>
           <MarkdownTextField
-            label="Trained instructions"
+            label="Trained instructions (legacy)"
             value={data.trained_instructions}
             onChange={(e) => setData('trained_instructions', e.target.value)}
             error={!!errors.trained_instructions}
@@ -367,7 +407,7 @@ const EquipmentForm = ({
 
         <Grid2 size={12}>
           <MarkdownTextField
-            label="Trainer instructions"
+            label="Trainer instructions (legacy)"
             value={data.trainer_instructions}
             onChange={(e) => setData('trainer_instructions', e.target.value)}
             error={!!errors.trainer_instructions}

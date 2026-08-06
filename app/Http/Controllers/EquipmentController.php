@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Room;
@@ -16,6 +17,7 @@ use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\PpeOptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -153,6 +155,11 @@ class EquipmentController extends Controller
             'ppeOptions' => PpeOptions::all(),
             'memberList' => $this->userRepository->getAllAsDropdown(),
             'usageCostPerOptions' => ['hour' => 'hour', 'gram' => 'gram', 'page' => 'page'],
+            'courseOptions' => Course::orderBy('name')->get(['id', 'name', 'live'])
+                ->map(function (Course $course) {
+                    return ['id' => $course->id, 'name' => $course->name, 'live' => (bool) $course->live];
+                })
+                ->values(),
             'canManageGlobally' => \Auth::user()->isAdmin() || \Auth::user()->hasRole('equipment'),
         ];
     }
@@ -168,9 +175,24 @@ class EquipmentController extends Controller
     {
         $this->authorize('create', Equipment::class);
 
-        Equipment::create($request->validated());
+        $data = $request->validated();
+        $courseId = $data['course_id'] ?? null;
+        unset($data['course_id']);
 
-        return \Redirect::route('equipment.show', $request->get('slug'));
+        // Associating a course means the equipment requires induction, managed
+        // through that course.
+        if ($courseId) {
+            $data['requires_induction'] = true;
+        }
+
+        $equipment = DB::transaction(function () use ($data, $courseId) {
+            $equipment = Equipment::create($data);
+            $equipment->courses()->sync($courseId ? [$courseId] : []);
+
+            return $equipment;
+        });
+
+        return \Redirect::route('equipment.show', $equipment->slug);
     }
 
 
@@ -178,7 +200,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        $equipment->load('roomModel');
+        $equipment->load('roomModel', 'courses');
 
         return Inertia::render('Equipment/Edit', array_merge($this->formSharedProps(), [
             'equipment' => new EquipmentFormResource($equipment),
@@ -198,7 +220,18 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        $equipment->update($request->validated());
+        $data = $request->validated();
+        $courseId = $data['course_id'] ?? null;
+        unset($data['course_id']);
+
+        if ($courseId) {
+            $data['requires_induction'] = true;
+        }
+
+        DB::transaction(function () use ($equipment, $data, $courseId) {
+            $equipment->update($data);
+            $equipment->courses()->sync($courseId ? [$courseId] : []);
+        });
 
         return \Redirect::route('equipment.show', $equipment);
     }
