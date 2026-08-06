@@ -20,7 +20,6 @@
         <script src="https://js.sentry-cdn.com/{{ config('services.sentry.browser_dsn') }}.min.js" crossorigin="anonymous"></script>
     @endif
     
-    <script src="//www.google.com/jsapi"></script>
     <script>var BB = BB || {};</script>
     @if (App::environment() == 'production')
     <script>

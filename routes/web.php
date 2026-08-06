@@ -60,9 +60,6 @@ Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'a
 Route::get('general_induction', ['uses' => 'GeneralInductionController@show', 'as' => 'general-induction.show', 'middleware' => 'role:member']);
 Route::put('general_induction', ['uses' => 'GeneralInductionController@update', 'as' => 'general-induction.update', 'middleware' => 'role:member']);
 
-// Leaderboards!
-Route::get('leaderboard', ['uses' => 'LeaderboardController@index', 'as' => 'leaderboard.index', 'middleware' => 'role:member']);
-
 // Tracked links
 Route::get('links/forum', ['uses' => 'LinksController@forum', 'as' => 'links.forum', 'middleware' => 'role:member']);
 
@@ -208,15 +205,6 @@ Route::group(array('middleware' => 'role:member'), function () {
 ##########################
 # Storage Boxes
 ##########################
-
-##########################
-# Stats
-##########################
-
-Route::get('stats', ['uses' => 'StatsController@index', 'middleware' => 'role:member', 'as' => 'stats.index']);
-Route::get('stats/gocardless', ['uses' => 'StatsController@ddSwitch', 'middleware' => 'role:member', 'as' => 'stats.gocardless']);
-Route::get('stats/history', ['uses' => 'StatsController@history', 'middleware' => 'role:member', 'as' => 'stats.history']);
-
 
 
 ##########################

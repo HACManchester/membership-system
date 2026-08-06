@@ -102,11 +102,6 @@ class SidebarItems
                 'badge' => 'New'
             ],
             [
-                'label' => 'Stats',
-                'href' => route('stats.index'),
-                'active' => self::isActive('stats.index')
-            ],
-            [
                 'label' => 'Rooms',
                 'href' => route('room.index'),
                 'active' => self::isActive('room.index'),
