@@ -21,11 +21,6 @@ parameters:
 			path: app/Http/Controllers/AccountController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/EquipmentController.php
-
-		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$online_only\\.$#"
 			count: 1
 			path: app/Http/Controllers/EquipmentController.php

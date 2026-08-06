@@ -117,7 +117,8 @@ class CourseTrainingVisibilityTest extends TestCase
         $response = $this->actingAs($user)->get(route('equipment.show', $this->equipment));
 
         $response->assertStatus(200);
-        $response->assertSee('COURSECODE');
+        $equipment = $response->viewData('page')['props']['equipment'];
+        $this->assertEquals('COURSECODE', $equipment['access_code']);
     }
 
     /** @test */

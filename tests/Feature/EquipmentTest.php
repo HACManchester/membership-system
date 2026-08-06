@@ -160,8 +160,7 @@ class EquipmentTest extends TestCase
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Big Lathe',
-            'room_id' => $room->id,
-        ]);
+            'room_id' => $room->id,        ]);
 
         $this->assertDatabaseHas('equipment', ['slug' => 'big-lathe']);
     }
@@ -169,17 +168,20 @@ class EquipmentTest extends TestCase
     /** @test */
     public function empty_optional_foreign_keys_are_stored_as_null()
     {
+        // The Inertia form submits these as '' when nothing is chosen.
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
-        $this->actingAs($this->admin)->post(route('equipment.store'), [
-            'name' => 'Sparse Tool',
-            'room_id' => $room->id,
-            'maintainer_group_id' => '',
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Loose Tool',
+            'room_id' => $room->id,            'maintainer_group_id' => '',
             'permaloan_user_id' => '',
+            'course_id' => '',
         ]);
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('equipment', [
-            'slug' => 'sparse-tool',
+            'slug' => 'loose-tool',
             'maintainer_group_id' => null,
             'permaloan_user_id' => null,
         ]);
@@ -192,8 +194,7 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Free Tool',
-            'room_id' => $room->id,
-        ]);
+            'room_id' => $room->id,        ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('equipment', ['slug' => 'free-tool']);
@@ -289,7 +290,54 @@ class EquipmentTest extends TestCase
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
         $response->assertStatus(200);
-        $response->assertViewHas('equipment', $this->equipment);
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')->where('equipment.slug', $this->equipment->slug);
+        });
+    }
+
+    /** @test */
+    public function show_exposes_legacy_training_data_for_legacy_equipment()
+    {
+        // $this->equipment has an induction_category and no course, so the legacy
+        // training management is still in play.
+        $response = $this->actingAs($this->admin)->get(route('equipment.show', $this->equipment));
+
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')
+                ->where('flags.useLegacyInduction', true)
+                ->has('training.trainers')
+                ->has('training.trained')
+                ->has('training.pending');
+        });
+    }
+
+    /** @test */
+    public function training_member_lists_are_only_exposed_to_members_who_can_train()
+    {
+        // An ordinary member gets no training-management data at all.
+        $props = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->viewData('page')['props'];
+        $this->assertNull($props['training']);
+
+        // A trainer for the equipment gets the trainer / trained / awaiting lists.
+        $props = $this->actingAs($this->trainerUser)->get(route('equipment.show', $this->equipment))
+            ->viewData('page')['props'];
+        $this->assertNotNull($props['training']);
+        $this->assertArrayHasKey('trainers', $props['training']);
+    }
+
+    /** @test */
+    public function admin_notes_are_only_exposed_to_members_who_can_edit()
+    {
+        $this->equipment->forceFill(['admin_notes' => 'Spare key is in the office'])->save();
+
+        $props = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->viewData('page')['props']['equipment'];
+        $this->assertArrayNotHasKey('admin_notes', $props);
+
+        $props = $this->actingAs($this->maintainerUser)->get(route('equipment.show', $this->equipment))
+            ->viewData('page')['props']['equipment'];
+        $this->assertEquals('Spare key is in the office', $props['admin_notes']);
     }
 
     /** @test */
@@ -382,8 +430,8 @@ class EquipmentTest extends TestCase
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
-        $response->assertDontSee('SECRET123');
-        $response->assertDontSee('Access code');
+        $equipment = $response->viewData('page')['props']['equipment'];
+        $this->assertArrayNotHasKey('access_code', $equipment);
     }
 
     /** @test */
@@ -403,8 +451,8 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($trainedUser)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
-        $response->assertSee('SECRET123');
-        $response->assertSee('Access code');
+        $equipment = $response->viewData('page')['props']['equipment'];
+        $this->assertEquals('SECRET123', $equipment['access_code']);
     }
 
     /** @test */
@@ -424,8 +472,50 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($trainer)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
-        $response->assertSee('SECRET123');
-        $response->assertSee('Access code');
+        $equipment = $response->viewData('page')['props']['equipment'];
+        $this->assertEquals('SECRET123', $equipment['access_code']);
+    }
+
+    /** @test */
+    public function instruction_fields_are_gated_by_training_status()
+    {
+        $this->equipment->forceFill([
+            'induction_instructions' => 'How to get inducted',
+            'trained_instructions' => 'How to use it safely',
+            'trainer_instructions' => 'How to assess a trainee',
+        ])->save();
+
+        $propsFor = function ($user) {
+            return $this->actingAs($user)->get(route('equipment.show', $this->equipment))
+                ->viewData('page')['props']['equipment'];
+        };
+
+        // A member with no training record sees none of the instruction fields.
+        $props = $propsFor($this->regularUser);
+        $this->assertArrayNotHasKey('induction_instructions', $props);
+        $this->assertArrayNotHasKey('trained_instructions', $props);
+        $this->assertArrayNotHasKey('trainer_instructions', $props);
+
+        // A member part-way through induction sees the induction instructions only.
+        $pending = factory(User::class)->create();
+        (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $pending->id, 'active' => true]))->save();
+        $props = $propsFor($pending);
+        $this->assertArrayHasKey('induction_instructions', $props);
+        $this->assertArrayNotHasKey('trained_instructions', $props);
+        $this->assertArrayNotHasKey('trainer_instructions', $props);
+
+        // A trained (non-trainer) member sees the instructions for use, not the
+        // trainer instructions.
+        $trained = factory(User::class)->create();
+        (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $trained->id, 'trained' => now(), 'active' => true]))->save();
+        $props = $propsFor($trained);
+        $this->assertArrayHasKey('trained_instructions', $props);
+        $this->assertArrayNotHasKey('trainer_instructions', $props);
+
+        // A trainer sees everything.
+        $props = $propsFor($this->trainerUser);
+        $this->assertArrayHasKey('trained_instructions', $props);
+        $this->assertArrayHasKey('trainer_instructions', $props);
     }
 
     /** @test */
@@ -553,8 +643,11 @@ class EquipmentTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->get(route('equipment.show', $this->equipmentWithAccessCode));
         $response->assertStatus(200);
-        $response->assertSee('Edit');
-        $response->assertSee('Delete');
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')
+                ->where('can.update', true)
+                ->where('can.delete', true);
+        });
     }
 
     /** @test */
@@ -569,7 +662,8 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $equipmentWithoutCode));
         $response->assertStatus(200);
-        $response->assertDontSee('Access code');
+        $equipment = $response->viewData('page')['props']['equipment'];
+        $this->assertArrayNotHasKey('access_code', $equipment);
     }
 
     /** @test */
@@ -588,7 +682,11 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
         $response->assertStatus(200);
-        $response->assertSee('Training to be completed');
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')
+                ->where('userStatus.hasRecord', true)
+                ->where('userStatus.trained', false);
+        });
     }
 
     /** @test */
@@ -607,7 +705,9 @@ class EquipmentTest extends TestCase
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
         $response->assertStatus(200);
-        $response->assertSee('You have been inducted and can use this equipment');
+        $response->assertInertia(function ($page) {
+            $page->component('Equipment/Show')->where('userStatus.trained', true);
+        });
     }
 
     /** @test */

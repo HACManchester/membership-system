@@ -13,6 +13,7 @@ use BB\Http\Requests\Equipment\StoreEquipmentRequest;
 use BB\Http\Requests\Equipment\UpdateEquipmentRequest;
 use BB\Http\Resources\EquipmentFormResource;
 use BB\Http\Resources\EquipmentListResource;
+use BB\Http\Resources\EquipmentShowResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
@@ -110,26 +111,138 @@ class EquipmentController extends Controller
     {
         $this->authorize('view', $equipment);
 
-        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
+        /** @var \BB\Entities\User $user */
+        $user = \Auth::user();
+        $equipment->load('courses', 'roomModel', 'maintainerGroup');
 
-        $userTrainingRecord = $this->trainingRecordRepository->getUserForEquipment($equipment, \Auth::user()->id);
+        $userRecord = $this->trainingRecordRepository->getUserForEquipment($equipment, $user->id);
 
-        $trainedUsers = $this->trainingRecordRepository->getTrainedUsersForEquipment($equipment);
+        $hasCourse = $equipment->courses->count() > 0;
+        $liveCourse = $hasCourse && $equipment->courses->first()->live;
+        $hasLegacyInduction = ! empty($equipment->induction_category);
+        $useLegacyInduction = $equipment->requiresInduction()
+            && ! $liveCourse
+            && ($hasLegacyInduction || ! $hasCourse);
 
-        $usersPendingTraining = $this->trainingRecordRepository->getUsersPendingTrainingForEquipment($equipment);
+        $canTrain = $user->can('train', $equipment);
 
-        $memberList = $this->userRepository->getAllAsDropdown();
+        return Inertia::render('Equipment/Show', [
+            'equipment' => new EquipmentShowResource($equipment),
+            'courses' => $equipment->courses->map(function ($course) {
+                return [
+                    'name' => $course->name,
+                    'live' => (bool) $course->live,
+                    'url' => route('courses.show', $course->slug, false),
+                ];
+            })->values(),
+            'flags' => [
+                'useLegacyInduction' => $useLegacyInduction,
+                'liveCourse' => $liveCourse,
+            ],
+            'userStatus' => [
+                'hasRecord' => (bool) $userRecord,
+                'trained' => $userRecord && $userRecord->trained ? true : false,
+                'isTrainer' => $userRecord ? (bool) $userRecord->is_trainer : false,
+            ],
+            'canRequestInduction' => $useLegacyInduction
+                && ! $userRecord
+                && (bool) $equipment->accepting_inductions
+                && ! $user->online_only,
+            // The trainer / trained / awaiting-training member lists are management
+            // data — only built for members who can manage training on this
+            // equipment, never shipped to ordinary viewers.
+            'training' => ($useLegacyInduction && $canTrain)
+                ? $this->legacyTrainingData($equipment, $user)
+                : null,
+            'memberList' => $canTrain ? $this->userRepository->getAllAsDropdown() : (object) [],
+            'authUserId' => $user->id,
+            'can' => [
+                'update' => $user->can('update', $equipment),
+                'delete' => $user->can('delete', $equipment),
+                'train' => $canTrain,
+            ],
+            'urls' => [
+                'index' => route('equipment.index', [], false),
+                'edit' => route('equipment.edit', $equipment->slug, false),
+                'destroy' => route('equipment.destroy', $equipment->slug, false),
+                'requestInduction' => route('equipment_training.create', $equipment->slug, false),
+                'emailTrainers' => route('notificationemail.equipment', [$equipment->slug, 'trainer'], false),
+                'emailTrained' => route('notificationemail.equipment', [$equipment->slug, 'trained'], false),
+                'emailAwaiting' => route('notificationemail.equipment', [$equipment->slug, 'awaiting_training'], false),
+            ],
+        ]);
+    }
 
-        $now = new \DateTime("");
+    /**
+     * Shape the legacy trainer / trained / awaiting-training lists for the show
+     * page, with per-record capabilities and action URLs.
+     *
+     * @param  \BB\Entities\User  $user
+     * @return array
+     */
+    private function legacyTrainingData(Equipment $equipment, $user): array
+    {
+        $trainers = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
+        $trained = $this->trainingRecordRepository->getTrainedUsersForEquipment($equipment);
+        $pending = $this->trainingRecordRepository->getUsersPendingTrainingForEquipment($equipment);
 
-        return \View::make('equipment.show')
-            ->with('equipment', $equipment)
-            ->with('trainers', $trainers)
-            ->with('userTrainingRecord', $userTrainingRecord)
-            ->with('trainedUsers', $trainedUsers)
-            ->with('usersPendingTraining', $usersPendingTraining)
-            ->with('memberList', $memberList)
-            ->with('now', $now);
+        return [
+            'trainers' => $trainers->map(function ($record) use ($equipment, $user) {
+                return [
+                    'id' => $record->id,
+                    'user' => $this->trainingUser($record),
+                    'can' => ['demote' => $user->can('demote', $record)],
+                    'urls' => ['demote' => route('equipment_training.demote', [$equipment->slug, $record->id], false)],
+                ];
+            })->values(),
+            'trained' => $trained->map(function ($record) use ($equipment, $user) {
+                return [
+                    'id' => $record->id,
+                    'user' => $this->trainingUser($record),
+                    'is_trainer' => (bool) $record->is_trainer,
+                    'trained_on' => optional($record->trained)->toFormattedDateString(),
+                    'can' => [
+                        'untrain' => $user->can('untrain', $record),
+                        'promote' => $user->can('promote', $record),
+                    ],
+                    'urls' => [
+                        'untrain' => route('equipment_training.untrain', [$equipment->slug, $record->id], false),
+                        'promote' => route('equipment_training.promote', [$equipment->slug, $record->id], false),
+                    ],
+                ];
+            })->values(),
+            'pending' => $pending->filter(function ($record) use ($user) {
+                return $user->can('view', $record) || $record->user_id == $user->id;
+            })->map(function ($record) use ($equipment, $user) {
+                return [
+                    'id' => $record->id,
+                    'user' => $this->trainingUser($record),
+                    'requested_on' => optional($record->created_at)->toFormattedDateString(),
+                    'can' => [
+                        'delete' => $user->can('delete', $record),
+                        'train' => $user->can('train', $record),
+                    ],
+                    'urls' => [
+                        'destroy' => route('equipment_training.destroy', [$equipment->slug, $record->id], false),
+                        'train' => route('equipment_training.train', [$equipment->slug, $record->id], false),
+                    ],
+                ];
+            })->values(),
+        ];
+    }
+
+    /**
+     * @param  \BB\Entities\TrainingRecord  $record
+     * @return array
+     */
+    private function trainingUser($record): array
+    {
+        return [
+            'id' => $record->user->id,
+            'name' => $record->user->name,
+            'pronouns' => $record->user->pronouns,
+            'url' => route('members.show', $record->user->id, false),
+        ];
     }
 
     public function create()
