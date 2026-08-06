@@ -114,9 +114,14 @@ class EquipmentController extends Controller
         $hasCourse = $equipment->courses->count() > 0;
         $liveCourse = $hasCourse && $equipment->courses->first()->live;
         $hasLegacyInduction = ! empty($equipment->induction_category);
+        // The legacy path keys training records by induction_category, so it is
+        // only functional when one is set. Without a category (and without a live
+        // course) a requested record has no key and no course_id — it can never be
+        // matched by recordsForEquipmentQuery, so offering the request would just
+        // create an orphaned, invisible record.
         $useLegacyInduction = $equipment->requiresInduction()
             && ! $liveCourse
-            && ($hasLegacyInduction || ! $hasCourse);
+            && $hasLegacyInduction;
 
         $canTrain = $user->can('train', $equipment);
 

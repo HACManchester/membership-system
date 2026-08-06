@@ -148,15 +148,13 @@ const Show = ({
   const inductionBlocks = (
     <>
       {canRequestInduction && (
-        <Alert
-          severity="warning"
-          action={
-            <Button color="inherit" size="small" onClick={requestInduction}>
-              Request induction
-            </Button>
-          }
-        >
-          An induction is required before you may use this tool.
+        <Alert severity="warning">
+          <Typography gutterBottom>
+            An induction is required before you may use this tool.
+          </Typography>
+          <Button variant="contained" color="primary" onClick={requestInduction}>
+            Request induction
+          </Button>
         </Alert>
       )}
 

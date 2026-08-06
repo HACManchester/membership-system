@@ -728,6 +728,47 @@ class EquipmentTest extends TestCase
     }
 
     /** @test */
+    public function equipment_requiring_induction_without_a_category_or_course_offers_no_request()
+    {
+        // requires_induction is on, but there is no legacy category and no course,
+        // so there is no functional way to record a request. The legacy path must
+        // stay off rather than offer a button that creates an orphaned record.
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Misconfigured Tool',
+            'slug' => 'misconfigured-tool',
+            'requires_induction' => true,
+            'induction_category' => null,
+            'accepting_inductions' => true,
+        ]);
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $equipment))
+            ->assertInertia(function ($page) {
+                $page->component('Equipment/Show')
+                    ->where('flags.useLegacyInduction', false)
+                    ->where('canRequestInduction', false);
+            });
+    }
+
+    /** @test */
+    public function requesting_induction_on_equipment_without_a_category_or_course_creates_no_record()
+    {
+        $equipment = factory(Equipment::class)->create([
+            'name' => 'Misconfigured Tool',
+            'slug' => 'misconfigured-tool',
+            'requires_induction' => true,
+            'induction_category' => null,
+            'accepting_inductions' => true,
+        ]);
+
+        $response = $this->actingAs($this->regularUser)
+            ->post(route('equipment_training.create', $equipment));
+
+        $response->assertRedirect(route('equipment.show', $equipment));
+        $response->assertSessionHas('error');
+        $this->assertEquals(0, TrainingRecord::where('user_id', $this->regularUser->id)->count());
+    }
+
+    /** @test */
     public function show_embeds_a_live_course_interface_and_suppresses_legacy_training()
     {
         $course = factory(Course::class)->create([

@@ -19,6 +19,14 @@ class TrainingRecordController extends Controller
 
         $course = $equipment->courses->first();
 
+        // Without a course or a legacy induction_category the record would have no
+        // key and no course_id, so recordsForEquipmentQuery could never match it —
+        // an orphaned, invisible record. Refuse rather than create one.
+        if (! $course && empty($equipment->induction_category)) {
+            return \Redirect::route('equipment.show', $equipment)
+                ->with('error', 'This equipment does not have an induction configured.');
+        }
+
         $trainingRecord = TrainingRecord::create([
             'user_id' => $userId,
             'key' => $equipment->induction_category, // Keep for backwards compatibility
