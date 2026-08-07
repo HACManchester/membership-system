@@ -1,10 +1,12 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Http\Resources\MemberCardResource;
+use BB\Http\Resources\MemberProfileResource;
+use Inertia\Inertia;
 
 class MembersController extends Controller
 {
-    
     /**
      * @var \BB\Repo\ProfileDataRepository
      */
@@ -27,8 +29,9 @@ class MembersController extends Controller
 
     public function index()
     {
-        $users = $this->userRepository->getActivePublicList();
-        return \View::make('members.index')->with('users', $users);
+        return Inertia::render('Members/Index', [
+            'members' => MemberCardResource::collection($this->userRepository->getActivePublicList()),
+        ]);
     }
 
     /**
@@ -66,19 +69,52 @@ class MembersController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // TODO: Is this privacy check necessary? This route is not accessible by guests
         if (\Auth::guest() && $user->profile_private) {
             abort(404);
         }
 
-        if (!\Auth::user()->isAdmin() && !$user->active) {
+        /** @var User $authUser */
+        $authUser = \Auth::user();
+
+        if (! $authUser->isAdmin() && ! $user->active) {
             \FlashNotification::error("This user's profile is no longer available as they are not an active member.");
             return \Redirect::route('members.index');
         }
 
         $profileData = $this->profileRepo->getUserProfile($id);
+        $user->setRelation('profile', $profileData);
         $userSkills = array_intersect_ukey($this->profileSkillsRepository->getAll(), array_flip($profileData->skills), [$this, 'key_compare_func']);
-        return \View::make('members.show')->with('user', $user)->with('profileData', $profileData)->with('userSkills', $userSkills);
+
+        $canManage = $authUser->id == $user->id || $authUser->isAdmin();
+
+        return Inertia::render('Members/Show', [
+            'profile' => new MemberProfileResource($user, $this->shapeSkills($userSkills)),
+            'can' => [
+                'edit' => $authUser->id == $user->id,
+                'viewAccount' => $canManage,
+            ],
+            'urls' => [
+                'index' => route('members.index', [], false),
+                'editProfile' => route('account.profile.edit', $user->id, false),
+                'account' => route('account.show', $user->id, false),
+            ],
+        ]);
+    }
+
+    /**
+     * Flatten the matched skills to the fields the profile page renders.
+     *
+     * @param  array  $userSkills
+     * @return array<int, array{name: string, icon: string}>
+     */
+    private function shapeSkills($userSkills): array
+    {
+        $skills = [];
+        foreach ($userSkills as $skill) {
+            $skills[] = ['name' => $skill['name'], 'icon' => $skill['icon']];
+        }
+
+        return $skills;
     }
 
     private function key_compare_func($key1, $key2)
@@ -91,5 +127,4 @@ class MembersController extends Controller
             return -1;
         }
     }
-
 }
