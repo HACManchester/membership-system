@@ -4,8 +4,6 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\User;
 use BB\Entities\Settings;
-use BB\Events\MemberGivenTrustedStatus;
-use BB\Events\MemberPhotoWasDeclined;
 
 class AccountController extends Controller
 {
@@ -14,10 +12,6 @@ class AccountController extends Controller
 
     protected $userForm;
 
-    /**
-     * @var \BB\Helpers\UserImage
-     */
-    private $userImage;
     /**
      * @var \BB\Repo\EquipmentRepository
      */
@@ -35,18 +29,11 @@ class AccountController extends Controller
      */
     private $subscriptionChargeRepository;
 
-    /**
-     * @var \BB\Helpers\GoCardlessHelper
-     */
-    private $goCardless;
-
     /** @var \BB\Services\Credit */
     private $bbCredit;
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
-        \BB\Helpers\GoCardlessHelper $goCardless,
-        \BB\Helpers\UserImage $userImage,
         \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Repo\AddressRepository $addressRepository,
@@ -54,8 +41,6 @@ class AccountController extends Controller
         \BB\Services\Credit $bbCredit
     ) {
         $this->userForm = $userForm;
-        $this->goCardless = $goCardless;
-        $this->userImage = $userImage;
         $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->addressRepository = $addressRepository;
@@ -66,33 +51,7 @@ class AccountController extends Controller
         $this->userForm->setAdminOverride(! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
         $this->middleware('role:member');
-        $this->middleware('role:admin', array('only' => ['index']));
-
-        $paymentMethods = [
-            'gocardless'    => 'GoCardless',
-            'cash'          => 'Cash',
-            'bank-transfer' => 'Manual Bank Transfer',
-            'other'         => 'Other'
-        ];
-        \View::share('paymentMethods', $paymentMethods);
-        \View::share('paymentDays', array_combine(range(1, 31), range(1, 31)));
     }
-
-    public function index()
-    {
-        $filter = \Request::get('filter');
-        $include_online_only = \Request::get('include_online_only');
-        $new_only = \Request::get('new_only');
-        $sortBy = \Request::get('sortBy');
-        $direction = \Request::get('direction', 'asc');
-        $showLeft = \Request::get('showLeft', 0);
-        $limit = \Request::get('limit');
-
-        $users = $this->userRepository->getPaginated(compact('sortBy', 'direction', 'showLeft', 'filter', 'include_online_only', 'new_only', 'limit'));
-
-        return \View::make('account.index')->with('users', $users);
-    }
-
 
     /**
      * Display the specified resource.
@@ -203,95 +162,6 @@ class AccountController extends Controller
         return \Redirect::route('account.show', [$user->id]);
     }
 
-
-
-    public function adminUpdate($id)
-    {
-        $user = User::findWithPermission($id);
-
-        $madeTrusted = false;
-
-        if (\Request::has('trusted')) {
-            if (! $user->trusted && \Request::input('trusted')) {
-                //User has been made a trusted member
-                $madeTrusted = true;
-            }
-            $user->trusted = \Request::input('trusted');
-        }
-
-        if (\Request::has('key_holder')) {
-            $user->key_holder = \Request::input('key_holder');
-        }
-
-        if (\Request::has('induction_completed')) {
-            $user->induction_completed = \Request::input('induction_completed');
-        }
-
-        if (\Request::has('profile_photo_on_wall')) {
-            $profileData = $user->profile()->first();
-            $profileData->profile_photo_on_wall = \Request::input('profile_photo_on_wall');
-            $profileData->save();
-        }
-
-        if (\Request::has('photo_approved')) {
-            $profile = $user->profile()->first();
-
-            if (\Request::input('photo_approved')) {
-                $this->userImage->approveNewImage($user->hash);
-                $profile->update(['new_profile_photo' => false, 'profile_photo' => true]);
-            } else {
-                $profile->update(['new_profile_photo' => false]);
-                event(new MemberPhotoWasDeclined($user));
-            }
-        }
-
-        // Handle membership state fields
-        if (\Request::has('active')) {
-            $user->active = \Request::input('active');
-        }
-        if (\Request::has('status')) {
-            $user->status = \Request::input('status');
-        }
-        if (\Request::has('subscription_expires')) {
-            $expiryDate = \Request::input('subscription_expires');
-            if (!empty($expiryDate)) {
-                $user->subscription_expires = $expiryDate;
-            }
-        }
-
-        $user->save();
-
-        if (\Request::has('approve_new_address')) {
-            if (\Request::input('approve_new_address') == 'Approve') {
-                $this->addressRepository->approvePendingMemberAddress($id);
-            } elseif (\Request::input('approve_new_address') == 'Decline') {
-                $this->addressRepository->declinePendingMemberAddress($id);
-            }
-        }
-
-        if ($madeTrusted) {
-            event(new MemberGivenTrustedStatus($user));
-        }
-
-        if (\Request::has('experimental_dd_subscription')) {
-            $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
-
-            $this->userRepository->recordGoCardlessSubscription($user->id,  $subscription->id);
-        }
-        if (\Request::has('cancel_experimental_dd_subscription')) {
-            $this->goCardless->cancelSubscription($user->subscription_id);
-
-            $this->userRepository->recordGoCardlessSubscription($user->id,  null);
-        }
-
-
-        if (\Request::wantsJson()) {
-            return \Response::json('Updated', 200);
-        } else {
-            \FlashNotification::success('Details Updated');
-            return \Redirect::route('account.show', [$user->id]);
-        }
-    }
 
 
     public function destroy($id)

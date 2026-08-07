@@ -134,7 +134,7 @@
                         <div class="infobox__grid-item infobox__grid-item--main">
                             <h4>New photo to approve</h4>
                             <p>If rejected they will be emailed explaining the photo wasn't suitable.</p>
-                            <form method="POST" action="{{ route('account.admin-update', $user->id) }}" class="form-horizontal">
+                            <form method="POST" action="{{ route('account.photo-approval', $user->id) }}" class="form-horizontal">
                                 @csrf
                                 @method('PUT')
 
@@ -252,7 +252,7 @@
                         <div class="infobox__grid-item infobox__grid-item--main">
                             <h4>Address Change</h4>
                             <p>Does this look like a real address?</p>
-                            <form method="POST" action="{{ route('account.admin-update', $user->id) }}" class="form-horizontal">
+                            <form method="POST" action="{{ route('account.address-approval', $user->id) }}" class="form-horizontal">
                                 @csrf
                                 @method('PUT')
 
@@ -265,8 +265,8 @@
                                         {{ $newAddress->postcode }}
                                     </div>
                                     <div class="col-sm-3">
-                                        <button type="submit" class="btn btn-default" name="approve_new_address">Approve</button>
-                                        <button type="submit" class="btn btn-default" name="approve_new_address">Decline</button>
+                                        <button type="submit" class="btn btn-default" name="approve_new_address" value="Approve">Approve</button>
+                                        <button type="submit" class="btn btn-default" name="approve_new_address" value="Decline">Decline</button>
                                     </div>
                                 </div>
                             </form>
@@ -359,10 +359,9 @@
                                 This is a fixed DD subscription based on the users exiting mandate. It does not replace the normal monthly payment, it is for testing only.
                             </p>
                             @if ($user->subscription_id)
-                                <form method="POST" action="{{ route('account.admin-update', $user->id) }}" class="form-horizontal">
+                                <form method="POST" action="{{ route('account.subscription.experimental.destroy', $user->id) }}" class="form-horizontal">
                                     @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="cancel_experimental_dd_subscription" value="true">
+                                    @method('DELETE')
                                     <div class="form-group">
                                         <div class="col-sm-3">
                                             <button type="submit" class="btn btn-default">Cancel monthly payment</button>
@@ -370,10 +369,8 @@
                                     </div>
                                 </form>
                             @else
-                                <form method="POST" action="{{ route('account.admin-update', $user->id) }}" class="form-horizontal">
+                                <form method="POST" action="{{ route('account.subscription.experimental.store', $user->id) }}" class="form-horizontal">
                                     @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="experimental_dd_subscription" value="true">
                                     <button type="submit" class="btn btn-default">Setup monthly payment</button>
                                 </form>
                             @endif

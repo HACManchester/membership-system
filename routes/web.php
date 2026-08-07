@@ -37,7 +37,8 @@ Route::inertia('component-zoo', 'ComponentZoo/Index');
 
 Route::get('account/create', ['uses' => 'MemberRegistrationController@create', 'as' => 'account.create', 'middleware' => 'throttle:10,1']);
 Route::post('account', ['uses' => 'MemberRegistrationController@store', 'as' => 'account.store', 'middleware' => 'throttle:5,1']);
-Route::resource('account', 'AccountController', ['except' => ['create', 'store']]);
+Route::get('account', ['uses' => 'MemberAdminController@index', 'as' => 'account.index', 'middleware' => 'role:admin']);
+Route::resource('account', 'AccountController', ['only' => ['show', 'edit', 'update', 'destroy']]);
 
 //Editing the profile
 Route::get('account/{account}/profile/edit', ['uses' => 'ProfileController@edit', 'as' => 'account.profile.edit', 'middleware' => 'role:member']);
@@ -48,7 +49,11 @@ Route::get('register', ['as' => 'register', 'uses' => 'MemberRegistrationControl
 Route::get('online-only', ['as' => 'online-only', 'uses' => 'MemberRegistrationController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
 
 //Special account editing routes
-Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware' => 'role:admin']);
+Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'MemberAdminController@update', 'middleware' => 'role:admin']);
+Route::put('account/{account}/photo-approval', ['as' => 'account.photo-approval', 'uses' => 'MemberPhotoApprovalController@update', 'middleware' => 'role:admin']);
+Route::put('account/{account}/address-approval', ['as' => 'account.address-approval', 'uses' => 'AddressApprovalController@update', 'middleware' => 'role:admin']);
+Route::post('account/{account}/experimental-subscription', ['as' => 'account.subscription.experimental.store', 'uses' => 'SubscriptionController@experimentalSubscriptionStore', 'middleware' => 'role:admin']);
+Route::delete('account/{account}/experimental-subscription', ['as' => 'account.subscription.experimental.destroy', 'uses' => 'SubscriptionController@experimentalSubscriptionDestroy', 'middleware' => 'role:admin']);
 Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'EmailConfirmationController@sendConfirmationEmail', 'middleware' => 'throttle:3,1']);
 Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'EmailConfirmationController@confirmEmail']);
 

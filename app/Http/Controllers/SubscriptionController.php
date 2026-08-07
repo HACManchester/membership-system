@@ -164,4 +164,39 @@ class SubscriptionController extends Controller
         $charges = $this->subscriptionChargeRepository->getChargesPaginated();
         return \View::make('payments.sub-charges')->with('charges', $charges);
     }
+
+    /**
+     * Set up the experimental fixed GoCardless DD subscription for a member
+     * (admin-only testing tool, separate from the normal monthly payment).
+     *
+     * @param  int  $userId
+     */
+    public function experimentalSubscriptionStore($userId)
+    {
+        $user = User::findWithPermission($userId);
+
+        $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
+
+        $this->userRepository->recordGoCardlessSubscription($user->id, $subscription->id);
+
+        \FlashNotification::success('Details Updated');
+        return \Redirect::route('account.show', [$user->id]);
+    }
+
+    /**
+     * Cancel the experimental fixed GoCardless DD subscription for a member.
+     *
+     * @param  int  $userId
+     */
+    public function experimentalSubscriptionDestroy($userId)
+    {
+        $user = User::findWithPermission($userId);
+
+        $this->goCardless->cancelSubscription($user->subscription_id);
+
+        $this->userRepository->recordGoCardlessSubscription($user->id, null);
+
+        \FlashNotification::success('Details Updated');
+        return \Redirect::route('account.show', [$user->id]);
+    }
 }
