@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use Inertia\Inertia;
 
 class HomeController extends Controller
 {
@@ -14,7 +15,12 @@ class HomeController extends Controller
             return \Redirect::route('account.show', [$user->id]);
         }
 
-        \View::share('body_class', 'home');
-        return \View::make('home');
+        return Inertia::render('Home', [
+            'urls' => [
+                'register' => route('register', [], false),
+                'gift' => route('gift', [], false),
+                'login' => route('login', [], false),
+            ],
+        ]);
     }
 }
