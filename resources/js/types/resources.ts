@@ -187,6 +187,21 @@ export type MaintainerGroupResource = {
   };
 };
 
+export type RoleResource = {
+  id: number;
+  name: string;
+  title: string | null;
+  description: string | null;
+  email_public: string | null;
+  email_private: string | null;
+  slack_channel: string | null;
+  member_count: number;
+  members: { id: number; name: string }[];
+  urls: {
+    edit: string;
+  };
+};
+
 // Additional types for page props
 export type Member = {
   id: number;

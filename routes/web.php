@@ -220,8 +220,7 @@ Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 
 ##########################
 
 Route::group(array('middleware' => 'role:admin'), function () {
-    Route::resource('roles', 'RolesController', []);
-    Route::resource('roles.users', 'RoleUsersController', ['only' => ['destroy', 'store']]);
+    Route::resource('roles', 'RolesController', ['only' => ['index', 'edit', 'update']]);
 });
 
 

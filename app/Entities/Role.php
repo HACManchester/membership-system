@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
@@ -12,7 +13,7 @@ class Role extends Model
      */
     protected $fillable = ['name', 'title', 'description', 'email_public', 'email_private', 'slack_channel'];
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany('\BB\Entities\User')->withTimestamps();
     }

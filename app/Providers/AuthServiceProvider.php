@@ -19,7 +19,9 @@ use BB\Policies\TrainingRecordPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
 use BB\Policies\CoursePolicy;
+use BB\Policies\RolePolicy;
 use BB\Policies\UserPolicy;
+use BB\Entities\Role;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -39,6 +41,7 @@ class AuthServiceProvider extends ServiceProvider
         MaintainerGroup::class => MaintainerGroupPolicy::class,
         Course::class => CoursePolicy::class,
         Room::class => RoomPolicy::class,
+        Role::class => RolePolicy::class,
     ];
 
     /**
