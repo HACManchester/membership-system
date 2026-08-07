@@ -6,8 +6,6 @@ use BB\Entities\User;
 use BB\Entities\Settings;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
-use BB\Exceptions\ValidationException;
-use BB\Helpers\MembershipPayments;
 
 class AccountController extends Controller
 {
@@ -42,15 +40,11 @@ class AccountController extends Controller
      */
     private $goCardless;
 
-    /** @var \BB\Validators\UpdateSubscription */
-    private $updateSubscriptionAdminForm;
-
     /** @var \BB\Services\Credit */
     private $bbCredit;
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
-        \BB\Validators\UpdateSubscription $updateSubscriptionAdminForm,
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Helpers\UserImage $userImage,
         \BB\Repo\EquipmentRepository $equipmentRepository,
@@ -60,7 +54,6 @@ class AccountController extends Controller
         \BB\Services\Credit $bbCredit
     ) {
         $this->userForm = $userForm;
-        $this->updateSubscriptionAdminForm = $updateSubscriptionAdminForm;
         $this->goCardless = $goCardless;
         $this->userImage = $userImage;
         $this->equipmentRepository = $equipmentRepository;
@@ -301,29 +294,6 @@ class AccountController extends Controller
     }
 
 
-    public function alterSubscription($id)
-    {
-        // I don't think this is used any more
-
-        $user = User::findWithPermission($id);
-        $input = \Request::all();
-
-        $this->updateSubscriptionAdminForm->validate($input, $user->id);
-
-        if (($user->payment_method == 'gocardless') && ($input['payment_method'] != 'gocardless')) {
-            //Changing away from GoCardless
-            $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
-            if ($subscription->status == 'cancelled') {
-                $user->cancelSubscription();
-            }
-        }
-
-        $user->updateSubscription($input['payment_method'], $input['payment_day']);
-
-        \FlashNotification::success('Details Updated');
-        return \Redirect::route('account.show', [$user->id]);
-    }
-
     public function destroy($id)
     {
         $user = User::findWithPermission($id);
@@ -341,32 +311,6 @@ class AccountController extends Controller
 
         \FlashNotification::success('Updated status to leaving');
 
-        return \Redirect::route('account.show', [$user->id]);
-    }
-
-    public function updateSubscriptionAmount($id)
-    {
-        $amount = \Request::input('monthly_subscription');
-
-        if (!is_numeric($amount) || $amount < 0) {
-            throw new ValidationException('Please enter a valid amount in pounds.');
-        }
-        $amount = (float) $amount;
-
-        $minAmountPence = MembershipPayments::getMinimumPrice();
-        $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
-        $minAmountPounds = $minAmountPence / 100;
-
-        // TODO: Lift this into some sort of "contact" config?
-        $boardEmail = 'board@hacman.org.uk';
-
-        if ($amount < $minAmountPounds && !\Auth::user()->isAdmin()) {
-            throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
-        }
-
-        $user = User::findWithPermission($id);
-        $user->updateSubAmount($amount);
-        \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
 

@@ -48,7 +48,6 @@ Route::get('register', ['as' => 'register', 'uses' => 'MemberRegistrationControl
 Route::get('online-only', ['as' => 'online-only', 'uses' => 'MemberRegistrationController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
 
 //Special account editing routes
-Route::put('account/{account}/alter-subscription', ['as' => 'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware' => 'role:admin']);
 Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware' => 'role:admin']);
 Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'EmailConfirmationController@sendConfirmationEmail', 'middleware' => 'throttle:3,1']);
 Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'EmailConfirmationController@confirmEmail']);
@@ -102,7 +101,7 @@ Route::group(array('middleware' => 'role:finance'), function () {
     Route::get('payments/possible-duplicates', ['as' => 'payments.possible-duplicates', 'uses' => 'PaymentController@possibleDuplicates']);
 });
 
-Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountController@updateSubscriptionAmount', 'middleware' => 'throttle:3,1']);
+Route::post('account/{account}/update-sub-payment', ['as' => 'account.update-sub-payment', 'uses' => 'AccountSubscriptionController@update', 'middleware' => 'throttle:3,1']);
 
 # Payment provider specific urls
 Route::post('account/{account}/payment/gocardless', ['as' => 'account.payment.gocardless.create', 'uses' => 'GoCardlessPaymentController@create']);

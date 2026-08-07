@@ -1,9 +1,5 @@
 parameters:
 	ignoreErrors:
-		-
-			message: "#^Parameter \\#2 \\$id of method BB\\\\Validators\\\\FormValidator\\:\\:validate\\(\\) expects null, int given\\.$#"
-			count: 1
-			path: app/Http/Controllers/AccountController.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$online_only\\.$#"
