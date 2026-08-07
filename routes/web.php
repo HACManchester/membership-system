@@ -35,8 +35,8 @@ Route::inertia('component-zoo', 'ComponentZoo/Index');
 # Account
 ##########################
 
-Route::get('account/create', ['uses' => 'AccountController@create', 'as' => 'account.create', 'middleware' => 'throttle:10,1']);
-Route::post('account', ['uses' => 'AccountController@store', 'as' => 'account.store', 'middleware' => 'throttle:5,1']);
+Route::get('account/create', ['uses' => 'MemberRegistrationController@create', 'as' => 'account.create', 'middleware' => 'throttle:10,1']);
+Route::post('account', ['uses' => 'MemberRegistrationController@store', 'as' => 'account.store', 'middleware' => 'throttle:5,1']);
 Route::resource('account', 'AccountController', ['except' => ['create', 'store']]);
 
 //Editing the profile
@@ -44,8 +44,8 @@ Route::get('account/{account}/profile/edit', ['uses' => 'ProfileController@edit'
 Route::put('account/{account}/profile', ['uses' => 'ProfileController@update', 'as' => 'account.profile.update', 'middleware' => 'role:member']);
 
 //Short register url
-Route::get('register', ['as' => 'register', 'uses' => 'AccountController@create', 'middleware' => 'throttle:10,1']);
-Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
+Route::get('register', ['as' => 'register', 'uses' => 'MemberRegistrationController@create', 'middleware' => 'throttle:10,1']);
+Route::get('online-only', ['as' => 'online-only', 'uses' => 'MemberRegistrationController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
 
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as' => 'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware' => 'role:admin']);
