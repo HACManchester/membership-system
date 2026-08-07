@@ -50,8 +50,8 @@ Route::get('online-only', ['as' => 'online-only', 'uses' => 'AccountController@c
 //Special account editing routes
 Route::put('account/{account}/alter-subscription', ['as' => 'account.alter-subscription', 'uses' => 'AccountController@alterSubscription', 'middleware' => 'role:admin']);
 Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'AccountController@adminUpdate', 'middleware' => 'role:admin']);
-Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'AccountController@sendConfirmationEmail', 'middleware' => 'throttle:3,1']);
-Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'AccountController@confirmEmail']);
+Route::get('account/confirm-email/send', ['as' => 'account.send-confirmation-email', 'uses' => 'EmailConfirmationController@sendConfirmationEmail', 'middleware' => 'throttle:3,1']);
+Route::get('account/confirm-email/{id}/{hash}', ['as' => 'account.confirm-email', 'uses' => 'EmailConfirmationController@confirmEmail']);
 
 //Balance
 Route::get('account/{account}/balance', ['uses' => 'BalanceController@index', 'as' => 'account.balance.index', 'middleware' => 'role:member']);

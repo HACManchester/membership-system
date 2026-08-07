@@ -1,21 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$email_verified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AccountController.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Http/Controllers/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of class BB\\\\Mailer\\\\UserMailer constructor expects BB\\\\Entities\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null given\\.$#"
-			count: 1
-			path: app/Http/Controllers/AccountController.php
-
-		-
 			message: "#^Parameter \\#2 \\$id of method BB\\\\Validators\\\\FormValidator\\:\\:validate\\(\\) expects null, int given\\.$#"
 			count: 1
 			path: app/Http/Controllers/AccountController.php
