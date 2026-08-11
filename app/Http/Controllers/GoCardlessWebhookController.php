@@ -237,7 +237,7 @@ class GoCardlessWebhookController extends Controller
         /** @var User|null $user */
         $user = User::where('mandate_id', $preAuth['links']['mandate'])->first();
         if ($user) {
-            $user->cancelSubscription();
+            $this->userRepository->subscriptionCancelled($user->id);
         }
     }
 
@@ -249,7 +249,7 @@ class GoCardlessWebhookController extends Controller
         $user = User::where('subscription_id', $subscription['links']['subscription'])->first();
         if ($user) {
             if ($user->payment_method == 'gocardless') {
-                $user->cancelSubscription();
+                $this->userRepository->subscriptionCancelled($user->id);
             } else {
                 // The user probably has a new subscription alongside an existing mandate,
                 // we don't want to touch that so just remove the subscription details

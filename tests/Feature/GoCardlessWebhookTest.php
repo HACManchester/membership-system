@@ -185,6 +185,40 @@ class GoCardlessWebhookTest extends TestCase
     }
 
     /** @test */
+    public function a_cancelled_mandate_cancels_the_outstanding_charges_it_leaves_behind()
+    {
+        $user = factory(User::class)->create([
+            'status' => 'active',
+            'active' => true,
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST_123',
+        ]);
+
+        $pending = factory(SubscriptionCharge::class)->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now()->addDays(7),
+            'status' => 'pending',
+        ]);
+
+        $due = factory(SubscriptionCharge::class)->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $this->postWebhook([[
+            'resource_type' => 'mandates',
+            'action' => 'cancelled',
+            'links' => ['mandate' => 'MD_TEST_123'],
+        ]])->assertStatus(200);
+
+        // Left outstanding these are uncollectable, and get billed in a batch against
+        // whatever mandate the member sets up when they rejoin
+        $this->assertEquals('cancelled', $pending->fresh()->status);
+        $this->assertEquals('cancelled', $due->fresh()->status);
+    }
+
+    /** @test */
     public function delivering_the_same_confirmed_event_twice_is_harmless()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('processing');

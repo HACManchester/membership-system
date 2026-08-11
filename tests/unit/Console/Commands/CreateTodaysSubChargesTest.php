@@ -16,6 +16,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user1 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $targetDay,
             'monthly_subscription' => 22,
         ]);
@@ -23,6 +24,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user2 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $targetDay,
             'monthly_subscription' => 17,
         ]);
@@ -61,6 +63,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
@@ -91,6 +94,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 27,
         ]);
@@ -120,6 +124,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
@@ -149,6 +154,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
@@ -209,6 +215,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
@@ -247,6 +254,7 @@ class CreateTodaysSubChargesTest extends TestCase
             $user = factory(User::class)->create([
                 'status' => 'active',
                 'payment_method' => 'gocardless-variable',
+                'mandate_id' => 'MD_TEST',
                 'payment_day' => $paymentDay,
                 'monthly_subscription' => $amount,
             ]);

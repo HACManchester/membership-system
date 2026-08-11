@@ -58,6 +58,15 @@ class MemberSubscriptionCharges
 
         $users = $this->userRepository->getBillableActive();
         foreach ($users as $user) {
+            // Being active isn't enough. Cancelling clears the payment method but leaves
+            // active = true until the daily check retires the member, so without this we
+            // keep raising charges against someone with no way to pay - which is how the
+            // backlog built up in the first place. Same test the billing run applies, so
+            // the two can't disagree about who is a paying member
+            if ( ! $this->canBeBilled($user)) {
+                continue;
+            }
+
             if (($user->payment_day == $targetDate->day) && ( ! $this->subscriptionChargeRepository->chargeExists($user->id, $targetDate))) {
                 try {
                     $this->subscriptionChargeRepository->createCharge($user->id, $targetDate, $user->monthly_subscription);
@@ -100,10 +109,23 @@ class MemberSubscriptionCharges
             return $this->paymentRepository->getPaymentsByReference($charge->id)->count() > 0;
         });
 
+        [$unbillable, $subCharges] = $subCharges->partition(function ($charge) {
+            return ! $this->canBeBilled($charge->user);
+        });
+        $this->cancelUnbillableCharges($unbillable);
+
         //Filter the list into two gocardless and balance subscriptions
         $goCardlessUsers = $subCharges->filter(function ($charge) {
             return $charge->user->payment_method == 'gocardless-variable';
         });
+
+        // Only the direct debits, because only they are collected automatically. A cash
+        // or standing order member's charge sits due until someone records the payment,
+        // and being slow about that is not a billing fault to alert on every night.
+        [$stale, $goCardlessUsers] = $goCardlessUsers->partition(function ($charge) {
+            return $charge->charge_date->lt(Carbon::now()->subDays($this->maxChargeAgeDays()));
+        });
+        $this->reportStaleCharges($stale);
 
         //Charge the gocardless users
         $members = [];
@@ -164,6 +186,85 @@ class MemberSubscriptionCharges
                 $message
             );
         }
+    }
+
+    /**
+     * Should we be taking money from this member at all?
+     *
+     * A member with no payment method is the state a cancellation leaves behind, and an
+     * inactive one has been suspended or has left. Either way their charges can't be
+     * collected - but nothing used to say so. They were dropped from the billing run
+     * without a word and picked up again, months of them, the moment the member set up
+     * a new mandate. Members paying by cash or standing order do keep a payment method:
+     * their charges legitimately wait here to be settled by hand.
+     *
+     * @param \BB\Entities\User|null $user
+     * @return bool
+     */
+    public function canBeBilled($user)
+    {
+        if ( ! $user || ! $user->active || empty($user->payment_method)) {
+            return false;
+        }
+
+        return ! ($user->payment_method == 'gocardless-variable' && empty($user->mandate_id));
+    }
+
+    /**
+     * @return int Days after its charge date that a due charge stops being collectable
+     */
+    private function maxChargeAgeDays()
+    {
+        return (int) config('membership.billing.max_charge_age_days');
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection $charges
+     */
+    private function cancelUnbillableCharges($charges)
+    {
+        if ($charges->isEmpty()) {
+            return;
+        }
+
+        $members = [];
+        foreach ($charges as $charge) {
+            $this->subscriptionChargeRepository->cancelCharge($charge->id);
+            $members[] = $charge->user ? $charge->user->name : 'user ' . $charge->user_id;
+        }
+
+        $message = "Cancelled " . $charges->count() . " uncollectable sub charges (member has no payment method): " . implode(", ", array_unique($members));
+        Log::warning($message);
+        $this->telegramHelper->notify(
+            TelegramHelper::WARNING,
+            $message
+        );
+    }
+
+    /**
+     * Charges this old are left alone rather than cancelled - the money may well still
+     * be owed, but collecting a backdated month automatically is never right. Someone
+     * needs to look at why it sat here.
+     *
+     * @param \Illuminate\Support\Collection $charges
+     */
+    private function reportStaleCharges($charges)
+    {
+        if ($charges->isEmpty()) {
+            return;
+        }
+
+        $details = $charges->map(function ($charge) {
+            $name = $charge->user ? $charge->user->name : 'user ' . $charge->user_id;
+            return $name . ' (' . $charge->charge_date->format('Y-m-d') . ')';
+        })->unique()->implode(", ");
+
+        $message = "Not billing " . $charges->count() . " sub charges over " . $this->maxChargeAgeDays() . " days old - these need review: " . $details;
+        Log::warning($message);
+        $this->telegramHelper->notify(
+            TelegramHelper::WARNING,
+            $message
+        );
     }
 
 }

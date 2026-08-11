@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'billing' => [
+        // How far past its charge date a due charge may be collected. Past this the
+        // nightly run reports it for review instead of billing it - a member should
+        // never wake up to a run of backdated subscription payments.
+        'max_charge_age_days' => 35,
+    ],
+
     'prices' => [
         // The minimum price we'll accept for online subscriptions, in pence
         'minimum' => 1700,

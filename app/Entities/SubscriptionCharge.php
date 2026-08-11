@@ -13,6 +13,7 @@ use Laracasts\Presenter\PresentableTrait;
  * @property Carbon|null  $payment_date
  * @property integer $amount
  * @property string  $status
+ * @property-read User|null $user
  * @package BB\Entities
  */
 class SubscriptionCharge extends Model

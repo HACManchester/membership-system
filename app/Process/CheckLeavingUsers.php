@@ -41,7 +41,12 @@ class CheckLeavingUsers
                     //an email will be sent by the user observer
                 }
             }else{
-                Log::error("User marked as active without an expiry date!");
+                // Nothing left to wait for: no paid-up period to run down and no payment
+                // method to collect one with. Left here they stay active indefinitely and
+                // the nightly run keeps raising charges nothing can collect
+                Log::warning($user->name . ' was leaving with no expiry date - marking as left');
+                $this->userRepository->memberLeft($user->id);
+                array_push($members, $user->name);
             }
 
         }

@@ -279,8 +279,27 @@ class UserRepository extends DBRepository
     }
 
     /**
+     * The member's payment method has gone away - either they cancelled it here or
+     * their bank cancelled the mandate and GoCardless told us about it.
+     *
+     * Outstanding charges have to go with it. They can never be collected while the
+     * member has no payment method, so they sit at 'due' accumulating one a month,
+     * invisible, until the member sets up a new mandate - at which point the whole
+     * backlog is billed against it in a single run.
+     *
+     * @param $userId
+     */
+    public function subscriptionCancelled($userId)
+    {
+        /** @var User $user */
+        $user = $this->getById($userId);
+        $user->cancelSubscription();
+
+        $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+    }
+
+    /**
      * The member has left, disable their account and cancel any out stand sub charge records
-     * The payment day is also cleared so when they start again the payment is charge happens at restart time
      *
      * @param $userId
      */

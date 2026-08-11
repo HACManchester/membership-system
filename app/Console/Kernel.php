@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\CreateTodaysSubCharges::class,
         Commands\BillMembers::class,
         Commands\Payments\CheckForPossibleDuplicates::class,
+        Commands\Payments\AuditSubscriptionCharges::class,
     ];
 
 

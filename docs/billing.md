@@ -45,6 +45,18 @@ One row per member per billing month — "this member owes this month's subscrip
 **Mental model:** a `SubscriptionCharge` is the *invoice*; a `Payment` is the *money movement*
 attempting to settle it; `Payment.reference = SubscriptionCharge.id` links them.
 
+> **Don't trust `created_at` on `subscription_charge` on production.** Charges there have been
+> observed with a `created_at` matching the moment a webhook marked them paid — a batch of
+> confirmations delivered in one request left a group of charges all "created" in the same second,
+> long after they were really raised. The likely cause is the age of the table: created in 2015
+> with non-nullable timestamps, `created_at` would have been the first `TIMESTAMP` column and
+> picked up MySQL's implicit `ON UPDATE CURRENT_TIMESTAMP`, so every write rewrites it. A
+> freshly-migrated database does **not** reproduce this (`created_at timestamp NULL DEFAULT NULL`),
+> so it can only be confirmed on production with `SHOW CREATE TABLE subscription_charge` — do that
+> before building any conclusion on those timestamps. Either way, prefer `charge_date` (a plain
+> `date`, written once) for when a charge is *for*, and the Payment's `paid_at` for when the money
+> actually moved.
+
 ### Pricing (`config/membership.php`)
 
 Tiered amounts (low income / standard / supporter), stored in pence in config while
@@ -58,7 +70,7 @@ project-health.md.
 | Command | Does |
 | --- | --- |
 | `CreateTodaysSubCharges` | Creates `SubscriptionCharge` rows **7 days ahead**: for each billable active user whose `payment_day` matches (today + 7), create a `pending` charge (`MemberSubscriptionCharges::createSubscriptionCharges`) |
-| `BillMembers` | (a) `makeChargesDue()`: flip `pending` charges whose `charge_date` has arrived to `due`; (b) `billMembers()`: for each `due` charge with **no existing payment for that charge**, submit a GoCardless bill and record a `pending` Payment |
+| `BillMembers` | (a) `makeChargesDue()`: flip `pending` charges whose `charge_date` has arrived to `due`; (b) `billMembers()`: for each `due` charge with **no existing payment for that charge**, submit a GoCardless bill and record a `pending` Payment. Two kinds of charge never get billed: those belonging to a member who can't be billed at all (inactive, or no payment method — these are **cancelled** and reported), and direct debits more than `membership.billing.max_charge_age_days` past their charge date (**left alone** and reported for review) |
 | `CheckMembershipStatus` | Runs five processes: `RecoverMemberships` (re-activate anyone whose recent payment covers them), `CheckPaymentWarnings` (warning expired → suspend), `CheckSuspendedUsers` (suspended > 30 days → left), `CheckLeavingUsers` (leaving + expired → left), `CheckExpiredActiveUsers` (active but expired > 7 days, or no expiry at all → payment-warning — the backstop for failures that never produced a webhook) |
 | `CheckForPossibleDuplicates` | Flags duplicate-looking pending payments for manual review (Telegram notification); no auto-dedup |
 
@@ -126,9 +138,21 @@ daily `RecoverMemberships` re-activates them. If the warning expires: `suspended
 — the keyfob export only includes active users). After 30 days suspended: `left`.
 
 **Leaving.** Member cancels (`SubscriptionController@destroy`): mandate cancelled at GoCardless,
-payment fields cleared, status `leaving`, outstanding charges cancelled. The daily check flips
-`leaving` → `left` once `subscription_expires` passes. A mandate cancelled *at the bank* arrives
-as a `mandates.cancelled` webhook with the same effect.
+then `UserRepository::subscriptionCancelled()` clears the payment fields, sets status `leaving`
+and **cancels the outstanding charges**. The daily check flips `leaving` → `left` once
+`subscription_expires` passes, or immediately if there is no expiry date to wait for. A mandate
+cancelled *at the bank* arrives as a `mandates.cancelled` webhook and goes through the same
+method — it must, or the charges it leaves behind become the backlog described below.
+
+**The rejoin backlog (fixed, worth understanding).** Cancelling used to leave outstanding charges
+in place. Nothing could collect them — `billMembers()` filtered out members with no payment method
+without a word — so they sat at `due` while the nightly run added another every month for as long
+as the member stayed `active`. When the member rejoined, the new mandate made the whole backlog
+billable at once and it went out in a single run: a year of backdated subscription payments in one
+night. Three things now prevent it: cancellation takes the charges with it, `billMembers()`
+cancels-and-reports charges it can't collect instead of dropping them, and it refuses to collect
+anything older than the configured age. `bb:audit-sub-charges` finds and clears any historic
+backlog.
 
 **Rejoining.** A returning member redoes the mandate setup; `ensureMembershipActive()` reactivates
 and bills immediately. History (payments, charges) is retained.

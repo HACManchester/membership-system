@@ -137,8 +137,7 @@ class SubscriptionController extends Controller
             }
 
             if ($cancelled) {
-                $user->cancelSubscription();
-                $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+                $this->userRepository->subscriptionCancelled($userId);
 
                 \FlashNotification::success('Your subscription has been cancelled');
                 return \Redirect::back();
@@ -146,9 +145,7 @@ class SubscriptionController extends Controller
         } elseif ($user->payment_method == 'gocardless-variable') {
             $status = $this->goCardless->cancelPreAuth($user->mandate_id);
             if ($status) {
-                $user->cancelSubscription();
-
-                $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
+                $this->userRepository->subscriptionCancelled($userId);
 
                 \FlashNotification::success('Your direct debit has been cancelled');
                 return \Redirect::back();

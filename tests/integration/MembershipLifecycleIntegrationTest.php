@@ -198,6 +198,72 @@ class MembershipLifecycleIntegrationTest extends TestCase
         Carbon::setTestNow();
     }
 
+    /**
+     * The regression this whole guard exists for: a member whose bank cancelled their
+     * mandate used to keep a charge raised against them every month, uncollectable and
+     * invisible, until they rejoined - at which point the entire backlog was billed
+     * against their new mandate in one nightly run.
+     */
+    public function testRejoiningAfterABankCancelledMandateDoesNotBillTheBacklog()
+    {
+        // Bind the mock before resolving anything, so every path through the container -
+        // including ensureMembershipActive's immediate billing - goes through it
+        $goCardless = $this->createMock(\BB\Helpers\GoCardlessHelper::class);
+        $goCardless->method('getNameFromReason')->willReturn('Monthly subscription');
+        $goCardless->method('newBill')->willReturn((object)['id' => 'PM_REJOIN', 'status' => 'pending_submission']);
+        $this->app->instance(\BB\Helpers\GoCardlessHelper::class, $goCardless);
+
+        $this->userRepository = app(UserRepository::class);
+        $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
+        $this->checkLeavingUsers = new CheckLeavingUsers($this->userRepository);
+        $billService = app(MemberSubscriptionCharges::class);
+
+        $user = factory(User::class)->create([
+            'status' => 'active',
+            'active' => true,
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_ORIGINAL',
+            'payment_day' => 1,
+            'monthly_subscription' => 22,
+            'subscription_expires' => Carbon::now()->subMonths(13),
+        ]);
+
+        $this->subscriptionChargeRepository->createCharge($user->id, Carbon::now()->subMonths(13), 22, 'due');
+
+        // Their bank cancels the direct debit
+        $this->userRepository->subscriptionCancelled($user->id);
+
+        $this->assertEquals(
+            0,
+            \BB\Entities\SubscriptionCharge::where('user_id', $user->id)->whereIn('status', ['pending', 'due'])->count(),
+            'Cancelling the mandate must take the outstanding charges with it'
+        );
+
+        // A year passes. Nothing can bill them, and the leaving check retires them
+        $this->checkLeavingUsers->run();
+        $this->assertEquals('left', $user->fresh()->status);
+
+        // They rejoin: new mandate, and ensureMembershipActive raises the first charge
+        $this->userRepository->updateUserPaymentMethod($user->id, 'gocardless-variable', Carbon::now()->day);
+        $user->fresh()->update(['mandate_id' => 'MD_REJOINED']);
+        $this->userRepository->ensureMembershipActive($user->id);
+
+        $billService->makeChargesDue();
+        $billService->billMembers();
+
+        // ensureMembershipActive raised and billed exactly one charge, for today, and
+        // the nightly run found no backlog to collect on top of it
+        $charges = \BB\Entities\SubscriptionCharge::where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'due', 'processing', 'paid'])
+            ->get();
+        $this->assertCount(1, $charges);
+        $this->assertTrue($charges->first()->charge_date->isToday());
+
+        $bills = \BB\Entities\Payment::where('user_id', $user->id)->where('reason', 'subscription')->get();
+        $this->assertCount(1, $bills, 'The member should be billed once, not once per month they were away');
+        $this->assertEquals(22, $bills->first()->amount);
+    }
+
     public function testMemberReactivationAfterSuspension()
     {
         // Step 1: Member is suspended

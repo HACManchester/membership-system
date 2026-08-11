@@ -258,6 +258,22 @@ class SubscriptionChargeRepository extends DBRepository
     }
 
     /**
+     * Cancel a single charge, without the payment-failure chain markChargeAsPaid's
+     * counterpart runs - nothing failed here, the charge should never have been
+     * collectable in the first place
+     *
+     * @param integer $chargeId
+     */
+    public function cancelCharge($chargeId)
+    {
+        /** @var SubscriptionCharge */
+        $subCharge = $this->getById($chargeId);
+
+        $subCharge->status = 'cancelled';
+        $subCharge->save();
+    }
+
+    /**
      * Cancel all outstanding (due and pending) charges for a user
      * Used when leaving
      *
