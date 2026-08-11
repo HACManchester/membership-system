@@ -100,7 +100,7 @@ Join Hackspace Manchester
 
         <div class="form-group {{ FlashNotification::hasErrorDetail('rules_agreed', 'has-error has-feedback') }}">
             <div class="col-sm-9 col-lg-7 col-sm-offset-3">
-                <span class="help-block">Please read the <a href="https://hacman.org.uk/rules" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
+                <span class="help-block">Please read the <a href="https://docs.hacman.org.uk/governance/rules/" target="_blank">rules</a> and click the checkbox to confirm you agree to them</span>
                 <input type="checkbox" name="rules_agreed" id="rules_agreed" value="1" {{ old('rules_agreed') ? 'checked' : '' }}>
                 <label for="rules_agreed">I agree to the Hackspace Manchester rules</label>
                 {!! FlashNotification::getErrorDetail('rules_agreed') !!}
