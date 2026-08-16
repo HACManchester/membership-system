@@ -159,6 +159,12 @@ class SidebarItems
                 'href' => route('payments.index'),
                 'active' => self::isActive('payments.index'),
                 'visible' => $this->user->hasRole('finance') || $this->user->isAdmin()
+            ],
+            [
+                'label' => '🔒 Access Lockdown',
+                'href' => route('access-lockdown.index'),
+                'active' => self::isActive('access-lockdown.index'),
+                'visible' => $this->user->isAdmin()
             ]
         ];
 

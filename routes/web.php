@@ -229,6 +229,17 @@ Route::group(array('middleware' => 'role:admin'), function () {
 
 
 ##########################
+# Space access lockdown
+##########################
+
+Route::group(array('middleware' => 'role:admin'), function () {
+    Route::get('admin/access-lockdown', ['as' => 'access-lockdown.index', 'uses' => 'AccessLockdownController@index']);
+    Route::post('admin/access-lockdown', ['as' => 'access-lockdown.store', 'uses' => 'AccessLockdownController@store']);
+    Route::delete('admin/access-lockdown', ['as' => 'access-lockdown.destroy', 'uses' => 'AccessLockdownController@destroy']);
+});
+
+
+##########################
 # Disciplinary
 ##########################
 

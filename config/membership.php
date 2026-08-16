@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'access' => [
+        // Roles pre-selected when starting a space access lockdown. Whoever starts the
+        // lockdown can change the selection - this is only the default, and it isn't
+        // consulted once a lockdown exists. Names must match rows in the `roles` table.
+        'default_lockdown_roles' => ['admin', 'committee', 'board'],
+    ],
+
     'billing' => [
         // How far past its charge date a due charge may be collected. Past this the
         // nightly run reports it for review instead of billing it - a member should

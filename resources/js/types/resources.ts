@@ -202,6 +202,16 @@ export type RoleResource = {
   };
 };
 
+export type AccessLockdownResource = {
+  id: number;
+  reason: string | null;
+  roles: string[];
+  started_by: string | null;
+  started_at: string | null;
+  lifted_by: string | null;
+  lifted_at: string | null;
+};
+
 // Additional types for page props
 export type Member = {
   id: number;

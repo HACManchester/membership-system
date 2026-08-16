@@ -20,6 +20,7 @@ type Props = {
     roles: string;
     payments: string;
     subCharges: string;
+    accessLockdown: string;
   };
 };
 
@@ -46,6 +47,10 @@ const Index = ({ urls }: Props) => {
         { label: 'All payments', href: urls.payments },
         { label: 'Subscription Charges', href: urls.subCharges },
       ],
+    },
+    {
+      title: 'Space Access Lockdown',
+      links: [{ label: 'Shut the space to general membership', href: urls.accessLockdown }],
     },
   ];
 

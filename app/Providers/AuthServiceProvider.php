@@ -4,6 +4,7 @@ namespace BB\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+use BB\Entities\AccessLockdown;
 use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
@@ -12,6 +13,7 @@ use BB\Entities\KeyFob;
 use BB\Entities\Room;
 use BB\Entities\User;
 use BB\Entities\MaintainerGroup;
+use BB\Policies\AccessLockdownPolicy;
 use BB\Policies\EquipmentAreaPolicy;
 use BB\Policies\EquipmentPolicy;
 use BB\Policies\RoomPolicy;
@@ -42,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Course::class => CoursePolicy::class,
         Room::class => RoomPolicy::class,
         Role::class => RolePolicy::class,
+        AccessLockdown::class => AccessLockdownPolicy::class,
     ];
 
     /**

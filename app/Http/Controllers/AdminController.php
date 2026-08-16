@@ -16,6 +16,7 @@ class AdminController extends Controller
                 'roles' => route('roles.index', [], false),
                 'payments' => route('payments.index', [], false),
                 'subCharges' => route('payments.sub-charges', [], false),
+                'accessLockdown' => route('access-lockdown.index', [], false),
             ],
         ]);
     }

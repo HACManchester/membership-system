@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Entities\AccessLockdown;
 use BB\Entities\KeyFob;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,22 @@ class KeyFobCsvController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $keyfobs = KeyFob::active()
+        $query = KeyFob::active()
             ->with('user')
             ->whereHas('user', function ($query) {
                 $query->active();
-            })
-            ->get()
+            });
+
+        // While the space is locked down only members holding one of the lockdown's
+        // roles keep their door access. Lifting it restores everyone on the next poll.
+        $lockdown = AccessLockdown::current();
+        if ($lockdown) {
+            $query->whereHas('user.roles', function ($query) use ($lockdown) {
+                $query->whereIn('name', $lockdown->roles);
+            });
+        }
+
+        $keyfobs = $query->get()
             ->map(function ($keyfob) {
                 return [
                     'key_id' => $keyfob->key_id,
