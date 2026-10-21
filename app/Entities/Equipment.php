@@ -85,7 +85,7 @@ class Equipment extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'working' => 'boolean',

@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope as ScopeInterface;
 
 /**
- * Scope class to add to models to set their default ordering
- * 
- * @see https://stackoverflow.com/a/30662338
+ * Scope class to add to models to set their default ordering. Undo it for a
+ * query with ->withoutGlobalScope(OrderScope::class).
  */
 class OrderScope implements ScopeInterface
 {
@@ -26,22 +25,5 @@ class OrderScope implements ScopeInterface
     public function apply(Builder $builder, Model $model)
     {
         $builder->orderBy($this->column, $this->direction);
-
-        // optional macro to undo the global scope
-        $builder->macro('unordered', function (Builder $builder) {
-            $this->remove($builder, $builder->getModel());
-            return $builder;
-        });
-    }
-
-    public function remove(Builder $builder, Model $model)
-    {
-        $query = $builder->getQuery();
-        $query->orders = collect($query->orders)->reject(function ($order) {
-            return $order['column'] == $this->column && $order['direction'] == $this->direction;
-        })->values()->all();
-        if (count($query->orders) == 0) {
-            $query->orders = null;
-        }
     }
 }

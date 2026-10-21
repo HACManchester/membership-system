@@ -19,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
 	/**
 	 * The event handler mappings for the application.
 	 *
-	 * @var array
+	 * @var array<string, array<int, string>>
 	 */
 	protected $listen = [
 		'payment.create' => [
@@ -75,5 +75,14 @@ class EventServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		parent::boot();
+	}
+
+	/**
+	 * Listeners are registered explicitly above. Later Laravel versions turn
+	 * discovery on by default, which would register them a second time.
+	 */
+	public function shouldDiscoverEvents()
+	{
+		return false;
 	}
 }

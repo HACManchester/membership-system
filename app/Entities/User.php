@@ -74,7 +74,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = array('password', 'remember_token');
 
@@ -86,7 +86,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Fillable fields
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $fillable = [
         'given_name',

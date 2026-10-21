@@ -16,7 +16,7 @@ class AuditLog extends Model
     /**
      * Fillable fields
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $fillable = [
         'user_id', 'admin_id', 'action', 'description'

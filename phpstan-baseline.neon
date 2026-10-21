@@ -1,5 +1,14 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Relation 'user' is not found in BB\\\\Entities\\\\SubscriptionCharge model\\.$#"
+			count: 2
+			path: app/Console/Commands/Payments/AuditSubscriptionCharges.php
+
+		-
+			message: "#^Relation 'profile' is not found in BB\\\\Entities\\\\User model\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentAreaController.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$online_only\\.$#"
@@ -7,13 +16,53 @@ parameters:
 			path: app/Http/Controllers/EquipmentController.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$live\\.$#"
+			count: 2
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$name\\.$#"
 			count: 1
-			path: app/Http/Controllers/TrainingRecordController.php
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$slug\\.$#"
+			count: 5
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:each\\(\\) expects callable\\(Illuminate\\\\Database\\\\Eloquent\\\\Model, int\\|string\\)\\: mixed, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: void given\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$record of method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:trainingUser\\(\\) expects BB\\\\Entities\\\\TrainingRecord, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Parameter \\#2 \\$course of method BB\\\\Http\\\\Controllers\\\\EquipmentController\\:\\:liveCourseData\\(\\) expects BB\\\\Entities\\\\Course, Illuminate\\\\Database\\\\Eloquent\\\\Model given\\.$#"
+			count: 1
+			path: app/Http/Controllers/EquipmentController.php
+
+		-
+			message: "#^Relation 'profile' is not found in BB\\\\Entities\\\\User model\\.$#"
+			count: 1
+			path: app/Http/Controllers/MaintainerGroupController.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 2
+			path: app/Http/Controllers/NotificationEmailController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user\\.$#"
+			count: 3
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
@@ -27,9 +76,24 @@ parameters:
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/TrainingRecordController.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Controllers/TrainingRecordController.php
+
+		-
 			message: "#^Parameter \\#1 \\$user of job class BB\\\\Jobs\\\\DiscourseSync constructor expects BB\\\\Entities\\\\User in BB\\\\Jobs\\\\DiscourseSync\\:\\:dispatch\\(\\), Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable given\\.$#"
 			count: 1
 			path: app/Listeners/DiscourseSyncSubscriber.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:each\\(\\) expects callable\\(Illuminate\\\\Database\\\\Eloquent\\\\Model, int\\|string\\)\\: mixed, Closure\\(BB\\\\Entities\\\\TrainingRecord\\)\\: void given\\.$#"
+			count: 1
+			path: app/Listeners/Notifications/TrainingRecords/TrainingRecordRequestedListener.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
@@ -42,9 +106,29 @@ parameters:
 			path: app/Notifications/ErrorNotification.php
 
 		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
+			count: 1
+			path: app/Notifications/TrainingRecords/Inductees/TrainingRecordCompletedNotification.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
+			count: 1
+			path: app/Notifications/TrainingRecords/Inductees/TrainingRecordRequestedNotification.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
+			count: 1
+			path: app/Notifications/TrainingRecords/Trainers/TrainingRecordRequestedNotification.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Observer/UserAuditObserver.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$maintainerGroup\\.$#"
+			count: 1
+			path: app/Policies/CoursePolicy.php
 
 		-
 			message: "#^Access to an undefined property BB\\\\Entities\\\\Equipment\\:\\:\\$role\\.$#"
@@ -52,17 +136,46 @@ parameters:
 			path: app/Policies/EquipmentPolicy.php
 
 		-
+			message: "#^Relation 'equipment' is not found in BB\\\\Entities\\\\Course model\\.$#"
+			count: 1
+			path: app/Repo/CourseRepository.php
+
+		-
 			message: "#^Relation 'courses' is not found in BB\\\\Entities\\\\Equipment model\\.$#"
-			count: 2
+			count: 4
 			path: app/Repo/EquipmentRepository.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user\\.$#"
+			count: 3
+			path: app/Repo/TrainingRecordRepository.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 5
+			path: app/Repo/TrainingRecordRepository.php
+
+		-
+			message: "#^Relation 'user' is not found in BB\\\\Entities\\\\TrainingRecord model\\.$#"
+			count: 7
+			path: app/Repo/TrainingRecordRepository.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Repo/UserRepository.php
 
+		-
+			message: "#^Relation 'profile' is not found in BB\\\\Entities\\\\User model\\.$#"
+			count: 1
+			path: app/Repo/UserRepository.php
 
 		-
-			message: "#^Property Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:\\$orders \\(array\\) does not accept null\\.$#"
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
 			count: 1
-			path: app/Scopes/OrderScope.php
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user\\.$#"
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php

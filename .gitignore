@@ -1,7 +1,9 @@
 /vendor
 /node_modules
 .env
+.env.production
 .env.testing
+auth.json
 composer.phar
 .DS_Store
 Thumbs.db

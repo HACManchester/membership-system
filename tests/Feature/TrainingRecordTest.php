@@ -23,6 +23,9 @@ class TrainingRecordTest extends TestCase
     protected $equipment;
     protected $pendingTrainingRecord;
     protected $trainedTrainingRecord;
+    protected $trainerInduction;
+    protected $pendingInduction;
+    protected $trainedInduction;
     protected $trainerTrainingRecord;
 
     protected function setUp(): void

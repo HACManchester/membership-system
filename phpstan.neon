@@ -1,5 +1,5 @@
 includes:
-    - ./vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/larastan/larastan/extension.neon
     - phpstan-baseline.neon
 
 parameters:
@@ -11,7 +11,8 @@ parameters:
         # GoCardlessPro SDK resources expose their data via __get() magic, so accessing
         # "protected" properties like ->id and ->status works at runtime by design.
         - '#^Access to protected property GoCardlessPro\\Resources\\#'
-
-    excludePaths:
-        - ./*/*/FileToBeExcluded.php
-    checkMissingIterableValueType: false
+        # The SDK's service classes also carry `@method get()` / `cancel()` / ...
+        # annotations with no parameters, contradicting their real signatures
+        # (e.g. get($identity, $params = [])), and PHPStan trusts the annotation.
+        # The calls are exercised against the real API by GoCardlessSandboxTest.
+        - '#^Method GoCardlessPro\\Services\\[A-Za-z]+Service::[a-z]+\(\) invoked with \d+ parameters?, 0 required\.$#'
