@@ -3,6 +3,7 @@
 namespace BB\Http\Resources;
 
 use BB\Repo\TrainingRecordRepository;
+use BB\Support\CurrentUser;
 use BB\Support\PpeOptions;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,7 @@ class EquipmentShowResource extends JsonResource
 {
     public function toArray($request)
     {
-        $user = $request->user();
+        $user = CurrentUser::find();
 
         $record = $user
             ? app(TrainingRecordRepository::class)->getUserForEquipment($this->resource, $user->id)

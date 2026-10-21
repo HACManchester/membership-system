@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Middleware;
 
 use BB\Exceptions\AuthenticationException;
+use BB\Support\CurrentUser;
 use Closure;
 
 class HasRole
@@ -27,11 +28,11 @@ class HasRole
                 return \Redirect::guest('login');
             }
 
-        } elseif (($role !== 'member') && ! \Auth::user()->hasRole($role)) {
+        } elseif (($role !== 'member') && ! CurrentUser::get()->hasRole($role)) {
 
             throw new AuthenticationException();
 
-        } elseif (\Auth::user()->isBanned()) {
+        } elseif (CurrentUser::get()->isBanned()) {
 
             throw new AuthenticationException();
         }

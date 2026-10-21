@@ -7,6 +7,7 @@ use BB\Mailer\UserMailer;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Repo\EquipmentRepository;
+use BB\Support\CurrentUser;
 
 class NotificationEmailController extends Controller
 {
@@ -43,7 +44,7 @@ class NotificationEmailController extends Controller
 
     public function create()
     {
-        if ( ! \Auth::user()->isAdmin() && \Auth::user()->roles()->get()->count() <= 0) {
+        if ( ! CurrentUser::get()->isAdmin() && CurrentUser::get()->roles()->get()->count() <= 0) {
             throw new AuthenticationException("You don't have permission to be here");
         }
 
@@ -75,12 +76,12 @@ class NotificationEmailController extends Controller
         $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
         $allowed = false;
 
-        if(\Auth::user()->isAdmin()){
+        if(CurrentUser::get()->isAdmin()){
             $allowed = true;
         }
 
         foreach($trainers as $t){
-            if(\Auth::user()->id == $t->user->id){
+            if(CurrentUser::get()->id == $t->user->id){
                 $allowed = true;
             }
         }
@@ -117,7 +118,7 @@ class NotificationEmailController extends Controller
         if ($input['send_to_all']) {
 
             if ($input['recipient'] == 'all') {
-                if ( ! \Auth::user()->isAdmin()) {
+                if ( ! CurrentUser::get()->isAdmin()) {
                     throw new AuthenticationException("You don't have permission to send to this group");
                 }
                 $users = $this->userRepository->getActive();
@@ -133,12 +134,12 @@ class NotificationEmailController extends Controller
                 $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
                 $allowed = false;
 
-                if(\Auth::user()->isAdmin()){
+                if(CurrentUser::get()->isAdmin()){
                     $allowed = true;
                 }
 
                 foreach($trainers as $t){
-                    if(\Auth::user()->id == $t->user->id){
+                    if(CurrentUser::get()->id == $t->user->id){
                         $allowed = true;
                     }
                 }

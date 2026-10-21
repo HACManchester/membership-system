@@ -2,6 +2,7 @@
 
 namespace BB\Http\Resources;
 
+use BB\Support\CurrentUser;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -47,7 +48,7 @@ class CourseResource extends JsonResource
             // Include user course induction status when user is authenticated
             'user_course_training_record' => $this->when(auth()->check(), function () {
                 $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
-                $userCourseTrainingRecord = $trainingRecordRepo->getUserForCourse(auth()->user()->id, $this->id);
+                $userCourseTrainingRecord = $trainingRecordRepo->getUserForCourse(CurrentUser::get()->id, $this->id);
                 return $userCourseTrainingRecord ? new TrainingRecordResource($userCourseTrainingRecord) : null;
             }),
 

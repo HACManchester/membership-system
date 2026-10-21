@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\User;
 use BB\Mailer\UserMailer;
+use BB\Support\CurrentUser;
 
 class EmailConfirmationController extends Controller
 {
@@ -26,8 +27,7 @@ class EmailConfirmationController extends Controller
 
     public function sendConfirmationEmail()
     {
-        /** @var User $user */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
 
         if (!$user->email_verified) {
             $userMailer = new UserMailer($user);

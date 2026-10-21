@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
+use BB\Support\CurrentUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -99,7 +100,7 @@ class PaymentController extends Controller
         // TODO: Review this method. Should have no active use?
         $user = User::findWithPermission($userId);
 
-        if (!\Auth::user()->hasRole('admin') &&  !\Auth::user()->hasRole('finance')) {
+        if (!CurrentUser::get()->hasRole('admin') &&  !CurrentUser::get()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
 
@@ -227,7 +228,7 @@ class PaymentController extends Controller
     public function migrateDD()
     {
         /** @var User */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
 
         //cancel the existing dd
         try {

@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Equipment;
 
 use BB\Entities\Equipment;
+use BB\Support\CurrentUser;
 use Illuminate\Validation\Rule;
 
 class UpdateEquipmentRequest extends StoreEquipmentRequest
@@ -15,7 +16,7 @@ class UpdateEquipmentRequest extends StoreEquipmentRequest
     public function authorize()
     {
         $equipment = $this->route('equipment');
-        return $this->user()->can('update', $equipment);
+        return CurrentUser::get()->can('update', $equipment);
     }
 
     /**

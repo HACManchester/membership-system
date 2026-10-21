@@ -10,6 +10,7 @@ use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
 use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
+use BB\Support\CurrentUser;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
@@ -92,7 +93,7 @@ class CourseTrainingController extends Controller
             'user_ids.*' => 'exists:users,id',
         ]);
 
-        $trainer = auth()->user();
+        $trainer = CurrentUser::get();
         $trained = [];
 
         foreach ($request->input('user_ids') as $userId) {

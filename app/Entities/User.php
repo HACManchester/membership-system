@@ -3,12 +3,12 @@
 namespace BB\Entities;
 
 use BB\Exceptions\AuthenticationException;
+use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
-use Auth;
 use BB\Entities\MaintainerGroup;
 use Hash;
 use Illuminate\Auth\Authenticatable;
@@ -506,17 +506,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         //Return the logged in user
         if (empty($id)) {
-            return Auth::user(); // @phpstan-ignore-line
+            return CurrentUser::get();
         }
 
         $requestedUser = self::findOrFail($id);
-        if (Auth::user()->getAuthIdentifier() == $requestedUser->id) {
+        if (CurrentUser::get()->getAuthIdentifier() == $requestedUser->id) {
             //The user they are after is themselves
             return $requestedUser;
         }
 
         //They are requesting a user that isn't them
-        if (Auth::user()->hasRole($role)) {
+        if (CurrentUser::get()->hasRole($role)) {
             //They are an admin so that's alright
             return $requestedUser;
         }

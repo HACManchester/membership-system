@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\User;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreGoCardlessPaymentRequest extends FormRequest
@@ -14,7 +15,7 @@ class StoreGoCardlessPaymentRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('makePayment', $this->targetUser());
+        return CurrentUser::get()->can('makePayment', $this->targetUser());
     }
 
     /**

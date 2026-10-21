@@ -1,7 +1,7 @@
 <?php namespace BB\Validators;
 
-use Auth;
 use BB\Helpers\MembershipPayments;
+use BB\Support\CurrentUser;
 
 class UserValidator extends FormValidator
 {
@@ -58,7 +58,7 @@ class UserValidator extends FormValidator
 
 
         // Allow admins to bypass the minimum
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        if (CurrentUser::find()?->isAdmin()) {
             $minPrice = 0;
         }
 

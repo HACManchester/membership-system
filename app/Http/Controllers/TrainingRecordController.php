@@ -10,12 +10,13 @@ use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use BB\Http\Requests\StoreTrainingRecordRequest;
 use BB\Http\Requests\TrainTrainingRecordRequest;
+use BB\Support\CurrentUser;
 
 class TrainingRecordController extends Controller
 {
     public function store(Equipment $equipment, StoreTrainingRecordRequest $request)
     {
-        $userId = $request->input('user_id', \Auth::user()->id);
+        $userId = $request->input('user_id', CurrentUser::get()->id);
 
         $course = $equipment->courses->first();
 

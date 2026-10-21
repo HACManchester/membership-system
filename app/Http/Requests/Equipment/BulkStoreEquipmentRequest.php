@@ -4,6 +4,7 @@ namespace BB\Http\Requests\Equipment;
 
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -12,7 +13,7 @@ class BulkStoreEquipmentRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('create', Equipment::class);
+        return CurrentUser::get()->can('create', Equipment::class);
     }
 
     /**
@@ -40,7 +41,7 @@ class BulkStoreEquipmentRequest extends FormRequest
 
     public function rules()
     {
-        $canGloballyManage = $this->user()->isAdmin() || $this->user()->hasRole('equipment');
+        $canGloballyManage = CurrentUser::get()->isAdmin() || CurrentUser::get()->hasRole('equipment');
 
         return [
             'room_id' => 'required|exists:rooms,id',

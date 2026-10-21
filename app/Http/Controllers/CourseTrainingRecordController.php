@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Course;
 use BB\Entities\TrainingRecord;
 use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
+use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\DB;
 
 class CourseTrainingRecordController extends Controller
@@ -14,7 +15,7 @@ class CourseTrainingRecordController extends Controller
      */
     public function store(Course $course)
     {
-        $user = auth()->user();
+        $user = CurrentUser::get();
 
         // Authorize that user can request sign-off for this course
         $this->authorize('requestSignOff', $course);

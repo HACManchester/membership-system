@@ -4,18 +4,10 @@ namespace BB\Services;
 
 use BB\Entities\User;
 use BB\Entities\Course;
-use Illuminate\Support\Facades\Auth;
+use BB\Support\CurrentUser;
 
 class SidebarItems
 {
-    /** @var User|null */
-    protected $user;
-
-    public function __construct()
-    {
-        $this->user = Auth::user();
-    }
-
     /**
      * The navigation items to show in the website's sidebar
      *
@@ -23,16 +15,18 @@ class SidebarItems
      */
     public function getItems()
     {
-        if (!$this->user) {
+        $user = CurrentUser::find();
+
+        if (!$user) {
             return [
                 $this->anonymousNav(),
             ];
         }
 
         return [
-            $this->accountNav(),
-            $this->resourcesNav(),
-            $this->adminNav(),
+            $this->accountNav($user),
+            $this->resourcesNav($user),
+            $this->adminNav($user),
         ];
     }
 
@@ -52,25 +46,25 @@ class SidebarItems
         ];
     }
 
-    protected function accountNav()
+    protected function accountNav(User $user)
     {
         return [
             [
                 'label' => '🙂 Your Membership',
-                'href' => route('account.show', $this->user->id),
-                'active' => self::isActive('account.show', [$this->user->id]),
-                'badge' => count($this->user->getAlerts()),
+                'href' => route('account.show', $user->id),
+                'active' => self::isActive('account.show', [$user->id]),
+                'badge' => count($user->getAlerts()),
             ],
             [
                 'label' => '💳 Manage Your Balance',
-                'href' => route('account.balance.index', $this->user->id),
-                'active' => self::isActive('account.balance.index', [$this->user->id])
+                'href' => route('account.balance.index', $user->id),
+                'active' => self::isActive('account.balance.index', [$user->id])
             ],
             [
                 'label' => 'ℹ️ General Induction',
-                'href' => route('general-induction.show', $this->user->id),
-                'active' => self::isActive('general-induction.show', [$this->user->id]),
-                'highlight' => !$this->user->induction_completed
+                'href' => route('general-induction.show', $user->id),
+                'active' => self::isActive('general-induction.show', [$user->id]),
+                'highlight' => !$user->induction_completed
             ],
             [
                 'label' => '💬 Forum',
@@ -81,7 +75,7 @@ class SidebarItems
         ];
     }
 
-    protected function resourcesNav()
+    protected function resourcesNav(User $user)
     {
         $resourcesItems = [
             [
@@ -98,14 +92,14 @@ class SidebarItems
                 'label' => 'Inductions',
                 'href' => route('courses.index'),
                 'active' => self::isActive('courses.index'),
-                'visible' => $this->user->can('viewAny', Course::class),
+                'visible' => $user->can('viewAny', Course::class),
                 'badge' => 'New'
             ],
             [
                 'label' => 'Rooms',
                 'href' => route('room.index'),
                 'active' => self::isActive('room.index'),
-                'visible' => $this->user->can('create', \BB\Entities\Room::class)
+                'visible' => $user->can('create', \BB\Entities\Room::class)
             ],
             [
                 'label' => 'Area Coordinators',
@@ -127,44 +121,44 @@ class SidebarItems
         }));
     }
 
-    protected function adminNav()
+    protected function adminNav(User $user)
     {
         $adminItems = [
             [
                 'label' => '👮 Admin',
                 'href' => route('admin'),
                 'active' => self::isActive('admin'),
-                'visible' => $this->user->isAdmin()
+                'visible' => $user->isAdmin()
             ],
             [
                 'label' => '👮 Manage Members',
                 'href' => route('account.index'),
                 'active' => self::isActive('account.index'),
-                'visible' => $this->user->isAdmin()
+                'visible' => $user->isAdmin()
             ],
             [
                 'label' => '👮 Log Files',
                 'href' => route('logs'),
                 'active' => self::isActive('logs'),
-                'visible' => $this->user->isAdmin()
+                'visible' => $user->isAdmin()
             ],
             [
                 'label' => '💌 Newsletter',
                 'href' => route('newsletter'),
                 'active' => self::isActive('newsletter'),
-                'visible' => $this->user->isAdmin()
+                'visible' => $user->isAdmin()
             ],
             [
                 'label' => '💰 Payments',
                 'href' => route('payments.index'),
                 'active' => self::isActive('payments.index'),
-                'visible' => $this->user->hasRole('finance') || $this->user->isAdmin()
+                'visible' => $user->hasRole('finance') || $user->isAdmin()
             ],
             [
                 'label' => '🔒 Access Lockdown',
                 'href' => route('access-lockdown.index'),
                 'active' => self::isActive('access-lockdown.index'),
-                'visible' => $this->user->isAdmin()
+                'visible' => $user->isAdmin()
             ]
         ];
 

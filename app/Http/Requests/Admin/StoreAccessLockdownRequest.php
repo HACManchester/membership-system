@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Admin;
 
 use BB\Entities\AccessLockdown;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -10,7 +11,7 @@ class StoreAccessLockdownRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('create', AccessLockdown::class);
+        return CurrentUser::get()->can('create', AccessLockdown::class);
     }
 
     public function rules()

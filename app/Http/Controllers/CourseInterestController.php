@@ -8,6 +8,7 @@ use BB\Events\TrainingRecords\TrainingInterestRegisteredEvent;
 use BB\Events\TrainingRecords\TrainingInterestWithdrawnEvent;
 use BB\Http\Requests\RegisterCourseInterestRequest;
 use BB\Http\Requests\WithdrawCourseInterestRequest;
+use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -21,7 +22,7 @@ class CourseInterestController extends Controller
 {
     public function store(RegisterCourseInterestRequest $request, Course $course)
     {
-        $user = $request->user();
+        $user = CurrentUser::get();
 
         $result = DB::transaction(function () use ($user, $course) {
             $trainingRecord = TrainingRecord::firstOrCreate(
@@ -55,7 +56,7 @@ class CourseInterestController extends Controller
 
     public function destroy(WithdrawCourseInterestRequest $request, Course $course)
     {
-        $user = $request->user();
+        $user = CurrentUser::get();
 
         $result = DB::transaction(function () use ($user, $course) {
             $trainingRecord = TrainingRecord::where('user_id', $user->id)

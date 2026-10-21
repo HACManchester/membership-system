@@ -18,6 +18,7 @@ use BB\Http\Resources\EquipmentShowResource;
 use BB\Http\Resources\TrainingRecordResource;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
+use BB\Support\CurrentUser;
 use BB\Support\PpeOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -57,8 +58,7 @@ class EquipmentController extends Controller
 
     public function index()
     {
-        /** @var \BB\Entities\User $user */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
         $equipment = $this->equipmentRepository->getAll();
         $equipment->load(['courses', 'roomModel']);
 
@@ -105,8 +105,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('view', $equipment);
 
-        /** @var \BB\Entities\User $user */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
         $equipment->load('courses', 'roomModel', 'maintainerGroup');
 
         $userRecord = $this->trainingRecordRepository->getUserForEquipment($equipment, $user->id);
@@ -315,7 +314,7 @@ class EquipmentController extends Controller
                     return ['id' => $course->id, 'name' => $course->name, 'live' => (bool) $course->live];
                 })
                 ->values(),
-            'canManageGlobally' => \Auth::user()->isAdmin() || \Auth::user()->hasRole('equipment'),
+            'canManageGlobally' => CurrentUser::get()->isAdmin() || CurrentUser::get()->hasRole('equipment'),
         ];
     }
 
@@ -487,7 +486,7 @@ class EquipmentController extends Controller
     {
         $this->authorize('update', $equipment);
 
-        if (\Auth::user()->online_only) {
+        if (CurrentUser::get()->online_only) {
             throw new \BB\Exceptions\AuthenticationException();
         }
 

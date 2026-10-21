@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Equipment;
 
 use BB\Entities\MaintainerGroup;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,7 @@ class StoreEquipmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create', \BB\Entities\Equipment::class);
+        return CurrentUser::get()->can('create', \BB\Entities\Equipment::class);
     }
 
     /**
@@ -52,7 +53,7 @@ class StoreEquipmentRequest extends FormRequest
      */
     public function rules()
     {
-        $canGloballyManage = $this->user()->isAdmin() || $this->user()->hasRole('equipment');
+        $canGloballyManage = CurrentUser::get()->isAdmin() || CurrentUser::get()->hasRole('equipment');
 
         return [
             'name'                      => 'required',

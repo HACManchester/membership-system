@@ -152,7 +152,8 @@ class Handler extends ExceptionHandler
             if ($request->wantsJson()) {
                 return \Response::json(['error' => $e->getMessage()], 403);
             }
-            $userString = \Auth::guest() ? "A guest" : (\Auth::user() instanceof User ? \Auth::user()->name : \Auth::user()->getAuthIdentifier());
+            $user = \Auth::user();
+            $userString = $user instanceof User ? $user->name : ($user ? $user->getAuthIdentifier() : "A guest");
             Log::warning($userString . " tried to access something they weren't supposed to.");
 
             return \Response::view('errors.403', [], 403);

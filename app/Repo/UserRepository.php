@@ -4,6 +4,7 @@ namespace BB\Repo;
 
 use BB\Entities\Gift;
 use BB\Entities\User;
+use BB\Support\CurrentUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -354,7 +355,7 @@ class UserRepository extends DBRepository
         $user = $this->getById($userId);
 
         $user->induction_completed = true;
-        $user->inducted_by = \Auth::user()->id;
+        $user->inducted_by = CurrentUser::get()->id;
 
         $user->rules_agreed = $user->rules_agreed ? $user->rules_agreed : Carbon::now();
 

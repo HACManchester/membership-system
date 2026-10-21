@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Role;
 
 use BB\Entities\Role;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRoleRequest extends FormRequest
@@ -12,7 +13,7 @@ class UpdateRoleRequest extends FormRequest
         /** @var Role $role */
         $role = $this->route('role');
 
-        return $this->user()->can('update', $role);
+        return CurrentUser::get()->can('update', $role);
     }
 
     public function rules()

@@ -56,6 +56,8 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
 - Feature tests assert DB state / queued mail / fired events, not just status codes. Mock at the
   boundary (`GoCardlessHelper`), never internal services.
 - Use `$request->validated()`, never `$request->all()`, for writes.
+- Get the signed-in member with `BB\Support\CurrentUser::get()` (or `find()` where guests can reach
+  the code), not `Auth::user()` / `$request->user()`, which can return the door system's `ApiKey`.
 - **Docblocks only where they add information the signature can't express** — e.g. `@param` types
   for untyped parameters, `@var` on properties, `@property` blocks on entities, genuine prose.
   Don't write `@param`/`@return` tags that restate native type hints, `@return mixed`/`void`, or

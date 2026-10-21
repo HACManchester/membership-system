@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\EquipmentArea;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,7 +18,7 @@ class UpdateEquipmentAreaRequest extends StoreEquipmentAreaRequest
     {
         /** @var EquipmentArea */
         $equipmentArea = $this->route('equipment_area');
-        return $this->user()->can('update', $equipmentArea);
+        return CurrentUser::get()->can('update', $equipmentArea);
     }
 
 

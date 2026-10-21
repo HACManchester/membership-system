@@ -2,16 +2,16 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Entities\User;
+use BB\Support\CurrentUser;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $user = \Auth::user();
+        $user = CurrentUser::find();
 
-        if ($user instanceof User) {
+        if ($user) {
             return \Redirect::route('account.show', [$user->id]);
         }
 

@@ -6,6 +6,7 @@ use BB\Entities\Room;
 use BB\Http\Requests\Room\StoreRoomRequest;
 use BB\Http\Requests\Room\UpdateRoomRequest;
 use BB\Http\Resources\RoomResource;
+use BB\Support\CurrentUser;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -26,7 +27,7 @@ class RoomController extends Controller
         return Inertia::render('Rooms/Index', [
             'rooms' => RoomResource::collection($rooms),
             'can' => [
-                'create' => auth()->user()->can('create', Room::class),
+                'create' => CurrentUser::get()->can('create', Room::class),
             ],
             'urls' => [
                 'create' => route('room.create', [], false),
@@ -58,7 +59,7 @@ class RoomController extends Controller
     public function show(Room $room)
     {
         $room->loadCount('equipment');
-        $user = auth()->user();
+        $user = CurrentUser::get();
 
         return Inertia::render('Rooms/Show', [
             'room' => new RoomResource($room),

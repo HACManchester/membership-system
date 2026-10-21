@@ -2,13 +2,14 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Support\CurrentUser;
 use Illuminate\Http\Request;
 
 class LinksController extends Controller
 {
     public function forum(Request $request)
     {
-        $user = $request->user();
+        $user = CurrentUser::get();
 
         if (!$user->visited_forum) {
             $user->visited_forum = true;

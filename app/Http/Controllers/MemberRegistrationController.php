@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\Gift;
 use BB\Helpers\MembershipPayments;
+use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\UploadedFile;
 
@@ -44,7 +45,7 @@ class MemberRegistrationController extends Controller
         $this->profileValidator = $profileValidator;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(! \Auth::guest() && \Auth::user()->hasRole('admin'));
+        $this->userForm->setAdminOverride((bool) CurrentUser::find()?->hasRole('admin'));
     }
 
     public function create()
@@ -127,7 +128,7 @@ class MemberRegistrationController extends Controller
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
 
-        $user = $this->userRepository->registerMember($input, ! \Auth::guest() && \Auth::user()->hasRole('admin'));
+        $user = $this->userRepository->registerMember($input, (bool) CurrentUser::find()?->hasRole('admin'));
 
         // A single file only: new_profile_photo[] arrives as an array
         $photo = \Request::file('new_profile_photo');
@@ -142,7 +143,7 @@ class MemberRegistrationController extends Controller
         }
 
         //If this isn't an admin user creating the record log them in
-        if (\Auth::guest() || ! \Auth::user()->isAdmin()) {
+        if (! CurrentUser::find()?->isAdmin()) {
             \Auth::login($user);
         }
 

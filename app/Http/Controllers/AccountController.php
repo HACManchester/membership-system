@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\User;
 use BB\Entities\Settings;
+use BB\Support\CurrentUser;
 
 class AccountController extends Controller
 {
@@ -48,7 +49,7 @@ class AccountController extends Controller
         $this->bbCredit = $bbCredit;
 
         //This tones down some validation rules for admins
-        $this->userForm->setAdminOverride(! \Auth::guest() && \Auth::user()->hasRole('admin'));
+        $this->userForm->setAdminOverride((bool) CurrentUser::find()?->hasRole('admin'));
 
         $this->middleware('role:member');
     }
@@ -150,13 +151,13 @@ class AccountController extends Controller
         );
 
         // TODO: Move to proper validators and 'validated' output?
-        if (!\Auth::user()->can('changeUsername', $user)) {
+        if (!CurrentUser::get()->can('changeUsername', $user)) {
             unset($input['display_name']);
         }
 
         $this->userForm->validate($input, $user->id);
 
-        $this->userRepository->updateMember($id, $input, \Auth::user()->hasRole('admin'));
+        $this->userRepository->updateMember($id, $input, CurrentUser::get()->hasRole('admin'));
 
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);

@@ -20,7 +20,7 @@ class MemberPhoto
             return UserImage::anonymous();
         }
 
-        $user = \Auth::user();
+        $user = CurrentUser::find();
         if ($isPrivate && (! $user || ! $user->shouldMemberSeeProtectedPhoto())) {
             return UserImage::anonymous();
         }

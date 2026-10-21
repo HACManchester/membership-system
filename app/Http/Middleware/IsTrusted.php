@@ -1,7 +1,7 @@
 <?php namespace BB\Http\Middleware;
 
-use BB\Entities\User;
 use BB\Exceptions\AuthenticationException;
+use BB\Support\CurrentUser;
 use Closure;
 
 class IsTrusted
@@ -26,8 +26,7 @@ class IsTrusted
             }
         }
 
-        /** @var User */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
         
         if ($user->isBanned()) {
             throw new AuthenticationException();

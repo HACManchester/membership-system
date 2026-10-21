@@ -2,6 +2,7 @@
 
 namespace BB\Notifications;
 
+use BB\Support\CurrentUser;
 use Throwable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -57,7 +58,8 @@ class ErrorNotification extends Notification
             'info' => 'ℹ️'
         );
 
-        $userString = \Auth::guest() ? "A guest" : \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
+        $user = CurrentUser::find();
+        $userString = $user ? $user->name . "(#" . $user->id . ")" : "A guest";
 
         // Sent with parse_mode HTML: an unescaped `<` or `&` in any of these (the
         // path and member names are user-controlled) makes Telegram reject the alert
