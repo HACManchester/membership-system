@@ -8,6 +8,7 @@ use BB\Exceptions\NotImplementedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use BB\Support\DirectDebitSetup;
 
 class PaymentController extends Controller
 {
@@ -243,23 +244,7 @@ class PaymentController extends Controller
         $user->subscription_id = '';
         $user->save();
 
-        $payment_details = array(
-            "description"          => "Hackspace Manchester",
-            'success_redirect_url' => str_replace('http://', 'https://', route('account.subscription.store', $user->id)),
-            "session_token"        => 'user-token-' . $user->id,
-            'prefilled_customer'   => [
-                'given_name'    => $user->given_name,
-                'family_name'   => $user->family_name,
-                'email'         => $user->email,
-                'address_line1' => $user->address->line_1,
-                'address_line2' => $user->address->line_2,
-                'city'          => $user->address->line_3,
-                'postal_code'   => $user->address->postcode,
-                'country_code'  => 'GB'
-            ]
-        );
-
-        return \Redirect::to($this->goCardless->newPreAuthUrl($user, $payment_details));
+        return \Redirect::to($this->goCardless->newPreAuthUrl($user, DirectDebitSetup::redirectFlowParams($user)));
     }
 
     public function possibleDuplicates()
