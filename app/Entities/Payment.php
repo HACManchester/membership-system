@@ -26,14 +26,14 @@ class Payment extends Model
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = array();
 
     /**
      * Fillable fields
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $fillable = [
         'source',

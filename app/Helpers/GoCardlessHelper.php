@@ -37,17 +37,14 @@ class GoCardlessHelper
 
     public function newPreAuthUrl($user, $paymentDetails)
     {
-        // @phpstan-ignore-next-line
         $redirectFlow = $this->client->redirectFlows()->create([
             "params" => $paymentDetails
         ]);
 
 
-        // @phpstan-ignore-next-line
         $user->gocardless_setup_id = $redirectFlow->id;
         $user->save();
 
-        // @phpstan-ignore-next-line
         return $redirectFlow->redirect_url;
     }
 
@@ -56,7 +53,6 @@ class GoCardlessHelper
         return $this->client->redirectFlows()->complete(
             $user->gocardless_setup_id,
 
-            // @phpstan-ignore-next-line
             ["params" => ["session_token" => 'user-token-' . $user->id]]
         );
     }
@@ -64,7 +60,6 @@ class GoCardlessHelper
 
     public function createSubscription($mandate, $amount, $dayOfMonth, $subscriptionNumber)
     {
-        // @phpstan-ignore-next-line
         $subscription = $this->client->subscriptions()->create([
             "params" => [
                 "amount"        => $amount, // GBP in pence
@@ -98,7 +93,6 @@ class GoCardlessHelper
     public function newBill($mandateId, $amount, $name = null, $description = null)
     {
         try {
-            // @phpstan-ignore-next-line
             return $this->client->payments()->create([
                 "params" => [
                     "amount" => $amount, // amount in pence
@@ -134,7 +128,6 @@ class GoCardlessHelper
         try {
             $mandate = $this->client->mandates()->cancel($preauthId);
 
-            // @phpstan-ignore-next-line
             if ($mandate->status == 'cancelled') {
                 return true;
             }

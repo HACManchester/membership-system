@@ -29,7 +29,7 @@ class Address extends Model
     /**
      * Fillable fields
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $fillable = [
         'user_id', 'line_1', 'line_2', 'line_3', 'line_4', 'postcode', 'hash'
