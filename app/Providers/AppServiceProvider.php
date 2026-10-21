@@ -35,11 +35,6 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		// We're running a higher PHP version than Laravel 5.2 supports. Temporarily ignore certain notices.
-		if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
-			error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-		}
-
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar',
 			'BB\Services\Registrar'

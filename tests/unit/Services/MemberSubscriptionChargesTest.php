@@ -10,9 +10,12 @@ use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
 use Tests\TestCase;
+use Tests\Concerns\MakesGoCardlessExceptions;
 
 class MemberSubscriptionChargesTest extends TestCase
 {
+    use MakesGoCardlessExceptions;
+
     private $service;
     private $mockGoCardless;
     private $userRepository;
@@ -566,7 +569,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->mockGoCardless->expects($this->once())
             ->method('newBill')
-            ->willThrowException(new \GoCardlessPro\Core\Exception\ValidationFailedException('Invalid mandate'));
+            ->willThrowException($this->gocardlessValidationFailed('Invalid mandate'));
 
         $this->mockGoCardless->expects($this->once())
             ->method('getNameFromReason')
@@ -627,7 +630,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->method('newBill')
             ->will($this->onConsecutiveCalls(
                 (object)['id' => 'PM111', 'status' => 'pending_submission'],
-                $this->throwException(new \GoCardlessPro\Core\Exception\ValidationFailedException('currency must be EUR for a sepa_core mandate')),
+                $this->throwException($this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate')),
                 (object)['id' => 'PM333', 'status' => 'pending_submission']
             ));
 
@@ -702,7 +705,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->mockGoCardless->expects($this->exactly(2))
             ->method('newBill')
             ->will($this->onConsecutiveCalls(
-                $this->throwException(new \GoCardlessPro\Core\Exception\ValidationFailedException('currency must be EUR for a sepa_core mandate')),
+                $this->throwException($this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate')),
                 (object)['id' => 'PM333', 'status' => 'pending_submission']
             ));
 
@@ -780,7 +783,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->mockGoCardless->expects($this->once())
             ->method('newBill')
-            ->willThrowException(new \GoCardlessPro\Core\Exception\InvalidStateException('Payment cannot be created'));
+            ->willThrowException($this->gocardlessInvalidState('Payment cannot be created'));
 
         $this->mockGoCardless->expects($this->once())
             ->method('getNameFromReason')

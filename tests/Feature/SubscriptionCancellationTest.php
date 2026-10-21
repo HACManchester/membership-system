@@ -9,9 +9,12 @@ use Carbon\Carbon;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Concerns\MakesGoCardlessExceptions;
 
 class SubscriptionCancellationTest extends TestCase
 {
+    use MakesGoCardlessExceptions;
+
     use RefreshDatabase;
 
     private $goCardless;
@@ -91,7 +94,7 @@ class SubscriptionCancellationTest extends TestCase
         ]);
 
         $this->goCardless->method('cancelSubscription')
-            ->willThrowException(new InvalidStateException('Subscription already cancelled'));
+            ->willThrowException($this->gocardlessInvalidState('Subscription already cancelled'));
 
         $this->actingAs($member)
             ->delete(route('account.subscription.destroy', [$member->id, 0]))

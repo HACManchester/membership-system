@@ -194,7 +194,7 @@ class UserRepository extends DBRepository
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
-        if ($memberData['gift_code']) {
+        if (!empty($memberData['gift_code'])) {
             $gift_record = Gift::where('code', $memberData['gift_code'])->first();
 
             if ($gift_record) {
