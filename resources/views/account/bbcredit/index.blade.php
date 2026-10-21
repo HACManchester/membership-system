@@ -38,7 +38,7 @@ Hackspace Manchester Balance
                 </p>
                 <p>
                   If you need to make a payment but are unable to visit the Hackspace in person, please contact the board
-                  on <a href="board@hacman.org.uk">board@hacman.org.uk</a>.
+                  on <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a>.
                 </p>
             </div>
         </div>
