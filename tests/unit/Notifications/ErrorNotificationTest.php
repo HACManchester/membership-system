@@ -49,6 +49,39 @@ class ErrorNotificationTest extends TestCase
         $this->assertSame(route('logs'), $button['url']);
     }
 
+    /**
+     * The message is sent with parse_mode HTML, so any `<` or `&` in an
+     * interpolated value — the exception message, the request path, a member's
+     * name — must be escaped, or Telegram rejects the whole alert as unparseable.
+     *
+     * @test
+     */
+    public function markup_in_the_alert_details_is_escaped()
+    {
+        config(['services.telegram-bot-api.enabled' => true, 'telegram.bot_chat' => '-100123456']);
+
+        $sent = null;
+        $telegram = \Mockery::mock(Telegram::class);
+        $telegram->shouldReceive('sendMessage')->once()->andReturnUsing(function (array $params) use (&$sent) {
+            $sent = $params;
+
+            return new \GuzzleHttp\Psr7\Response(200, [], '{"ok":true,"result":{}}');
+        });
+        $this->app->instance(Telegram::class, $telegram);
+
+        $member = factory(\BB\Entities\User::class)->make(['id' => 7, 'display_name' => 'Bobby <b> Tables & Co']);
+        $this->actingAs($member);
+
+        $exception = new \RuntimeException('Expected <int> & got <string>');
+        (new TelegramErrorHelper())->notify(new ErrorNotification('error', 'Error', false, $exception));
+
+        $this->assertStringContainsString('Expected &lt;int&gt; &amp; got &lt;string&gt;', $sent['text']);
+        $this->assertStringContainsString('Bobby &lt;b&gt; Tables &amp; Co(#7)', $sent['text']);
+        $this->assertStringNotContainsString('<int>', $sent['text']);
+        // The formatting the template itself adds is left intact
+        $this->assertStringContainsString('<b>Error</b>', $sent['text']);
+    }
+
     /** @test */
     public function nothing_is_sent_when_telegram_is_disabled()
     {

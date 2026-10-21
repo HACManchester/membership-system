@@ -59,11 +59,17 @@ class ErrorNotification extends Notification
 
         $userString = \Auth::guest() ? "A guest" : \Auth::user()->name . "(#" .  \Auth::user()->id . ")";
 
-        $notificationContent = $icon[$this->level] . "<b>{$this->title}</b>\n\n" .
-            "Path: <b>/" . \Request::path() . "</b> \n" .
-            "User: <b>" . $userString . "</b> \n" .
-            "Message: <b>" . $this->e->getMessage() . "</b> \n"  .
-            "File: <b>" . $this->e->getFile() . "</b> \n"  .
+        // Sent with parse_mode HTML: an unescaped `<` or `&` in any of these (the
+        // path and member names are user-controlled) makes Telegram reject the alert
+        $html = function ($value) {
+            return htmlspecialchars((string) $value, ENT_NOQUOTES, 'UTF-8');
+        };
+
+        $notificationContent = $icon[$this->level] . "<b>" . $html($this->title) . "</b>\n\n" .
+            "Path: <b>/" . $html(\Request::path()) . "</b> \n" .
+            "User: <b>" . $html($userString) . "</b> \n" .
+            "Message: <b>" . $html($this->e->getMessage()) . "</b> \n"  .
+            "File: <b>" . $html($this->e->getFile()) . "</b> \n"  .
             "Line: <b>" . $this->e->getLine() . "</b>";
 
         $logsUrl = route('logs');
