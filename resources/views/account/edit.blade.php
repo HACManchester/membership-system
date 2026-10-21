@@ -150,7 +150,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('address.line_1', 'has-error has-feedback') }}">
                     <label for="address_line_1">Address Line 1</label>
-                    <input type="text" name="address[line_1]" id="address_line_1" class="form-control" autocomplete="address-line-1" value="{{ old('address.line_1', $user->address->line_1) }}">
+                    <input type="text" name="address[line_1]" id="address_line_1" class="form-control" autocomplete="address-line-1" value="{{ old('address.line_1', optional($user->address)->line_1) }}">
                     {!! FlashNotification::getErrorDetail('address.line_1') !!}
                 </div>
             </div>
@@ -160,7 +160,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('address.line_2', 'has-error has-feedback') }}">
                     <label for="address_line_2">Address Line 2</label>
-                    <input type="text" name="address[line_2]" id="address_line_2" class="form-control" autocomplete="address-line-2" value="{{ old('address.line_2', $user->address->line_2) }}">
+                    <input type="text" name="address[line_2]" id="address_line_2" class="form-control" autocomplete="address-line-2" value="{{ old('address.line_2', optional($user->address)->line_2) }}">
                     {!! FlashNotification::getErrorDetail('address.line_2') !!}
                 </div>
             </div>
@@ -170,7 +170,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('address.line_3', 'has-error has-feedback') }}">
                     <label for="address_line_3">Address Line 3</label>
-                    <input type="text" name="address[line_3]" id="address_line_3" class="form-control" autocomplete="address-locality" value="{{ old('address.line_3', $user->address->line_3) }}">
+                    <input type="text" name="address[line_3]" id="address_line_3" class="form-control" autocomplete="address-locality" value="{{ old('address.line_3', optional($user->address)->line_3) }}">
                     {!! FlashNotification::getErrorDetail('address.line_3') !!}
                 </div>
             </div>
@@ -181,7 +181,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('address.line_4', 'has-error has-feedback') }}">
                     <label for="address_line_4">Address Line 4</label>
-                    <input type="text" name="address[line_4]" id="address_line_4" class="form-control" autocomplete="region" value="{{ old('address.line_4', $user->address->line_4) }}">
+                    <input type="text" name="address[line_4]" id="address_line_4" class="form-control" autocomplete="region" value="{{ old('address.line_4', optional($user->address)->line_4) }}">
                     {!! FlashNotification::getErrorDetail('address.line_4') !!}
                 </div>
             </div>
@@ -191,7 +191,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('address.postcode', 'has-error has-feedback') }}">
                     <label for="address_postcode">Post Code</label>
-                    <input type="text" name="address[postcode]" id="address_postcode" class="form-control" autocomplete="postal-code" value="{{ old('address.postcode', $user->address->postcode) }}">
+                    <input type="text" name="address[postcode]" id="address_postcode" class="form-control" autocomplete="postal-code" value="{{ old('address.postcode', optional($user->address)->postcode) }}">
                     {!! FlashNotification::getErrorDetail('address.postcode') !!}
                 </div>
             </div>

@@ -80,7 +80,7 @@ abstract class DBRepository
     public function update($recordId, $recordData)
     {
         // Can remove if we ever add the ConvertEmptyStringsToNull middleware
-        if (is_string($recordData['maintainer_group_id']) && $recordData['maintainer_group_id'] == '') {
+        if (isset($recordData['maintainer_group_id']) && is_string($recordData['maintainer_group_id']) && $recordData['maintainer_group_id'] === '') {
             $recordData['maintainer_group_id'] = null;
         }
 

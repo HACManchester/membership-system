@@ -38,7 +38,7 @@ class TrainingRecordResource extends JsonResource
                 'name' => $this->user->name,
                 'pronouns' => $this->user->pronouns,
                 'profile_photo_url' => $this->when(
-                    $this->user->relationLoaded('profile') && $this->user->profile->profile_photo,
+                    $this->user->relationLoaded('profile') && $this->user->profile && $this->user->profile->profile_photo,
                     function () {
                         return UserImage::thumbnailUrl($this->user->hash);
                     }

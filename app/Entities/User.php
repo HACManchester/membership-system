@@ -48,14 +48,14 @@ use Illuminate\Notifications\Notifiable;
  * @property Carbon|null $banned_date
  * @property string $phone
  * @property integer $storage_box_payment_id
- * @property ProfileData $profile
+ * @property ProfileData|null $profile
  * @property string|null $secondary_payment_method
  * @property string|null $mandate_id
  * @property int $monthly_subscription
  * @property string|null $gocardless_setup_id
  * @property bool $postFob (false=collect, true=post)
  * @property date $last_seen
- * @property-read \BB\Entities\Address $address
+ * @property-read \BB\Entities\Address|null $address
  * 
  * @package BB\Entities
  */
@@ -304,7 +304,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         if (!$this->email_verified) {
             $alerts[] = 'email-not-verified';
         }
-        if (!$this->profile->profile_photo && !$this->profile->new_profile_photo) {
+        $profile = $this->profile;
+        if (!$profile || (!$profile->profile_photo && !$profile->new_profile_photo)) {
             $alerts[] = 'missing-profile-photo';
         }
         if (empty($this->phone)) {

@@ -9,9 +9,12 @@ use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Concerns\MakesGoCardlessExceptions;
 
 class GoCardlessPaymentTest extends TestCase
 {
+    use MakesGoCardlessExceptions;
+
     use RefreshDatabase;
 
     private $goCardless;
@@ -135,7 +138,7 @@ class GoCardlessPaymentTest extends TestCase
         [$member, $charge] = $this->memberWithDueCharge();
 
         $this->goCardless->method('newBill')
-            ->willThrowException(new \GoCardlessPro\Core\Exception\ValidationFailedException('mandate is not active'));
+            ->willThrowException($this->gocardlessValidationFailed('mandate is not active'));
         $this->goCardless->method('getNameFromReason')->willReturn('Monthly subscription');
 
         $this->actingAs($member)

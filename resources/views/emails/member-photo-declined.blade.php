@@ -13,7 +13,7 @@
     Please also make sure you're the only person in the image and it's not too dark.<br />
     If in doubt please upload a passport style photo.<br />
     <br />
-    If you require further information please email the board, <a href="board@hacman.org.uk">board@hacman.org.uk</a><br />
+    If you require further information please email the board, <a href="mailto:board@hacman.org.uk">board@hacman.org.uk</a><br />
     <br />
     <br />
     <br />

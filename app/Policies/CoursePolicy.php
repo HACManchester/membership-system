@@ -148,7 +148,9 @@ class CoursePolicy
         });
 
         $areaCoordinators = $maintainerGroups->flatMap(function ($maintainerGroup) {
-            return $maintainerGroup->equipmentArea->areaCoordinators;
+            $equipmentArea = $maintainerGroup->equipmentArea;
+
+            return $equipmentArea ? $equipmentArea->areaCoordinators : [];
         });
 
         $authorizedUsers = $maintainers->merge($areaCoordinators);

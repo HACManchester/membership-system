@@ -6,9 +6,12 @@ use BB\Entities\Payment;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use Tests\TestCase;
+use Tests\Concerns\MakesGoCardlessExceptions;
 
 class BillMembersTest extends TestCase
 {
+    use MakesGoCardlessExceptions;
+
     private $mockGoCardless;
 
     public function setUp(): void
@@ -172,7 +175,7 @@ class BillMembersTest extends TestCase
 
         $this->mockGoCardless->expects($this->once())
             ->method('newBill')
-            ->willThrowException(new \GoCardlessPro\Core\Exception\ValidationFailedException('Invalid mandate'));
+            ->willThrowException($this->gocardlessValidationFailed('Invalid mandate'));
 
         $this->mockGoCardless->expects($this->once())
             ->method('getNameFromReason')
