@@ -19,6 +19,26 @@ class DeprecationsFailTestsTest extends TestCase
         trigger_error('this is deprecated', E_USER_DEPRECATED);
     }
 
+    /**
+     * Deprecations inside dependencies aren't ours to fix — e.g. Laravel 8's own
+     * Timebox on PHP 8.1 — so they're handed to Laravel, not failed.
+     *
+     * @test
+     */
+    public function a_deprecation_raised_inside_vendor_does_not_fail_the_test()
+    {
+        // Read the active handler (the one Tests\TestCase installed) without replacing it
+        $handler = set_error_handler(function () {
+            return true;
+        });
+        restore_error_handler();
+
+        // Would throw ErrorException if the deprecation were treated as ours
+        $handler(E_USER_DEPRECATED, 'vendor deprecation', base_path('vendor/autoload.php'), 1);
+
+        $this->addToAssertionCount(1);
+    }
+
     /** @test */
     public function other_errors_still_reach_laravels_handler()
     {
