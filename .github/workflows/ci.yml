@@ -7,14 +7,28 @@ on:
 
 jobs:
   build:
+    name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
     runs-on: ubuntu-latest
+    # The "next" PHP runs ahead of the upgrade so each engine bump promotes a
+    # version that's already green rather than discovering problems on the day.
+    # It reports but doesn't block until it passes; then drop `experimental`
+    # from it and add the following version as the new experimental entry.
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: "7.2"
+            experimental: false
+          - php: "8.0"
+            experimental: true
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.2"
+          php-version: ${{ matrix.php }}
           extensions: mbstring, dom, fileinfo
           coverage: xdebug
 
@@ -27,9 +41,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-
+            ${{ runner.os }}-php${{ matrix.php }}-composer-
 
       - name: Fix yarn being stupid
         run: corepack enable
