@@ -2,13 +2,13 @@
 
 ## Summary
 
-68 test files / 486 tests (October 2026), in three quality bands (the legacy BrowserKit band was
+69 test files / 505 tests (October 2026), in three quality bands (the legacy BrowserKit band was
 retired in June 2026 — its coverage was ported to `tests/Feature/`):
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
 | Modern feature tests | `tests/Feature/` | 39 files | Good to excellent |
-| Integration tests | `tests/integration/` | 2 files | Excellent — the crown jewels |
+| Integration tests | `tests/integration/` | 3 files | Excellent — the crown jewels |
 | Unit tests | `tests/unit/` | 26 files | Good, especially billing |
 | Mailer tests | `tests/Mailer/` | 1 file | Queue assertions only — rendering is covered elsewhere |
 
@@ -16,15 +16,28 @@ retired in June 2026 — its coverage was ported to `tests/Feature/`):
 suspension → recovery → left), the GoCardless webhook endpoint, the equipment/induction/course
 system, and the admin authorization flows (roles, disciplinary, storage, cash).
 Every GET route is smoke-tested as guest, member, trusted member and admin, so no page can start
-500ing unnoticed. **Biggest remaining gaps:** `GoCardlessHelper` against the real SDK (it is always
-mocked — see below), pages that are only smoke-tested (gifts, stats, the balance page), and the
-entire JS frontend.
+500ing unnoticed. **Biggest remaining gaps:** pages that are only smoke-tested (gifts, stats, the balance
+page) and the entire JS frontend. The real GoCardless SDK is covered only by opt-in sandbox tests
+that don't run in CI (see below).
 
 ## Infrastructure
 
 - `phpunit.xml`: SQLite `:memory:`, array mail/cache, sync queue, Telegram disabled. Fast and
   isolated; `RefreshDatabase` migrates per test. No DB setup needed to run the suite.
 - Run via Docker: `docker compose exec laravel vendor/bin/phpunit`.
+- **GoCardless sandbox tests** (`tests/integration/GoCardlessSandboxTest.php`, group
+  `gocardless-sandbox`) drive `GoCardlessHelper` against the real GoCardless sandbox API. They skip
+  unless `GOCARDLESS_SANDBOX_ACCESS_TOKEN` is set, so CI never touches the network. Run them before
+  and after any change to the GoCardless SDK, Guzzle, or `GoCardlessHelper`:
+
+  ```sh
+  docker compose exec -e GOCARDLESS_SANDBOX_ACCESS_TOKEN=sandbox_... laravel \
+      vendor/bin/phpunit --group gocardless-sandbox
+  ```
+
+  They create a throwaway customer and mandate in the sandbox and cancel what they create. If the
+  account can't create mandates through the API, set `GOCARDLESS_SANDBOX_MANDATE_ID` to one made
+  through the hosted page.
 - Base class: `tests/TestCase.php`. Shared test helpers live in `tests/Concerns/` (namespace
   `Tests\Concerns`) — e.g. `MakesGoCardlessExceptions`. (The legacy `BrowserKitTestCase` and the
   `laravel/browser-kit-testing` + `symfony/dom-crawler` dev dependencies were removed in June 2026.)
@@ -90,8 +103,8 @@ gap only bites for event shapes we've never received live traffic for).
 | Every GET route (smoke) | ✅ Good | `RouteSmokeTest`: every GET route as guest/member/trusted/admin must not 5xx. Picks up new routes automatically; four skips, each justified in the file |
 | Payment lifecycle & status transitions | ✅ Excellent | Integration + handler + process tests |
 | Money arithmetic | ✅ Good | `MoneyHandlingTest`: float-pounds → integer-pence round-trips for awkward amounts, grace periods per payment method. Pins a known wart (a debt under £1 reports as positive) rather than fixing it |
-| GoCardless SDK (`GoCardlessHelper`) | 🔴 None | Always mocked. The SDK upgrade needs sandbox integration tests first — see the upgrade plan |
-| GoCardless webhook endpoint | ✅ Good | `GoCardlessWebhookTest`: signature verification, every event type's state chain, idempotency |
+| GoCardless SDK (`GoCardlessHelper`) | 🟡 Opt-in | Mocked everywhere in the main suite. `GoCardlessSandboxTest` exercises all eight SDK calls the helper makes against the real sandbox — redirect-flow completion only via its error path, since success needs a person on the hosted page — including a real validation-failure envelope. Not run in CI — run it by hand for SDK changes |
+| GoCardless webhook endpoint | ✅ Good | `GoCardlessWebhookTest`: signature verification; every handled event type (payments submitted/confirmed/failed/cancelled, mandates cancelled, subscriptions payment_created/cancelled) including the full legacy fixed-subscription cycle; multi-event deliveries; redelivery of each mutating event; and a delivery that fails part-way through then gets redelivered. `getPayment()` is faked with real SDK `Payment` resources, which throw on unknown properties |
 | Scheduled billing commands | ✅ Good | `BillMembersTest`, `CreateTodaysSubChargesTest`, `CheckMembershipStatusTest` |
 | Equipment / inductions / courses | ✅ Excellent | Feature tests + policy tests |
 | Notification emails | ✅ Good | `NotificationEmailTest`: admin/trainer authorization, recipient resolution, body escaping |
@@ -147,8 +160,7 @@ actually breaks:
 1. Convert factories to class-based once the upgrade has passed Laravel 9 (they're bridged with
    `laravel/legacy-factories` until then); add factory states for the common personas (active
    member, payment-warning member, trainer, admin) to cut setup noise.
-2. Sandbox integration tests for `GoCardlessHelper`, before the GoCardless SDK is upgraded.
-3. Start JS testing where logic lives: begin with pure functions/hooks in `resources/js`, then
+2. Start JS testing where logic lives: begin with pure functions/hooks in `resources/js`, then
    component tests for the course-training pages, and reinstate a CI step once tests exist.
-4. Adopt a coverage floor in CI (e.g. fail under 60%, ratchet up), so coverage only moves one
+3. Adopt a coverage floor in CI (e.g. fail under 60%, ratchet up), so coverage only moves one
    direction.
