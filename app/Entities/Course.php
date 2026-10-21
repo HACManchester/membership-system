@@ -6,12 +6,14 @@ use BB\Entities\Equipment;
 use BB\Entities\TrainingRecord;
 use BB\Presenters\CoursePresenter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
 /**
- * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Equipment> $equipment
- * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\TrainingRecord> $trainingRecords
+ * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
+ * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
  */
 class Course extends Model
 {
@@ -52,13 +54,13 @@ class Course extends Model
         return 'slug';
     }
 
-    public function equipment()
+    public function equipment(): BelongsToMany
     {
         return $this->belongsToMany(Equipment::class, 'course_equipment')
             ->withTimestamps();
     }
 
-    public function trainingRecords()
+    public function trainingRecords(): HasMany
     {
         return $this->hasMany(TrainingRecord::class);
     }

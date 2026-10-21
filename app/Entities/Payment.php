@@ -4,6 +4,7 @@ namespace BB\Entities;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 
 class Payment extends Model
@@ -63,9 +64,9 @@ class Payment extends Model
     protected $presenter = 'BB\Presenters\PaymentPresenter';
 
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
     public function scopeSubscription($query)
