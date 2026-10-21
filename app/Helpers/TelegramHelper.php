@@ -66,7 +66,7 @@ class TelegramHelper
         try {
             $this->client->get(
                 "https://api.telegram.org/bot{$botKey}/sendMessage" .
-                    "?parse_mode=HTML&chat_id=${botChat}" .
+                    "?parse_mode=HTML&chat_id={$botChat}" .
                     "&text=" . urlencode($formattedMessage)
             );
         } catch (\Exception $e) {
