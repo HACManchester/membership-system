@@ -34,7 +34,7 @@ class SubscriptionCharge extends Model
     /**
      * Fillable fields
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'user_id', 'charge_date', 'amount', 'status'

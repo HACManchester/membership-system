@@ -36,7 +36,7 @@ class TrainingRecord extends Model
     /**
      * Fillable fields
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'key',

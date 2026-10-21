@@ -9,7 +9,7 @@ class Role extends Model
     /**
      * Fillable fields
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = ['name', 'title', 'description', 'email_public', 'email_private', 'slack_channel'];
 

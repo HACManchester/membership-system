@@ -9,11 +9,6 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
 
-	/**
-	 * Bootstrap any application services.
-	 *
-	 * @return void
-	 */
 	public function boot()
 	{
 		if (!$this->app->isLocal()) {
@@ -22,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
 		}
 
 		JsonResource::withoutWrapping();
+
+		// Laravel 8 made Tailwind the default paginator markup; the Blade pages use Bootstrap
+		Paginator::useBootstrap();
 	}
 
 	public function register()
