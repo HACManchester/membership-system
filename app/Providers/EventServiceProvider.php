@@ -76,4 +76,13 @@ class EventServiceProvider extends ServiceProvider
 	{
 		parent::boot();
 	}
+
+	/**
+	 * Listeners are registered explicitly above. Later Laravel versions turn
+	 * discovery on by default, which would register them a second time.
+	 */
+	public function shouldDiscoverEvents()
+	{
+		return false;
+	}
 }
