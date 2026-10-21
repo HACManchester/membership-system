@@ -2,13 +2,13 @@
 
 ## Summary
 
-68 test files / 486 tests (October 2026), in three quality bands (the legacy BrowserKit band was
+69 test files / 505 tests (October 2026), in three quality bands (the legacy BrowserKit band was
 retired in June 2026 — its coverage was ported to `tests/Feature/`):
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
 | Modern feature tests | `tests/Feature/` | 39 files | Good to excellent |
-| Integration tests | `tests/integration/` | 2 files | Excellent — the crown jewels |
+| Integration tests | `tests/integration/` | 3 files | Excellent — the crown jewels |
 | Unit tests | `tests/unit/` | 26 files | Good, especially billing |
 | Mailer tests | `tests/Mailer/` | 1 file | Queue assertions only — rendering is covered elsewhere |
 
@@ -104,7 +104,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Payment lifecycle & status transitions | ✅ Excellent | Integration + handler + process tests |
 | Money arithmetic | ✅ Good | `MoneyHandlingTest`: float-pounds → integer-pence round-trips for awkward amounts, grace periods per payment method. Pins a known wart (a debt under £1 reports as positive) rather than fixing it |
 | GoCardless SDK (`GoCardlessHelper`) | 🟡 Opt-in | Mocked everywhere in the main suite. `GoCardlessSandboxTest` exercises all eight SDK calls the helper makes against the real sandbox — redirect-flow completion only via its error path, since success needs a person on the hosted page — including a real validation-failure envelope. Not run in CI — run it by hand for SDK changes |
-| GoCardless webhook endpoint | ✅ Good | `GoCardlessWebhookTest`: signature verification, every event type's state chain, idempotency |
+| GoCardless webhook endpoint | ✅ Good | `GoCardlessWebhookTest`: signature verification; every handled event type (payments submitted/confirmed/failed/cancelled, mandates cancelled, subscriptions payment_created/cancelled) including the full legacy fixed-subscription cycle; multi-event deliveries; redelivery of each mutating event; and a delivery that fails part-way through then gets redelivered. `getPayment()` is faked with real SDK `Payment` resources, which throw on unknown properties |
 | Scheduled billing commands | ✅ Good | `BillMembersTest`, `CreateTodaysSubChargesTest`, `CheckMembershipStatusTest` |
 | Equipment / inductions / courses | ✅ Excellent | Feature tests + policy tests |
 | Notification emails | ✅ Good | `NotificationEmailTest`: admin/trainer authorization, recipient resolution, body escaping |
