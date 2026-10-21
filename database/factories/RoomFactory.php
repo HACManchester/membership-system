@@ -4,6 +4,7 @@
 
 use BB\Entities\Room;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Room::class, function (Faker $faker) {
     $name = $faker->unique()->words(2, true);
