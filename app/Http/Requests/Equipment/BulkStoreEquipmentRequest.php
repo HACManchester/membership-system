@@ -61,8 +61,9 @@ class BulkStoreEquipmentRequest extends FormRequest
                     if (! $maintainerGroup instanceof MaintainerGroup) {
                         return;
                     }
-                    $inMaintainerGroup = $this->user()->maintainerGroups->contains($maintainerGroup);
-                    $isAreaCoordinator = $this->user()->equipmentAreas->contains($maintainerGroup->equipmentArea);
+                    $inMaintainerGroup = CurrentUser::get()->maintainerGroups->contains($maintainerGroup);
+                    $isAreaCoordinator = $maintainerGroup->equipmentArea !== null
+                        && CurrentUser::get()->equipmentAreas->contains($maintainerGroup->equipmentArea);
 
                     if (! $inMaintainerGroup && ! $isAreaCoordinator) {
                         $fail('You can only create equipment managed by maintainer groups you are in.');

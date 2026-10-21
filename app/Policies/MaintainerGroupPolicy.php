@@ -65,7 +65,8 @@ class MaintainerGroupPolicy
     public function update(User $user, MaintainerGroup $maintainerGroup)
     {
         $isMaintainer = $maintainerGroup->maintainers->contains($user);
-        $isAreaCoordinator = $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
+        $isAreaCoordinator = $maintainerGroup->equipmentArea !== null
+            && $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
 
         return $isMaintainer || $isAreaCoordinator;
     }
@@ -80,7 +81,8 @@ class MaintainerGroupPolicy
     public function delete(User $user, MaintainerGroup $maintainerGroup)
     {
         $isMaintainer = $maintainerGroup->maintainers->contains($user);
-        $isAreaCoordinator = $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
+        $isAreaCoordinator = $maintainerGroup->equipmentArea !== null
+            && $user->equipmentAreas->contains($maintainerGroup->equipmentArea);
 
         return $isMaintainer || $isAreaCoordinator;
     }

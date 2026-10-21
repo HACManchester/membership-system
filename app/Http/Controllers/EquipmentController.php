@@ -111,7 +111,7 @@ class EquipmentController extends Controller
         $userRecord = $this->trainingRecordRepository->getUserForEquipment($equipment, $user->id);
 
         $hasCourse = $equipment->courses->count() > 0;
-        $liveCourse = $hasCourse && $equipment->courses->first()->live;
+        $liveCourse = (bool) $equipment->courses->first()?->live;
         $hasLegacyInduction = ! empty($equipment->induction_category);
         // The legacy path keys training records by induction_category, so it is
         // only functional when one is set. Without a category (and without a live

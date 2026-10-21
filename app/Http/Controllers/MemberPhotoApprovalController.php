@@ -26,7 +26,7 @@ class MemberPhotoApprovalController extends Controller
     public function update($id)
     {
         $user = User::findWithPermission($id);
-        $profile = $user->profile()->first();
+        $profile = $user->profile()->firstOrFail();
 
         if (\Request::input('photo_approved')) {
             $this->userImage->approveNewImage($user->hash);

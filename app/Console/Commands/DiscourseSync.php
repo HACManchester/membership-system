@@ -19,7 +19,7 @@ class DiscourseSync extends Command
      */
     public function handle()
     {
-        $user = User::find($this->argument('user'));
+        $user = User::findOrFail((int) $this->argument('user'));
 
         DiscourseSyncJob::dispatch($user);
         $this->info("Queued a job to sync {$user} with Discourse.");

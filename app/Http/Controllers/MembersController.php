@@ -66,7 +66,7 @@ class MembersController extends Controller
         return response()->json($members);
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $user = User::findOrFail($id);
 
