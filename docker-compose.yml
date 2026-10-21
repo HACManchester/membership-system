@@ -1,13 +1,17 @@
 # For more information: https://laravel.com/docs/sail
-version: "3"
 services:
   laravel:
+    # One Dockerfile for every PHP version, like membership-deployment's images.
+    # Set SAIL_PHP_VERSION in .env and run `docker compose up -d` to switch;
+    # each version builds to its own image tag, so switching back needs no rebuild.
     build:
-      context: .docker/runtimes/7.2
+      context: .docker/sail
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP}"
-    image: sail-8.1/app
+        PHP_VERSION: "${SAIL_PHP_VERSION:-8.0}"
+        INSTALL_XDEBUG: "${SAIL_INSTALL_XDEBUG:-false}"
+    image: sail-${SAIL_PHP_VERSION:-8.0}/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

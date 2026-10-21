@@ -19,7 +19,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of the exception types that should not be reported.
      *
-     * @var array
+     * @var string[]
      */
     protected $dontReport = [
         // Laravel 5.5+ handles standard framework exceptions via $internalDontReport
@@ -34,9 +34,10 @@ class Handler extends ExceptionHandler
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
-     * @var array
+     * @var string[]
      */
     protected $dontFlash = [
+        'current_password',
         'password',
         'password_confirmation',
     ];

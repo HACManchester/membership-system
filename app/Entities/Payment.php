@@ -33,7 +33,7 @@ class Payment extends Model
     /**
      * Fillable fields
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'source',
