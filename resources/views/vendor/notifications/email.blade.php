@@ -104,11 +104,11 @@ $style = [
 
                                         <!-- Action Button -->
                                         @if (isset($actionText))
-                                            @include('vendor.notifications.components.action', compact('actionColor', 'actionText', 'actionUrl', 'fontFamily', 'level', 'style'))
+                                            @include('vendor.notifications.components.action', compact('actionText', 'actionUrl', 'fontFamily', 'level', 'style'))
                                         @endif
                                         @if (isset($actionLines))
                                             @foreach ($actionLines as $action)
-                                                @include('vendor.notifications.components.action', array_merge([ 'actionText' => $action->text, 'actionUrl' => $action->url, ], compact('actionColor', 'fontFamily', 'level', 'style')))
+                                                @include('vendor.notifications.components.action', array_merge([ 'actionText' => $action->text, 'actionUrl' => $action->url, ], compact('fontFamily', 'level', 'style')))
                                             @endforeach
                                         @endif
                                             
