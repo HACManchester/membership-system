@@ -83,8 +83,11 @@ return [
     |
     */
 
+    // Symfony Mailer (Laravel 9+) refuses to send without a From address, where
+    // SwiftMailer didn't care, so fall back to the default for an empty or
+    // "null" MAIL_FROM_ADDRESS as well as a missing one.
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'alerts@hacman.org.uk'),
+        'address' => env('MAIL_FROM_ADDRESS') ?: 'alerts@hacman.org.uk',
         'name' => env('MAIL_FROM_NAME', 'Hackspace Manchester'),
     ],
 
