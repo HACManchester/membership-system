@@ -31,7 +31,7 @@ class SubscriptionController extends Controller
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
         $this->userRepository = $userRepository;
 
-        $this->middleware('role:member', array('only' => ['create', 'destroy']));
+        $this->middleware('role:member', array('only' => ['create', 'store', 'destroy']));
     }
 
     /**

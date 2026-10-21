@@ -202,7 +202,7 @@ Route::group(['middleware' => 'role:member'], function() {
 ##########################
 
 Route::group(array('middleware' => 'role:member'), function () {
-    Route::resource('account/{user}/keyfobs', 'KeyFobController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+    Route::resource('account/{user}/keyfobs', 'KeyFobController', ['only' => ['index', 'store', 'destroy']]);
 });
 
 
