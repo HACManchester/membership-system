@@ -300,7 +300,7 @@ class Equipment extends Model
      */
     public function getPpeAttribute()
     {
-        $items = json_decode($this->attributes['ppe'], true);
+        $items = json_decode($this->attributes['ppe'] ?? '', true);
         if (is_array($items)) {
             // Filter out empty strings and trim whitespace
             return array_values(array_filter($items, function($item) {
