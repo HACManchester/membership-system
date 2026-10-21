@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Gift;
 use BB\Helpers\MembershipPayments;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\UploadedFile;
 
 class MemberRegistrationController extends Controller
 {
@@ -128,9 +129,11 @@ class MemberRegistrationController extends Controller
 
         $user = $this->userRepository->registerMember($input, ! \Auth::guest() && \Auth::user()->hasRole('admin'));
 
-        if (\Request::file('new_profile_photo')) {
+        // A single file only: new_profile_photo[] arrives as an array
+        $photo = \Request::file('new_profile_photo');
+        if ($photo instanceof UploadedFile) {
             try {
-                $this->userImage->uploadPhoto($user->hash, \Request::file('new_profile_photo')->getRealPath(), true);
+                $this->userImage->uploadPhoto($user->hash, $photo->getRealPath(), true);
 
                 $this->profileRepo->update($user->id, ['new_profile_photo' => 1, 'profile_photo_private' => $input['profile_photo_private']]);
             } catch (\Exception $e) {
