@@ -62,7 +62,3 @@ parameters:
 			path: app/Repo/UserRepository.php
 
 
-		-
-			message: "#^Property Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:\\$orders \\(array\\) does not accept null\\.$#"
-			count: 1
-			path: app/Scopes/OrderScope.php
