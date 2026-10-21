@@ -41,7 +41,7 @@ class TrainingRecordController extends Controller
 
     public function train(Equipment $equipment, TrainingRecord $trainingRecord, TrainTrainingRecordRequest $request)
     {
-        $trainer = User::findOrFail($request->input('trainer_user_id'));
+        $trainer = User::findOrFail((int) $request->validated('trainer_user_id'));
 
         $trainingRecord->update([
             'trained' => \Carbon\Carbon::now(),

@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\TrainingRecord;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TrainTrainingRecordRequest extends FormRequest
@@ -14,7 +15,7 @@ class TrainTrainingRecordRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('train', [TrainingRecord::class, $this->route('trainingRecord')]);
+        return CurrentUser::get()->can('train', [TrainingRecord::class, $this->route('trainingRecord')]);
     }
 
     /**
@@ -25,7 +26,7 @@ class TrainTrainingRecordRequest extends FormRequest
     public function rules()
     {
         return [
-            'trainer_user_id' => ['required', 'exists:BB\Entities\User,id'],
+            'trainer_user_id' => ['required', 'integer', 'exists:BB\Entities\User,id'],
         ];
     }
 

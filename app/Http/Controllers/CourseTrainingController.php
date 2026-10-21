@@ -70,7 +70,11 @@ class CourseTrainingController extends Controller
 
         $this->authorize('train', $trainingRecord);
 
-        $trainer = User::findOrFail($request->input('trainer_user_id', auth()->user()->id));
+        $request->validate([
+            'trainer_user_id' => ['sometimes', 'integer', 'exists:users,id'],
+        ]);
+
+        $trainer = User::findOrFail((int) $request->input('trainer_user_id', CurrentUser::get()->id));
 
         $trainingRecord->update([
             'trained' => Carbon::now(),
