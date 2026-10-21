@@ -21,6 +21,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Deprecations Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | Since Laravel 8, PHP and library deprecation warnings are written to this
+    | channel instead of being thrown. Set it to a real channel (e.g. "daily")
+    | to see what the next PHP version will break, ahead of upgrading.
+    |
+    */
+
+    'deprecations' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Log Channels
     |--------------------------------------------------------------------------
     |
