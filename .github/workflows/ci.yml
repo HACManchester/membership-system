@@ -20,6 +20,10 @@ jobs:
         include:
           - php: "8.0"
             experimental: false
+          # Production moves here next. Laravel 9 needs it too: on PHP 8.0 it can
+          # only use Symfony 6.0, which is out of support with open advisories.
+          - php: "8.1"
+            experimental: false
           # Laravel 8 stops at PHP 8.1, so this stays red until the Laravel 9 step;
           # once it's green there, 8.2 is safe to switch production to.
           - php: "8.2"
