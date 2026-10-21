@@ -64,7 +64,7 @@ $factory->define('BB\Entities\Role', function (Generator $faker) {
 $factory->define('BB\Entities\KeyFob', function (Generator $faker) {
     return [
         'user_id' => 0,
-        'key_id'  => str_random(12),
+        'key_id'  => Str::random(12),
         'active'  => 1,
         'lost'    => 0,
     ];

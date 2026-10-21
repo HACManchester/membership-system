@@ -89,7 +89,7 @@ class PaymentRepository extends DBRepository
      * @param string        $reason What was the reason. subscription, induction, etc...
      * @param int           $userId The users ID
      * @param string|null   $source gocardless
-     * @param string        $sourceId A reference for the source
+     * @param string|null   $sourceId A reference for the source
      * @param double        $amount Amount received before a fee in pounds
      * @param string        $status paid, pending, cancelled, refunded
      * @param double        $fee The fee charged by the payment provider
@@ -99,7 +99,7 @@ class PaymentRepository extends DBRepository
      * @return int The ID of the payment record
      * @throws PaymentException if the source ID is already recorded against another user
      */
-    public function recordPayment($reason, $userId, $source, $sourceId = null, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
     {
         if ($paidDate == null) {
             $paidDate = new Carbon();

@@ -4,6 +4,7 @@
 
 use BB\Entities\Equipment;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Equipment::class, function (Faker $faker) {
     $name = $faker->unique()->word;

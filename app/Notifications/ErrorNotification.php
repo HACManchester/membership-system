@@ -25,12 +25,7 @@ class ErrorNotification extends Notification
     /** @var Throwable */
     protected $e;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct($level = 'error', $title = 'Exception', $suppress = false, Throwable $e)
+    public function __construct($level, $title, $suppress, Throwable $e)
     {
         $this->level = $level;
         $this->title = $title;

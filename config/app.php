@@ -174,7 +174,6 @@ return [
         BB\Providers\NotificationServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
-        OwenIt\Auditing\AuditingServiceProvider::class,
     ],
 
     /*

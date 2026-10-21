@@ -102,7 +102,7 @@ class Handler extends ExceptionHandler
         }
     }
 
-    protected function notifyTelegram($level = 'error', $title = 'Exception', $suppress = false, Throwable $e)
+    protected function notifyTelegram($level, $title, $suppress, Throwable $e)
     {
         Log::error($e);
         try {
