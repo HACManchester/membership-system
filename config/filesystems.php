@@ -43,9 +43,13 @@ return [
 
     'disks' => [
 
+        // `throw` keeps Flysystem 1's behaviour: since Laravel 9 (Flysystem 3) a
+        // failed write returns false instead of throwing, which would let photo
+        // uploads record files that were never written.
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'throw' => true,
         ],
 
         'public' => [
@@ -53,6 +57,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
+            'throw' => true,
         ],
 
         's3' => [
