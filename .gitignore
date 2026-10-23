@@ -16,6 +16,7 @@ yarn-error.log
 /public/mix-manifest.json
 /public/fonts
 /public/js
+/.phpunit.cache
 .phpunit.result.cache
 
 # IDE-helper related

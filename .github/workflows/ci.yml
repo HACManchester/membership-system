@@ -18,12 +18,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Laravel 9 here needs PHP 8.1+: on 8.0 it could only use Symfony 6.0,
-          # out of support with open advisories, so the lock requires Symfony 6.4.
-          - php: "8.1"
-            experimental: false
-          # Production's next engine: the first still-supported PHP.
+          # Production's engine.
           - php: "8.2"
+            experimental: false
+          # Production's next engine, which Laravel 13 will require. Already green,
+          # so it blocks too.
+          - php: "8.3"
             experimental: false
 
     steps:

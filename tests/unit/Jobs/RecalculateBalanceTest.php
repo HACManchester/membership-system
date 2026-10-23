@@ -11,7 +11,7 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(0, $user->fresh()->cash_balance);
     }
@@ -32,7 +32,7 @@ class RecalculateBalanceTest extends TestCase
             'amount' => 10,
         ]);
 
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(0, $user->fresh()->cash_balance);
     }
@@ -52,7 +52,7 @@ class RecalculateBalanceTest extends TestCase
             'user_id' => $user->id,
             'amount' => 10,
         ]);
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(1000, $user->fresh()->cash_balance);
     }
@@ -72,7 +72,7 @@ class RecalculateBalanceTest extends TestCase
             'user_id' => $user->id,
             'amount' => 10,
         ]);
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(-2000, $user->fresh()->cash_balance);
     }
@@ -93,7 +93,7 @@ class RecalculateBalanceTest extends TestCase
             'amount' => 20,
         ]);
 
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(0, $user->fresh()->cash_balance);
     }
@@ -114,7 +114,7 @@ class RecalculateBalanceTest extends TestCase
             'amount' => 20,
         ]);
 
-        RecalculateBalance::dispatchNow($user);
+        RecalculateBalance::dispatchSync($user);
 
         $this->assertEquals(-2000, $user->fresh()->cash_balance);
     }

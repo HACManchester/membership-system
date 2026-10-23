@@ -9,9 +9,9 @@ services:
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP}"
-        PHP_VERSION: "${SAIL_PHP_VERSION:-8.0}"
+        PHP_VERSION: "${SAIL_PHP_VERSION:-8.2}"
         INSTALL_XDEBUG: "${SAIL_INSTALL_XDEBUG:-false}"
-    image: sail-${SAIL_PHP_VERSION:-8.0}/app
+    image: sail-${SAIL_PHP_VERSION:-8.2}/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

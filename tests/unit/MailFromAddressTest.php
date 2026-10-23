@@ -30,7 +30,7 @@ class MailFromAddressTest extends TestCase
         $this->assertSame('alerts@hacman.org.uk', $config['from']['address']);
     }
 
-    public function unsetValues()
+    public static function unsetValues()
     {
         return ['"null"' => ['null'], 'empty' => [''], 'missing' => [null]];
     }

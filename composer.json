@@ -10,15 +10,15 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
         "gocardless/gocardless-pro": "^4.28",
         "guzzlehttp/guzzle": "^7.15.2",
         "guzzlehttp/psr7": "^2.13",
         "inertiajs/inertia-laravel": "^0.6.11",
         "intervention/image": "2.*",
         "laracasts/presenter": "~0.2.7",
-        "laravel-notification-channels/telegram": "^2.1",
-        "laravel/framework": "^9.52",
+        "laravel-notification-channels/telegram": "^5.0",
+        "laravel/framework": "^10.48",
         "laravel/tinker": "^2.10.1",
         "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "^2.0.0",
@@ -27,14 +27,14 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
-        "doctrine/dbal": "~2.6",
+        "doctrine/dbal": "^3.0",
         "fakerphp/faker": "^1.9.1",
         "filp/whoops": "~2.17.0",
         "larastan/larastan": "^2.9",
         "laravel/legacy-factories": "^1.3",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10"
+        "nunomaduro/collision": "^7.10",
+        "phpunit/phpunit": "^10.5"
     },
     "autoload": {
         "classmap": [
@@ -79,9 +79,7 @@
                     "PKSA-d5tc-s1qs-h781": "CVE-2026-102279, XSS in the debug error page. Only reachable with APP_DEBUG=true; production runs with it off. Fixed in Laravel 12.69 / 13.30.",
                     "PKSA-m5cs-t1y6-qpcs": "Temporary signed URL path confusion. The app creates and verifies no signed URLs (no signed routes, no `signed` middleware, no package that uses them). Fixed in Laravel 12.61.1 / 13.12.",
                     "PKSA-3r5d-mb8f-1qw9": "CRLF injection through the `email` validation rule. Mitigated in-app: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule (tests/unit/Validators/EmailCrlfValidationTest). Fixed in Laravel 12.60 / 13.10.",
-                    "PKSA-8qx3-n5y5-vvnd": "CVE-2025-27515, file validation bypass via wildcard rules (`files.*`). The app has no wildcard file/image rules; its only file rules are on single fields. Fixed in Laravel 10.48.29.",
-                    "PKSA-mdq4-51ck-6kdq": "CVE-2026-48019 (the 9.x-12.x entry for the same issue as PKSA-3r5d-mb8f-1qw9): CRLF injection through the `email` validation rule. Mitigated in-app: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule (tests/unit/Validators/EmailCrlfValidationTest).",
-                    "PKSA-zwc5-qtrz-zm1n": "CVE-2026-48019 again, as filed against the illuminate/mail split package. It isn't installed (laravel/framework provides it), but laravel-notification-channels/telegram's dependency chain can't resolve without this. Same in-app mitigation as PKSA-3r5d-mb8f-1qw9: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule."
+                    "PKSA-mdq4-51ck-6kdq": "CVE-2026-48019 (the 9.x-12.x entry for the same issue as PKSA-3r5d-mb8f-1qw9): CRLF injection through the `email` validation rule. Mitigated in-app: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule (tests/unit/Validators/EmailCrlfValidationTest)."
                 }
             }
         }
