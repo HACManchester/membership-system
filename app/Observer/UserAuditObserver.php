@@ -1,6 +1,7 @@
 <?php namespace BB\Observer;
 
 use BB\Entities\AuditLog;
+use BB\Entities\ProfileData;
 use BB\Support\CurrentUser;
 
 class UserAuditObserver
@@ -32,7 +33,8 @@ class UserAuditObserver
         if (count($changedData) > 0) {
             AuditLog::create(
                 [
-                    'user_id'     => $user->id,
+                    // Observes both User and ProfileData; a profile's own id isn't the member's
+                    'user_id'     => $user instanceof ProfileData ? $user->user_id : $user->id,
                     'admin_id'    => $adminId,
                     'action'      => 'user_updated',
                     'description' => implode(', ', $changedData)

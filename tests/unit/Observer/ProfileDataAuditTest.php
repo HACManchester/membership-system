@@ -9,23 +9,39 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * ProfileData's audit observer used to be registered in its own boot(), which
- * Laravel 13 forbids (observe() instantiates the model mid-boot). It's now
- * registered by ObserverServiceProvider.
+ * UserAuditObserver watches both User and ProfileData. ProfileData's
+ * registration moved to ObserverServiceProvider for Laravel 13 (observe()
+ * instantiates the model, which its own boot() can no longer do), and the
+ * observer used to file profile changes under the profile row's id instead of
+ * the member's.
  */
 class ProfileDataAuditTest extends TestCase
 {
     #[Test]
-    public function changing_an_audited_profile_field_is_recorded()
+    public function changing_an_audited_profile_field_is_recorded_against_the_member()
     {
+        // Make sure the profile's id and its member's id differ
+        factory(User::class)->times(2)->create();
         $member = factory(User::class)->create();
         $profile = factory(ProfileData::class)->create(['user_id' => $member->id, 'profile_photo_on_wall' => 0]);
+        $this->assertNotEquals($member->id, $profile->id);
 
         $profile->update(['profile_photo_on_wall' => 1]);
 
-        $this->assertTrue(
-            AuditLog::where('description', 'like', '%profile_photo_on_wall [is 1, was 0]%')->exists(),
-            'the profile change should be audited'
-        );
+        $log = AuditLog::where('description', 'like', '%profile_photo_on_wall [is 1, was 0]%')->first();
+        $this->assertNotNull($log, 'the profile change should be audited');
+        $this->assertSame($member->id, (int) $log->user_id, 'against the member, not the profile row');
+    }
+
+    #[Test]
+    public function changing_an_audited_member_field_is_recorded_against_the_member()
+    {
+        $member = factory(User::class)->create(['trusted' => 0]);
+
+        $member->update(['trusted' => 1]);
+
+        $log = AuditLog::where('description', 'like', '%trusted [is 1, was 0]%')->first();
+        $this->assertNotNull($log);
+        $this->assertSame($member->id, (int) $log->user_id);
     }
 }
