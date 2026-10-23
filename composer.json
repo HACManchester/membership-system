@@ -17,8 +17,8 @@
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "2.*",
         "laracasts/presenter": "~0.2.7",
-        "laravel-notification-channels/telegram": "^5.0",
-        "laravel/framework": "^11.45",
+        "laravel-notification-channels/telegram": "^6.0",
+        "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "^3.8",
@@ -26,7 +26,7 @@
         "sentry/sentry-laravel": "^4.13.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^3.0",
+        "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.9.1",
         "filp/whoops": "~2.17.0",
         "larastan/larastan": "^3.0",
@@ -71,18 +71,7 @@
             "kylekatarnls/update-helper": true
         },
         "sort-packages": true,
-        "optimize-autoloader": true,
-        "policy": {
-            "advisories": {
-                "ignore-id": {
-                    "PKSA-d5tc-s1qs-h781": "CVE-2026-102279, XSS in the debug error page. Only reachable with APP_DEBUG=true; production runs with it off. Fixed in Laravel 12.69 / 13.30.",
-                    "PKSA-m5cs-t1y6-qpcs": "Temporary signed URL path confusion. The app creates and verifies no signed URLs (no signed routes, no `signed` middleware, no package that uses them). Fixed in Laravel 12.61.1 / 13.12.",
-                    "PKSA-3r5d-mb8f-1qw9": "CRLF injection through the `email` validation rule. Mitigated in-app: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule (tests/unit/Validators/EmailCrlfValidationTest). Fixed in Laravel 12.60 / 13.10.",
-                    "PKSA-mdq4-51ck-6kdq": "CVE-2026-48019 (the 9.x-12.x entry for the same issue as PKSA-3r5d-mb8f-1qw9): CRLF injection through the `email` validation rule. Mitigated in-app: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule (tests/unit/Validators/EmailCrlfValidationTest).",
-                    "PKSA-zwc5-qtrz-zm1n": "CVE-2026-48019 again, as filed against the illuminate/mail split package. It isn't installed (laravel/framework provides it), but laravel-notification-channels/telegram requires illuminate/notifications, and Composer won't resolve that chain without this ignore. Same in-app mitigation as PKSA-3r5d-mb8f-1qw9: BB\\Validators\\CustomValidator::validateEmail() rejects CR/LF for every `email` rule."
-                }
-            }
-        }
+        "optimize-autoloader": true
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
