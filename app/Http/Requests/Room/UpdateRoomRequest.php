@@ -2,13 +2,14 @@
 
 namespace BB\Http\Requests\Room;
 
+use BB\Support\CurrentUser;
 use Illuminate\Validation\Rule;
 
 class UpdateRoomRequest extends StoreRoomRequest
 {
     public function authorize()
     {
-        return $this->user()->can('update', $this->route('room'));
+        return CurrentUser::get()->can('update', $this->route('room'));
     }
 
     public function rules()

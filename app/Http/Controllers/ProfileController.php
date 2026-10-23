@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\UploadedFile;
 
 class ProfileController extends Controller
 {
@@ -78,9 +79,11 @@ class ProfileController extends Controller
 
         $this->profileRepo->update($userId, $input);
 
-        if (\Request::file('new_profile_photo')) {
+        // A single file only: new_profile_photo[] arrives as an array
+        $photo = \Request::file('new_profile_photo');
+        if ($photo instanceof UploadedFile) {
             try {
-                $this->userImage->uploadPhoto($user->hash, \Request::file('new_profile_photo')->getRealPath(), true);
+                $this->userImage->uploadPhoto($user->hash, $photo->getRealPath(), true);
 
                 $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
 

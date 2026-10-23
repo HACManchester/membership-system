@@ -24,7 +24,7 @@ belongs to tells you how much to trust it and how to extend it.
 
 ### Generation 3 — current practice (the style all new code uses)
 
-- **FormRequests carrying authorization**: e.g. `TrainInductionRequest::authorize()` calls the
+- **FormRequests carrying authorization**: e.g. `TrainCourseMemberRequest::authorize()` calls the
   policy — validation and authz in one place
 - **Policies** (`app/Policies/`, 9 classes) with `before()` admin short-circuits and
   `authorizeResource()` in constructors
@@ -36,7 +36,7 @@ belongs to tells you how much to trust it and how to extend it.
 
 The course/equipment-training subsystem is the reference implementation of generation 3 — when in
 doubt about "how should this look", read `CourseController`, `CoursePolicy`,
-`TrainInductionRequest`, `CourseTrainingController`, and their tests.
+`TrainCourseMemberRequest`, `CourseTrainingController`, and their tests.
 
 ## Target architecture
 
@@ -106,12 +106,12 @@ In order of value:
 
 ### Step 4 — ratchet quality
 
-- Continue burning down `phpstan-baseline.neon` (down from ~200 to 26): the stale-docblock and
-  genuine-bug tranches are done; the remainder is mostly `Authenticatable` property noise that the
-  framework upgrade fixes for free, plus a few larastan relation false-positives. Raise to level
-  6–7 once under ~20 entries. New errors must be baselined *deliberately* (CI's `phpstan analyse`
-  fails on un-baselined errors, so silencing one is a visible, reviewable change to the baseline
-  file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
+- PHPStan runs at level 8, with level 6's missing-type checks (`missingType.*`) switched off: those
+  are ~870 findings across most files, best revisited with Larastan 3 on Laravel 11+.
+  `phpstan-baseline.neon` holds 27 entries, all checked and found safe: mostly guarantees PHPStan
+  can't see, such as a member always having a profile row. New errors must be baselined
+  *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
+  visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.
 
 ## How to sequence against other work

@@ -25,7 +25,7 @@ abstract class DBRepository
     /**
      * Fetch a record by id
      *
-     * @param $id
+     * @param int|string $id
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function getById($id)

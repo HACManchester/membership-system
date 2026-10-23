@@ -63,7 +63,7 @@ class MemberAdminController extends Controller
         }
 
         if ($request->has('profile_photo_on_wall')) {
-            $profileData = $user->profile()->first();
+            $profileData = $user->profile()->firstOrFail();
             $profileData->profile_photo_on_wall = $request->input('profile_photo_on_wall');
             $profileData->save();
         }

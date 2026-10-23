@@ -1,6 +1,7 @@
 <?php namespace BB\Observer;
 
 use BB\Entities\AuditLog;
+use BB\Support\CurrentUser;
 
 class UserAuditObserver
 {
@@ -25,11 +26,7 @@ class UserAuditObserver
             }
         }
 
-        if (\Auth::guest()) {
-            $adminId = null;
-        } else {
-            $adminId = \Auth::user()->id;
-        }
+        $adminId = CurrentUser::find()?->id;
 
         //If there are changes to log create a new audit log entry with them in
         if (count($changedData) > 0) {

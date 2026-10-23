@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -92,7 +93,7 @@ class SessionController extends Controller
 
         if (!Auth::guest()) {
 
-            $user = Auth::user();
+            $user = CurrentUser::get();
 
             if (!$user->email_verified) {
                 return \View::make('session.error')

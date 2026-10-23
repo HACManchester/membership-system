@@ -4,6 +4,8 @@ namespace BB\Policies;
 
 use BB\Entities\User;
 use BB\Entities\Course;
+use BB\Entities\Equipment;
+use BB\Entities\MaintainerGroup;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CoursePolicy
@@ -139,15 +141,16 @@ class CoursePolicy
 
     protected function isMaintainerOrCoordinator(User $user, Course $course)
     {
-        $maintainerGroups = $course->equipment->map(function ($equipment) {
+        // Not all equipment has a maintainer group
+        $maintainerGroups = $course->equipment->map(function (Equipment $equipment) {
             return $equipment->maintainerGroup;
-        });
+        })->filter();
 
-        $maintainers = $maintainerGroups->flatMap(function ($maintainerGroup) {
+        $maintainers = $maintainerGroups->flatMap(function (MaintainerGroup $maintainerGroup) {
             return $maintainerGroup->maintainers;
         });
 
-        $areaCoordinators = $maintainerGroups->flatMap(function ($maintainerGroup) {
+        $areaCoordinators = $maintainerGroups->flatMap(function (MaintainerGroup $maintainerGroup) {
             $equipmentArea = $maintainerGroup->equipmentArea;
 
             return $equipmentArea ? $equipmentArea->areaCoordinators : [];

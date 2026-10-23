@@ -3,6 +3,7 @@
 use BB\Entities\User;
 use BB\Http\Resources\MemberCardResource;
 use BB\Http\Resources\MemberProfileResource;
+use BB\Support\CurrentUser;
 use Inertia\Inertia;
 
 class MembersController extends Controller
@@ -65,7 +66,7 @@ class MembersController extends Controller
         return response()->json($members);
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $user = User::findOrFail($id);
 
@@ -73,8 +74,7 @@ class MembersController extends Controller
             abort(404);
         }
 
-        /** @var User $authUser */
-        $authUser = \Auth::user();
+        $authUser = CurrentUser::get();
 
         if (! $authUser->isAdmin() && ! $user->active) {
             \FlashNotification::error("This user's profile is no longer available as they are not an active member.");

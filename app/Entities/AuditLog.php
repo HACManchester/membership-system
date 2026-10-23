@@ -1,6 +1,7 @@
 <?php namespace BB\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditLog extends Model
 {
@@ -23,14 +24,14 @@ class AuditLog extends Model
     ];
 
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function admin()
+    public function admin(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User', 'admin_id');
+        return $this->belongsTo(User::class, 'admin_id');
     }
 
 

@@ -3,12 +3,12 @@
 namespace BB\Entities;
 
 use BB\Exceptions\AuthenticationException;
+use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
-use Auth;
 use BB\Entities\MaintainerGroup;
 use Hash;
 use Illuminate\Auth\Authenticatable;
@@ -18,6 +18,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 
@@ -185,12 +186,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |
     */
 
-    public function payments()
+    public function payments(): HasMany
     {
         return $this->hasMany(Payment::class)->orderBy('created_at', 'desc');
     }
 
-    public function trainingRecords()
+    public function trainingRecords(): HasMany
     {
         return $this->hasMany(TrainingRecord::class);
     }
@@ -205,12 +206,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(KeyFob::class)->where('active', true);
     }
 
-    public function profile()
+    public function profile(): HasOne
     {
         return $this->hasOne(ProfileData::class);
     }
 
-    public function address()
+    public function address(): HasOne
     {
         return $this->hasOne(Address::class)->orderBy('approved', 'asc');
     }
@@ -505,17 +506,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         //Return the logged in user
         if (empty($id)) {
-            return Auth::user(); // @phpstan-ignore-line
+            return CurrentUser::get();
         }
 
         $requestedUser = self::findOrFail($id);
-        if (Auth::user()->getAuthIdentifier() == $requestedUser->id) {
+        if (CurrentUser::get()->getAuthIdentifier() == $requestedUser->id) {
             //The user they are after is themselves
             return $requestedUser;
         }
 
         //They are requesting a user that isn't them
-        if (Auth::user()->hasRole($role)) {
+        if (CurrentUser::get()->hasRole($role)) {
             //They are an admin so that's alright
             return $requestedUser;
         }

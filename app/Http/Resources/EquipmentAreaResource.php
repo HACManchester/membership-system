@@ -22,7 +22,7 @@ class EquipmentAreaResource extends JsonResource
                     return [
                         'id' => $user->id,
                         'name' => $user->name,
-                        'profile_photo_url' => ($user->relationLoaded('profile') && $user->profile->profile_photo)
+                        'profile_photo_url' => ($user->relationLoaded('profile') && $user->profile?->profile_photo)
                             ? UserImage::thumbnailUrl($user->hash)
                             : null,
                         'url' => route('members.show', $user->id, false),

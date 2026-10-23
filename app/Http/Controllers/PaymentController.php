@@ -5,9 +5,11 @@ namespace BB\Http\Controllers;
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
+use BB\Support\CurrentUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use BB\Support\DirectDebitSetup;
 
 class PaymentController extends Controller
 {
@@ -98,7 +100,7 @@ class PaymentController extends Controller
         // TODO: Review this method. Should have no active use?
         $user = User::findWithPermission($userId);
 
-        if (!\Auth::user()->hasRole('admin') &&  !\Auth::user()->hasRole('finance')) {
+        if (!CurrentUser::get()->hasRole('admin') &&  !CurrentUser::get()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
         }
 
@@ -226,7 +228,7 @@ class PaymentController extends Controller
     public function migrateDD()
     {
         /** @var User */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
 
         //cancel the existing dd
         try {
@@ -243,23 +245,7 @@ class PaymentController extends Controller
         $user->subscription_id = '';
         $user->save();
 
-        $payment_details = array(
-            "description"          => "Hackspace Manchester",
-            'success_redirect_url' => str_replace('http://', 'https://', route('account.subscription.store', $user->id)),
-            "session_token"        => 'user-token-' . $user->id,
-            'prefilled_customer'   => [
-                'given_name'    => $user->given_name,
-                'family_name'   => $user->family_name,
-                'email'         => $user->email,
-                'address_line1' => $user->address->line_1,
-                'address_line2' => $user->address->line_2,
-                'city'          => $user->address->line_3,
-                'postal_code'   => $user->address->postcode,
-                'country_code'  => 'GB'
-            ]
-        );
-
-        return \Redirect::to($this->goCardless->newPreAuthUrl($user, $payment_details));
+        return \Redirect::to($this->goCardless->newPreAuthUrl($user, DirectDebitSetup::redirectFlowParams($user)));
     }
 
     public function possibleDuplicates()

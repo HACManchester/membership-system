@@ -6,6 +6,7 @@ use BB\Entities\AccessLockdown;
 use BB\Entities\Role;
 use BB\Http\Requests\Admin\StoreAccessLockdownRequest;
 use BB\Http\Resources\AccessLockdownResource;
+use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -48,7 +49,7 @@ class AccessLockdownController extends Controller
             }
 
             AccessLockdown::create($request->validated() + [
-                'started_by' => $request->user()->id,
+                'started_by' => CurrentUser::get()->id,
             ]);
 
             return redirect()

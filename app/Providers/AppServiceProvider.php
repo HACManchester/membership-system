@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		if (!$this->app->isLocal()) {
 			// TODO: What's this doing? 🤔
-			$this->app['request']->server->set('HTTPS', true);
+			$this->app->make('request')->server->set('HTTPS', true);
 		}
 
 		JsonResource::withoutWrapping();

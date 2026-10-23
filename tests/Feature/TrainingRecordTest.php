@@ -175,6 +175,18 @@ class TrainingRecordTest extends TestCase
     }
 
     /** @test */
+    public function an_array_of_trainer_ids_is_rejected()
+    {
+        $this->actingAs($this->trainer)
+            ->post(route('equipment_training.train', [$this->equipment, $this->pendingInduction]), [
+                'trainer_user_id' => [$this->trainer->id],
+            ])
+            ->assertSessionHasErrors('trainer_user_id');
+
+        $this->assertNull($this->pendingInduction->refresh()->trained);
+    }
+
+    /** @test */
     public function trainer_can_mark_user_as_trained()
     {
         Event::fake();

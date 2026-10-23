@@ -3,6 +3,7 @@
 namespace BB\Http\Middleware;
 
 use BB\Services\SidebarItems;
+use BB\Support\CurrentUser;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,8 +39,8 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'auth' => function () use ($request) {
-                $user = $request->user();
+            'auth' => function () {
+                $user = CurrentUser::find();
 
                 return $user ? [
                     'user' => [

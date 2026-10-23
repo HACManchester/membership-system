@@ -3,6 +3,7 @@
 namespace BB\Http\Requests\Room;
 
 use BB\Entities\Room;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -10,7 +11,7 @@ class StoreRoomRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('create', Room::class);
+        return CurrentUser::get()->can('create', Room::class);
     }
 
     /**

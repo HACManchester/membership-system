@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\KeyFob;
 use BB\Repo\UserRepository;
+use BB\Support\CurrentUser;
 use Illuminate\Http\Request;
 use BB\Entities\Settings;
 use BB\Rules\GeneralInductionCodeRule;
@@ -28,7 +29,7 @@ class GeneralInductionController extends Controller
      */
     public function show(Request $request)
     {
-        $user = \Auth::user();
+        $user = CurrentUser::get();
         $induction_code = Settings::get("general_induction_code");
         $prefill_code = $request->has('code') ? $request->input('code') : '';
 

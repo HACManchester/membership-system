@@ -2,6 +2,7 @@
 
 namespace BB\Http\Resources;
 
+use BB\Support\CurrentUser;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -15,7 +16,7 @@ class EquipmentListResource extends JsonResource
 {
     public function toArray($request)
     {
-        $user = $request->user();
+        $user = CurrentUser::find();
 
         // Computed once for the whole collection in EquipmentController@index.
         $trained = (bool) $this->getAttribute('trained_for_user');

@@ -6,6 +6,7 @@ use BB\Entities\EquipmentArea;
 use BB\Http\Requests\StoreEquipmentAreaRequest;
 use BB\Http\Requests\UpdateEquipmentAreaRequest;
 use BB\Http\Resources\EquipmentAreaResource;
+use BB\Support\CurrentUser;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -24,7 +25,7 @@ class EquipmentAreaController extends Controller
         return Inertia::render('EquipmentAreas/Index', [
             'areas' => EquipmentAreaResource::collection($areas),
             'can' => [
-                'create' => auth()->user()->can('create', EquipmentArea::class),
+                'create' => CurrentUser::get()->can('create', EquipmentArea::class),
             ],
             'urls' => [
                 'create' => route('equipment_area.create', [], false),
@@ -61,7 +62,7 @@ class EquipmentAreaController extends Controller
     public function show(EquipmentArea $equipmentArea)
     {
         $equipmentArea->load('areaCoordinators.profile');
-        $user = auth()->user();
+        $user = CurrentUser::get();
 
         return Inertia::render('EquipmentAreas/Show', [
             'area' => new EquipmentAreaResource($equipmentArea),

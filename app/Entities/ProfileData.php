@@ -2,6 +2,7 @@
 
 use BB\Observer\UserAuditObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 
 /**
@@ -56,9 +57,9 @@ class ProfileData extends Model
         return (array)json_decode($this->skills_array ?? '[]');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
     /**

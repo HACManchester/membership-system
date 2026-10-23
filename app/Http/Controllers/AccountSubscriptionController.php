@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\User;
 use BB\Exceptions\ValidationException;
 use BB\Helpers\MembershipPayments;
+use BB\Support\CurrentUser;
 
 class AccountSubscriptionController extends Controller
 {
@@ -34,7 +35,7 @@ class AccountSubscriptionController extends Controller
         // TODO: Lift this into some sort of "contact" config?
         $boardEmail = 'board@hacman.org.uk';
 
-        if ($amount < $minAmountPounds && !\Auth::user()->isAdmin()) {
+        if ($amount < $minAmountPounds && !CurrentUser::get()->isAdmin()) {
             throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 

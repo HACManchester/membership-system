@@ -198,6 +198,21 @@ class CourseTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_course_show_page_loads_when_equipment_has_no_maintainer_group()
+    {
+        $user = factory(User::class)->create();
+        $course = factory(Course::class)->create();
+        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
+
+        $response = $this->actingAs($user)
+            ->get(route('courses.show', $course));
+
+        $response->assertStatus(200);
+        $response->assertInertia(function ($page) {
+            $page->where('can.update', false);
+        });
+    }
+
     public function test_admin_can_view_edit_page()
     {
         $admin = factory(User::class)->state('admin')->create();

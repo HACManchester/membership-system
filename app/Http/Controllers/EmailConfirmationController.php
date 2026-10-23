@@ -4,6 +4,7 @@ namespace BB\Http\Controllers;
 
 use BB\Entities\User;
 use BB\Mailer\UserMailer;
+use BB\Support\CurrentUser;
 
 class EmailConfirmationController extends Controller
 {
@@ -12,7 +13,7 @@ class EmailConfirmationController extends Controller
         $this->middleware('role:member');
     }
 
-    public function confirmEmail($id, $hash)
+    public function confirmEmail(string $id, $hash)
     {
         $user = User::find($id);
         if ($user && $user->hash == $hash) {
@@ -26,8 +27,7 @@ class EmailConfirmationController extends Controller
 
     public function sendConfirmationEmail()
     {
-        /** @var User $user */
-        $user = \Auth::user();
+        $user = CurrentUser::get();
 
         if (!$user->email_verified) {
             $userMailer = new UserMailer($user);

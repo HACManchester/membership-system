@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\EquipmentArea;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -15,7 +16,7 @@ class StoreEquipmentAreaRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create', EquipmentArea::class);
+        return CurrentUser::get()->can('create', EquipmentArea::class);
     }
 
     /**

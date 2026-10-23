@@ -4,6 +4,7 @@ namespace BB\Http\Requests;
 
 use BB\Entities\KeyFob;
 use BB\Rules\KeyFobRule;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Unique;
 
@@ -16,7 +17,7 @@ class StoreKeyFobRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create', [KeyFob::class, $this->user]);
+        return CurrentUser::get()->can('create', [KeyFob::class, $this->user]);
     }
 
     /**

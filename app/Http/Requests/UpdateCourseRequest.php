@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\Course;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,7 +18,7 @@ class UpdateCourseRequest extends StoreCourseRequest
     {
         /** @var Course */
         $course = $this->route('course');
-        return $this->user()->can('update', $course);
+        return CurrentUser::get()->can('update', $course);
     }
 
 

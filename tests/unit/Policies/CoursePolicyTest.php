@@ -130,6 +130,19 @@ class CoursePolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($user, $course));
     }
 
+    public function test_equipment_without_a_maintainer_group_is_skipped()
+    {
+        $user = factory(User::class)->create();
+        $course = factory(Course::class)->create();
+        $maintainerGroup = factory(MaintainerGroup::class)->create();
+        $maintainerGroup->maintainers()->attach($user);
+        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
+        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => $maintainerGroup->id]));
+
+        $this->assertTrue($this->policy->update($user, $course));
+        $this->assertFalse($this->policy->update(factory(User::class)->create(), $course));
+    }
+
     public function test_restore_always_returns_false()
     {
         $user = factory(User::class)->create();

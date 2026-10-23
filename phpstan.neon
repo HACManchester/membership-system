@@ -5,9 +5,18 @@ includes:
 parameters:
     paths:
         - app
-    # The level 9 is the highest level
-    level: 5
+    level: 8
     ignoreErrors:
+        # Level 6 also asks for a type on every parameter, return value and property,
+        # and for the value types of every array. That's ~870 findings across most
+        # files, and adding native types risks runtime TypeErrors. Revisit with
+        # Larastan 3 (Laravel 11+). The null-safety and union checks of levels 7-8
+        # still apply.
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
+        - identifier: missingType.parameter
+        - identifier: missingType.return
+        - identifier: missingType.property
         # GoCardlessPro SDK resources expose their data via __get() magic, so accessing
         # "protected" properties like ->id and ->status works at runtime by design.
         - '#^Access to protected property GoCardlessPro\\Resources\\#'

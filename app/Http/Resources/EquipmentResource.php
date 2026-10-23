@@ -2,6 +2,7 @@
 
 namespace BB\Http\Resources;
 
+use BB\Support\CurrentUser;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -19,11 +20,12 @@ class EquipmentResource extends JsonResource
     {
         // Check if user is trained for this equipment (through any associated course)
         $isUserTrained = false;
-        if (auth()->check() && $this->relationLoaded('courses')) {
+        $user = CurrentUser::find();
+        if ($user && $this->relationLoaded('courses')) {
             $trainingRecordRepo = app(\BB\Repo\TrainingRecordRepository::class);
             
             foreach ($this->courses as $course) {
-                $userTrainingRecord = $trainingRecordRepo->getUserForCourse(auth()->user()->id, $course->id);
+                $userTrainingRecord = $trainingRecordRepo->getUserForCourse($user->id, $course->id);
                 if ($userTrainingRecord && $userTrainingRecord->trained) {
                     $isUserTrained = true;
                     break;

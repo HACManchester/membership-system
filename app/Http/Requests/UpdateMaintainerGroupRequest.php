@@ -3,6 +3,7 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\MaintainerGroup;
+use BB\Support\CurrentUser;
 use Illuminate\Validation\Rule;
 
 class UpdateMaintainerGroupRequest extends StoreMaintainerGroupRequest
@@ -16,7 +17,7 @@ class UpdateMaintainerGroupRequest extends StoreMaintainerGroupRequest
     {
         /** @var MaintainerGroup */
         $maintainerGroup = $this->route('maintainer_group');
-        return $this->user()->can('update', $maintainerGroup);
+        return CurrentUser::get()->can('update', $maintainerGroup);
     }
 
 

@@ -1,6 +1,7 @@
 <?php namespace BB\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Address
@@ -39,8 +40,8 @@ class Address extends Model
         'approved' => 0,
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->hasOne('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 } 

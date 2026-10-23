@@ -4,6 +4,7 @@ namespace BB\Http\Requests;
 
 use BB\Entities\TrainingRecord;
 use BB\Entities\User;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTrainingRecordRequest extends FormRequest
@@ -20,7 +21,7 @@ class StoreTrainingRecordRequest extends FormRequest
             $userAwaitingTraining = User::find($this->input('user_id'));
         }
 
-        return $this->user()->can('create', [
+        return CurrentUser::get()->can('create', [
             TrainingRecord::class,
             $this->route('equipment'),
             $userAwaitingTraining

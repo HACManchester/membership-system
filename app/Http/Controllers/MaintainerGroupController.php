@@ -7,6 +7,7 @@ use BB\Entities\MaintainerGroup;
 use BB\Http\Requests\StoreMaintainerGroupRequest;
 use BB\Http\Requests\UpdateMaintainerGroupRequest;
 use BB\Http\Resources\MaintainerGroupResource;
+use BB\Support\CurrentUser;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -28,7 +29,7 @@ class MaintainerGroupController extends Controller
         return Inertia::render('MaintainerGroups/Index', [
             'maintainerGroups' => MaintainerGroupResource::collection($maintainerGroups),
             'can' => [
-                'create' => auth()->user()->can('create', MaintainerGroup::class),
+                'create' => CurrentUser::get()->can('create', MaintainerGroup::class),
             ],
             'urls' => [
                 'create' => route('maintainer_groups.create', [], false),
@@ -66,7 +67,7 @@ class MaintainerGroupController extends Controller
     public function show(MaintainerGroup $maintainerGroup)
     {
         $maintainerGroup->load('maintainers.profile', 'equipmentArea', 'equipment');
-        $user = auth()->user();
+        $user = CurrentUser::get();
 
         return Inertia::render('MaintainerGroups/Show', [
             'maintainerGroup' => new MaintainerGroupResource($maintainerGroup),

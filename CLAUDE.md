@@ -47,7 +47,7 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
   authorization check in `authorize()` (calling a policy), policies for all authz, event classes +
   listeners for side effects, service objects for multi-step logic, Inertia + React + TypeScript
   for UI. The course/training subsystem (`CourseController`, `CoursePolicy`,
-  `TrainInductionRequest`, `CourseTrainingController` + their tests) is the reference
+  `TrainCourseMemberRequest`, `CourseTrainingController` + their tests) is the reference
   implementation — match it.
 - **Authorization goes through policies**, not route middleware alone and not ad-hoc role checks
   in controllers. Route middleware is defense-in-depth, never the sole gate.
@@ -56,6 +56,8 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
 - Feature tests assert DB state / queued mail / fired events, not just status codes. Mock at the
   boundary (`GoCardlessHelper`), never internal services.
 - Use `$request->validated()`, never `$request->all()`, for writes.
+- Get the signed-in member with `BB\Support\CurrentUser::get()` (or `find()` where guests can reach
+  the code), not `Auth::user()` / `$request->user()`, which can return the door system's `ApiKey`.
 - **Docblocks only where they add information the signature can't express** — e.g. `@param` types
   for untyped parameters, `@var` on properties, `@property` blocks on entities, genuine prose.
   Don't write `@param`/`@return` tags that restate native type hints, `@return mixed`/`void`, or

@@ -41,13 +41,13 @@ class Settings extends Model
         self::create(['key' => $key, 'value' => $value]);
     }
 
-    public static function get($key)
+    public static function get(string $key)
     {
         $setting = self::findOrFail($key);
         return $setting->value;
     }
 
-    public static function change($key, $value)
+    public static function change(string $key, $value)
     {
         $setting = self::findOrFail($key);
         $setting->value = $value;

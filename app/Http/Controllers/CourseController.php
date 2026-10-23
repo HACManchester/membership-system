@@ -11,6 +11,7 @@ use BB\Http\Resources\EquipmentResource;
 use BB\Repo\CourseRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
+use BB\Support\CurrentUser;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -39,7 +40,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $user = CurrentUser::get();
         $courses = $this->courseRepository->getCoursesForUser($user);
         $equipmentWithoutLiveCourse = $this->equipmentRepository->getEquipmentWithoutLiveCourse();
         
@@ -117,7 +118,7 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         $course->load('equipment.courses', 'equipment.roomModel');
-        $user = auth()->user();
+        $user = CurrentUser::get();
 
         return Inertia::render('Courses/Show', [
             'course' => new CourseResource($course),

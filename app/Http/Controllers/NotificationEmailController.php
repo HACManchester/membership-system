@@ -7,6 +7,7 @@ use BB\Mailer\UserMailer;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Repo\EquipmentRepository;
+use BB\Support\CurrentUser;
 
 class NotificationEmailController extends Controller
 {
@@ -43,7 +44,7 @@ class NotificationEmailController extends Controller
 
     public function create()
     {
-        if ( ! \Auth::user()->isAdmin() && \Auth::user()->roles()->get()->count() <= 0) {
+        if ( ! CurrentUser::get()->isAdmin() && CurrentUser::get()->roles()->get()->count() <= 0) {
             throw new AuthenticationException("You don't have permission to be here");
         }
 
@@ -75,12 +76,12 @@ class NotificationEmailController extends Controller
         $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
         $allowed = false;
 
-        if(\Auth::user()->isAdmin()){
+        if(CurrentUser::get()->isAdmin()){
             $allowed = true;
         }
 
         foreach($trainers as $t){
-            if(\Auth::user()->id == $t->user->id){
+            if(CurrentUser::get()->id == $t->user->id){
                 $allowed = true;
             }
         }
@@ -101,13 +102,11 @@ class NotificationEmailController extends Controller
         $input = $request->validated();
 
         $parts = explode('/', $input['recipient']);
-        $isToolEmail = false;
         $status = null;
         $equipment = null;
 
         if(count($parts) == 3){
             if($parts[0] == "tool"){
-                $isToolEmail = true;
                 $tool_slug = $parts[1];
                 $status = $parts[2];
                 $equipment = $this->equipmentRepository->findBySlug($tool_slug);
@@ -117,11 +116,11 @@ class NotificationEmailController extends Controller
         if ($input['send_to_all']) {
 
             if ($input['recipient'] == 'all') {
-                if ( ! \Auth::user()->isAdmin()) {
+                if ( ! CurrentUser::get()->isAdmin()) {
                     throw new AuthenticationException("You don't have permission to send to this group");
                 }
                 $users = $this->userRepository->getActive();
-            } elseif($isToolEmail){
+            } elseif($equipment){
 
                 
                 
@@ -133,12 +132,12 @@ class NotificationEmailController extends Controller
                 $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
                 $allowed = false;
 
-                if(\Auth::user()->isAdmin()){
+                if(CurrentUser::get()->isAdmin()){
                     $allowed = true;
                 }
 
                 foreach($trainers as $t){
-                    if(\Auth::user()->id == $t->user->id){
+                    if(CurrentUser::get()->id == $t->user->id){
                         $allowed = true;
                     }
                 }
@@ -172,7 +171,7 @@ class NotificationEmailController extends Controller
 
             foreach ($users as $user) {
                 $notification = new UserMailer($user);
-                if($isToolEmail){
+                if($equipment){
                     $notification->sendEquipmentNotificationEmail($input['subject'], nl2br(e($input['message'])), $equipment->name, $status);
                 }else{
                     $notification->sendNotificationEmail($input['subject'], nl2br(e($input['message'])));
@@ -182,15 +181,15 @@ class NotificationEmailController extends Controller
             
         } else {
             //Just send to the current user
-            $notification = new UserMailer(\Auth::user());
-            if($isToolEmail){
+            $notification = new UserMailer(CurrentUser::get());
+            if($equipment){
                 $notification->sendEquipmentNotificationEmail($input['subject'], nl2br(e($input['message'])), $equipment->name, $status);
             }else{
                 $notification->sendNotificationEmail($input['subject'], nl2br(e($input['message'])));
             } 
         }
         
-        if($isToolEmail){
+        if($equipment){
             \FlashNotification::success("Email Queued to Send to `$equipment->name` equipment users with status of `$status`");
             return \Redirect::route('equipment.show', $equipment->slug);
         }

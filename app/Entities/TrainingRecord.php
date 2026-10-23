@@ -4,6 +4,7 @@ namespace BB\Entities;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class TrainingRecord
@@ -68,14 +69,14 @@ class TrainingRecord extends Model
     }
 
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function trainerUser()
+    public function trainerUser(): BelongsTo
     {
-        return $this->belongsTo('\BB\Entities\User', 'trainer_user_id');
+        return $this->belongsTo(User::class, 'trainer_user_id');
     }
 
     public static function trainersFor($key)
@@ -83,7 +84,7 @@ class TrainingRecord extends Model
         return self::where('key', $key)->where('is_trainer', true)->get();
     }
 
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }

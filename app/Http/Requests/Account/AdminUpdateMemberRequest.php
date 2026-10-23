@@ -2,13 +2,14 @@
 
 namespace BB\Http\Requests\Account;
 
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminUpdateMemberRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user() && $this->user()->isAdmin();
+        return (bool) CurrentUser::find()?->isAdmin();
     }
 
     /**

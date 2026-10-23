@@ -27,7 +27,7 @@ class TrainingRecordRepository extends DBRepository
      * the course system would otherwise be missed by a key-only match (their key is
      * the course slug, not necessarily the equipment's induction_category).
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Builder<TrainingRecord>
      */
     private function recordsForEquipmentQuery(Equipment $equipment)
     {
@@ -52,7 +52,7 @@ class TrainingRecordRepository extends DBRepository
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, TrainingRecord>
      */
     public function getTrainersForEquipment(Equipment $equipment)
     {

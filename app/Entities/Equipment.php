@@ -7,6 +7,7 @@ use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 
@@ -20,7 +21,7 @@ use Laracasts\Presenter\PresentableTrait;
  * @property Carbon  $removed_at
  * @property integer $usageCost
  * @property string  $induction_category
- * @property \Illuminate\Database\Eloquent\Collection<\BB\Entities\Course> $courses
+ * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Course> $courses
  * @package BB\Entities
  */
 class Equipment extends Model
@@ -123,7 +124,7 @@ class Equipment extends Model
     }
 
 
-    public function role()
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'managing_role_id');
     }
@@ -319,7 +320,7 @@ class Equipment extends Model
         $this->attributes['ppe'] = json_encode($value);
     }
 
-    public function courses()
+    public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_equipment')
             ->withTimestamps();

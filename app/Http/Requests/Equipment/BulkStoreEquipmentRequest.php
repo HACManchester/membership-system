@@ -4,6 +4,7 @@ namespace BB\Http\Requests\Equipment;
 
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
+use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -12,7 +13,7 @@ class BulkStoreEquipmentRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('create', Equipment::class);
+        return CurrentUser::get()->can('create', Equipment::class);
     }
 
     /**
@@ -40,7 +41,7 @@ class BulkStoreEquipmentRequest extends FormRequest
 
     public function rules()
     {
-        $canGloballyManage = $this->user()->isAdmin() || $this->user()->hasRole('equipment');
+        $canGloballyManage = CurrentUser::get()->isAdmin() || CurrentUser::get()->hasRole('equipment');
 
         return [
             'room_id' => 'required|exists:rooms,id',
@@ -60,8 +61,9 @@ class BulkStoreEquipmentRequest extends FormRequest
                     if (! $maintainerGroup instanceof MaintainerGroup) {
                         return;
                     }
-                    $inMaintainerGroup = $this->user()->maintainerGroups->contains($maintainerGroup);
-                    $isAreaCoordinator = $this->user()->equipmentAreas->contains($maintainerGroup->equipmentArea);
+                    $inMaintainerGroup = CurrentUser::get()->maintainerGroups->contains($maintainerGroup);
+                    $isAreaCoordinator = $maintainerGroup->equipmentArea !== null
+                        && CurrentUser::get()->equipmentAreas->contains($maintainerGroup->equipmentArea);
 
                     if (! $inMaintainerGroup && ! $isAreaCoordinator) {
                         $fail('You can only create equipment managed by maintainer groups you are in.');
