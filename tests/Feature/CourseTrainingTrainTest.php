@@ -64,4 +64,58 @@ class CourseTrainingTrainTest extends TestCase
 
         $this->assertNull($this->record->refresh()->trained);
     }
+
+    /** @test */
+    public function a_member_who_is_not_a_trainer_cannot_train()
+    {
+        $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))
+            ->post(route('courses.training.train', [$this->course, $this->member]))
+            ->assertForbidden();
+
+        $this->assertNull($this->record->refresh()->trained);
+    }
+
+    /** @test */
+    public function bulk_training_marks_each_member_as_trained()
+    {
+        $newcomer = factory(User::class)->create(['status' => 'active', 'active' => true]);
+
+        $this->actingAs($this->admin)
+            ->post(route('courses.training.bulk-train', $this->course), [
+                'user_ids' => [$this->member->id, $newcomer->id],
+            ])
+            ->assertRedirect(route('courses.training.index', $this->course));
+
+        // The member without a record gets one created
+        foreach ([$this->member, $newcomer] as $user) {
+            $record = TrainingRecord::where('user_id', $user->id)->where('course_id', $this->course->id)->firstOrFail();
+            $this->assertNotNull($record->trained);
+            $this->assertEquals($this->admin->id, $record->trainer_user_id);
+        }
+        Event::assertDispatchedTimes(TrainingRecordCompletedEvent::class, 2);
+    }
+
+    /** @test */
+    public function bulk_training_rejects_ids_that_are_not_members()
+    {
+        $this->actingAs($this->admin)
+            ->post(route('courses.training.bulk-train', $this->course), [
+                'user_ids' => [[$this->member->id]],
+            ])
+            ->assertSessionHasErrors('user_ids.0');
+
+        $this->assertNull($this->record->refresh()->trained);
+    }
+
+    /** @test */
+    public function a_member_who_is_not_a_trainer_cannot_bulk_train()
+    {
+        $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))
+            ->post(route('courses.training.bulk-train', $this->course), [
+                'user_ids' => [$this->member->id],
+            ])
+            ->assertForbidden();
+
+        $this->assertNull($this->record->refresh()->trained);
+    }
 }

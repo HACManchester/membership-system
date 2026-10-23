@@ -47,7 +47,7 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
   authorization check in `authorize()` (calling a policy), policies for all authz, event classes +
   listeners for side effects, service objects for multi-step logic, Inertia + React + TypeScript
   for UI. The course/training subsystem (`CourseController`, `CoursePolicy`,
-  `TrainInductionRequest`, `CourseTrainingController` + their tests) is the reference
+  `TrainCourseMemberRequest`, `CourseTrainingController` + their tests) is the reference
   implementation — match it.
 - **Authorization goes through policies**, not route middleware alone and not ad-hoc role checks
   in controllers. Route middleware is defense-in-depth, never the sole gate.

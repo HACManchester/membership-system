@@ -24,7 +24,7 @@ belongs to tells you how much to trust it and how to extend it.
 
 ### Generation 3 — current practice (the style all new code uses)
 
-- **FormRequests carrying authorization**: e.g. `TrainInductionRequest::authorize()` calls the
+- **FormRequests carrying authorization**: e.g. `TrainCourseMemberRequest::authorize()` calls the
   policy — validation and authz in one place
 - **Policies** (`app/Policies/`, 9 classes) with `before()` admin short-circuits and
   `authorizeResource()` in constructors
@@ -36,7 +36,7 @@ belongs to tells you how much to trust it and how to extend it.
 
 The course/equipment-training subsystem is the reference implementation of generation 3 — when in
 doubt about "how should this look", read `CourseController`, `CoursePolicy`,
-`TrainInductionRequest`, `CourseTrainingController`, and their tests.
+`TrainCourseMemberRequest`, `CourseTrainingController`, and their tests.
 
 ## Target architecture
 

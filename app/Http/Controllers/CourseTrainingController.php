@@ -8,10 +8,11 @@ use BB\Entities\User;
 use BB\Events\TrainingRecords\TrainingInterestWithdrawnEvent;
 use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
 use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
+use BB\Http\Requests\CourseTraining\BulkTrainCourseRequest;
+use BB\Http\Requests\CourseTraining\TrainCourseMemberRequest;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\CurrentUser;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use BB\Http\Resources\TrainingRecordResource;
@@ -59,7 +60,7 @@ class CourseTrainingController extends Controller
     }
 
 
-    public function train(Course $course, User $user, Request $request)
+    public function train(Course $course, User $user, TrainCourseMemberRequest $request)
     {
         $trainingRecord = $this->trainingRecordRepository->getUserForCourse($user->id, $course->id);
         
@@ -68,13 +69,7 @@ class CourseTrainingController extends Controller
                 ->with('error', 'User does not have an induction record for this course');
         }
 
-        $this->authorize('train', $trainingRecord);
-
-        $request->validate([
-            'trainer_user_id' => ['sometimes', 'integer', 'exists:users,id'],
-        ]);
-
-        $trainer = User::findOrFail((int) $request->input('trainer_user_id', CurrentUser::get()->id));
+        $trainer = User::findOrFail((int) $request->validated('trainer_user_id', CurrentUser::get()->id));
 
         $trainingRecord->update([
             'trained' => Carbon::now(),
@@ -88,19 +83,12 @@ class CourseTrainingController extends Controller
             ->with('success', 'User marked as trained');
     }
 
-    public function bulkTrain(Course $course, Request $request)
+    public function bulkTrain(Course $course, BulkTrainCourseRequest $request)
     {
-        $this->authorize('train', $course);
-
-        $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'exists:users,id',
-        ]);
-
         $trainer = CurrentUser::get();
         $trained = [];
 
-        foreach ($request->input('user_ids') as $userId) {
+        foreach ($request->validated('user_ids') as $userId) {
             $trainingRecord = $this->trainingRecordRepository->getUserForCourse($userId, $course->id);
             
             if (!$trainingRecord) {
