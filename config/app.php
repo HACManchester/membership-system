@@ -144,7 +144,6 @@ return [
 		 * 3rd Party Providers...
 		 */
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
         BB\Providers\NotificationServiceProvider::class,
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         Sentry\Laravel\ServiceProvider::class,
@@ -199,7 +198,6 @@ return [
         'View'                  => Illuminate\Support\Facades\View::class,
         'FlashNotification'     => BB\FlashNotification\FlashNotificationFacade::class,
         'Notification'          => Illuminate\Support\Facades\Notification::class,
-        'Image'                 => Intervention\Image\Facades\Image::class,
         'MembershipPayments'    => BB\Helpers\MembershipPayments::class,
         'Sentry'                => Sentry\Laravel\Facade::class,
 

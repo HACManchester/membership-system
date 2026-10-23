@@ -11,9 +11,13 @@ use GoCardlessPro\Resources\Payment as GoCardlessPayment;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
 class GoCardlessWebhookTest extends TestCase
 {
     use RefreshDatabase;

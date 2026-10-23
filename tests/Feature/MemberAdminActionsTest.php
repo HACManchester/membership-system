@@ -134,7 +134,7 @@ class MemberAdminActionsTest extends TestCase
     #[Test]
     public function experimental_dd_subscription_is_recorded_then_cleared()
     {
-        $goCardless = $this->createMock(GoCardlessHelper::class);
+        $goCardless = $this->createStub(GoCardlessHelper::class);
         $goCardless->method('createSubscription')->willReturn((object) ['id' => 'SUB123']);
         $this->app->instance(GoCardlessHelper::class, $goCardless);
 

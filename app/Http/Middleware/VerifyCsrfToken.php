@@ -2,9 +2,12 @@
 
 namespace BB\Http\Middleware;
 
-use Closure;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as Middleware;
 
+/**
+ * Laravel 13 renamed this middleware PreventRequestForgery. Besides the token,
+ * it also accepts a same-origin Sec-Fetch-Site header.
+ */
 class VerifyCsrfToken extends Middleware
 {
     /**

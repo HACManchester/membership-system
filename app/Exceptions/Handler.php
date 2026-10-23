@@ -176,6 +176,16 @@ class Handler extends ExceptionHandler
         return parent::render($request, $e);
     }
 
+    /**
+     * API clients get JSON errors, never a redirect to the login page. The door
+     * system polls api/keyfobs/csv and follows redirects: a login page arriving
+     * as a 200 was only rejected because it happened not to parse as CSV.
+     */
+    protected function shouldReturnJson($request, Throwable $e)
+    {
+        return $request->is('api/*') || parent::shouldReturnJson($request, $e);
+    }
+
     protected function invalid($request, IlluminateValidationException $exception)
     {
         \FlashNotification::error($exception->getMessage());

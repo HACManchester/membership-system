@@ -5,9 +5,13 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\Payment;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
 class BillMembersTest extends TestCase
 {
     use MakesGoCardlessExceptions;
@@ -18,7 +22,7 @@ class BillMembersTest extends TestCase
     {
         parent::setUp();
 
-        $telegramHelper = $this->createMock(\BB\Helpers\TelegramHelper::class);
+        $telegramHelper = $this->createStub(\BB\Helpers\TelegramHelper::class);
         $this->app->instance(\BB\Helpers\TelegramHelper::class, $telegramHelper);
 
         $this->mockGoCardless = $this->createMock(GoCardlessHelper::class);

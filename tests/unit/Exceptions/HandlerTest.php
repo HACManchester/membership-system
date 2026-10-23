@@ -32,7 +32,6 @@ class HandlerTest extends TestCase
 
         // Call telegramException directly via reflection
         $method = new \ReflectionMethod($this->handler, 'telegramException');
-        $method->setAccessible(true);
         $method->invoke($this->handler, $e);
     }
 
@@ -114,7 +113,6 @@ class HandlerTest extends TestCase
 
         for ($i = 0; $i < 10; $i++) {
             $method = new \ReflectionMethod($this->handler, 'telegramException');
-            $method->setAccessible(true);
             $method->invoke($this->handler, $e);
         }
 

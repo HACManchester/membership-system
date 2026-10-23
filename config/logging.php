@@ -69,7 +69,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
-            'days' => 90,
+            'max_files' => 90,
             'replace_placeholders' => true,
         ],
 

@@ -22,6 +22,7 @@ use BB\Support\CurrentUser;
 use BB\Support\PpeOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -305,7 +306,7 @@ class EquipmentController extends Controller
     {
         return [
             'rooms' => $this->roomList(),
-            'maintainerGroupOptions' => MaintainerGroup::orderBy('name', 'ASC')->pluck('name', 'id'),
+            'maintainerGroupOptions' => MaintainerGroup::orderBy('name', 'asc')->pluck('name', 'id'),
             'ppeOptions' => PpeOptions::all(),
             'memberSearch' => route('members.search', [], false),
             'usageCostPerOptions' => ['hour' => 'hour', 'gram' => 'gram', 'page' => 'page'],
@@ -465,11 +466,11 @@ class EquipmentController extends Controller
         if ($photo) {
             try {
                 $ext = $photo->guessClientExtension() ?: 'png';
-                $stream = \Image::make($photo->getRealPath())->fit(1000)->stream($ext);
+                $contents = Image::fromPath($photo->getRealPath())->cover(1000, 1000)->toFormat($ext)->toBytes();
 
                 $newFilename = sprintf('%s.%s', Str::random(), $ext);
 
-                $this->disk->put($equipment->getPhotoBasePath() . $newFilename, $stream);
+                $this->disk->put($equipment->getPhotoBasePath() . $newFilename, $contents);
 
                 $equipment->addPhoto($newFilename);
             } catch (\Exception $e) {

@@ -30,6 +30,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          # CI never pushes, so the job token needn't be left in the checkout
+          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:

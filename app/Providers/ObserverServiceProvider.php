@@ -2,6 +2,7 @@
 
 namespace BB\Providers;
 
+use BB\Entities\ProfileData;
 use BB\Entities\User;
 use BB\Observer\UserAuditObserver;
 use BB\Observer\UserObserver;
@@ -18,6 +19,9 @@ class ObserverServiceProvider extends ServiceProvider
     {
         User::observe(new UserObserver());
         User::observe(new UserAuditObserver());
+        // Registered here rather than in ProfileData::boot(): since Laravel 13,
+        // observe() instantiates the model, which isn't allowed while it boots
+        ProfileData::observe(new UserAuditObserver());
     }
 
     /**

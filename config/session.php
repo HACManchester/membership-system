@@ -212,4 +212,19 @@ return [
 
     'partitioned' => false,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | Laravel 13's skeleton uses "json". We stay on "php": FlashNotification
+    | flashes a MessageBag object, which JSON would turn into an array, and
+    | changing it would log every member out.
+    |
+    | Supported: "php", "json"
+    |
+    */
+
+    'serialization' => 'php',
+
 ];
