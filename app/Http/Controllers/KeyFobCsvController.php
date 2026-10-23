@@ -52,15 +52,16 @@ class KeyFobCsvController extends Controller
             if ($out === false) {
                 return;
             }
-            // The door system parses this output, so fputcsv's quoting is spelled out:
-            // PHP 8.4 deprecates relying on the $escape default, which will change
+            // RFC 4180 escaping (quotes doubled, no escape character), which the
+            // door system's csv-parse expects. PHP's "\\" escape wrote names
+            // containing \" in a form it rejects, which stalled the whole update.
             $writeRow = function (array $row) use ($out) {
-                fputcsv($out, $row, ',', '"', '\\');
+                fputcsv($out, $row, ',', '"', '');
             };
-            $firstRow = $keyfobs->first();
-            if ($firstRow !== null) {
-                $writeRow(array_keys($firstRow));
-            }
+            // Always sent, so the body is never empty: the door system ignores an
+            // empty body and keeps its previous list, but a list with no fobs must
+            // take effect (e.g. a lockdown whose roles hold none)
+            $writeRow(['key_id', 'announce_name', 'id']);
             foreach ($keyfobs as $line) {
                 $writeRow($line);
             }

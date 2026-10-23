@@ -10,18 +10,16 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * Pins the parts of the keyfob export that are a contract with the door system
- * but that no other test asserts: the response headers, the exact CSV escaping,
- * and the shape of an empty export.
+ * Pins the keyfob export the door system (conorriches/doorbotjs) polls.
  *
- * KeyFobCsvTest already compares the body byte-for-byte for the simple case and
- * covers the access-lockdown filtering. What is added here is the behaviour a
- * PHP or framework upgrade is liable to perturb underneath us — fputcsv's
- * quoting and escaping in particular, whose default $escape handling PHP has
- * been moving away from.
+ * What it depends on, from its code: a 200 with valid RFC 4180 CSV that its
+ * csv-parse accepts, columns in the order key_id, announce_name, id (read by
+ * position), and a non-empty body (an empty one is ignored and the previous
+ * list kept, so the header row is always sent). One row it can't parse discards the whole update. It doesn't
+ * read the response headers, the header row's names or the line endings.
  *
- * If a change here is deliberate, coordinate it with the acs team before
- * updating the expectations: the door controller parses this output.
+ * The exact bytes are still pinned here so any change is deliberate; check
+ * with the acs team before changing what the door system reads.
  */
 class KeyFobCsvContractTest extends TestCase
 {
@@ -41,8 +39,10 @@ class KeyFobCsvContractTest extends TestCase
     }
 
     /**
-     * fputcsv quotes a field only when it has to, escapes an embedded quote by
-     * doubling it, and leaves UTF-8 alone. Semicolons are not special.
+     * RFC 4180: a field is quoted when it has to be, an embedded quote is
+     * doubled, and a backslash is an ordinary character. PHP's old "\\" escape
+     * wrote a name containing \" as "Back\"slash", which csv-parse rejects,
+     * stalling the door's whole member list. UTF-8 and semicolons pass through.
      */
     #[Test]
     public function announce_names_are_csv_escaped_exactly_as_the_door_system_expects()
@@ -53,6 +53,8 @@ class KeyFobCsvContractTest extends TestCase
         $this->activeMemberWithFob("Newline\nName", 'fob_3');
         $this->activeMemberWithFob("Ó'Brien — ümlaut", 'fob_4');
         $this->activeMemberWithFob('Semi;colon', 'fob_5');
+        $this->activeMemberWithFob('Back\\"slash', 'fob_6');
+        $this->activeMemberWithFob('Trailing\\', 'fob_7');
 
         $expected = "key_id,announce_name,id\n"
             . "fob_0,\"Plain Name\",1\n"
@@ -60,7 +62,9 @@ class KeyFobCsvContractTest extends TestCase
             . "fob_2,\"Quote \"\"Bob\"\" Name\",3\n"
             . "fob_3,\"Newline\nName\",4\n"
             . "fob_4,\"Ó'Brien — ümlaut\",5\n"
-            . "fob_5,Semi;colon,6\n";
+            . "fob_5,Semi;colon,6\n"
+            . "fob_6,\"Back\\\"\"slash\",7\n"
+            . "fob_7,Trailing\\,8\n";
 
         $this->assertSame($expected, $this->export()->streamedContent());
     }
@@ -77,17 +81,17 @@ class KeyFobCsvContractTest extends TestCase
     }
 
     /**
-     * The controller only writes the header row when there is a first row, so an
-     * empty export is a zero-byte body rather than a lone header. The door
-     * system has always been fed that, so pin it rather than quietly "fix" it.
+     * The header row is always sent. The door system ignores a zero-byte body and
+     * keeps its previous list, so with no fobs to export it would go on admitting
+     * everyone it last knew about. A header-only list admits nobody.
      */
     #[Test]
-    public function an_empty_export_is_an_empty_body_with_no_header_row()
+    public function an_empty_export_is_the_header_row_alone()
     {
         $response = $this->export();
 
         $response->assertStatus(200);
-        $this->assertSame('', $response->streamedContent());
+        $this->assertSame("key_id,announce_name,id\n", $response->streamedContent());
     }
 
     private function activeMemberWithFob(string $announceName, string $keyId): User

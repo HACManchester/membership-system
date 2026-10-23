@@ -40,6 +40,21 @@ CSV;
         $this->assertEquals($expectedContent, $content);
     }
 
+    /**
+     * The door system ignores an empty body and keeps its previous list, so a
+     * lockdown whose roles hold no fobs used to never take effect. The header
+     * row is now always sent: here, a list that admits nobody.
+     */
+    #[Test]
+    public function a_lockdown_matching_no_fobs_still_replaces_the_door_list()
+    {
+        $this->memberWithFob('Ordinary', 'fob_ordinary');
+
+        $this->startLockdown(['admin']);
+
+        $this->assertSame("key_id,announce_name,id\n", $this->export()->streamedContent());
+    }
+
     #[Test]
     public function a_lockdown_restricts_the_export_to_its_roles()
     {
