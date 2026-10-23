@@ -165,7 +165,7 @@ class AuditSubscriptionCharges extends Command
         // collected this year is exactly what we're looking for
         [$collections, $olderThanCutoff] = $collections->partition(function ($row) use ($since) {
             return $row['collectedAt']->gte($since);
-        });
+        })->all();
 
         $this->info('Charges collected more than ' . $days . ' days after their charge date, since ' . $since->format('Y-m-d') . ': ' . $collections->count());
         $this->reportSkipped($olderThanCutoff, $since);

@@ -27,14 +27,14 @@ class Payment extends Model
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = array();
 
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'source',
@@ -64,6 +64,9 @@ class Payment extends Model
     protected $presenter = 'BB\Presenters\PaymentPresenter';
 
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

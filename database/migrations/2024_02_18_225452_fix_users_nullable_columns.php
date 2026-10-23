@@ -27,8 +27,10 @@ class FixUsersNullableColumns extends Migration
     public function down()
     {
         Schema::table("users", function (Blueprint $table) {
-            $table->string('gift', 20)->change();
-            $table->boolean('visited_forum')->change();
+            // Laravel 10's change() kept the column's nullability and default, so this rollback never
+            // reverted it; Laravel 11 keeps only what's stated, so it's stated here
+            $table->string('gift', 20)->nullable()->change();
+            $table->boolean('visited_forum')->default(false)->change();
         });
     }
 }

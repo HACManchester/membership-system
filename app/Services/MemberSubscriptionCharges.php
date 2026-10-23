@@ -111,7 +111,7 @@ class MemberSubscriptionCharges
 
         [$unbillable, $subCharges] = $subCharges->partition(function ($charge) {
             return ! $this->canBeBilled($charge->user);
-        });
+        })->all();
         $this->cancelUnbillableCharges($unbillable);
 
         //Filter the list into two gocardless and balance subscriptions
@@ -124,7 +124,7 @@ class MemberSubscriptionCharges
         // and being slow about that is not a billing fault to alert on every night.
         [$stale, $goCardlessUsers] = $goCardlessUsers->partition(function ($charge) {
             return $charge->charge_date->lt(Carbon::now()->subDays($this->maxChargeAgeDays()));
-        });
+        })->all();
         $this->reportStaleCharges($stale);
 
         //Charge the gocardless users

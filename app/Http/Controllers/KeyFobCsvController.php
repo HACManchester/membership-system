@@ -16,6 +16,7 @@ class KeyFobCsvController extends Controller
         $query = KeyFob::active()
             ->with('user')
             ->whereHas('user', function ($query) {
+                /** @var \Illuminate\Database\Eloquent\Builder<\BB\Entities\User> $query */
                 $query->active();
             });
 
@@ -40,7 +41,9 @@ class KeyFobCsvController extends Controller
 
         $filename = 'keyfobs_' . time() . '.csv';
         $headers = [
-            'Content-Type' => 'text/csv',
+            // The door system reads this header. Stated in full so the framework
+            // doesn't append its own charset, whose case varies between versions
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}.csv\"",
         ];
 

@@ -115,11 +115,17 @@ class Equipment extends Model
     }
 
 
+    /**
+     * @return BelongsTo<Role, $this>
+     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'managing_role_id');
     }
 
+    /**
+     * @return BelongsTo<MaintainerGroup, $this>
+     */
     public function maintainerGroup(): BelongsTo
     {
         return $this->belongsTo(MaintainerGroup::class);
@@ -131,12 +137,16 @@ class Equipment extends Model
      * Named `roomModel` rather than `room` because the legacy `room` string
      * column still exists and would shadow a relation of the same name. Rename
      * to `room()` once that column is dropped (Phase 5).
+     * @return BelongsTo<Room, $this>
      */
     public function roomModel(): BelongsTo
     {
         return $this->belongsTo(Room::class, 'room_id');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function permaloanUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'permaloan_user_id');
@@ -311,6 +321,9 @@ class Equipment extends Model
         $this->attributes['ppe'] = json_encode($value);
     }
 
+    /**
+     * @return BelongsToMany<Course, $this>
+     */
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_equipment')

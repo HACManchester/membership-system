@@ -26,8 +26,6 @@ class Kernel extends HttpKernel
         // Introduced in 5.4, but affects validation rules (we have rules that we'd need to set nullable on to allow empty strings)
         // \BB\Http\Middleware\TrimStrings::class,
         // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-
-        HandleInertiaRequests::class,
     ];
 
     /**
@@ -45,6 +43,9 @@ class Kernel extends HttpKernel
             \BB\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \BB\Http\Middleware\UserSeen::class,
+            // Last, as Inertia documents: it reads validation errors from the
+            // session, so it must run after StartSession and ShareErrorsFromSession
+            HandleInertiaRequests::class,
         ],
 
         'api' => [

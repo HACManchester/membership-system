@@ -2,6 +2,7 @@
 
 namespace BB\Http\Controllers;
 
+use BB\Entities\User;
 use BB\Support\CurrentUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -38,7 +39,14 @@ class SessionController extends Controller
             'password'  => 'required',
         ]);
 
-        if (Auth::attempt($credentials, true)) {
+        // config/hashing.php sets bcrypt 'verify', so checking a password stored with
+        // any other algorithm throws instead of failing. Treat it as a failed login:
+        // the member can still reset their password.
+        $user = User::where('email', $credentials['email'])->first();
+        $storedHash = $user ? $user->getAuthPassword() : null;
+        $checkable = ! $storedHash || password_get_info($storedHash)['algoName'] === 'bcrypt';
+
+        if ($checkable && Auth::attempt($credentials, true)) {
 
             if (\Request::input('sso')) {
                 return redirect(
@@ -51,7 +59,7 @@ class SessionController extends Controller
             }
         }
 
-        \FlashNotification::error("Invalid login details");
+        \FlashNotification::error("Invalid login details. If you can't remember your password, you can reset it.");
         return redirect()->back()->withInput();
     }
 

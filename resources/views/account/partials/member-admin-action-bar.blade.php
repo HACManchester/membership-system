@@ -278,7 +278,7 @@
                             <h4>Cash Membership</h4>
                             <form method="POST" action="{{ route('account.payment.store', $user->id) }}" class="form-horizontal">
                                 @csrf
-                                <button type="submit" class="btn btn-default">Record A &pound;{{ round($user->monthly_subscription) }} Cash Subscription Payment</button>
+                                <button type="submit" class="btn btn-default">Record A &pound;{{ round((float) $user->monthly_subscription) }} Cash Subscription Payment</button>
                                 <input type="hidden" name="reason" value="subscription">
                                 <input type="hidden" name="source" value="cash">
                             </form>

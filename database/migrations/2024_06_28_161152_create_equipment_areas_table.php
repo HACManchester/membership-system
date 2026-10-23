@@ -42,7 +42,7 @@ class CreateEquipmentAreasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('equipment_area_users');
+        Schema::dropIfExists('equipment_area_user');
         Schema::dropIfExists('equipment_areas');
     }
 }

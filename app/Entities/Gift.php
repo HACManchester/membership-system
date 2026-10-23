@@ -17,7 +17,7 @@ class Gift extends Model
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'code', 'gifter_name', 'giftee_name', 'months', 'credit', 'expires'

@@ -54,12 +54,18 @@ class Course extends Model
         return 'slug';
     }
 
+    /**
+     * @return BelongsToMany<Equipment, $this>
+     */
     public function equipment(): BelongsToMany
     {
         return $this->belongsToMany(Equipment::class, 'course_equipment')
             ->withTimestamps();
     }
 
+    /**
+     * @return HasMany<TrainingRecord, $this>
+     */
     public function trainingRecords(): HasMany
     {
         return $this->hasMany(TrainingRecord::class);

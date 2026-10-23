@@ -4,11 +4,11 @@ trait UserRoleTrait
 {
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\BB\Entities\Role, $this>
      */
     public function roles()
     {
-        return $this->belongsToMany('\BB\Entities\Role')->withTimestamps();
+        return $this->belongsToMany(\BB\Entities\Role::class)->withTimestamps();
     }
 
     /**

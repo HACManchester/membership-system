@@ -30,7 +30,7 @@ class Address extends Model
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id', 'line_1', 'line_2', 'line_3', 'line_4', 'postcode', 'hash'
@@ -40,6 +40,9 @@ class Address extends Model
         'approved' => 0,
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

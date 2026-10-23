@@ -31,6 +31,7 @@ class AddRoomIdToEquipment extends Migration
     public function down()
     {
         Schema::table('equipment', function (Blueprint $table) {
+            $table->dropForeign(['room_id']);
             $table->dropColumn('room_id');
         });
     }

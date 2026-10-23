@@ -106,10 +106,12 @@ In order of value:
 
 ### Step 4 — ratchet quality
 
-- PHPStan runs at level 8, with level 6's missing-type checks (`missingType.*`) switched off: those
-  are ~870 findings across most files, best revisited with Larastan 3 on Laravel 11+.
-  `phpstan-baseline.neon` holds 27 entries, all checked and found safe: mostly guarantees PHPStan
-  can't see, such as a member always having a profile row. New errors must be baselined
+- PHPStan 2 (Larastan 3) runs at level 8, with level 6's missing-type checks (`missingType.*`)
+  switched off: those are ~870 findings across most files, best turned on a file at a time.
+  Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
+  needs to know their models. `phpstan-baseline.neon` holds 29 entries, all checked and found
+  safe: mostly guarantees PHPStan can't see, such as a member always having a profile row, or a
+  charge's member having been checked before billing. New errors must be baselined
   *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
   visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.

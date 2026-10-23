@@ -88,13 +88,13 @@
                     If you know you have missed a payment please make this ASAP or ideally change over to a direct debit payment.<br />
                     If you have concerns or aren't sure please contact a board.<br />
                     <br />
-                    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+                    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round((float) $user->monthly_subscription) }}</a>
                     <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly amount</a></small>
                     <form method="POST" action="{{ route('account.update-sub-payment', $user->id) }}" class="form-inline hidden js-alter-subscription-amount-form" style="display:inline-block">
                         @csrf
                         <div class="input-group">
                             <div class="input-group-addon">&pound;</div>
-                            <input type="number" name="monthly_subscription" value="{{ round($user->monthly_subscription) }}" class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
+                            <input type="number" name="monthly_subscription" value="{{ round((float) $user->monthly_subscription) }}" class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
                         </div>
                         <button type="submit" class="btn btn-default">Update</button>
                     </form>

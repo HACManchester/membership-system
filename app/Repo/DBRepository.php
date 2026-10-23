@@ -67,7 +67,7 @@ abstract class DBRepository
      */
     public function delete($recordId)
     {
-        $this->getById($recordId)->delete();
+        return $this->getById($recordId)->delete();
     }
 
 

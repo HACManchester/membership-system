@@ -50,6 +50,6 @@ class StoreGoCardlessPaymentRequest extends FormRequest
 
     public function targetUser(): User
     {
-        return User::findOrFail($this->route('account'));
+        return User::findOrFail((string) $this->route('account'));
     }
 }
