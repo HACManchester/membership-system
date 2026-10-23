@@ -8,6 +8,7 @@ use BB\Http\Middleware\IsTrusted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -30,7 +31,7 @@ class IsTrustedTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function a_guest_is_redirected_to_login()
     {
         $result = $this->runMiddleware();
@@ -39,7 +40,7 @@ class IsTrustedTest extends TestCase
         $this->assertStringEndsWith('/login', $result->getTargetUrl());
     }
 
-    /** @test */
+    #[Test]
     public function a_guest_making_an_ajax_request_gets_a_401()
     {
         $result = $this->runMiddleware($ajax = true);
@@ -47,7 +48,7 @@ class IsTrustedTest extends TestCase
         $this->assertEquals(401, $result->getStatusCode());
     }
 
-    /** @test */
+    #[Test]
     public function a_trusted_user_passes()
     {
         $this->actingAs(factory(User::class)->create(['trusted' => true]));
@@ -55,7 +56,7 @@ class IsTrustedTest extends TestCase
         $this->assertEquals('PASSED', $this->runMiddleware());
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_passes_even_when_not_flagged_trusted()
     {
         $this->actingAs(factory(User::class)->state('admin')->create(['trusted' => false]));
@@ -63,7 +64,7 @@ class IsTrustedTest extends TestCase
         $this->assertEquals('PASSED', $this->runMiddleware());
     }
 
-    /** @test */
+    #[Test]
     public function an_untrusted_non_admin_is_rejected()
     {
         $this->actingAs(factory(User::class)->create(['trusted' => false]));
@@ -72,7 +73,7 @@ class IsTrustedTest extends TestCase
         $this->runMiddleware();
     }
 
-    /** @test */
+    #[Test]
     public function a_banned_user_is_rejected_even_when_trusted()
     {
         $this->actingAs(factory(User::class)->create(['trusted' => true, 'banned' => true]));

@@ -10,6 +10,7 @@ use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TrainingRecordTest extends TestCase
@@ -85,7 +86,7 @@ class TrainingRecordTest extends TestCase
         $this->trainedInduction->save();
     }
 
-    /** @test */
+    #[Test]
     public function user_can_request_own_training()
     {
         Event::fake();
@@ -110,7 +111,7 @@ class TrainingRecordTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_request_training_for_others()
     {
         Event::fake();
@@ -134,7 +135,7 @@ class TrainingRecordTest extends TestCase
         Event::assertDispatched(TrainingRecordRequestedEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_request_training_for_others()
     {
         Event::fake();
@@ -156,7 +157,7 @@ class TrainingRecordTest extends TestCase
         Event::assertDispatched(TrainingRecordRequestedEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_request_training_for_others()
     {
         $newUser = factory(User::class)->create();
@@ -174,7 +175,7 @@ class TrainingRecordTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function an_array_of_trainer_ids_is_rejected()
     {
         $this->actingAs($this->trainer)
@@ -186,7 +187,7 @@ class TrainingRecordTest extends TestCase
         $this->assertNull($this->pendingInduction->refresh()->trained);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_mark_user_as_trained()
     {
         Event::fake();
@@ -207,7 +208,7 @@ class TrainingRecordTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_mark_user_as_trained()
     {
         Event::fake();
@@ -226,7 +227,7 @@ class TrainingRecordTest extends TestCase
         Event::assertDispatched(TrainingRecordCompletedEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_mark_user_as_trained()
     {
         $response = $this->actingAs($this->regularUser)
@@ -240,7 +241,7 @@ class TrainingRecordTest extends TestCase
         $this->assertNull($this->pendingInduction->trained);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_untrain_user()
     {
         $response = $this->actingAs($this->trainer)
@@ -253,7 +254,7 @@ class TrainingRecordTest extends TestCase
         $this->assertEquals(0, $this->trainedInduction->trainer_user_id);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_untrain_user()
     {
         $response = $this->actingAs($this->admin)
@@ -265,7 +266,7 @@ class TrainingRecordTest extends TestCase
         $this->assertNull($this->trainedInduction->trained);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_untrain_user()
     {
         $response = $this->actingAs($this->regularUser)
@@ -277,7 +278,7 @@ class TrainingRecordTest extends TestCase
         $this->assertNotNull($this->trainedInduction->trained);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_promote_user_to_trainer()
     {
         Event::fake();
@@ -295,7 +296,7 @@ class TrainingRecordTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_promote_user_to_trainer()
     {
         Event::fake();
@@ -311,7 +312,7 @@ class TrainingRecordTest extends TestCase
         Event::assertDispatched(TrainingRecordMarkedAsTrainerEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_promote_user_to_trainer()
     {
         $response = $this->actingAs($this->regularUser)
@@ -323,7 +324,7 @@ class TrainingRecordTest extends TestCase
         $this->assertFalse($this->trainedInduction->is_trainer);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_demote_trainer()
     {
         // First promote the user to trainer
@@ -338,7 +339,7 @@ class TrainingRecordTest extends TestCase
         $this->assertFalse($this->trainedInduction->is_trainer);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_demote_trainer()
     {
         // First promote the user to trainer
@@ -353,7 +354,7 @@ class TrainingRecordTest extends TestCase
         $this->assertFalse($this->trainedInduction->is_trainer);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_demote_trainer()
     {
         // First promote the user to trainer
@@ -368,7 +369,7 @@ class TrainingRecordTest extends TestCase
         $this->assertTrue($this->trainedInduction->is_trainer);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_delete_induction()
     {
         $inductionId = $this->pendingInduction->id;
@@ -381,7 +382,7 @@ class TrainingRecordTest extends TestCase
         $this->assertDatabaseMissing('inductions', ['id' => $inductionId]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_delete_induction()
     {
         $inductionId = $this->pendingInduction->id;
@@ -394,7 +395,7 @@ class TrainingRecordTest extends TestCase
         $this->assertDatabaseMissing('inductions', ['id' => $inductionId]);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_delete_induction()
     {
         $inductionId = $this->pendingInduction->id;
@@ -407,7 +408,7 @@ class TrainingRecordTest extends TestCase
         $this->assertDatabaseHas('inductions', ['id' => $inductionId]);
     }
 
-    /** @test */
+    #[Test]
     public function non_trainer_for_different_equipment_cannot_train()
     {
         // Create trainer for different equipment

@@ -8,6 +8,7 @@ use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
@@ -46,7 +47,7 @@ class GoCardlessPaymentTest extends TestCase
         return [$member, $charge];
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_retry_their_subscription_payment()
     {
         [$member, $charge] = $this->memberWithDueCharge();
@@ -72,7 +73,7 @@ class GoCardlessPaymentTest extends TestCase
         $this->assertEquals('processing', $charge->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_subscription_payment_below_the_monthly_amount_is_rejected()
     {
         [$member, $charge] = $this->memberWithDueCharge(22);
@@ -92,7 +93,7 @@ class GoCardlessPaymentTest extends TestCase
         $this->assertEquals(0, Payment::where('user_id', $member->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function unknown_reasons_and_invalid_amounts_are_rejected()
     {
         [$member] = $this->memberWithDueCharge();
@@ -116,7 +117,7 @@ class GoCardlessPaymentTest extends TestCase
             ->assertJsonValidationErrors('amount');
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_pay_against_another_members_account()
     {
         [$member] = $this->memberWithDueCharge();
@@ -132,7 +133,7 @@ class GoCardlessPaymentTest extends TestCase
             ->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function a_failed_payment_attempt_does_not_block_the_charge_from_nightly_billing()
     {
         [$member, $charge] = $this->memberWithDueCharge();

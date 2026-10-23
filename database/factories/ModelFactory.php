@@ -64,7 +64,8 @@ $factory->define('BB\Entities\Role', function (Generator $faker) {
 $factory->define('BB\Entities\KeyFob', function (Generator $faker) {
     return [
         'user_id' => 0,
-        'key_id'  => Str::random(12),
+        // Upper case: a key_id starting "ff" is an access code, shown differently
+        'key_id'  => Str::upper(Str::random(12)),
         'active'  => 1,
         'lost'    => 0,
     ];

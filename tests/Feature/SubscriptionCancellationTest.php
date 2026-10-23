@@ -8,6 +8,7 @@ use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
@@ -27,7 +28,7 @@ class SubscriptionCancellationTest extends TestCase
         $this->app->instance(GoCardlessHelper::class, $this->goCardless);
     }
 
-    /** @test */
+    #[Test]
     public function a_variable_dd_member_can_cancel_and_their_charges_are_cancelled()
     {
         $member = factory(User::class)->create([
@@ -56,7 +57,7 @@ class SubscriptionCancellationTest extends TestCase
         $this->assertEquals('cancelled', $charge->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_legacy_dd_cancellation_failure_does_not_cancel_locally()
     {
         $member = factory(User::class)->create([
@@ -79,7 +80,7 @@ class SubscriptionCancellationTest extends TestCase
         $this->assertEquals('SB123', $member->subscription_id);
     }
 
-    /** @test */
+    #[Test]
     public function a_legacy_dd_already_cancelled_at_gocardless_cancels_locally()
     {
         $member = factory(User::class)->create([

@@ -6,6 +6,7 @@ use BB\Entities\KeyFob;
 use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class KeyFobTest extends TestCase
@@ -20,7 +21,7 @@ class KeyFobTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[Test]
     public function general_induction_is_required_before_adding_access_methods()
     {
         $user = factory(User::class)->create(['induction_completed' => false]);
@@ -31,7 +32,7 @@ class KeyFobTest extends TestCase
             ->assertSee('You need to have been given the general induction before you can add access methods.');
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_view_their_own_keyfobs()
     {
         $user = factory(User::class)->create(['induction_completed' => true]);
@@ -43,7 +44,7 @@ class KeyFobTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_view_another_members_keyfobs()
     {
         $user = factory(User::class)->create();
@@ -52,7 +53,7 @@ class KeyFobTest extends TestCase
         $this->actingAs($user)->get("/account/{$other->id}/keyfobs")->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_view_another_members_keyfobs()
     {
         $other = factory(User::class)->create();
@@ -64,7 +65,7 @@ class KeyFobTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_add_a_keyfob_to_themselves()
     {
         $user = factory(User::class)->create(['induction_completed' => true]);
@@ -77,7 +78,7 @@ class KeyFobTest extends TestCase
         $this->assertDatabaseHas('key_fobs', ['user_id' => $user->id, 'key_id' => $keyId, 'active' => true]);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_add_a_keyfob_to_another_member()
     {
         $user = factory(User::class)->create();
@@ -90,7 +91,7 @@ class KeyFobTest extends TestCase
         $this->assertEquals(0, KeyFob::where('user_id', $other->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_add_a_keyfob_to_another_member()
     {
         $other = factory(User::class)->create(['induction_completed' => true]);
@@ -103,7 +104,7 @@ class KeyFobTest extends TestCase
         $this->assertDatabaseHas('key_fobs', ['user_id' => $other->id, 'key_id' => $keyId]);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_mark_their_own_keyfob_as_lost()
     {
         $user = factory(User::class)->create(['induction_completed' => true]);
@@ -116,7 +117,7 @@ class KeyFobTest extends TestCase
         $this->assertDatabaseHas('key_fobs', ['id' => $fob->id, 'lost' => true, 'active' => false]);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_mark_another_members_keyfob_as_lost()
     {
         $user = factory(User::class)->create();
@@ -130,7 +131,7 @@ class KeyFobTest extends TestCase
         $this->assertDatabaseHas('key_fobs', ['id' => $fob->id, 'active' => true]);
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_mark_another_members_keyfob_as_lost()
     {
         $other = factory(User::class)->create(['induction_completed' => true]);

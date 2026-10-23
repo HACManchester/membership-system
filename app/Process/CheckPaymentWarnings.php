@@ -36,8 +36,9 @@ class CheckPaymentWarnings
                 Log::info($user->name . ' suspended - payment warning grace period expired');
                 array_push($suspendedMembers, $user->name);
             } else {
-                $daysLeft = $user->subscription_expires->diffInDays($today, false);
-                Log::info($user->name . ' has payment warning, ' . abs($daysLeft) . ' days until suspension');
+                // Whole days, as Carbon 2 returned: Carbon 3's diffInDays() is a signed float
+                $daysLeft = (int) abs($user->subscription_expires->diffInDays($today));
+                Log::info($user->name . ' has payment warning, ' . $daysLeft . ' days until suspension');
                 array_push($warningMembers, $user->name);
             }
         }

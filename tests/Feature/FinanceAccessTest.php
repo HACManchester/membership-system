@@ -5,19 +5,20 @@ namespace Tests\Feature;
 use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class FinanceAccessTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function a_guest_is_redirected_to_login_from_the_payments_page()
     {
         $this->get('/payments')->assertRedirect(route('login'));
     }
 
-    /** @test */
+    #[Test]
     public function a_regular_member_cannot_view_the_payments_page()
     {
         $user = factory(User::class)->create();
@@ -25,7 +26,7 @@ class FinanceAccessTest extends TestCase
         $this->actingAs($user)->get('/payments')->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function a_finance_role_member_can_view_the_payments_page()
     {
         $user = factory(User::class)->create();

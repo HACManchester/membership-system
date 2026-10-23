@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\ProfileData;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AccountAccessTest extends TestCase
@@ -19,7 +20,7 @@ class AccountAccessTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_view_their_own_account_page()
     {
         $user = $this->memberWithProfile();
@@ -31,7 +32,7 @@ class AccountAccessTest extends TestCase
             ->assertSee($user->email);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_view_another_members_account_page()
     {
         $user = $this->memberWithProfile();
@@ -40,7 +41,7 @@ class AccountAccessTest extends TestCase
         $this->actingAs($user)->get("/account/{$other->id}")->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function the_members_directory_lists_active_members()
     {
         $user = $this->memberWithProfile();
@@ -53,7 +54,7 @@ class AccountAccessTest extends TestCase
             ->assertSee($other->name);
     }
 
-    /** @test */
+    #[Test]
     public function guests_are_redirected_away_from_the_members_directory()
     {
         $this->memberWithProfile();
@@ -61,7 +62,7 @@ class AccountAccessTest extends TestCase
         $this->get('/members')->assertStatus(302);
     }
 
-    /** @test */
+    #[Test]
     public function private_profiles_are_hidden_from_the_members_directory()
     {
         $user = $this->memberWithProfile();
@@ -74,7 +75,7 @@ class AccountAccessTest extends TestCase
             ->assertDontSee($private->name);
     }
 
-    /** @test */
+    #[Test]
     public function an_inactive_members_profile_is_not_viewable()
     {
         $user = $this->memberWithProfile();
@@ -85,7 +86,7 @@ class AccountAccessTest extends TestCase
             ->assertRedirect(route('members.index'));
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_edit_their_profile()
     {
         $user = $this->memberWithProfile();

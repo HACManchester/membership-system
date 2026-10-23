@@ -6,6 +6,7 @@ use BB\Entities\ApiKey;
 use BB\Entities\KeyFob;
 use BB\Entities\User;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -24,7 +25,7 @@ use Tests\TestCase;
  */
 class KeyFobCsvContractTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_export_is_served_as_a_utf8_csv_attachment()
     {
         $this->activeMemberWithFob('Plain Name', 'fob_1');
@@ -42,9 +43,8 @@ class KeyFobCsvContractTest extends TestCase
     /**
      * fputcsv quotes a field only when it has to, escapes an embedded quote by
      * doubling it, and leaves UTF-8 alone. Semicolons are not special.
-     *
-     * @test
      */
+    #[Test]
     public function announce_names_are_csv_escaped_exactly_as_the_door_system_expects()
     {
         $this->activeMemberWithFob('Plain Name', 'fob_0');
@@ -65,7 +65,7 @@ class KeyFobCsvContractTest extends TestCase
         $this->assertSame($expected, $this->export()->streamedContent());
     }
 
-    /** @test */
+    #[Test]
     public function rows_are_terminated_with_a_bare_newline_and_no_carriage_return()
     {
         $this->activeMemberWithFob('Plain Name', 'fob_1');
@@ -80,9 +80,8 @@ class KeyFobCsvContractTest extends TestCase
      * The controller only writes the header row when there is a first row, so an
      * empty export is a zero-byte body rather than a lone header. The door
      * system has always been fed that, so pin it rather than quietly "fix" it.
-     *
-     * @test
      */
+    #[Test]
     public function an_empty_export_is_an_empty_body_with_no_header_row()
     {
         $response = $this->export();

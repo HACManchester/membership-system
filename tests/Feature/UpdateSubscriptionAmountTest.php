@@ -5,13 +5,14 @@ namespace Tests\Feature;
 use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UpdateSubscriptionAmountTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function a_member_can_update_their_subscription_amount()
     {
         $member = factory(User::class)->create(['monthly_subscription' => 22]);
@@ -25,7 +26,7 @@ class UpdateSubscriptionAmountTest extends TestCase
         $this->assertEquals(27, $member->fresh()->monthly_subscription);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_numeric_amount_is_rejected()
     {
         $member = factory(User::class)->create(['monthly_subscription' => 22]);
@@ -39,7 +40,7 @@ class UpdateSubscriptionAmountTest extends TestCase
         $this->assertEquals(22, $member->fresh()->monthly_subscription);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_go_below_the_minimum_price()
     {
         $member = factory(User::class)->create(['monthly_subscription' => 22]);
@@ -53,7 +54,7 @@ class UpdateSubscriptionAmountTest extends TestCase
         $this->assertEquals(22, $member->fresh()->monthly_subscription);
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_set_an_amount_below_the_minimum()
     {
         $member = factory(User::class)->create(['monthly_subscription' => 22]);

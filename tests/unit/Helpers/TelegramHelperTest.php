@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class TelegramHelperTest extends TestCase
@@ -59,9 +60,7 @@ class TelegramHelperTest extends TestCase
     ];
   }
 
-  /**
-   * @dataProvider notifyDataProvider
-   */
+  #[DataProvider('notifyDataProvider')]
   public function testNotify($level, $message, $encodedTextParam)
   {
     $this->mock->reset();

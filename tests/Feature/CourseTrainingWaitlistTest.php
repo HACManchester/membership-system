@@ -9,6 +9,7 @@ use BB\Events\TrainingRecords\TrainingInterestWithdrawnEvent;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CourseTrainingWaitlistTest extends TestCase
@@ -52,7 +53,7 @@ class CourseTrainingWaitlistTest extends TestCase
         return $record;
     }
 
-    /** @test */
+    #[Test]
     public function waitlist_is_ordered_longest_waiting_first()
     {
         // Created in shuffled order so insertion order can't mask a sort bug
@@ -73,7 +74,7 @@ class CourseTrainingWaitlistTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function waitlist_only_contains_members_awaiting_training()
     {
         $waiting = $this->waitlistRecord(factory(User::class)->create(), 3);
@@ -101,7 +102,7 @@ class CourseTrainingWaitlistTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_remove_a_member_from_the_waitlist()
     {
         Event::fake([TrainingInterestWithdrawnEvent::class]);
@@ -122,7 +123,7 @@ class CourseTrainingWaitlistTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function trained_members_cannot_be_removed_via_the_waitlist()
     {
         $member = factory(User::class)->create();
@@ -138,7 +139,7 @@ class CourseTrainingWaitlistTest extends TestCase
         $this->assertDatabaseHas('inductions', ['id' => $record->id]);
     }
 
-    /** @test */
+    #[Test]
     public function non_trainers_cannot_remove_members_from_the_waitlist()
     {
         $member = factory(User::class)->create();
@@ -154,7 +155,7 @@ class CourseTrainingWaitlistTest extends TestCase
         $this->assertDatabaseHas('inductions', ['id' => $record->id]);
     }
 
-    /** @test */
+    #[Test]
     public function admins_can_remove_members_from_the_waitlist()
     {
         $admin = factory(User::class)->state('admin')->create();

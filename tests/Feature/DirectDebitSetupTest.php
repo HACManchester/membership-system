@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\Address;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -34,7 +35,7 @@ class DirectDebitSetupTest extends TestCase
         $this->app->instance(GoCardlessHelper::class, $this->goCardless);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_with_an_address_has_it_prefilled()
     {
         $member = $this->rejoiningMember();
@@ -58,7 +59,7 @@ class DirectDebitSetupTest extends TestCase
         $this->assertStringStartsWith('https://', $this->sentParams['success_redirect_url']);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_without_an_address_can_still_start_a_direct_debit()
     {
         $member = $this->rejoiningMember();
@@ -79,9 +80,8 @@ class DirectDebitSetupTest extends TestCase
     /**
      * migrateDD() cancels the legacy subscription before redirecting, so a
      * crash here used to leave the member with no Direct Debit at all.
-     *
-     * @test
      */
+    #[Test]
     public function a_legacy_member_without_an_address_can_migrate_to_variable_billing()
     {
         $member = $this->rejoiningMember();

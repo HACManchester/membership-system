@@ -12,7 +12,7 @@ class CreateTodaysSubChargesTest extends TestCase
         // Use a fixed date to avoid month boundary issues
         // payment_day > 28 gets converted to 1 by User mutator
         $targetDay = 15;
-        
+
         $user1 = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
@@ -31,15 +31,15 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date so the command thinks it's 7 days before payment day
         Carbon::setTestNow(Carbon::now()->setDay($targetDay)->subDays(7));
-        
+
         $this->artisan('bb:create-todays-sub-charges')->assertExitCode(0);
 
         $expectedDate = Carbon::now()->addDays(7);
-        
+
         $charge1 = SubscriptionCharge::where('user_id', $user1->id)
             ->whereDate('charge_date', $expectedDate)
             ->first();
-            
+
         $this->assertNotNull($charge1);
         $this->assertEquals(22, $charge1->amount);
         $this->assertEquals('pending', $charge1->status);
@@ -47,11 +47,11 @@ class CreateTodaysSubChargesTest extends TestCase
         $charge2 = SubscriptionCharge::where('user_id', $user2->id)
             ->whereDate('charge_date', $expectedDate)
             ->first();
-            
+
         $this->assertNotNull($charge2);
         $this->assertEquals(17, $charge2->amount);
         $this->assertEquals('pending', $charge2->status);
-        
+
         Carbon::setTestNow(); // Reset
     }
 
@@ -59,7 +59,7 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $customOffset = 14;
         $paymentDay = 10; // Use a day that exists in all months
-        
+
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
@@ -70,27 +70,27 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date so it's customOffset days before the payment day
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->subDays($customOffset));
-        
+
         $this->artisan('bb:create-todays-sub-charges', [
             'dayOffset' => $customOffset
         ])->assertExitCode(0);
 
         $targetDate = Carbon::now()->addDays($customOffset);
-        
+
         $charge = SubscriptionCharge::where('user_id', $user->id)
             ->whereDate('charge_date', $targetDate)
             ->first();
-            
+
         $this->assertNotNull($charge);
         $this->assertEquals(22, $charge->amount);
-        
+
         Carbon::setTestNow(); // Reset
     }
 
     public function testZeroOffsetCreatesChargesForToday()
     {
         $paymentDay = 20; // Use a day that exists in all months
-        
+
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
@@ -101,7 +101,7 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date to be on the payment day
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay));
-        
+
         $this->artisan('bb:create-todays-sub-charges', [
             'dayOffset' => 0
         ])->assertExitCode(0);
@@ -109,10 +109,10 @@ class CreateTodaysSubChargesTest extends TestCase
         $charge = SubscriptionCharge::where('user_id', $user->id)
             ->whereDate('charge_date', Carbon::now())
             ->first();
-            
+
         $this->assertNotNull($charge);
         $this->assertEquals(27, $charge->amount);
-        
+
         Carbon::setTestNow(); // Reset
     }
 
@@ -120,7 +120,7 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $negativeOffset = -3;
         $paymentDay = 25; // Use a day that exists in all months
-        
+
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
@@ -131,19 +131,19 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date so it's 3 days after the payment day
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->addDays(3));
-        
+
         $this->artisan('bb:create-todays-sub-charges', [
             'dayOffset' => $negativeOffset
         ])->assertExitCode(0);
 
         $targetDate = Carbon::now()->addDays($negativeOffset);
-        
+
         $charge = SubscriptionCharge::where('user_id', $user->id)
             ->whereDate('charge_date', $targetDate)
             ->first();
-            
+
         $this->assertNotNull($charge);
-        
+
         Carbon::setTestNow(); // Reset
     }
 
@@ -211,7 +211,7 @@ class CreateTodaysSubChargesTest extends TestCase
     public function testDuplicateChargesNotCreated()
     {
         $paymentDay = 15; // Use a day that exists in all months
-        
+
         $user = factory(User::class)->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
@@ -222,25 +222,25 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date so it's 7 days before the payment day
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->subDays(7));
-        
+
         $this->artisan('bb:create-todays-sub-charges')->assertExitCode(0);
         $this->artisan('bb:create-todays-sub-charges')->assertExitCode(0);
 
         $targetDate = Carbon::now()->addDays(7);
-        
+
         $charges = SubscriptionCharge::where('user_id', $user->id)
             ->whereDate('charge_date', $targetDate)
             ->get();
-            
+
         $this->assertEquals(1, $charges->count(), 'Expected 1 charge but found ' . $charges->count());
-        
+
         Carbon::setTestNow(); // Reset
     }
 
     public function testChargesCreatedWithCorrectAmount()
     {
         $paymentDay = 15; // Use a day that exists in all months
-        
+
         $amounts = [
             17 => 'Low income',
             22 => 'Standard',
@@ -249,7 +249,7 @@ class CreateTodaysSubChargesTest extends TestCase
 
         // Mock the date so it's 7 days before the payment day
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->subDays(7));
-        
+
         foreach ($amounts as $amount => $type) {
             $user = factory(User::class)->create([
                 'status' => 'active',
@@ -262,15 +262,15 @@ class CreateTodaysSubChargesTest extends TestCase
             $this->artisan('bb:create-todays-sub-charges')->assertExitCode(0);
 
             $targetDate = Carbon::now()->addDays(7);
-            
+
             $charge = SubscriptionCharge::where('user_id', $user->id)
                 ->whereDate('charge_date', $targetDate)
                 ->first();
-                
+
             $this->assertNotNull($charge, "Charge not created for $type user");
             $this->assertEquals($amount, $charge->amount, "Incorrect amount for $type user");
         }
-        
+
         Carbon::setTestNow(); // Reset
     }
 }

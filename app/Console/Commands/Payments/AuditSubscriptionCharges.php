@@ -182,7 +182,7 @@ class AuditSubscriptionCharges extends Command
                     $this->memberName($row['charge']),
                     $row['charge']->charge_date->format('Y-m-d'),
                     $row['collectedAt']->format('Y-m-d'),
-                    $row['charge']->charge_date->diffInDays($row['collectedAt']),
+                    (int) $row['charge']->charge_date->diffInDays($row['collectedAt']),
                     $row['payment']->amount,
                     $row['payment']->source_id ?: '-',
                 ];
@@ -241,7 +241,7 @@ class AuditSubscriptionCharges extends Command
      * @param string $label
      * @param callable|null $amount How to read the amount from a row
      */
-    private function summariseByMember($groups, $label, callable $amount = null)
+    private function summariseByMember($groups, $label, ?callable $amount = null)
     {
         $this->line('');
         $this->line('By member (' . $label . '):');

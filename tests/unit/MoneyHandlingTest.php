@@ -7,6 +7,8 @@ use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use BB\Services\Credit;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -29,12 +31,11 @@ use Tests\TestCase;
 class MoneyHandlingTest extends TestCase
 {
     /**
-     * @dataProvider awkwardAmounts
-     * @test
-     *
      * @param float[] $amounts pounds, as stored in payments.amount
      * @param int     $expectedPence
      */
+    #[DataProvider('awkwardAmounts')]
+    #[Test]
     public function a_balance_recalculation_lands_on_exact_pence(array $amounts, $expectedPence)
     {
         $user = factory(User::class)->create(['cash_balance' => 0]);
@@ -65,7 +66,7 @@ class MoneyHandlingTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function spends_are_subtracted_from_the_balance()
     {
         $user = factory(User::class)->create(['cash_balance' => 0]);
@@ -79,12 +80,11 @@ class MoneyHandlingTest extends TestCase
     }
 
     /**
-     * @dataProvider gracePeriods
-     * @test
-     *
      * @param string|null $paymentMethod
      * @param string      $expectedCutoff date the grace period reaches back to
      */
+    #[DataProvider('gracePeriods')]
+    #[Test]
     public function each_payment_method_keeps_its_grace_period($paymentMethod, $expectedCutoff)
     {
         $reference = Carbon::parse('2026-06-15 13:45:00');
@@ -116,7 +116,7 @@ class MoneyHandlingTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function a_balance_is_reported_in_pounds()
     {
         $user = factory(User::class)->create(['cash_balance' => 1999]);
@@ -133,9 +133,8 @@ class MoneyHandlingTest extends TestCase
      * the only consumer. Left as-is deliberately — changing it changes what
      * members see, which is a call for the board, not a side effect of an
      * upgrade. Flagged so the upgrade doesn't silently alter it either way.
-     *
-     * @test
      */
+    #[Test]
     public function a_sub_one_pound_debt_currently_reports_as_positive()
     {
         $inDebtByFiftyPence = factory(User::class)->create(['cash_balance' => -50]);

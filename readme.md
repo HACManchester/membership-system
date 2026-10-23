@@ -133,7 +133,7 @@ A `.env` file needs to be set up — copy `.env.example` and adjust. Notes:
 
 We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)).
 It's built on the official PHP image with the same extensions as the live environment, for
-whichever PHP version `SAIL_PHP_VERSION` in `.env` selects (default 8.2, which production runs; 8.0–8.4 images build).
+whichever PHP version `SAIL_PHP_VERSION` in `.env` selects (default 8.3, which production runs; 8.0–8.4 images build).
 Each version builds to its own image, so switching is `docker compose up -d` after changing it.
 Node isn't in the container — yarn runs on the host.
 

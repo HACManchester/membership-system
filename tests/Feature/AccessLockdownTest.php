@@ -4,11 +4,12 @@ namespace Tests\Feature;
 
 use BB\Entities\AccessLockdown;
 use BB\Entities\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AccessLockdownTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function an_admin_can_view_the_lockdown_page()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -24,9 +25,8 @@ class AccessLockdownTest extends TestCase
     /**
      * `committee` is configured as a default but doesn't exist in every environment.
      * Offering it pre-selected with no checkbox to clear would fail validation.
-     *
-     * @test
      */
+    #[Test]
     public function the_default_roles_are_narrowed_to_roles_that_exist()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -38,7 +38,7 @@ class AccessLockdownTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_start_a_lockdown()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -59,7 +59,7 @@ class AccessLockdownTest extends TestCase
         $this->assertEquals(['admin', 'board'], AccessLockdown::current()->roles);
     }
 
-    /** @test */
+    #[Test]
     public function a_second_lockdown_cannot_be_started_while_one_is_running()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -78,7 +78,7 @@ class AccessLockdownTest extends TestCase
         $this->assertEquals('First', AccessLockdown::current()->reason);
     }
 
-    /** @test */
+    #[Test]
     public function a_lockdown_must_name_at_least_one_role()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -92,7 +92,7 @@ class AccessLockdownTest extends TestCase
         $this->assertEquals(0, AccessLockdown::count());
     }
 
-    /** @test */
+    #[Test]
     public function a_lockdown_cannot_name_a_role_that_does_not_exist()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -105,7 +105,7 @@ class AccessLockdownTest extends TestCase
         $this->assertEquals(0, AccessLockdown::count());
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_lift_a_lockdown()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -125,9 +125,8 @@ class AccessLockdownTest extends TestCase
     /**
      * `current()` only reads the newest row, so if duplicates ever slip through,
      * lifting must clear all of them or the space silently stays shut.
-     *
-     * @test
      */
+    #[Test]
     public function lifting_clears_every_active_lockdown()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -140,7 +139,7 @@ class AccessLockdownTest extends TestCase
         $this->assertEquals(0, AccessLockdown::active()->count());
     }
 
-    /** @test */
+    #[Test]
     public function a_member_cannot_view_or_change_the_lockdown()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -156,7 +155,7 @@ class AccessLockdownTest extends TestCase
         $this->assertNotNull(AccessLockdown::current());
     }
 
-    /** @test */
+    #[Test]
     public function a_guest_is_sent_to_login()
     {
         $this->get(route('access-lockdown.index'))->assertRedirect(route('login'));

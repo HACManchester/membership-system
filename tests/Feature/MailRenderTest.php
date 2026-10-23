@@ -9,6 +9,7 @@ use BB\Events\MemberPhotoWasDeclined;
 use BB\Notifications\Messages\MailMessage;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -31,7 +32,7 @@ use Tests\TestCase;
  */
 class MailRenderTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function every_action_on_a_notification_renders_as_its_own_button()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -50,9 +51,8 @@ class MailRenderTest extends TestCase
      * Pins the subclass's contract directly, so a change in the parent
      * MailMessage fails here with a clear reason rather than as a missing
      * button in an email nobody checks.
-     *
-     * @test
      */
+    #[Test]
     public function actions_are_collected_separately_from_lines_and_bypass_the_single_action_slot()
     {
         $message = (new MailMessage)
@@ -72,7 +72,7 @@ class MailRenderTest extends TestCase
         $this->assertSame(['First line', 'Second line'], array_merge($data['introLines'], $data['outroLines']));
     }
 
-    /** @test */
+    #[Test]
     public function a_member_made_trusted_is_emailed()
     {
         $user = $this->member('Ada', 'ada@example.test');
@@ -87,7 +87,7 @@ class MailRenderTest extends TestCase
         $this->assertStringContainsString('You have been made a trusted member', $this->sentMessageBody($sent[0]));
     }
 
-    /** @test */
+    #[Test]
     public function a_member_whose_photo_is_declined_is_emailed()
     {
         $user = $this->member('Grace', 'grace@example.test');

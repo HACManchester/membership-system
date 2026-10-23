@@ -7,6 +7,7 @@ use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CourseTrainingTrainTest extends TestCase
@@ -40,7 +41,7 @@ class CourseTrainingTrainTest extends TestCase
         $this->record->save();
     }
 
-    /** @test */
+    #[Test]
     public function the_signed_in_trainer_is_recorded_by_default()
     {
         $this->actingAs($this->admin)
@@ -53,7 +54,7 @@ class CourseTrainingTrainTest extends TestCase
         Event::assertDispatched(TrainingRecordCompletedEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function an_array_of_trainer_ids_is_rejected()
     {
         $this->actingAs($this->admin)
@@ -65,7 +66,7 @@ class CourseTrainingTrainTest extends TestCase
         $this->assertNull($this->record->refresh()->trained);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_who_is_not_a_trainer_cannot_train()
     {
         $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))
@@ -75,7 +76,7 @@ class CourseTrainingTrainTest extends TestCase
         $this->assertNull($this->record->refresh()->trained);
     }
 
-    /** @test */
+    #[Test]
     public function bulk_training_marks_each_member_as_trained()
     {
         $newcomer = factory(User::class)->create(['status' => 'active', 'active' => true]);
@@ -95,7 +96,7 @@ class CourseTrainingTrainTest extends TestCase
         Event::assertDispatchedTimes(TrainingRecordCompletedEvent::class, 2);
     }
 
-    /** @test */
+    #[Test]
     public function bulk_training_rejects_ids_that_are_not_members()
     {
         $this->actingAs($this->admin)
@@ -107,7 +108,7 @@ class CourseTrainingTrainTest extends TestCase
         $this->assertNull($this->record->refresh()->trained);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_who_is_not_a_trainer_cannot_bulk_train()
     {
         $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))

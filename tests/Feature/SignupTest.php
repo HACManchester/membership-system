@@ -4,19 +4,20 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SignupTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /** @test */
+    #[Test]
     public function the_signup_page_is_reachable()
     {
         $this->get('/register')->assertStatus(200)->assertSee('Join');
     }
 
-    /** @test */
+    #[Test]
     public function a_new_full_member_can_register()
     {
         $given = $this->faker->firstName;

@@ -17,7 +17,7 @@ class TelegramHelper
     /** @var Client */
     protected $client;
 
-    public function __construct($id, Client $client = null)
+    public function __construct($id, ?Client $client = null)
     {
         $this->identifier = $id;
         $this->client = $client ?? new Client();

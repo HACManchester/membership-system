@@ -10,6 +10,7 @@ use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\NotificationEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class NotificationEmailTest extends TestCase
@@ -52,7 +53,7 @@ class NotificationEmailTest extends TestCase
         return [$equipment, $trainer, $trainedUser];
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_send_a_notification_to_all_active_members()
     {
         $admin = factory(User::class)->state('admin')->create(['status' => 'active', 'active' => true]);
@@ -71,7 +72,7 @@ class NotificationEmailTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function the_message_body_is_escaped_before_being_marked_up()
     {
         $admin = factory(User::class)->state('admin')->create(['status' => 'active', 'active' => true]);
@@ -93,7 +94,7 @@ class NotificationEmailTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function a_regular_member_cannot_send_to_all_members()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
@@ -109,7 +110,7 @@ class NotificationEmailTest extends TestCase
         Mail::assertNotQueued(NotificationEmail::class);
     }
 
-    /** @test */
+    #[Test]
     public function a_trainer_can_email_members_trained_on_their_tool()
     {
         [$equipment, $trainer, $trainedUser] = $this->equipmentWithTrainerAndTrainedUser();
@@ -127,7 +128,7 @@ class NotificationEmailTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function a_non_trainer_cannot_email_a_tool_group()
     {
         // Regression test: this path previously crashed with an undefined
@@ -147,7 +148,7 @@ class NotificationEmailTest extends TestCase
         Mail::assertNotQueued(NotificationEmail::class);
     }
 
-    /** @test */
+    #[Test]
     public function an_unrecognised_recipient_group_is_rejected()
     {
         // Regression test: this path previously crashed with an undefined
@@ -165,7 +166,7 @@ class NotificationEmailTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function a_member_can_send_a_test_email_to_themselves()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);

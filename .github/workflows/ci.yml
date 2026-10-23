@@ -18,13 +18,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Production's engine.
-          - php: "8.2"
-            experimental: false
-          # Production's next engine, which Laravel 13 will require. Already green,
-          # so it blocks too.
+          # Production's engine, and the minimum Laravel 13 requires.
           - php: "8.3"
             experimental: false
+          # Laravel 12 and 13 also support these. The final step swaps production to
+          # the newest one, so they run ahead of it.
+          - php: "8.4"
+            experimental: false
+          - php: "8.5"
+            experimental: true
 
     steps:
       - uses: actions/checkout@v3

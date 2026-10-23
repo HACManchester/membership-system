@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Assert;
 use Illuminate\Support\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DisciplinaryTest extends TestCase
@@ -93,7 +94,7 @@ class DisciplinaryTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function a_non_admin_cannot_ban_a_member()
     {
         $member = factory('BB\Entities\User')->create();
@@ -106,7 +107,7 @@ class DisciplinaryTest extends TestCase
         $this->assertFalse((bool) $target->fresh()->banned);
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_cannot_ban_themselves()
     {
         $admin = factory('BB\Entities\User')->states('admin')->create();
@@ -118,7 +119,7 @@ class DisciplinaryTest extends TestCase
         $this->assertFalse((bool) $admin->fresh()->banned);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_admin_cannot_unban_a_member()
     {
         $member = factory('BB\Entities\User')->create();

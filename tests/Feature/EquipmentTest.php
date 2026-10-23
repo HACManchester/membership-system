@@ -11,6 +11,7 @@ use BB\Entities\Role;
 use BB\Entities\Room;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class EquipmentTest extends TestCase
@@ -99,7 +100,7 @@ class EquipmentTest extends TestCase
         $trainerTrainingRecord->save();
     }
 
-    /** @test */
+    #[Test]
     public function anyone_can_view_equipment_index()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
@@ -109,7 +110,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function equipment_index_exposes_room_display_from_the_related_room()
     {
         $room = factory(Room::class)->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
@@ -122,7 +123,7 @@ class EquipmentTest extends TestCase
         $this->assertSame('The Workshop', $item['room_display']);
     }
 
-    /** @test */
+    #[Test]
     public function create_and_edit_pages_render_inertia()
     {
         $this->actingAs($this->admin)->get(route('equipment.create'))
@@ -136,7 +137,7 @@ class EquipmentTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_create_equipment_with_room()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -153,7 +154,7 @@ class EquipmentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function slug_is_generated_from_name_when_omitted()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -165,7 +166,7 @@ class EquipmentTest extends TestCase
         $this->assertDatabaseHas('equipment', ['slug' => 'big-lathe']);
     }
 
-    /** @test */
+    #[Test]
     public function empty_optional_foreign_keys_are_stored_as_null()
     {
         // The Inertia form submits these as '' when nothing is chosen.
@@ -187,7 +188,7 @@ class EquipmentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function usage_cost_is_no_longer_required()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -200,7 +201,7 @@ class EquipmentTest extends TestCase
         $this->assertDatabaseHas('equipment', ['slug' => 'free-tool']);
     }
 
-    /** @test */
+    #[Test]
     public function attaching_a_course_links_it_and_marks_induction_required()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -218,7 +219,7 @@ class EquipmentTest extends TestCase
         $this->assertTrue($equipment->courses->contains($course->id));
     }
 
-    /** @test */
+    #[Test]
     public function attaching_a_course_does_not_detach_its_other_equipment()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -240,7 +241,7 @@ class EquipmentTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function detaching_a_course_on_update_removes_the_link()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -262,7 +263,7 @@ class EquipmentTest extends TestCase
         $this->assertEquals(0, $equipment->fresh()->courses()->count());
     }
 
-    /** @test */
+    #[Test]
     public function edit_exposes_the_attached_course_id()
     {
         $course = factory(Course::class)->create();
@@ -274,7 +275,7 @@ class EquipmentTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function edit_exposes_the_permaloan_holder_and_a_member_search_url()
     {
         $holder = factory(User::class)->create();
@@ -291,7 +292,7 @@ class EquipmentTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function edit_of_a_legacy_record_has_no_course_but_keeps_its_category()
     {
         $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
@@ -302,7 +303,7 @@ class EquipmentTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function anyone_can_view_equipment_show()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
@@ -312,7 +313,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function show_exposes_legacy_training_data_for_legacy_equipment()
     {
         // $this->equipment has an induction_category and no course, so the legacy
@@ -328,7 +329,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function training_member_lists_are_only_exposed_to_members_who_can_train()
     {
         // An ordinary member gets no training-management data at all.
@@ -343,7 +344,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayHasKey('trainers', $props['training']);
     }
 
-    /** @test */
+    #[Test]
     public function admin_notes_are_only_exposed_to_members_who_can_edit()
     {
         $this->equipment->forceFill(['admin_notes' => 'Spare key is in the office'])->save();
@@ -357,77 +358,77 @@ class EquipmentTest extends TestCase
         $this->assertEquals('Spare key is in the office', $props['admin_notes']);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_create_equipment()
     {
         $response = $this->actingAs($this->admin)->get(route('equipment.create'));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function equipment_role_user_can_create_equipment()
     {
         $response = $this->actingAs($this->equipmentRoleUser)->get(route('equipment.create'));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function maintainer_can_create_equipment()
     {
         $response = $this->actingAs($this->maintainerUser)->get(route('equipment.create'));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function area_coordinator_can_create_equipment()
     {
         $response = $this->actingAs($this->areaCoordinatorUser)->get(route('equipment.create'));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_create_equipment()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.create'));
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_edit_equipment()
     {
         $response = $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function equipment_role_user_can_edit_equipment()
     {
         $response = $this->actingAs($this->equipmentRoleUser)->get(route('equipment.edit', $this->equipment));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function maintainer_can_edit_their_equipment()
     {
         $response = $this->actingAs($this->maintainerUser)->get(route('equipment.edit', $this->equipment));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function area_coordinator_can_edit_equipment_in_their_area()
     {
         $response = $this->actingAs($this->areaCoordinatorUser)->get(route('equipment.edit', $this->equipment));
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_edit_equipment()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.edit', $this->equipment));
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_delete_equipment()
     {
         $response = $this->actingAs($this->admin)->delete(route('equipment.destroy', $this->equipment));
@@ -435,14 +436,14 @@ class EquipmentTest extends TestCase
         $this->assertSoftDeleted('equipment', ['id' => $this->equipment->id]);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_delete_equipment()
     {
         $response = $this->actingAs($this->regularUser)->delete(route('equipment.destroy', $this->equipment));
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function access_code_not_visible_to_untrained_users()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipmentWithAccessCode));
@@ -451,7 +452,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayNotHasKey('access_code', $equipment);
     }
 
-    /** @test */
+    #[Test]
     public function access_code_visible_to_trained_users()
     {
         // Create a trained user
@@ -472,7 +473,7 @@ class EquipmentTest extends TestCase
         $this->assertEquals('SECRET123', $equipment['access_code']);
     }
 
-    /** @test */
+    #[Test]
     public function access_code_visible_to_trainers()
     {
         // Create trainer for secure equipment
@@ -493,7 +494,7 @@ class EquipmentTest extends TestCase
         $this->assertEquals('SECRET123', $equipment['access_code']);
     }
 
-    /** @test */
+    #[Test]
     public function instruction_fields_are_gated_by_training_status()
     {
         $this->equipment->forceFill([
@@ -535,7 +536,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayHasKey('trainer_instructions', $props);
     }
 
-    /** @test */
+    #[Test]
     public function access_code_visible_in_equipment_index_for_trained_users()
     {
         // Create a trained user
@@ -561,7 +562,7 @@ class EquipmentTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function access_code_not_visible_in_equipment_index_for_untrained_users()
     {
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
@@ -575,7 +576,7 @@ class EquipmentTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_request_induction_for_others()
     {
         $response = $this->actingAs($this->trainerUser)
@@ -590,7 +591,7 @@ class EquipmentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_can_request_own_induction()
     {
         $response = $this->actingAs($this->regularUser)
@@ -603,7 +604,7 @@ class EquipmentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function trainer_can_mark_user_as_trained()
     {
         // Create pending induction
@@ -632,7 +633,7 @@ class EquipmentTest extends TestCase
         $this->assertNotNull($pendingTrainingRecord->trained);
     }
 
-    /** @test */
+    #[Test]
     public function regular_user_cannot_mark_user_as_trained()
     {
         // Create pending induction
@@ -655,7 +656,7 @@ class EquipmentTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_access_all_equipment_features()
     {
         $response = $this->actingAs($this->admin)->get(route('equipment.show', $this->equipmentWithAccessCode));
@@ -667,7 +668,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function equipment_without_access_code_works_normally()
     {
         $equipmentWithoutCode = factory(Equipment::class)->create([
@@ -683,7 +684,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayNotHasKey('access_code', $equipment);
     }
 
-    /** @test */
+    #[Test]
     public function pending_induction_shows_appropriate_status()
     {
         // Create pending induction
@@ -706,7 +707,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function completed_induction_shows_appropriate_status()
     {
         // Create completed induction
@@ -727,7 +728,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function equipment_requiring_induction_without_a_category_or_course_offers_no_request()
     {
         // requires_induction is on, but there is no legacy category and no course,
@@ -749,7 +750,7 @@ class EquipmentTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function requesting_induction_on_equipment_without_a_category_or_course_creates_no_record()
     {
         $equipment = factory(Equipment::class)->create([
@@ -768,7 +769,7 @@ class EquipmentTest extends TestCase
         $this->assertEquals(0, TrainingRecord::where('user_id', $this->regularUser->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function show_embeds_a_live_course_interface_and_suppresses_legacy_training()
     {
         $course = factory(Course::class)->create([
@@ -795,7 +796,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function show_keeps_a_legacy_trained_member_trained_after_a_live_course_is_attached()
     {
         // A member trained under the legacy system has a record keyed by the
@@ -827,7 +828,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function show_does_not_embed_a_non_live_course()
     {
         $course = factory(Course::class)->create(['slug' => 'draft-course', 'live' => false]);
@@ -843,7 +844,7 @@ class EquipmentTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -872,7 +873,7 @@ class EquipmentTest extends TestCase
         $this->assertDatabaseHas('equipment', ['slug' => 'course-item', 'name' => 'Course Item Renamed']);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_induction_item_with_a_stale_legacy_category_can_be_edited()
     {
         // A hidden legacy category that predates alpha_dash validation must not
@@ -898,7 +899,7 @@ class EquipmentTest extends TestCase
         $response->assertRedirect(route('equipment.show', 'bandsaw'));
         $this->assertDatabaseHas('equipment', ['slug' => 'bandsaw', 'name' => 'Bandsaw Renamed']);
     }
-    /** @test */
+    #[Test]
     public function a_non_permaloan_item_ignores_a_stale_permaloan_holder()
     {
         // A former holder who has since left leaves a now-invalid id on a hidden
@@ -931,7 +932,7 @@ class EquipmentTest extends TestCase
             'permaloan_user_id' => null,
         ]);
     }
-    /** @test */
+    #[Test]
     public function the_update_policy_handles_equipment_without_a_maintainer_group()
     {
         // A group-less item has no maintainer/area to manage it, so a maintainer of
@@ -949,7 +950,7 @@ class EquipmentTest extends TestCase
         $this->assertTrue($this->admin->can('update', $equipment));
     }
 
-    /** @test */
+    #[Test]
     public function a_course_less_item_that_still_flags_requires_induction_can_be_edited()
     {
         // e.g. a course was detached, leaving requires_induction set with no legacy
@@ -976,7 +977,7 @@ class EquipmentTest extends TestCase
         $this->assertDatabaseHas('equipment', ['slug' => 'orphan', 'name' => 'Orphan Renamed']);
     }
 
-    /** @test */
+    #[Test]
     public function updating_the_slug_redirects_to_the_new_slug()
     {
         $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);

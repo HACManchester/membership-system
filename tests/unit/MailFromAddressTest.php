@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -12,10 +14,8 @@ use Tests\TestCase;
  */
 class MailFromAddressTest extends TestCase
 {
-    /**
-     * @dataProvider unsetValues
-     * @test
-     */
+    #[DataProvider('unsetValues')]
+    #[Test]
     public function the_from_address_falls_back_when_the_env_value_is_null_or_empty($value)
     {
         $original = getenv('MAIL_FROM_ADDRESS');
@@ -35,7 +35,7 @@ class MailFromAddressTest extends TestCase
         return ['"null"' => ['null'], 'empty' => [''], 'missing' => [null]];
     }
 
-    /** @test */
+    #[Test]
     public function a_configured_from_address_is_used()
     {
         $original = getenv('MAIL_FROM_ADDRESS');
