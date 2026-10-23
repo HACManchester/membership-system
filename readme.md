@@ -173,6 +173,14 @@ For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might b
 
 6. Visit [http://localhost:8080](http://localhost:8080) (or whatever `APP_PORT` you configured)
 
+7. Optional, for AI coding agents: generate the [Laravel Boost](https://laravel.com/docs/boost) skills
+   (`.claude/skills/`, git-ignored) and refresh its guidelines in `CLAUDE.md`. `composer update`
+   also does this. The Boost MCP server is configured in `.mcp.json` to run inside the container.
+
+   ```sh
+   docker compose exec laravel php artisan boost:update
+   ```
+
 ### Running console commands
 
 **PHP/artisan/composer commands run inside the Docker container; Node/yarn commands run on the
