@@ -5,15 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class ReconcileSubscriptionCharge extends Migration
 {
-    public function __construct()
-    {
-        /**
-         * Hack to allow changes to this table, as it contains an 'enum' field
-         * @see https://stackoverflow.com/a/42107554
-         */
-        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-    }
-
     /**
      * Run the migrations.
      *

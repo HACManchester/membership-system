@@ -43,6 +43,8 @@ class TelegramHelperTest extends TestCase
   {
     Config::set('telegram.bot_key', null);
     Config::set('telegram.bot_chat', null);
+
+    parent::tearDown();
   }
 
   public static function notifyDataProvider()

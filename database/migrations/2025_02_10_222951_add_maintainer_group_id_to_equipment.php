@@ -28,6 +28,7 @@ class AddMaintainerGroupIdToEquipment extends Migration
     public function down()
     {
         Schema::table('equipment', function (Blueprint $table) {
+            $table->dropForeign(['maintainer_group_id']);
             $table->dropColumn('maintainer_group_id');
         });
     }

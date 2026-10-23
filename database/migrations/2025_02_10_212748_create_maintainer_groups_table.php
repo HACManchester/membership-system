@@ -44,7 +44,7 @@ class CreateMaintainerGroupsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('maintainer_group_user');
         Schema::dropIfExists('maintainer_groups');
-        Schema::dropIfExists('maintainer_group_users');
     }
 }

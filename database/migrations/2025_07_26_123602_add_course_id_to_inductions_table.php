@@ -30,12 +30,11 @@ class AddCourseIdToInductionsTable extends Migration
     public function down()
     {
         Schema::table('inductions', function (Blueprint $table) {
-            // Sqlite doesn't support dropping foreign keys. It'll all go with the column.
-            if (config('database.default') !== 'sqlite') {
-                $table->dropForeign(['course_id']);
-                $table->dropIndex(['course_id']);
-                $table->dropIndex(['sign_off_requested_at']);
-            }
+            // Laravel 11 drops foreign keys on SQLite too, and must: SQLite can no
+            // longer drop a column that a foreign key still names
+            $table->dropForeign(['course_id']);
+            $table->dropIndex(['course_id']);
+            $table->dropIndex(['sign_off_requested_at']);
 
             $table->dropColumn(['course_id', 'sign_off_requested_at']);
         });

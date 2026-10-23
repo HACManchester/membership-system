@@ -26,7 +26,9 @@ class MakeTrainerUserIdColumnNullableForInductions extends Migration
     public function down()
     {
         Schema::table('inductions', function (Blueprint $table) {
-            $table->integer('trainer_user_id')->change();
+            // Laravel 10's change() kept the column's nullability, so this rollback never
+            // reverted it; Laravel 11 keeps only what's stated, so it's stated here
+            $table->integer('trainer_user_id')->nullable()->change();
         });
     }
 }
