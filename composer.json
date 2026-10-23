@@ -14,7 +14,7 @@
         "gocardless/gocardless-pro": "^4.28",
         "guzzlehttp/guzzle": "^7.15.2",
         "guzzlehttp/psr7": "^2.13",
-        "inertiajs/inertia-laravel": "^0.6.11",
+        "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "2.*",
         "laracasts/presenter": "~0.2.7",
         "laravel-notification-channels/telegram": "^5.0",
@@ -26,7 +26,7 @@
         "sentry/sentry-laravel": "^4.13.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.12",
+        "barryvdh/laravel-ide-helper": "^3.0",
         "doctrine/dbal": "^3.0",
         "fakerphp/faker": "^1.9.1",
         "filp/whoops": "~2.17.0",
