@@ -65,7 +65,6 @@ class Kernel extends HttpKernel
         'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can'           => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest'         => \BB\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'role'          => \BB\Http\Middleware\HasRole::class,
