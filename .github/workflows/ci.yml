@@ -25,6 +25,12 @@ jobs:
           # so it blocks too.
           - php: "8.3"
             experimental: false
+          # Laravel 12 and 13 also support these. The final step swaps production to
+          # the newest one, so they run ahead of it.
+          - php: "8.4"
+            experimental: false
+          - php: "8.5"
+            experimental: true
 
     steps:
       - uses: actions/checkout@v3
