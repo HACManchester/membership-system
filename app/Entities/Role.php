@@ -9,13 +9,16 @@ class Role extends Model
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = ['name', 'title', 'description', 'email_public', 'email_private', 'slack_channel'];
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany('\BB\Entities\User')->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     public static function findByName($name) {

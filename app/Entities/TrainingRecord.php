@@ -30,14 +30,14 @@ class TrainingRecord extends Model
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = array();
 
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'key',
@@ -69,11 +69,17 @@ class TrainingRecord extends Model
     }
 
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function trainerUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_user_id');
@@ -84,6 +90,9 @@ class TrainingRecord extends Model
         return self::where('key', $key)->where('is_trainer', true)->get();
     }
 
+    /**
+     * @return BelongsTo<Course, $this>
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

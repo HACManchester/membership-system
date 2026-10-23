@@ -9,9 +9,9 @@ parameters:
     ignoreErrors:
         # Level 6 also asks for a type on every parameter, return value and property,
         # and for the value types of every array. That's ~870 findings across most
-        # files, and adding native types risks runtime TypeErrors. Revisit with
-        # Larastan 3 (Laravel 11+). The null-safety and union checks of levels 7-8
-        # still apply.
+        # files, and adding native types risks runtime TypeErrors. Better turned on
+        # a file at a time than all at once. The null-safety and union checks of
+        # levels 7-8 still apply.
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
         - identifier: missingType.parameter

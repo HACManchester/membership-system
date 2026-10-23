@@ -55,7 +55,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $monthly_subscription
  * @property string|null $gocardless_setup_id
  * @property bool $postFob (false=collect, true=post)
- * @property date $last_seen
+ * @property \Carbon\Carbon|null $seen_at
  * @property-read \BB\Entities\Address|null $address
  * 
  * @package BB\Entities
@@ -75,7 +75,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = array('password', 'remember_token');
 
@@ -87,7 +87,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'given_name',
@@ -186,11 +186,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |
     */
 
+    /**
+     * @return HasMany<Payment, $this>
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class)->orderBy('created_at', 'desc');
     }
 
+    /**
+     * @return HasMany<TrainingRecord, $this>
+     */
     public function trainingRecords(): HasMany
     {
         return $this->hasMany(TrainingRecord::class);
@@ -201,27 +207,42 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(KeyFob::class)->where('active', true)->first();
     }
 
+    /**
+     * @return HasMany<KeyFob, $this>
+     */
     public function keyFobs(): HasMany
     {
         return $this->hasMany(KeyFob::class)->where('active', true);
     }
 
+    /**
+     * @return HasOne<ProfileData, $this>
+     */
     public function profile(): HasOne
     {
         return $this->hasOne(ProfileData::class);
     }
 
+    /**
+     * @return HasOne<Address, $this>
+     */
     public function address(): HasOne
     {
         return $this->hasOne(Address::class)->orderBy('approved', 'asc');
     }
 
+    /**
+     * @return BelongsToMany<EquipmentArea, $this>
+     */
     public function equipmentAreas(): BelongsToMany
     {
         return $this->belongsToMany(EquipmentArea::class);
     }
 
     
+    /**
+     * @return BelongsToMany<MaintainerGroup, $this>
+     */
     public function maintainerGroups(): BelongsToMany
     {
         return $this->belongsToMany(MaintainerGroup::class);

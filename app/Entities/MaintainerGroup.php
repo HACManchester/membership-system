@@ -26,16 +26,25 @@ class MaintainerGroup extends Model
         return 'slug';
     }
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function maintainers(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }
 
+    /**
+     * @return BelongsTo<EquipmentArea, $this>
+     */
     public function equipmentArea(): BelongsTo
     {
         return $this->belongsTo(EquipmentArea::class);
     }
 
+    /**
+     * @return HasMany<Equipment, $this>
+     */
     public function equipment(): HasMany
     {
         return $this->hasMany(Equipment::class);

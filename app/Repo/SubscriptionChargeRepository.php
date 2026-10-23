@@ -226,7 +226,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Get all the charges which are due payment
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection<int, SubscriptionCharge>
      */
     public function getDue()
     {
@@ -236,7 +236,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * Get charges that are newly created and pending
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection<int, SubscriptionCharge>
      */
     public function getPending()
     {

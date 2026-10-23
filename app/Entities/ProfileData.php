@@ -57,6 +57,9 @@ class ProfileData extends Model
         return (array)json_decode($this->skills_array ?? '[]');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

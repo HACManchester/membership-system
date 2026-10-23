@@ -30,6 +30,9 @@ class Room extends Model
         $this->attributes['slug'] = Str::slug($value ?: ($this->attributes['name'] ?? ''));
     }
 
+    /**
+     * @return HasMany<Equipment, $this>
+     */
     public function equipment(): HasMany
     {
         return $this->hasMany(Equipment::class);

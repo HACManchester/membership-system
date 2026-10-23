@@ -1,136 +1,175 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access property \\$id on BB\\\\Entities\\\\Course\\|null\\.$#"
+			message: '#^Unable to resolve the template type TGroupKey in call to method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:groupBy\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Console/Commands/Payments/AuditSubscriptionCharges.php
+
+		-
+			message: '#^Cannot access property \$id on BB\\Entities\\Course\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Console/Commands/PopulateCourseIdInTrainingRecords.php
 
 		-
-			message: "#^Cannot access property \\$name on BB\\\\Entities\\\\Course\\|null\\.$#"
+			message: '#^Cannot access property \$name on BB\\Entities\\Course\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Console/Commands/PopulateCourseIdInTrainingRecords.php
 
 		-
-			message: "#^Offset 'courses' does not exist on array\\{equipment\\: string, key\\: \\(int\\|string\\), course_by_key\\: string, courses_by_relation\\: string, issue\\: 'Key matches…'\\}\\|array\\{equipment\\: string, key\\: \\(int\\|string\\), courses\\: string, issue\\: 'Has course relation…'\\}\\.$#"
-			count: 1
-			path: app/Console/Commands/PopulateCourseIdInTrainingRecords.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:each\\(\\) expects callable\\(Illuminate\\\\Database\\\\Eloquent\\\\Model, int\\|string\\)\\: mixed, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: void given\\.$#"
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(BB\\Entities\\Equipment\)\: void given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/EquipmentController.php
 
 		-
-			message: "#^Called 'count' on Laravel collection, but could have been retrieved as a query\\.$#"
+			message: '#^Called ''count'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
 			count: 1
 			path: app/Http/Controllers/NotificationEmailController.php
 
 		-
-			message: "#^Cannot call method setTime\\(\\) on Carbon\\\\Carbon\\|false\\.$#"
+			message: '#^Cannot call method setTime\(\) on Carbon\\Carbon\|false\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: app/Http/Controllers/PaymentController.php
 
 		-
-			message: "#^Cannot access property \\$description on BB\\\\Entities\\\\ProfileData\\|null\\.$#"
+			message: '#^Cannot access property \$description on BB\\Entities\\ProfileData\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Resources/MemberProfileResource.php
 
 		-
-			message: "#^Cannot access property \\$profile_photo on BB\\\\Entities\\\\ProfileData\\|null\\.$#"
+			message: '#^Cannot access property \$profile_photo on BB\\Entities\\ProfileData\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Resources/MemberProfileResource.php
 
 		-
-			message: "#^Cannot access property \\$profile_photo_private on BB\\\\Entities\\\\ProfileData\\|null\\.$#"
+			message: '#^Cannot access property \$profile_photo_private on BB\\Entities\\ProfileData\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Resources/MemberProfileResource.php
 
 		-
-			message: "#^Cannot call method present\\(\\) on BB\\\\Entities\\\\ProfileData\\|null\\.$#"
+			message: '#^Cannot call method present\(\) on BB\\Entities\\ProfileData\|null\.$#'
+			identifier: method.nonObject
 			count: 5
 			path: app/Http/Resources/MemberProfileResource.php
 
 		-
-			message: "#^Cannot access property \\$hash on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot access property \$hash on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Cannot access property \\$id on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot access property \$id on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Cannot access property \\$name on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot access property \$name on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Cannot access property \\$profile on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot access property \$profile on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Cannot access property \\$pronouns on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot access property \$pronouns on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Cannot call method relationLoaded\\(\\) on BB\\\\Entities\\\\User\\|null\\.$#"
+			message: '#^Cannot call method relationLoaded\(\) on BB\\Entities\\User\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: app/Http/Resources/TrainingRecordResource.php
 
 		-
-			message: "#^Parameter \\#1 \\$user of job class BB\\\\Jobs\\\\DiscourseSync constructor expects BB\\\\Entities\\\\User in BB\\\\Jobs\\\\DiscourseSync\\:\\:dispatch\\(\\), Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable given\\.$#"
+			message: '#^Parameter \#1 \$user of job class BB\\Jobs\\DiscourseSync constructor expects BB\\Entities\\User in BB\\Jobs\\DiscourseSync\:\:dispatch\(\), Illuminate\\Contracts\\Auth\\Authenticatable given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Listeners/DiscourseSyncSubscriber.php
 
 		-
-			message: "#^Cannot call method addMonth\\(\\) on Carbon\\\\Carbon\\|null\\.$#"
+			message: '#^Cannot call method addMonth\(\) on Carbon\\Carbon\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: app/Listeners/ExtendMembership.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:each\\(\\) expects callable\\(Illuminate\\\\Database\\\\Eloquent\\\\Model, int\\|string\\)\\: mixed, Closure\\(BB\\\\Entities\\\\TrainingRecord\\)\\: void given\\.$#"
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(BB\\Entities\\TrainingRecord\)\: void given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Listeners/Notifications/TrainingRecords/TrainingRecordRequestedListener.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
-			count: 1
-			path: app/Notifications/TrainingRecords/Inductees/TrainingRecordCompletedNotification.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
-			count: 1
-			path: app/Notifications/TrainingRecords/Inductees/TrainingRecordRequestedNotification.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects \\(callable\\(mixed, int\\|string\\)\\: bool\\)\\|null, Closure\\(BB\\\\Entities\\\\Equipment\\)\\: string given\\.$#"
-			count: 1
-			path: app/Notifications/TrainingRecords/Trainers/TrainingRecordRequestedNotification.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Repo/AddressRepository.php
 
 		-
-			message: "#^Property BB\\\\Entities\\\\Payment\\:\\:\\$source \\(string\\) does not accept string\\|null\\.$#"
+			message: '#^Property BB\\Entities\\Payment\:\:\$source \(string\) does not accept string\|null\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: app/Repo/PaymentRepository.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
 			count: 8
 			path: app/Repo/TrainingRecordRepository.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$id\\.$#"
+			message: '#^Cannot access property \$id on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Cannot access property \$mandate_id on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: app/Services/MemberSubscriptionCharges.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$user\\.$#"
+			message: '#^Cannot access property \$monthly_subscription on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Cannot access property \$name on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Cannot access property \$payment_method on BB\\Entities\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Parameter \#1 \$reference of method BB\\Repo\\PaymentRepository\:\:getPaymentsByReference\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Parameter \#7 \$ref of method BB\\Repo\\PaymentRepository\:\:recordSubscriptionPayment\(\) expects string\|null, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Services/MemberSubscriptionCharges.php

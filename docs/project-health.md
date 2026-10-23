@@ -41,7 +41,7 @@ tests/                Mixed: legacy BrowserKit (root), Feature/, integration/, u
 | --- | --- | --- |
 | Framework & dependencies | 2/5 | Laravel 7.30 (EOL early 2021), Dockerfile on PHP 7.2 (EOL 2020), Node 16 (EOL 2023). Several packages abandoned or absorbed into newer Laravel. |
 | Tests | 3/5 | ~38 files, 259 tests. Excellent payment-lifecycle integration tests; the GoCardless webhook endpoint and authorization middleware are now covered; remaining gaps are admin flows, onboarding end-to-end, and the entire JS frontend; 7 legacy BrowserKit files await retirement. See testing.md. |
-| Static analysis | 3/5 | PHPStan level 8, without level 6's missing-type checks. Baseline down from ~200 to 27 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
+| Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 29 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
 | Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators/Presenters vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
 | Frontend | 3/5 | Healthy direction (Inertia + React + TS + MUI, ESLint flat config, Prettier) but the legacy Blade/jQuery/Bootstrap-3 stack still serves most pages. See frontend.md. |
 | Docs & dev experience | 4/5 | Strong README, complete `.env.example`, documented Docker setup, this docs folder. |
@@ -101,7 +101,7 @@ Kept by decision:
 
 ### Medium (weeks)
 
-1. Turn on PHPStan's missing-type checks (level 6) once on Larastan 3, a file at a time.
+1. Turn on PHPStan's missing-type checks (level 6) a file at a time.
 2. Split the god classes: `app/Entities/User.php` (~561 lines) and
    `app/Http/Controllers/AccountController.php` (~557 lines).
 3. Normalise money units (`payments.amount` and `monthly_subscription` are pounds —

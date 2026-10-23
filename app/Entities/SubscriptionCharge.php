@@ -35,7 +35,7 @@ class SubscriptionCharge extends Model
     /**
      * Fillable fields
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id', 'charge_date', 'amount', 'status'
@@ -52,6 +52,9 @@ class SubscriptionCharge extends Model
 
 
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

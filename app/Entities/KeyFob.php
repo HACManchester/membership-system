@@ -33,6 +33,9 @@ class KeyFob extends Model
         'lost'   => 0,
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

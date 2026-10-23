@@ -35,11 +35,17 @@ class AccessLockdown extends Model
         'lifted_at' => 'datetime',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function startedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'started_by');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function liftedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'lifted_by');

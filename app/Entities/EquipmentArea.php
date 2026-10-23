@@ -24,11 +24,17 @@ class EquipmentArea extends Model
         return 'slug';
     }
 
+    /**
+     * @return BelongsToMany<User, $this>
+     */
     public function areaCoordinators(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }
 
+    /**
+     * @return HasMany<MaintainerGroup, $this>
+     */
     public function maintainerGroups(): HasMany
     {
         return $this->hasMany(MaintainerGroup::class);
