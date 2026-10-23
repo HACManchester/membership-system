@@ -134,6 +134,6 @@ class SessionController extends Controller
 
         \FlashNotification::success('Logged Out');
 
-        return redirect()->home();
+        return redirect()->route('home');
     }
 }

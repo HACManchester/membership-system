@@ -77,7 +77,7 @@ class ReminderController extends Controller
         switch ($response) {
             case Password::PASSWORD_RESET:
                 \FlashNotification::success("Your password has been changed");
-                return redirect()->home();
+                return redirect()->route('home');
 
             default:
                 \FlashNotification::error(trans($response));

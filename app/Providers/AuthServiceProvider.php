@@ -52,8 +52,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
-
         // The member-search endpoint backs the training pickers, so restrict it to
         // the people who manage inductions rather than every logged-in member.
         Gate::define('search-members', function (User $user) {
