@@ -10,7 +10,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
         "gocardless/gocardless-pro": "^4.28",
         "guzzlehttp/guzzle": "^7.15.2",
         "guzzlehttp/psr7": "^2.13",
