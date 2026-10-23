@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use BB\Entities\ProfileData;
 use BB\Entities\User;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -13,10 +15,8 @@ use Tests\TestCase;
  */
 class AccountPageWithoutSubscriptionTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider statusesShowingAPaymentPanel
-     */
+    #[DataProvider('statusesShowingAPaymentPanel')]
+    #[Test]
     public function the_payment_panels_render_without_a_subscription_amount(string $status, string $panelText)
     {
         $member = $this->memberWithoutSubscription(['status' => $status, 'active' => false]);
@@ -40,7 +40,7 @@ class AccountPageWithoutSubscriptionTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_view_a_cash_member_without_a_subscription_amount()
     {
         $admin = factory(User::class)->state('admin')->create();

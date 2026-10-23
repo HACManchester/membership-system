@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -14,7 +15,7 @@ use Tests\TestCase;
  */
 class PaginationMarkupTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function length_aware_pagination_renders_bootstrap_markup()
     {
         $paginator = new LengthAwarePaginator(range(1, 10), 30, 10, 2, ['path' => '/payments']);
@@ -26,7 +27,7 @@ class PaginationMarkupTest extends TestCase
         $this->assertStringContainsString('page-link', $html);
     }
 
-    /** @test */
+    #[Test]
     public function simple_pagination_renders_bootstrap_markup()
     {
         $paginator = new Paginator(range(1, 11), 10, 1, ['path' => '/payments']);

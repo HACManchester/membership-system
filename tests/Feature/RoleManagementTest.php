@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RoleManagementTest extends TestCase
@@ -28,7 +29,7 @@ class RoleManagementTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function the_roles_index_renders_for_an_admin()
     {
         $this->actingAs($this->admin())->get(route('roles.index'))
@@ -38,7 +39,7 @@ class RoleManagementTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function the_role_edit_page_exposes_its_members()
     {
         $role = Role::findByName('finance');
@@ -53,7 +54,7 @@ class RoleManagementTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_assign_a_role_to_a_member()
     {
         $role = Role::findByName('finance');
@@ -66,7 +67,7 @@ class RoleManagementTest extends TestCase
         $this->assertTrue($member->fresh()->hasRole('finance'));
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_remove_a_role_from_a_member()
     {
         $role = Role::findByName('finance');
@@ -82,10 +83,10 @@ class RoleManagementTest extends TestCase
     }
 
     /**
-     * @test
      * Pins current behaviour: any admin can grant the admin role itself, with no second-party
      * approval. Flagged in the access-control review as a privilege-escalation consideration.
      */
+    #[Test]
     public function an_admin_can_grant_the_admin_role()
     {
         $role = Role::findByName('admin');
@@ -98,7 +99,7 @@ class RoleManagementTest extends TestCase
         $this->assertTrue($member->fresh()->isAdmin());
     }
 
-    /** @test */
+    #[Test]
     public function updating_a_role_persists_its_fields()
     {
         $role = Role::findByName('finance');
@@ -121,7 +122,7 @@ class RoleManagementTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function updating_a_role_with_empty_text_fields_saves_blank_not_null()
     {
         $role = Role::findByName('finance');
@@ -136,7 +137,7 @@ class RoleManagementTest extends TestCase
         $this->assertDatabaseHas('roles', ['id' => $role->id, 'title' => 'Finance', 'email_public' => '']);
     }
 
-    /** @test */
+    #[Test]
     public function the_role_name_cannot_be_changed()
     {
         $role = Role::findByName('finance');
@@ -151,7 +152,7 @@ class RoleManagementTest extends TestCase
         $this->assertEquals('finance', $role->fresh()->name);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_admin_cannot_manage_roles()
     {
         $role = Role::findByName('finance');

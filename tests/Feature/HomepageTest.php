@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class HomepageTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_homepage_loads()
     {
         // The landing page is now an Inertia page; its content renders client-side,

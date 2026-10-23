@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CashPaymentTest extends TestCase
@@ -19,7 +20,7 @@ class CashPaymentTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[Test]
     public function an_admin_can_record_a_cash_payment_for_a_member()
     {
         $member = factory(User::class)->create();
@@ -41,7 +42,7 @@ class CashPaymentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_admin_cannot_record_a_cash_payment()
     {
         $member = factory(User::class)->create();

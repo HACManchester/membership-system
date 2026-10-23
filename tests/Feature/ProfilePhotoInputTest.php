@@ -6,6 +6,7 @@ use BB\Entities\ProfileData;
 use BB\Entities\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -15,7 +16,7 @@ use Tests\TestCase;
  */
 class ProfilePhotoInputTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function a_single_photo_is_still_uploaded_for_approval()
     {
         Storage::fake('public');
@@ -37,7 +38,7 @@ class ProfilePhotoInputTest extends TestCase
         $this->assertSame([500, 200], [$width, $thumbWidth]);
     }
 
-    /** @test */
+    #[Test]
     public function a_profile_update_with_an_array_of_photos_is_handled_without_error()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
@@ -55,7 +56,7 @@ class ProfilePhotoInputTest extends TestCase
         $this->assertFalse((bool) $profile->new_profile_photo, 'no photo should be recorded');
     }
 
-    /** @test */
+    #[Test]
     public function a_registration_with_an_array_of_photos_is_handled_without_error()
     {
         $this->post(route('account.store'), [

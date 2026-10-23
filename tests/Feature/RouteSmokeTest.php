@@ -12,6 +12,7 @@ use BB\Entities\Room;
 use BB\Entities\User;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -55,25 +56,25 @@ class RouteSmokeTest extends TestCase
         $this->world = $this->seedWorld();
     }
 
-    /** @test */
+    #[Test]
     public function no_get_route_returns_a_server_error_for_a_guest()
     {
         $this->assertNoServerErrors(null);
     }
 
-    /** @test */
+    #[Test]
     public function no_get_route_returns_a_server_error_for_a_member()
     {
         $this->assertNoServerErrors($this->world['member']);
     }
 
-    /** @test */
+    #[Test]
     public function no_get_route_returns_a_server_error_for_a_trusted_member()
     {
         $this->assertNoServerErrors($this->world['trusted']);
     }
 
-    /** @test */
+    #[Test]
     public function no_get_route_returns_a_server_error_for_an_admin()
     {
         $this->assertNoServerErrors($this->world['admin']);

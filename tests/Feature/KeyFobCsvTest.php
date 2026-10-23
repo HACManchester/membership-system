@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\AccessLockdown;
 use BB\Entities\Role;
 use BB\Entities\User;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 
@@ -39,7 +40,7 @@ CSV;
         $this->assertEquals($expectedContent, $content);
     }
 
-    /** @test */
+    #[Test]
     public function a_lockdown_restricts_the_export_to_its_roles()
     {
         $this->createCommitteeRole();
@@ -59,7 +60,7 @@ CSV;
         );
     }
 
-    /** @test */
+    #[Test]
     public function a_lockdown_uses_its_own_role_list_not_the_config_default()
     {
         $this->memberWithFob('Safety', 'fob_safety', 'safety');
@@ -73,7 +74,7 @@ CSV;
         $this->assertEqualsCanonicalizing(['fob_admin', 'fob_safety'], $rows);
     }
 
-    /** @test */
+    #[Test]
     public function a_lockdown_never_widens_the_export()
     {
         $inactive = $this->memberWithFob('Inactive Admin', 'fob_inactive', 'admin');
@@ -89,7 +90,7 @@ CSV;
         $this->assertEquals(['fob_active'], $this->exportRows());
     }
 
-    /** @test */
+    #[Test]
     public function lifting_a_lockdown_restores_the_full_list()
     {
         $admin = $this->memberWithFob('Admin', 'fob_admin', 'admin');

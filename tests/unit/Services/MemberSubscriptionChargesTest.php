@@ -179,8 +179,8 @@ class MemberSubscriptionChargesTest extends TestCase
         $mockChargeRepo->method('chargeExists')->willReturn(false);
         $mockChargeRepo->expects($this->exactly(2))
             ->method('createCharge')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException(new \Exception('database error')),
+            ->willReturnCallback($this->consecutive(
+                new \Exception('database error'),
                 factory(SubscriptionCharge::class)->make(['user_id' => 1])
             ));
 
@@ -636,9 +636,9 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->mockGoCardless->expects($this->exactly(3))
             ->method('newBill')
-            ->will($this->onConsecutiveCalls(
+            ->willReturnCallback($this->consecutive(
                 (object)['id' => 'PM111', 'status' => 'pending_submission'],
-                $this->throwException($this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate')),
+                $this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate'),
                 (object)['id' => 'PM333', 'status' => 'pending_submission']
             ));
 
@@ -712,8 +712,8 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->mockGoCardless->expects($this->exactly(2))
             ->method('newBill')
-            ->will($this->onConsecutiveCalls(
-                $this->throwException($this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate')),
+            ->willReturnCallback($this->consecutive(
+                $this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate'),
                 (object)['id' => 'PM333', 'status' => 'pending_submission']
             ));
 
@@ -808,5 +808,20 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $user->refresh();
         $this->assertEquals('payment-warning', $user->status);
+    }
+
+    /**
+     * A stub that returns each result in turn, throwing any that is an exception.
+     */
+    private function consecutive(...$results): \Closure
+    {
+        return function () use (&$results) {
+            $result = array_shift($results);
+            if ($result instanceof \Throwable) {
+                throw $result;
+            }
+
+            return $result;
+        };
     }
 }

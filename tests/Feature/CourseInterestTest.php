@@ -10,6 +10,7 @@ use BB\Events\TrainingRecords\TrainingInterestWithdrawnEvent;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CourseInterestTest extends TestCase
@@ -44,7 +45,7 @@ class CourseInterestTest extends TestCase
         return $record;
     }
 
-    /** @test */
+    #[Test]
     public function member_can_join_the_waitlist()
     {
         $response = $this->actingAs($this->user)
@@ -64,7 +65,7 @@ class CourseInterestTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function joining_twice_keeps_one_record_and_fires_one_event()
     {
         $this->actingAs($this->user)->post(route('courses.interest.store', $this->course));
@@ -75,7 +76,7 @@ class CourseInterestTest extends TestCase
         Event::assertDispatchedTimes(TrainingInterestRegisteredEvent::class, 1);
     }
 
-    /** @test */
+    #[Test]
     public function member_can_join_while_the_course_is_paused()
     {
         $this->course->update(['paused_at' => Carbon::now()]);
@@ -90,7 +91,7 @@ class CourseInterestTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function member_cannot_join_the_waitlist_of_a_self_serve_course()
     {
         $selfServe = factory(Course::class)->create(['frequency' => 'self-serve']);
@@ -105,7 +106,7 @@ class CourseInterestTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function trained_member_cannot_join_the_waitlist()
     {
         $trainedAt = Carbon::now()->subDay();
@@ -120,7 +121,7 @@ class CourseInterestTest extends TestCase
         Event::assertNotDispatched(TrainingInterestRegisteredEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function joining_with_an_existing_expired_sign_off_record_is_idempotent()
     {
         $requestedAt = Carbon::now()->subDays(8);
@@ -135,7 +136,7 @@ class CourseInterestTest extends TestCase
         Event::assertNotDispatched(TrainingInterestRegisteredEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function member_can_withdraw_from_the_waitlist()
     {
         $record = $this->waitlistRecord($this->user);
@@ -151,7 +152,7 @@ class CourseInterestTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function withdrawal_is_blocked_when_not_on_the_waitlist()
     {
         $response = $this->actingAs($this->user)
@@ -161,7 +162,7 @@ class CourseInterestTest extends TestCase
         Event::assertNotDispatched(TrainingInterestWithdrawnEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function withdrawal_is_blocked_for_trained_members()
     {
         $record = $this->waitlistRecord($this->user, ['trained' => Carbon::now()]);
@@ -174,7 +175,7 @@ class CourseInterestTest extends TestCase
         Event::assertNotDispatched(TrainingInterestWithdrawnEvent::class);
     }
 
-    /** @test */
+    #[Test]
     public function withdrawal_is_blocked_for_trainers()
     {
         $record = $this->waitlistRecord($this->user, ['is_trainer' => true]);
@@ -186,7 +187,7 @@ class CourseInterestTest extends TestCase
         $this->assertDatabaseHas('inductions', ['id' => $record->id]);
     }
 
-    /** @test */
+    #[Test]
     public function withdrawal_is_blocked_while_a_sign_off_request_is_pending()
     {
         $record = $this->waitlistRecord($this->user, [
@@ -200,7 +201,7 @@ class CourseInterestTest extends TestCase
         $this->assertDatabaseHas('inductions', ['id' => $record->id]);
     }
 
-    /** @test */
+    #[Test]
     public function withdrawal_is_allowed_once_a_sign_off_request_has_expired()
     {
         $record = $this->waitlistRecord($this->user, [
@@ -214,7 +215,7 @@ class CourseInterestTest extends TestCase
         $this->assertDatabaseMissing('inductions', ['id' => $record->id]);
     }
 
-    /** @test */
+    #[Test]
     public function guests_cannot_join_the_waitlist()
     {
         $response = $this->post(route('courses.interest.store', $this->course));

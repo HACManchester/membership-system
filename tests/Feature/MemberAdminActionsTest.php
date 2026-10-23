@@ -10,6 +10,7 @@ use BB\Events\MemberPhotoWasDeclined;
 use BB\Helpers\GoCardlessHelper;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -26,7 +27,7 @@ class MemberAdminActionsTest extends TestCase
         return factory(User::class)->state('admin')->create();
     }
 
-    /** @test */
+    #[Test]
     public function making_a_member_trusted_persists_and_fires_the_event()
     {
         Event::fake([MemberGivenTrustedStatus::class]);
@@ -40,7 +41,7 @@ class MemberAdminActionsTest extends TestCase
         Event::assertDispatched(MemberGivenTrustedStatus::class);
     }
 
-    /** @test */
+    #[Test]
     public function membership_flags_update_and_the_ajax_form_gets_json()
     {
         $member = factory(User::class)->create(['key_holder' => false]);
@@ -60,7 +61,7 @@ class MemberAdminActionsTest extends TestCase
         $this->assertEquals('active', $member->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_admin_cannot_use_the_admin_update_endpoint()
     {
         $member = factory(User::class)->create();
@@ -71,7 +72,7 @@ class MemberAdminActionsTest extends TestCase
             ->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function approving_a_photo_marks_it_approved()
     {
         $userImage = $this->createMock(\BB\Helpers\UserImage::class);
@@ -96,7 +97,7 @@ class MemberAdminActionsTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function declining_a_photo_fires_the_declined_event()
     {
         Event::fake([MemberPhotoWasDeclined::class]);
@@ -112,7 +113,7 @@ class MemberAdminActionsTest extends TestCase
         Event::assertDispatched(MemberPhotoWasDeclined::class);
     }
 
-    /** @test */
+    #[Test]
     public function approving_a_pending_address_marks_it_approved()
     {
         $member = factory(User::class)->create();
@@ -130,7 +131,7 @@ class MemberAdminActionsTest extends TestCase
         $this->assertTrue((bool) $address->fresh()->approved);
     }
 
-    /** @test */
+    #[Test]
     public function experimental_dd_subscription_is_recorded_then_cleared()
     {
         $goCardless = $this->createMock(GoCardlessHelper::class);

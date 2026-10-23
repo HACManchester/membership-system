@@ -5,6 +5,7 @@ namespace Tests\Unit\Notifications;
 use BB\Helpers\TelegramErrorHelper;
 use BB\Notifications\ErrorNotification;
 use NotificationChannels\Telegram\Telegram;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -16,7 +17,7 @@ use Tests\TestCase;
  */
 class ErrorNotificationTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function an_error_alert_is_sent_to_the_configured_chat_as_html_with_a_logs_button()
     {
         config([
@@ -53,9 +54,8 @@ class ErrorNotificationTest extends TestCase
      * The message is sent with parse_mode HTML, so any `<` or `&` in an
      * interpolated value — the exception message, the request path, a member's
      * name — must be escaped, or Telegram rejects the whole alert as unparseable.
-     *
-     * @test
      */
+    #[Test]
     public function markup_in_the_alert_details_is_escaped()
     {
         config(['services.telegram-bot-api.enabled' => true, 'telegram.bot_chat' => '-100123456']);
@@ -82,7 +82,7 @@ class ErrorNotificationTest extends TestCase
         $this->assertStringContainsString('<b>Error</b>', $sent['text']);
     }
 
-    /** @test */
+    #[Test]
     public function nothing_is_sent_when_telegram_is_disabled()
     {
         config(['services.telegram-bot-api.enabled' => false]);

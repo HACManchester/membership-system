@@ -11,6 +11,7 @@ use GoCardlessPro\Resources\Payment as GoCardlessPayment;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class GoCardlessWebhookTest extends TestCase
@@ -114,7 +115,7 @@ class GoCardlessWebhookTest extends TestCase
         return [$user, $charge, $payment];
     }
 
-    /** @test */
+    #[Test]
     public function a_webhook_with_an_invalid_signature_is_rejected()
     {
         [, $charge, $payment] = $this->activeUserWithCharge('processing');
@@ -129,7 +130,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('processing', $charge->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_webhook_with_no_signature_is_rejected()
     {
         $body = json_encode(['events' => [$this->paymentEvent('confirmed', 'PM_TEST_123')]]);
@@ -141,7 +142,7 @@ class GoCardlessWebhookTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function a_submitted_payment_event_marks_the_local_payment_pending()
     {
         [, , $payment] = $this->activeUserWithCharge('processing');
@@ -153,7 +154,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('pending', $payment->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_confirmed_payment_marks_the_payment_and_charge_paid_and_extends_membership()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('processing');
@@ -174,7 +175,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->addMonth()));
     }
 
-    /** @test */
+    #[Test]
     public function a_failed_payment_cancels_the_charge_and_puts_the_member_into_payment_warning()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('due');
@@ -197,7 +198,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertTrue($user->subscription_expires->isAfter(Carbon::now()));
     }
 
-    /** @test */
+    #[Test]
     public function a_cancelled_mandate_clears_payment_details_and_marks_the_member_leaving()
     {
         $user = factory(User::class)->create([
@@ -219,7 +220,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEmpty($user->payment_method);
     }
 
-    /** @test */
+    #[Test]
     public function a_cancelled_mandate_cancels_the_outstanding_charges_it_leaves_behind()
     {
         $user = factory(User::class)->create([
@@ -253,7 +254,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('cancelled', $due->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function delivering_the_same_confirmed_event_twice_is_harmless()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('processing');
@@ -271,7 +272,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
     }
 
-    /** @test */
+    #[Test]
     public function an_event_for_an_unknown_payment_is_acknowledged_without_changes()
     {
         $this->postWebhook([$this->paymentEvent('confirmed', 'PM_UNKNOWN')])
@@ -311,8 +312,7 @@ class GoCardlessWebhookTest extends TestCase
     // ---------------------------------------------------------------------
     // Legacy fixed-amount subscriptions (payment_method = 'gocardless')
     // ---------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function a_legacy_subscription_payment_is_recorded_in_pounds_and_linked_to_the_members_charge()
     {
         [$user, $charge] = $this->legacyMemberWithCharge();
@@ -338,7 +338,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertTrue($user->fresh()->subscription_expires->isSameDay(Carbon::now()));
     }
 
-    /** @test */
+    #[Test]
     public function a_legacy_charge_takes_the_amount_actually_collected()
     {
         [, $charge] = $this->legacyMemberWithCharge(17.0);
@@ -352,7 +352,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals(22.0, (float) $charge->fresh()->amount);
     }
 
-    /** @test */
+    #[Test]
     public function a_legacy_subscription_payment_that_is_confirmed_pays_the_charge_and_extends_membership()
     {
         [$user, $charge] = $this->legacyMemberWithCharge();
@@ -374,7 +374,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->addMonth()));
     }
 
-    /** @test */
+    #[Test]
     public function a_legacy_subscription_payment_that_fails_puts_the_member_into_payment_warning()
     {
         [$user, $charge] = $this->legacyMemberWithCharge();
@@ -392,7 +392,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('payment-warning', $user->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function a_redelivered_legacy_subscription_payment_is_recorded_once()
     {
         [, $charge] = $this->legacyMemberWithCharge();
@@ -408,7 +408,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals((string) $charge->id, Payment::where('source_id', 'PM_SUB_1')->first()->reference);
     }
 
-    /** @test */
+    #[Test]
     public function a_subscription_payment_for_an_unknown_subscription_is_acknowledged_without_recording_anything()
     {
         $this->goCardless->method('getPayment')
@@ -423,8 +423,7 @@ class GoCardlessWebhookTest extends TestCase
     // ---------------------------------------------------------------------
     // Subscription cancellation
     // ---------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function a_cancelled_legacy_subscription_marks_the_member_leaving_and_cancels_their_charges()
     {
         [$user, $charge] = $this->legacyMemberWithCharge();
@@ -443,9 +442,8 @@ class GoCardlessWebhookTest extends TestCase
     /**
      * A member who moved to variable billing can still have an old subscription
      * id on file. Its cancellation must not touch the mandate they now pay through.
-     *
-     * @test
      */
+    #[Test]
     public function a_cancelled_old_subscription_on_a_variable_member_only_clears_the_subscription()
     {
         [$user, $charge] = $this->activeUserWithCharge('due');
@@ -467,8 +465,7 @@ class GoCardlessWebhookTest extends TestCase
     // ---------------------------------------------------------------------
     // Cancelled payments
     // ---------------------------------------------------------------------
-
-    /** @test */
+    #[Test]
     public function a_cancelled_payment_is_handled_like_a_failed_one()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('due');
@@ -487,12 +484,10 @@ class GoCardlessWebhookTest extends TestCase
     // ---------------------------------------------------------------------
     // Batched and redelivered webhooks
     // ---------------------------------------------------------------------
-
     /**
      * GoCardless batches events into one delivery; every test above sends one.
-     *
-     * @test
      */
+    #[Test]
     public function every_event_in_a_multi_event_delivery_is_processed()
     {
         [, , $submitted] = $this->activeUserWithCharge('processing', 'PM_A');
@@ -516,7 +511,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('leaving', $leaving->fresh()->status);
     }
 
-    /** @test */
+    #[Test]
     public function redelivering_a_submitted_event_is_harmless()
     {
         [, $charge, $payment] = $this->activeUserWithCharge('processing');
@@ -530,7 +525,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
     }
 
-    /** @test */
+    #[Test]
     public function redelivering_a_failed_event_is_harmless()
     {
         [$user, $charge, $payment] = $this->activeUserWithCharge('due');
@@ -556,9 +551,8 @@ class GoCardlessWebhookTest extends TestCase
      * already been applied are applied again. The end state must be the same as
      * if the first delivery had succeeded: in particular, membership is extended
      * once, not twice.
-     *
-     * @test
      */
+    #[Test]
     public function a_delivery_that_fails_part_way_through_is_safe_to_redeliver()
     {
         [$paidUser, $paidCharge, $paid] = $this->activeUserWithCharge('processing', 'PM_A');

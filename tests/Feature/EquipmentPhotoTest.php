@@ -6,6 +6,7 @@ use BB\Entities\Equipment;
 use BB\Entities\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -15,7 +16,7 @@ use Tests\TestCase;
  */
 class EquipmentPhotoTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function an_uploaded_photo_is_resized_stored_and_recorded_on_the_equipment()
     {
         Storage::fake('public');
@@ -44,9 +45,8 @@ class EquipmentPhotoTest extends TestCase
      * configured disks set `throw`, so a failure still surfaces as an exception
      * (which addPhoto() turns into "image failed") rather than recording a
      * photo that was never written.
-     *
-     * @test
      */
+    #[Test]
     public function a_failed_write_to_the_configured_public_disk_throws()
     {
         $root = sys_get_temp_dir() . '/flysystem-throw-' . uniqid();

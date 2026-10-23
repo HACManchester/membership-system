@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\User;
 use BB\Services\SidebarItems;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SidebarItemsTest extends TestCase
@@ -15,9 +16,8 @@ class SidebarItemsTest extends TestCase
      * Filtering visible-gated items must re-index each group. A gap in the keys
      * makes json_encode emit a JSON object instead of an array, which blanks the
      * whole app because the frontend maps over each group.
-     *
-     * @test
      */
+    #[Test]
     public function every_nav_group_serialises_as_a_json_array_for_a_regular_member()
     {
         // A regular member cannot create Rooms, so that middle item is filtered
@@ -41,7 +41,7 @@ class SidebarItemsTest extends TestCase
         $this->assertStringNotContainsString('{"0":', json_encode($groups));
     }
 
-    /** @test */
+    #[Test]
     public function an_anonymous_visitor_gets_a_single_list_group()
     {
         $groups = (new SidebarItems)->getItems();

@@ -5,6 +5,8 @@ use BB\Helpers\GoCardlessHelper;
 use GoCardlessPro\Core\Exception\ApiException;
 use GoCardlessPro\Core\Exception\PermissionsException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -30,9 +32,8 @@ use Tests\TestCase;
  * Redirect-flow *completion* can't be automated — it needs a person on the
  * hosted page — so it's covered by asserting the real API error for completing
  * an unvisited flow.
- *
- * @group gocardless-sandbox
  */
+#[Group('gocardless-sandbox')]
 class GoCardlessSandboxTest extends TestCase
 {
     /** @var string|null cached across tests so only one mandate is made per run */
@@ -61,7 +62,7 @@ class GoCardlessSandboxTest extends TestCase
         $this->helper = new GoCardlessHelper();
     }
 
-    /** @test */
+    #[Test]
     public function a_redirect_flow_is_created_and_its_id_stored_on_the_member()
     {
         $user = factory(User::class)->create(['given_name' => 'Sandbox', 'family_name' => 'Member']);
@@ -81,9 +82,8 @@ class GoCardlessSandboxTest extends TestCase
      * The hosted page can't be completed without a person, so assert the next
      * best thing: completing an unvisited flow fails with a real API exception
      * the controller's catch block will handle.
-     *
-     * @test
      */
+    #[Test]
     public function completing_an_unvisited_redirect_flow_fails_with_an_api_exception()
     {
         $user = factory(User::class)->create();
@@ -101,7 +101,7 @@ class GoCardlessSandboxTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function a_payment_is_created_fetched_and_cancelled()
     {
         $payment = $this->helper->newBill($this->mandate(), 100, 'Sandbox test payment');
@@ -123,9 +123,8 @@ class GoCardlessSandboxTest extends TestCase
      * errors went through a legacy implode() that is a TypeError on PHP 8,
      * which the billing code's catch blocks don't catch. It must arrive as a
      * ValidationFailedException with a readable message.
-     *
-     * @test
      */
+    #[Test]
     public function an_invalid_payment_raises_a_validation_failed_exception_with_its_field_errors()
     {
         try {
@@ -137,7 +136,7 @@ class GoCardlessSandboxTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function a_subscription_is_created_and_cancelled()
     {
         $subscription = $this->helper->createSubscription($this->mandate(), 100, 15, 'sandbox-test');
@@ -154,9 +153,8 @@ class GoCardlessSandboxTest extends TestCase
     /**
      * Runs last (alphabetically and by declaration) and only on a mandate these
      * tests created — never on one supplied through GOCARDLESS_SANDBOX_MANDATE_ID.
-     *
-     * @test
      */
+    #[Test]
     public function zz_a_mandate_is_cancelled()
     {
         $mandateId = $this->mandate();

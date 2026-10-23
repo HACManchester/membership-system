@@ -6,6 +6,7 @@ use BB\Entities\Equipment;
 use BB\Entities\User;
 use BB\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -19,7 +20,7 @@ use Tests\TestCase;
  */
 class InertiaSharedPropsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function validation_errors_reach_the_page_after_a_failed_submission()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -34,7 +35,7 @@ class InertiaSharedPropsTest extends TestCase
             });
     }
 
-    /** @test */
+    #[Test]
     public function validation_errors_reach_a_client_side_visit()
     {
         $admin = factory(User::class)->state('admin')->create();
@@ -56,7 +57,7 @@ class InertiaSharedPropsTest extends TestCase
             ->assertJsonPath('props.errors.name', 'The name field is required.');
     }
 
-    /** @test */
+    #[Test]
     public function a_flashed_message_reaches_the_page_after_a_submission()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);

@@ -4,13 +4,14 @@ use BB\Events\SubscriptionChargePaid;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SubscriptionChargeTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
+    #[Test]
     public function marking_a_charge_as_paid_updates_it_and_fires_an_event()
     {
         /** @var \BB\Repo\SubscriptionChargeRepository $repo */

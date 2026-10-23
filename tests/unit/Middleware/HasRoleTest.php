@@ -8,6 +8,7 @@ use BB\Http\Middleware\HasRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -39,7 +40,7 @@ class HasRoleTest extends TestCase
         }, $role);
     }
 
-    /** @test */
+    #[Test]
     public function a_guest_is_redirected_to_login()
     {
         $result = $this->runMiddleware('member');
@@ -48,7 +49,7 @@ class HasRoleTest extends TestCase
         $this->assertStringEndsWith('/login', $result->getTargetUrl());
     }
 
-    /** @test */
+    #[Test]
     public function a_guest_making_an_ajax_request_gets_a_401()
     {
         $result = $this->runMiddleware('member', $ajax = true);
@@ -56,7 +57,7 @@ class HasRoleTest extends TestCase
         $this->assertEquals(401, $result->getStatusCode());
     }
 
-    /** @test */
+    #[Test]
     public function a_user_with_the_required_role_passes()
     {
         $this->actingAs(factory(User::class)->state('admin')->create());
@@ -64,7 +65,7 @@ class HasRoleTest extends TestCase
         $this->assertEquals('PASSED', $this->runMiddleware('admin'));
     }
 
-    /** @test */
+    #[Test]
     public function a_user_without_the_required_role_is_rejected()
     {
         $this->actingAs(factory(User::class)->create());
@@ -74,10 +75,10 @@ class HasRoleTest extends TestCase
     }
 
     /**
-     * @test
      * Documents the quirk: role:member only requires a logged-in, non-banned
      * account. A user with no roles at all still passes.
      */
+    #[Test]
     public function role_member_lets_any_logged_in_user_through_regardless_of_roles()
     {
         $this->actingAs(factory(User::class)->create());
@@ -85,7 +86,7 @@ class HasRoleTest extends TestCase
         $this->assertEquals('PASSED', $this->runMiddleware('member'));
     }
 
-    /** @test */
+    #[Test]
     public function a_banned_user_is_rejected_even_for_a_member_route()
     {
         $this->actingAs(factory(User::class)->create(['banned' => true]));
@@ -94,7 +95,7 @@ class HasRoleTest extends TestCase
         $this->runMiddleware('member');
     }
 
-    /** @test */
+    #[Test]
     public function a_banned_user_who_has_the_required_role_is_still_rejected()
     {
         $this->actingAs(factory(User::class)->state('admin')->create(['banned' => true]));

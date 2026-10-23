@@ -8,6 +8,7 @@ use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use BB\Repo\TrainingRecordRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -65,7 +66,7 @@ class CourseTrainingVisibilityTest extends TestCase
         return $record;
     }
 
-    /** @test */
+    #[Test]
     public function account_page_shows_course_trained_member_as_trained()
     {
         $user = factory(User::class)->create();
@@ -79,7 +80,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $response->assertSee('COURSECODE');
     }
 
-    /** @test */
+    #[Test]
     public function account_page_hides_access_code_when_member_has_no_training_record()
     {
         $user = factory(User::class)->create();
@@ -90,7 +91,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $response->assertDontSee('COURSECODE');
     }
 
-    /** @test */
+    #[Test]
     public function equipment_index_shows_access_code_to_course_trained_member()
     {
         $user = factory(User::class)->create();
@@ -108,7 +109,7 @@ class CourseTrainingVisibilityTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function equipment_show_shows_access_code_to_course_trained_member()
     {
         $user = factory(User::class)->create();
@@ -121,7 +122,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $this->assertEquals('COURSECODE', $equipment['access_code']);
     }
 
-    /** @test */
+    #[Test]
     public function repository_matches_records_via_both_course_and_legacy_key()
     {
         $repo = app(TrainingRecordRepository::class);
@@ -157,7 +158,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $this->assertNotFalse($repo->getUserForEquipment($equipment, $courseUser->id));
     }
 
-    /** @test */
+    #[Test]
     public function equipment_with_no_category_or_course_matches_no_records()
     {
         $repo = app(TrainingRecordRepository::class);
@@ -176,7 +177,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $this->assertCount(0, $repo->getTrainedUsersForEquipment($orphan));
     }
 
-    /** @test */
+    #[Test]
     public function trainer_signed_off_via_course_can_train_and_request_for_others()
     {
         $trainer = factory(User::class)->create();

@@ -4,6 +4,8 @@ namespace Tests\Unit\Validators;
 
 use BB\Entities\User;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -16,10 +18,8 @@ use Tests\TestCase;
  */
 class EmailCrlfValidationTest extends TestCase
 {
-    /**
-     * @dataProvider crlfAddresses
-     * @test
-     */
+    #[DataProvider('crlfAddresses')]
+    #[Test]
     public function the_email_rule_rejects_addresses_containing_cr_or_lf($address)
     {
         $validator = Validator::make(['email' => $address], ['email' => 'required|email']);
@@ -38,10 +38,8 @@ class EmailCrlfValidationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validAddresses
-     * @test
-     */
+    #[DataProvider('validAddresses')]
+    #[Test]
     public function ordinary_addresses_still_pass($address)
     {
         $validator = Validator::make(['email' => $address], ['email' => 'required|email']);
@@ -62,9 +60,8 @@ class EmailCrlfValidationTest extends TestCase
      * Through the real signup endpoint, which anyone can reach. The payload is
      * otherwise valid (it mirrors SignupTest), so the email is the only thing
      * that can stop the account being created.
-     *
-     * @test
      */
+    #[Test]
     public function signup_rejects_an_email_carrying_crlf()
     {
         $payload = [

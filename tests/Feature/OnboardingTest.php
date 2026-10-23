@@ -6,6 +6,7 @@ use BB\Entities\Settings;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -19,7 +20,7 @@ class OnboardingTest extends TestCase
 
     const INDUCTION_CODE = 'OPEN-SESAME';
 
-    /** @test */
+    #[Test]
     public function a_new_member_can_progress_through_the_full_onboarding_journey()
     {
         Settings::change('general_induction_code', self::INDUCTION_CODE);
@@ -66,7 +67,7 @@ class OnboardingTest extends TestCase
         $this->assertDatabaseHas('key_fobs', ['user_id' => $user->id, 'key_id' => $keyId, 'active' => true]);
     }
 
-    /** @test */
+    #[Test]
     public function a_key_fob_cannot_be_registered_before_the_general_induction()
     {
         $user = factory(User::class)->create([

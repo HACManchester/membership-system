@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -10,7 +11,7 @@ use Tests\TestCase;
  */
 class DeprecationsFailTestsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function a_deprecation_raised_during_a_test_throws()
     {
         $this->expectException(\ErrorException::class);
@@ -22,9 +23,8 @@ class DeprecationsFailTestsTest extends TestCase
     /**
      * Deprecations inside dependencies aren't ours to fix — e.g. Laravel 8's own
      * Timebox on PHP 8.1 — so they're handed to Laravel, not failed.
-     *
-     * @test
      */
+    #[Test]
     public function a_deprecation_raised_inside_vendor_does_not_fail_the_test()
     {
         // Read the active handler (the one Tests\TestCase installed) without replacing it
@@ -39,7 +39,7 @@ class DeprecationsFailTestsTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /** @test */
+    #[Test]
     public function other_errors_still_reach_laravels_handler()
     {
         // Laravel converts warnings to ErrorException itself; that must be unaffected
