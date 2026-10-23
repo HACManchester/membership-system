@@ -41,8 +41,8 @@ class KeyFobCsvController extends Controller
 
         $filename = 'keyfobs_' . time() . '.csv';
         $headers = [
-            // The door system reads this header. Stated in full so the framework
-            // doesn't append its own charset, whose case varies between versions
+            // The door system ignores the headers, but stating the charset keeps the
+            // response stable: the framework's own casing of it varies by version
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}.csv\"",
         ];
