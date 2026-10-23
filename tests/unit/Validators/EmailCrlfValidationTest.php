@@ -27,7 +27,7 @@ class EmailCrlfValidationTest extends TestCase
         $this->assertTrue($validator->fails(), 'accepted: ' . json_encode($address));
     }
 
-    public function crlfAddresses()
+    public static function crlfAddresses()
     {
         return [
             'header injection'   => ["member@example.com\r\nBcc: someone@example.com"],
@@ -49,7 +49,7 @@ class EmailCrlfValidationTest extends TestCase
         $this->assertFalse($validator->fails(), 'rejected: ' . $address);
     }
 
-    public function validAddresses()
+    public static function validAddresses()
     {
         return [
             ['member@example.com'],

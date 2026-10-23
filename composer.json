@@ -33,8 +33,8 @@
         "larastan/larastan": "^2.9",
         "laravel/legacy-factories": "^1.3",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10"
+        "nunomaduro/collision": "^7.10",
+        "phpunit/phpunit": "^10.5"
     },
     "autoload": {
         "classmap": [

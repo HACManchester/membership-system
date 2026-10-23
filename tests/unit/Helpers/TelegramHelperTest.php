@@ -45,7 +45,7 @@ class TelegramHelperTest extends TestCase
     Config::set('telegram.bot_chat', null);
   }
 
-  public function notifyDataProvider()
+  public static function notifyDataProvider()
   {
     return [
       [1, 'I am level "job"', '⏰  [test-id] I am level "job"'],

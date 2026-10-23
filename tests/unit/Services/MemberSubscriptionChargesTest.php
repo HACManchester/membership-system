@@ -292,13 +292,15 @@ class MemberSubscriptionChargesTest extends TestCase
         $mockBill1 = (object)['id' => 'PM123456789', 'status' => 'pending_submission'];
         $mockBill2 = (object)['id' => 'PM987654321', 'status' => 'pending_submission'];
 
+        $bills = [$mockBill1, $mockBill2];
+        $newBillCalls = [];
         $this->mockGoCardless->expects($this->exactly(2))
             ->method('newBill')
-            ->withConsecutive(
-                ['MD123456789', 2200, 'Monthly subscription'],
-                ['MD987654321', 1700, 'Monthly subscription'] 
-            )
-            ->willReturnOnConsecutiveCalls($mockBill1, $mockBill2);
+            ->willReturnCallback(function ($mandateId, $amount, $name) use (&$bills, &$newBillCalls) {
+                $newBillCalls[] = [$mandateId, $amount, $name];
+
+                return array_shift($bills);
+            });
 
         $this->mockGoCardless->expects($this->exactly(2))
             ->method('getNameFromReason')
@@ -306,6 +308,12 @@ class MemberSubscriptionChargesTest extends TestCase
             ->willReturn('Monthly subscription');
 
         $this->service->billMembers();
+
+        // Loose comparison, as withConsecutive() made: amounts may arrive as floats
+        $this->assertEquals([
+            ['MD123456789', 2200, 'Monthly subscription'],
+            ['MD987654321', 1700, 'Monthly subscription'],
+        ], $newBillCalls);
 
         $payment1 = Payment::where('user_id', $user1->id)
             ->where('reference', $charge1->id)
