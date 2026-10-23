@@ -1,7 +1,7 @@
 <?php namespace BB\Helpers;
 
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Image;
 
 class UserImage
 {
@@ -21,13 +21,13 @@ class UserImage
         // Resize the photo to 500px
         $this->disk->put(
             sprintf('user-photo/%s%s.png', $userHash, $newImage ? '-new' : ''),
-            Image::make($filePath)->fit(500)->stream('png')
+            Image::fromPath($filePath)->cover(500, 500)->toPng()->toBytes()
         );
 
         // And make a 200px thumbnail
         $this->disk->put(
             sprintf('user-photo/%s-thumb%s.png', $userHash, $newImage ? '-new' : ''),
-            Image::make($filePath)->fit(200)->stream('png')
+            Image::fromPath($filePath)->cover(200, 200)->toPng()->toBytes()
         );
     }
 

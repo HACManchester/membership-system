@@ -118,7 +118,7 @@ class SubscriptionChargeRepository extends DBRepository
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
 
-        return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'ASC')->first();
+        return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'asc')->first();
     }
 
     /**
@@ -188,7 +188,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMemberChargesPaginated($userId)
     {
-        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'DESC')->paginate();
+        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'desc')->paginate();
     }
 
     /**
@@ -199,7 +199,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMemberCharges($userId)
     {
-        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'DESC')->get();
+        return $this->model->where('user_id', $userId)->orderBy('charge_date', 'desc')->get();
     }
 
     /**
@@ -210,7 +210,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMembersLatestPaidCharge($userId)
     {
-        return $this->model->where('user_id', $userId)->where('status', 'paid')->orderBy('charge_date', 'DESC')->first();
+        return $this->model->where('user_id', $userId)->where('status', 'paid')->orderBy('charge_date', 'desc')->first();
     }
 
     /**
@@ -220,7 +220,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getChargesPaginated()
     {
-        return $this->model->orderBy('charge_date', 'DESC')->paginate();
+        return $this->model->orderBy('charge_date', 'desc')->paginate();
     }
 
     /**

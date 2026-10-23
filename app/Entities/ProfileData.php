@@ -1,6 +1,5 @@
 <?php namespace BB\Entities;
 
-use BB\Observer\UserAuditObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
@@ -33,14 +32,6 @@ class ProfileData extends Model
         'new_profile_photo'     => 0,
         'profile_photo_on_wall' => 0,
     ];
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::observe(new UserAuditObserver());
-    }
 
     public function setSkillsAttribute($skills)
     {

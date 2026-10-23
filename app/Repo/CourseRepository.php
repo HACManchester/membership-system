@@ -26,7 +26,7 @@ class CourseRepository extends DBRepository
      */
     public function getCoursesForUser(User $user): Collection
     {
-        $query = $this->model->with('equipment.courses')->orderBy('name', 'ASC');
+        $query = $this->model->with('equipment.courses')->orderBy('name', 'asc');
         
         // Only show live courses to regular users
         if (!$this->canUserSeeNonLiveCourses($user)) {
