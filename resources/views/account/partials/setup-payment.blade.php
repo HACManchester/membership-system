@@ -1,8 +1,8 @@
 <h3>💳 Set up a direct debit</h3>
 <p>Not able to pay by direct debit? Email the board, board@hacman.org.uk</p>
 
-@if(round($user->monthly_subscription) > 0)
-    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round($user->monthly_subscription) }}</a>
+@if(round((float) $user->monthly_subscription) > 0)
+    <a href="{{ route('account.subscription.create', $user->id) }}" class="btn btn-primary">Setup a Direct Debit for &pound;{{ round((float) $user->monthly_subscription) }}</a>
     <small><a href="#" class="js-show-alter-subscription-amount">Change your monthly direct debit amount</a></small>
 @else
     <p>
@@ -13,7 +13,7 @@
     @csrf
     <div class="input-group">
         <div class="input-group-addon">&pound;</div>
-        <input type="number" name="monthly_subscription" value="{{ round($user->monthly_subscription) }}" 
+        <input type="number" name="monthly_subscription" value="{{ round((float) $user->monthly_subscription) }}" 
                class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" 
                min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
     </div>
