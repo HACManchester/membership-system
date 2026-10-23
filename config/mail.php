@@ -36,6 +36,7 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
+            'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'email-smtp.us-east-2.amazonaws.com'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
