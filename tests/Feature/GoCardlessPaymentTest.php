@@ -8,10 +8,14 @@ use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
 class GoCardlessPaymentTest extends TestCase
 {
     use MakesGoCardlessExceptions;

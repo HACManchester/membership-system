@@ -12,7 +12,7 @@ class AuditSubscriptionChargesTest extends TestCase
     {
         parent::setUp();
 
-        $telegramHelper = $this->createMock(\BB\Helpers\TelegramHelper::class);
+        $telegramHelper = $this->createStub(\BB\Helpers\TelegramHelper::class);
         $this->app->instance(\BB\Helpers\TelegramHelper::class, $telegramHelper);
     }
 

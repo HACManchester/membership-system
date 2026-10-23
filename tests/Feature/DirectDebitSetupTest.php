@@ -16,7 +16,7 @@ use Tests\TestCase;
  */
 class DirectDebitSetupTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var \PHPUnit\Framework\MockObject\Stub */
     private $goCardless;
 
     /** @var array|null the params sent to GoCardless's redirect flow */
@@ -26,7 +26,7 @@ class DirectDebitSetupTest extends TestCase
     {
         parent::setUp();
 
-        $this->goCardless = $this->createMock(GoCardlessHelper::class);
+        $this->goCardless = $this->createStub(GoCardlessHelper::class);
         $this->goCardless->method('newPreAuthUrl')->willReturnCallback(function ($user, $params) {
             $this->sentParams = $params;
 

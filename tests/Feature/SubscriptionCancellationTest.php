@@ -8,10 +8,14 @@ use BB\Helpers\GoCardlessHelper;
 use Carbon\Carbon;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
 class SubscriptionCancellationTest extends TestCase
 {
     use MakesGoCardlessExceptions;
@@ -42,7 +46,7 @@ class SubscriptionCancellationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->goCardless->method('cancelPreAuth')->with('MD123')->willReturn(true);
+        $this->goCardless->expects($this->once())->method('cancelPreAuth')->with('MD123')->willReturn(true);
 
         $this->actingAs($member)
             ->delete(route('account.subscription.destroy', [$member->id, 0]))

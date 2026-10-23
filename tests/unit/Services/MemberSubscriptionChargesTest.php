@@ -9,9 +9,13 @@ use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Tests\TestCase;
 use Tests\Concerns\MakesGoCardlessExceptions;
 
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
 class MemberSubscriptionChargesTest extends TestCase
 {
     use MakesGoCardlessExceptions;
@@ -33,7 +37,7 @@ class MemberSubscriptionChargesTest extends TestCase
         
         // Mock GoCardless and Telegram to avoid external calls
         $this->mockGoCardless = $this->createMock(GoCardlessHelper::class);
-        $mockTelegramHelper = $this->createMock(\BB\Helpers\TelegramHelper::class);
+        $mockTelegramHelper = $this->createStub(\BB\Helpers\TelegramHelper::class);
         $this->app->instance(\BB\Helpers\TelegramHelper::class, $mockTelegramHelper);
         
         $this->service = new MemberSubscriptionCharges(

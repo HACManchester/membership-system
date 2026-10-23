@@ -208,7 +208,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     {
         // Bind the mock before resolving anything, so every path through the container -
         // including ensureMembershipActive's immediate billing - goes through it
-        $goCardless = $this->createMock(\BB\Helpers\GoCardlessHelper::class);
+        $goCardless = $this->createStub(\BB\Helpers\GoCardlessHelper::class);
         $goCardless->method('getNameFromReason')->willReturn('Monthly subscription');
         $goCardless->method('newBill')->willReturn((object)['id' => 'PM_REJOIN', 'status' => 'pending_submission']);
         $this->app->instance(\BB\Helpers\GoCardlessHelper::class, $goCardless);
