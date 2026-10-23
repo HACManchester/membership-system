@@ -241,7 +241,7 @@ class AuditSubscriptionCharges extends Command
      * @param string $label
      * @param callable|null $amount How to read the amount from a row
      */
-    private function summariseByMember($groups, $label, callable $amount = null)
+    private function summariseByMember($groups, $label, ?callable $amount = null)
     {
         $this->line('');
         $this->line('By member (' . $label . '):');

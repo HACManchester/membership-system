@@ -545,7 +545,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         throw new AuthenticationException();
     }
 
-    public function extendMembership($paymentMethod = null, DateTime $expiry = null)
+    public function extendMembership($paymentMethod = null, ?DateTime $expiry = null)
     {
         if ($this->banned) {
             return;

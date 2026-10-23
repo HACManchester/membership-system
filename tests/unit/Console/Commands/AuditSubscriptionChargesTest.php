@@ -141,7 +141,7 @@ class AuditSubscriptionChargesTest extends TestCase
      * @param Carbon|null $chargeDate
      * @return SubscriptionCharge
      */
-    private function orphanedCharge(Carbon $chargeDate = null)
+    private function orphanedCharge(?Carbon $chargeDate = null)
     {
         $user = factory(User::class)->create([
             'status' => 'leaving',

@@ -22,7 +22,7 @@ class FlashNotificationManager
      * 
      * @param string     $message
      */
-    public function info($message, MessageBag $details = null)
+    public function info($message, ?MessageBag $details = null)
     {
         $this->message($message, $details, 'info');
 
@@ -34,7 +34,7 @@ class FlashNotificationManager
      *
      * @param  string    $message
      */
-    public function success($message, MessageBag $details = null)
+    public function success($message, ?MessageBag $details = null)
     {
         $this->message($message, $details, 'success');
 
@@ -46,7 +46,7 @@ class FlashNotificationManager
      *
      * @param  string    $message
      */
-    public function error($message, MessageBag $details = null)
+    public function error($message, ?MessageBag $details = null)
     {
         $this->message($message, $details, 'danger');
 
@@ -58,7 +58,7 @@ class FlashNotificationManager
      *
      * @param  string    $message
      */
-    public function warning($message, MessageBag $details = null)
+    public function warning($message, ?MessageBag $details = null)
     {
         $this->message($message, $details, 'warning');
 
@@ -71,7 +71,7 @@ class FlashNotificationManager
      *
      * @param  string    $message
      */
-    public function message($message, MessageBag $details = null, $level = 'info')
+    public function message($message, ?MessageBag $details = null, $level = 'info')
     {
         $this->session->flash('flash_notification.message', $message);
         $this->session->flash('flash_notification.details', $details);

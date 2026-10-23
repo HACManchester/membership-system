@@ -99,7 +99,7 @@ class PaymentRepository extends DBRepository
      * @return int The ID of the payment record
      * @throws PaymentException if the source ID is already recorded against another user
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
     {
         if ($paidDate == null) {
             $paidDate = new Carbon();
@@ -154,7 +154,7 @@ class PaymentRepository extends DBRepository
      * @param Carbon $paidDate
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', Carbon $paidDate = null)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
     {
         return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref, $paidDate);
     }

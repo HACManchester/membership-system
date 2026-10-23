@@ -26,7 +26,7 @@ class HandlerTest extends TestCase
         });
     }
 
-    protected function reportExceptionToTelegram(\Throwable $e = null): void
+    protected function reportExceptionToTelegram(?\Throwable $e = null): void
     {
         $e = $e ?? new \RuntimeException('Test error');
 

@@ -49,7 +49,7 @@ class MembershipPayments
      * @param Carbon $refDate Defaults to today as the ref point, this can be overridden
      * @return Carbon
      */
-    public static function getSubGracePeriodDate($paymentMethod, Carbon $refDate = null)
+    public static function getSubGracePeriodDate($paymentMethod, ?Carbon $refDate = null)
     {
         if (is_null($refDate)) {
             $refDate = Carbon::now();

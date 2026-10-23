@@ -52,12 +52,17 @@ class KeyFobCsvController extends Controller
             if ($out === false) {
                 return;
             }
+            // The door system parses this output, so fputcsv's quoting is spelled out:
+            // PHP 8.4 deprecates relying on the $escape default, which will change
+            $writeRow = function (array $row) use ($out) {
+                fputcsv($out, $row, ',', '"', '\\');
+            };
             $firstRow = $keyfobs->first();
             if ($firstRow !== null) {
-                fputcsv($out, array_keys($firstRow));
+                $writeRow(array_keys($firstRow));
             }
             foreach ($keyfobs as $line) {
-                fputcsv($out, $line);
+                $writeRow($line);
             }
             fclose($out);
         }, $filename, $headers);
