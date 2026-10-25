@@ -28,7 +28,6 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.9.1",
-        "filp/whoops": "^2.18.4",
         "larastan/larastan": "^3.0",
         "laravel/boost": "^2.0",
         "laravel/legacy-factories": "^1.3",
