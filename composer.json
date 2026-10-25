@@ -26,7 +26,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
-        "fakerphp/faker": "^1.9.1",
+        "fakerphp/faker": "^1.24",
         "guzzlehttp/psr7": "^2.13",
         "larastan/larastan": "^3.0",
         "laravel/boost": "^2.0",
