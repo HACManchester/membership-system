@@ -30,9 +30,9 @@ $factory->define(Payment::class, function (Faker $faker) {
             Payment::STATUS_WITHDRAWN
         ]),
         'reason' => $faker->randomElement(array_keys(Payment::getPaymentReasons())),
-        'created_at' => $faker->dateTime,
-        'reference' => $faker->uuid,
-        'paid_at' => $faker->dateTime,
+        'created_at' => $faker->dateTime(),
+        'reference' => $faker->uuid(),
+        'paid_at' => $faker->dateTime(),
     ];
 });
 

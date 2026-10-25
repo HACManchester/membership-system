@@ -12,6 +12,6 @@ $factory->define(Room::class, function (Faker $faker) {
     return [
         'name' => ucfirst($name),
         'slug' => Str::slug($name),
-        'description' => $faker->optional()->sentence,
+        'description' => $faker->optional()->sentence(),
     ];
 });

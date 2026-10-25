@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
 $factory->define(Equipment::class, function (Faker $faker) {
-    $name = $faker->unique()->word;
+    $name = $faker->unique()->word();
     $slug = Str::slug($name);
 
     return [
@@ -31,7 +31,7 @@ $factory->define(Equipment::class, function (Faker $faker) {
         // 'access_fee' => '',
         'photos' => [], // Not sure why this can be omitted when not creating via factories?
         // 'archive' => '',
-        'obtained_at' => $faker->dateTimeThisYear,
+        'obtained_at' => $faker->dateTimeThisYear(),
         // 'removed_at' => '',
         // 'asset_tag_id' => '',
         // 'usage_cost' => '',
@@ -50,7 +50,7 @@ $factory->define(Equipment::class, function (Faker $faker) {
 $factory->state(Equipment::class, 'requiresInduction', function (Faker $faker) {
     return [
         'requires_induction'  => true,
-        'induction_category'  => $faker->word,
+        'induction_category'  => $faker->word(),
         'accepting_inductions' => true,
     ];
 });
