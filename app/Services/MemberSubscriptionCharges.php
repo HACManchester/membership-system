@@ -135,7 +135,13 @@ class MemberSubscriptionCharges
             $bill = null;
             try {
                 try {
-                    $bill = $this->goCardless->newBill($charge->user->mandate_id, ($amount * 100), $this->goCardless->getNameFromReason('subscription'));
+                    $mandateId = $charge->user->mandate_id;
+                    $bill = $this->goCardless->newBill(
+                        $mandateId,
+                        ($amount * 100),
+                        $this->goCardless->getNameFromReason('subscription'),
+                        idempotencyKey: $charge->goCardlessIdempotencyKey($mandateId)
+                    );
                     $status = $bill->status;
                     if ($status == 'pending_submission') {
                         $status = 'pending';

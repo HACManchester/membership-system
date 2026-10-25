@@ -103,9 +103,13 @@ class GoCardlessHelper
      * @param             $amount
      * @param null|string $name
      * @param null|string $description
+     * @param string|null $idempotencyKey identifies the collection, so a repeat
+     *        returns the payment GoCardless already created instead of taking
+     *        the money again. Without one the SDK sends a random key, which only
+     *        protects its own retries of this one call.
      * @return \GoCardlessPro\Resources\Payment
      */
-    public function newBill($mandateId, $amount, $name = null, $description = null)
+    public function newBill($mandateId, $amount, $name = null, $description = null, ?string $idempotencyKey = null)
     {
         try {
             return $this->client->payments()->create([
@@ -119,9 +123,7 @@ class GoCardlessHelper
                         "description" => $name
                     ]
                 ],
-                "headers" => [
-                    //"Idempotency-Key" => $preauthId . ':' . time()
-                ]
+                "headers" => $idempotencyKey === null ? [] : ["Idempotency-Key" => $idempotencyKey],
             ]);
         } catch (\Exception $e) {
             Log::error($e);

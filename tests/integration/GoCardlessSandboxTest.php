@@ -119,6 +119,25 @@ class GoCardlessSandboxTest extends TestCase
     }
 
     /**
+     * Billing sends a key identifying the subscription charge, so that billing a
+     * charge twice can't collect twice. GoCardless must answer the repeat with
+     * the payment it already created, and the SDK must hand that back.
+     */
+    #[Test]
+    public function a_repeated_idempotency_key_returns_the_original_payment()
+    {
+        $key = 'sandbox-test-' . bin2hex(random_bytes(8));
+
+        $first = $this->helper->newBill($this->mandate(), 100, 'Sandbox idempotency test', idempotencyKey: $key);
+        $repeat = $this->helper->newBill($this->mandate(), 100, 'Sandbox idempotency test', idempotencyKey: $key);
+
+        $this->assertStringStartsWith('PM', $first->id);
+        $this->assertSame($first->id, $repeat->id);
+
+        $this->helper->cancelPayment($first->id);
+    }
+
+    /**
      * The regression SDK 1.7.0 hid: a validation failure carrying field-level
      * errors went through a legacy implode() that is a TypeError on PHP 8,
      * which the billing code's catch blocks don't catch. It must arrive as a

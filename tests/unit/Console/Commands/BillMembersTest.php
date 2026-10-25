@@ -72,6 +72,43 @@ class BillMembersTest extends TestCase
         $this->assertEquals('PM123456789', $payment->source_id);
     }
 
+    /**
+     * The key ties the GoCardless payment to this charge, so if a run bills the
+     * charge again (say it failed after GoCardless took the payment but before
+     * we recorded it) GoCardless hands back the first payment instead of
+     * collecting twice.
+     */
+    public function testEachChargeIsBilledWithAnIdempotencyKeyIdentifyingTheCharge()
+    {
+        $user = factory(User::class)->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $charge = factory(SubscriptionCharge::class)->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::parse('2026-10-01'),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->method('getNameFromReason')->willReturn('Monthly subscription');
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->with(
+                'MD123456789',
+                2200,
+                'Monthly subscription',
+                null,
+                "subscription-charge-{$charge->id}-user-{$user->id}-2026-10-01-MD123456789"
+            )
+            ->willReturn((object)['id' => 'PM123456789', 'status' => 'pending_submission']);
+
+        $this->artisan('bb:bill-members')->assertExitCode(0);
+    }
+
     public function testBillsCreatedUsingChargeAmountIfSet()
     {
         $user = factory(User::class)->create([

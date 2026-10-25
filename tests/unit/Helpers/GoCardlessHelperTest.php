@@ -34,7 +34,8 @@ class GoCardlessHelperTest extends TestCase
         (new ReflectionProperty(GoCardlessHelper::class, 'client'))->setValue($this->helper, new \GoCardlessPro\Client([
             'access_token' => 'sandbox_test',
             'environment' => \GoCardlessPro\Environment::SANDBOX,
-            'http_client' => new Client(['handler' => $stack, 'base_uri' => 'https://api-sandbox.gocardless.com']),
+            // As the SDK configures its own client: it reads error responses itself
+            'http_client' => new Client(['handler' => $stack, 'base_uri' => 'https://api-sandbox.gocardless.com', 'http_errors' => false]),
         ]));
     }
 
@@ -68,6 +69,60 @@ class GoCardlessHelperTest extends TestCase
     }
 
     #[Test]
+    public function a_bill_carries_the_given_idempotency_key()
+    {
+        $this->responses->append($this->paymentResponse(201, 'PM123', 'pending_submission'));
+
+        $this->helper->newBill('MD123', 2200, 'Monthly subscription', idempotencyKey: 'subscription-charge-1-user-2-2026-10-01-MD123');
+
+        $this->assertSame(['subscription-charge-1-user-2-2026-10-01-MD123'], $this->sent[0]['request']->getHeader('Idempotency-Key'));
+    }
+
+    #[Test]
+    public function a_bill_without_a_key_keeps_the_sdks_own_random_key()
+    {
+        $this->responses->append($this->paymentResponse(201, 'PM1', 'pending_submission'));
+        $this->responses->append($this->paymentResponse(201, 'PM2', 'pending_submission'));
+
+        $this->helper->newBill('MD123', 500, 'Balance top up');
+        $this->helper->newBill('MD123', 500, 'Balance top up');
+
+        $first = $this->sent[0]['request']->getHeaderLine('Idempotency-Key');
+        $this->assertNotSame('', $first);
+        $this->assertNotSame($first, $this->sent[1]['request']->getHeaderLine('Idempotency-Key'));
+    }
+
+    /**
+     * What the key relies on: GoCardless answers a reused key with a 409
+     * naming the payment it already created, and the SDK returns that payment
+     * rather than an error, so billing code records it like a new one.
+     */
+    #[Test]
+    public function a_repeated_key_returns_the_payment_gocardless_already_created()
+    {
+        $this->responses->append(new Response(409, ['Content-Type' => 'application/json'], json_encode(['error' => [
+            'type' => 'invalid_state',
+            'code' => 409,
+            'message' => 'A resource has already been created with this idempotency key',
+            'documentation_url' => 'https://developer.gocardless.com/api-reference#idempotent_creation_conflict',
+            'request_id' => 'REQ1',
+            'errors' => [[
+                'reason' => 'idempotent_creation_conflict',
+                'message' => 'A resource has already been created with this idempotency key',
+                'links' => ['conflicting_resource_id' => 'PM123'],
+            ]],
+        ]])));
+        $this->responses->append($this->paymentResponse(200, 'PM123', 'submitted'));
+
+        $payment = $this->helper->newBill('MD123', 2200, 'Monthly subscription', idempotencyKey: 'subscription-charge-1-user-2-2026-10-01-MD123');
+
+        $this->assertSame('PM123', $payment->id);
+        $this->assertSame('submitted', $payment->status);
+        $this->assertSame(['POST', '/payments'], [$this->sent[0]['request']->getMethod(), $this->sent[0]['request']->getUri()->getPath()]);
+        $this->assertSame(['GET', '/payments/PM123'], [$this->sent[1]['request']->getMethod(), $this->sent[1]['request']->getUri()->getPath()]);
+    }
+
+    #[Test]
     public function a_subscription_with_an_id_is_cancelled_at_gocardless()
     {
         $this->responses->append(new Response(200, ['Content-Type' => 'application/json'], json_encode([
@@ -80,5 +135,12 @@ class GoCardlessHelperTest extends TestCase
         $this->assertCount(1, $this->sent);
         $this->assertSame('POST', $this->sent[0]['request']->getMethod());
         $this->assertSame('/subscriptions/SB123/actions/cancel', $this->sent[0]['request']->getUri()->getPath());
+    }
+
+    private function paymentResponse(int $status, string $id, string $paymentStatus): Response
+    {
+        return new Response($status, ['Content-Type' => 'application/json'], json_encode([
+            'payments' => ['id' => $id, 'status' => $paymentStatus, 'amount' => 2200, 'currency' => 'GBP'],
+        ]));
     }
 }
