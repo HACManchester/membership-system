@@ -1674,7 +1674,6 @@ __metadata:
     "@typescript-eslint/parser": ^8.39.1
     babel-jest: ^29.7.0
     bootstrap: ^3.3.4
-    cross-env: ^7.0
     eslint: ^9.33.0
     eslint-config-prettier: ^10.1.8
     eslint-plugin-prettier: ^5.5.4
@@ -4791,19 +4790,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-env@npm:^7.0":
-  version: 7.0.3
-  resolution: "cross-env@npm:7.0.3"
-  dependencies:
-    cross-spawn: ^7.0.1
-  bin:
-    cross-env: src/bin/cross-env.js
-    cross-env-shell: src/bin/cross-env-shell.js
-  checksum: 26f2f3ea2ab32617f57effb70d329c2070d2f5630adc800985d8b30b56e8bf7f5f439dd3a0358b79cee6f930afc23cf8e23515f17ccfb30092c6b62c6b630a79
-  languageName: node
-  linkType: hard
-
-"cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.3, cross-spawn@npm:^7.0.6":
+"cross-spawn@npm:^7.0.3, cross-spawn@npm:^7.0.6":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
   dependencies:
