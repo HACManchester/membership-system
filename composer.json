@@ -71,10 +71,7 @@
         "platform": {
             "php": "8.4"
         },
-        "allow-plugins": {
-            "php-http/discovery": true,
-            "kylekatarnls/update-helper": true
-        },
+        "allow-plugins": {},
         "sort-packages": true,
         "optimize-autoloader": true
     },
