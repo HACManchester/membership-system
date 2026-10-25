@@ -59,7 +59,7 @@ class EquipmentTest extends TestCase
             'slug' => 'test-area'
         ]);
 
-        $this->maintainerGroup = factory(MaintainerGroup::class)->create([
+        $this->maintainerGroup = MaintainerGroup::factory()->create([
             'name' => 'Test Maintainers',
             'slug' => 'test-maintainers',
             'equipment_area_id' => $this->equipmentArea->id,

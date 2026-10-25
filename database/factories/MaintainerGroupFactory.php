@@ -1,14 +1,26 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use BB\Entities\MaintainerGroup;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MaintainerGroup::class, function (Faker $faker) {
-    return [
-        'name' => $faker->unique()->word(),
-        'slug' => $faker->unique()->slug(),
-        'description' => $faker->sentence(),
-    ];
-});
+/**
+ * @extends Factory<MaintainerGroup>
+ */
+class MaintainerGroupFactory extends Factory
+{
+    protected $model = MaintainerGroup::class;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->unique()->word(),
+            'slug' => $this->faker->unique()->slug(),
+            'description' => $this->faker->sentence(),
+        ];
+    }
+}

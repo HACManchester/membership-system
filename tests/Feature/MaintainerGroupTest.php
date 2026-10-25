@@ -19,7 +19,7 @@ class MaintainerGroupTest extends TestCase
 
     public function test_index_renders_inertia()
     {
-        factory(MaintainerGroup::class)->create([
+        MaintainerGroup::factory()->create([
             'equipment_area_id' => factory(EquipmentArea::class)->create()->id,
         ]);
 
@@ -40,7 +40,7 @@ class MaintainerGroupTest extends TestCase
                 $page->component('MaintainerGroups/Create')->has('equipmentAreaOptions')->has('searchUrl');
             });
 
-        $group = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
+        $group = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         $this->actingAs($admin)->get(route('maintainer_groups.edit', $group))
             ->assertInertia(function ($page) use ($group) {
                 $page->component('MaintainerGroups/Edit')->where('maintainerGroup.id', $group->id);
@@ -84,7 +84,7 @@ class MaintainerGroupTest extends TestCase
         $admin = $this->admin();
         $areaA = factory(EquipmentArea::class)->create();
         $areaB = factory(EquipmentArea::class)->create();
-        $group = factory(MaintainerGroup::class)->create([
+        $group = MaintainerGroup::factory()->create([
             'name' => 'Metalwork',
             'slug' => 'metalwork',
             'equipment_area_id' => $areaA->id,

@@ -76,7 +76,7 @@ class CoursePolicyTest extends TestCase
         $course = factory(Course::class)->create();
         $equipment = factory(Equipment::class)->create();
         $area = factory(EquipmentArea::class)->create();
-        $maintainerGroup = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
+        $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         
         // Setup relationships
         $equipment->maintainerGroup()->associate($maintainerGroup);
@@ -97,7 +97,7 @@ class CoursePolicyTest extends TestCase
         $course = factory(Course::class)->create();
         $equipment = factory(Equipment::class)->create();
         $area = factory(EquipmentArea::class)->create();
-        $maintainerGroup = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
+        $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         
         // Setup relationships
         $equipment->maintainerGroup()->associate($maintainerGroup);
@@ -118,7 +118,7 @@ class CoursePolicyTest extends TestCase
         $otherUser = factory(User::class)->create();
         $course = factory(Course::class)->create();
         $equipment = factory(Equipment::class)->create();
-        $maintainerGroup = factory(MaintainerGroup::class)->create();
+        $maintainerGroup = MaintainerGroup::factory()->create();
         
         // Setup relationships with different user
         $equipment->maintainerGroup()->associate($maintainerGroup);
@@ -134,7 +134,7 @@ class CoursePolicyTest extends TestCase
     {
         $user = factory(User::class)->create();
         $course = factory(Course::class)->create();
-        $maintainerGroup = factory(MaintainerGroup::class)->create();
+        $maintainerGroup = MaintainerGroup::factory()->create();
         $maintainerGroup->maintainers()->attach($user);
         $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
         $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => $maintainerGroup->id]));
@@ -198,8 +198,8 @@ class CoursePolicyTest extends TestCase
         // Create multiple equipment with different maintainer groups
         $equipment1 = factory(Equipment::class)->create();
         $equipment2 = factory(Equipment::class)->create();
-        $maintainerGroup1 = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
-        $maintainerGroup2 = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
+        $maintainerGroup1 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
+        $maintainerGroup2 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         
         $equipment1->maintainerGroup()->associate($maintainerGroup1);
         $equipment1->save();

@@ -67,7 +67,7 @@ class RoomPolicyTest extends TestCase
         );
 
         $maintainer = factory(User::class)->create();
-        $maintainer->maintainerGroups()->attach(factory(MaintainerGroup::class)->create());
+        $maintainer->maintainerGroups()->attach(MaintainerGroup::factory()->create());
 
         $room = Room::factory()->create();
 
