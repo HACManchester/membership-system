@@ -19,7 +19,6 @@
         "laravel-notification-channels/telegram": "^8.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "michelf/php-markdown": "~1.4",
         "nesbot/carbon": "^3.8",
         "rap2hpoutre/laravel-log-viewer": "^3.0",
         "sentry/sentry-laravel": "^4.29"
