@@ -8,7 +8,7 @@
 | Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 6 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
-| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, Jest (configured, no tests yet) |
+| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, Jest (two legacy `.jsx` component suites; runs in CI) |
 
 Pages migrated to Inertia/React so far: courses, course training, equipment-adjacent pages,
 newsletter. Everything else (account, profile, members directory, payments/admin screens, storage
@@ -64,8 +64,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 ### Tooling milestones along the way
 
-- **Now**: delete `elixir.json`; bump Node. (The no-op Jest CI step has been removed; reinstate a
-  JS test step once `resources/js` actually has tests.)
+- **Now**: delete `elixir.json`; bump Node. (Jest runs in CI again, covering the two legacy
+  `.jsx` suites; `resources/js` has no tests yet.)
 - **With the Laravel 9 hop**: switch Mix → Vite (the natural moment, since Laravel 9 ships Vite).
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.

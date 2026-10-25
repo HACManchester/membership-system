@@ -54,6 +54,9 @@ jobs:
       - name: Lint
         run: yarn lint
 
+      - name: Test
+        run: yarn test --ci
+
       - name: Build
         run: yarn run production
 
