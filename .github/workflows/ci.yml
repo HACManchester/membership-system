@@ -18,13 +18,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Production's engine, and the minimum Laravel 13 requires.
-          - php: "8.3"
-            experimental: false
-          # Laravel 12 and 13 also support these. The final step swaps production to
-          # the newest one, so they run ahead of it.
+          # Production's engine, and composer.json's config.platform.php.
           - php: "8.4"
             experimental: false
+          # Laravel 13 also supports 8.5, production's next engine.
           - php: "8.5"
             experimental: true
 
