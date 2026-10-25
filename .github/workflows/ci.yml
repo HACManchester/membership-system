@@ -18,6 +18,7 @@ jobs:
   build:
     name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # The "next" PHP runs ahead of the upgrade so each engine bump promotes a
     # version that's already green rather than discovering problems on the day.
     # It reports but doesn't block until it passes; then drop `experimental`
