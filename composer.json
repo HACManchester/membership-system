@@ -12,7 +12,7 @@
     "require": {
         "php": "^8.4",
         "gocardless/gocardless-pro": "^8.15",
-        "guzzlehttp/guzzle": "^7.15.2",
+        "guzzlehttp/guzzle": "^8.3",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^4.4",
         "laracasts/presenter": "^0.2.9",
@@ -26,7 +26,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.24",
-        "guzzlehttp/psr7": "^2.13",
+        "guzzlehttp/psr7": "^3.2",
         "larastan/larastan": "^3.0",
         "laravel/boost": "^2.0",
         "laravel/legacy-factories": "^1.3",

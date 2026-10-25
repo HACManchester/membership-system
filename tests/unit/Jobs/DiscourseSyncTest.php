@@ -116,6 +116,34 @@ class DiscourseSyncTest extends TestCase
         ], $this->last_sent_payload());
     }
 
+    public function testAuthenticatesWithTheConfiguredApiKey()
+    {
+        config(['discourse.api_key' => 'key123', 'discourse.api_username' => 'system']);
+        $this->mock->append(new Response(200, [], null));
+
+        (new DiscourseSync(factory(User::class)->create()))->handle($this->client);
+
+        $request = $this->container[0]['request'];
+        $this->assertSame('key123', $request->getHeaderLine('Api-Key'));
+        $this->assertSame('system', $request->getHeaderLine('Api-Username'));
+    }
+
+    /**
+     * An unset key (a dev setup, say) still sends the request, with empty
+     * credentials for Discourse to refuse, rather than failing inside Guzzle,
+     * which rejects null header values from version 8.
+     */
+    public function testStillSendsTheRequestWhenTheApiCredentialsAreUnset()
+    {
+        config(['discourse.api_key' => null, 'discourse.api_username' => null]);
+        $this->mock->append(new Response(200, [], null));
+
+        (new DiscourseSync(factory(User::class)->create()))->handle($this->client);
+
+        $this->assertCount(1, $this->container);
+        $this->assertSame('', $this->container[0]['request']->getHeaderLine('Api-Key'));
+    }
+
     protected function last_sent_payload()
     {
         $request = $this->container[0]['request'];
