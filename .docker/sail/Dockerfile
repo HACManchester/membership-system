@@ -8,7 +8,7 @@
 #
 # Node isn't installed: yarn runs on the host (see CLAUDE.md).
 
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.4
 FROM php:${PHP_VERSION}-cli
 
 ARG WWWGROUP

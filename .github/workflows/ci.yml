@@ -5,10 +5,20 @@ on:
     branches: ["master"]
   pull_request:
 
+# Jobs only read the repository. Anything needing more asks for it per job.
+permissions:
+  contents: read
+
+# A new push to a PR supersedes its running build. Builds on master always finish.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # The "next" PHP runs ahead of the upgrade so each engine bump promotes a
     # version that's already green rather than discovering problems on the day.
     # It reports but doesn't block until it passes; then drop `experimental`
@@ -18,23 +28,21 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Production's engine, and the minimum Laravel 13 requires.
-          - php: "8.3"
-            experimental: false
-          # Laravel 12 and 13 also support these. The final step swaps production to
-          # the newest one, so they run ahead of it.
+          # Production's engine, and composer.json's config.platform.php.
           - php: "8.4"
             experimental: false
+          # Production's next engine, which Laravel 13 supports. Green, so it blocks.
           - php: "8.5"
-            experimental: true
+            experimental: false
 
     steps:
-      - uses: actions/checkout@v3
+      # Actions are pinned to commit SHAs (version in the comment); Dependabot updates both
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # CI never pushes, so the job token needn't be left in the checkout
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, fileinfo
@@ -43,29 +51,46 @@ jobs:
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
-          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+          echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Set up dependency caching for faster installs
-        uses: actions/cache@v3
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-php${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php${{ matrix.php }}-composer-
 
-      - name: Fix yarn being stupid
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      # Yarn (Berry, pinned by package.json's packageManager) comes from Corepack,
+      # which must be enabled after setup-node so it belongs to Node 24
+      - name: Enable Corepack
         run: corepack enable
 
-      - uses: actions/setup-node@v4
+      - name: Get Yarn Cache Directory
+        id: yarn-cache
+        run: echo "dir=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Yarn packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          node-version: "20"
-          cache: "yarn"
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Composer install
         run: composer install --prefer-dist
 
-      - name: Npm install
-        run: yarn install
+      # setup-php disables Composer's own audit on install (COMPOSER_NO_AUDIT)
+      - name: Composer audit
+        run: composer audit --locked
+
+      - name: Yarn install
+        run: yarn install --immutable
 
       - name: Frontend lint
         run: yarn lint
@@ -96,3 +121,36 @@ jobs:
 
       - name: phpunit
         run: vendor/bin/phpunit --coverage-text
+
+  # Fails a PR that adds a dependency with a known high-severity vulnerability
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+
+  # The one check branch protection requires. Matrix legs can be renamed, added or
+  # removed without touching the repository settings.
+  ci-result:
+    name: All checks passed
+    if: always()
+    needs: [build, dependency-review]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every required job passed
+        env:
+          BUILD: ${{ needs.build.result }}
+          REVIEW: ${{ needs.dependency-review.result }}
+        run: |
+          echo "build: $BUILD, dependency review: $REVIEW"
+          [ "$BUILD" = "success" ] || exit 1
+          # Dependency review only runs on pull requests
+          [ "$REVIEW" = "success" ] || [ "$REVIEW" = "skipped" ] || exit 1

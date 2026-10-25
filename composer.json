@@ -10,7 +10,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "gocardless/gocardless-pro": "^4.28",
         "guzzlehttp/guzzle": "^7.15.2",
         "guzzlehttp/psr7": "^2.13",
@@ -68,6 +68,9 @@
     },
     "config": {
         "preferred-install": "dist",
+        "platform": {
+            "php": "8.4"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "kylekatarnls/update-helper": true
