@@ -135,3 +135,22 @@ jobs:
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
+
+  # The one check branch protection requires. Matrix legs can be renamed, added or
+  # removed without touching the repository settings.
+  ci-result:
+    name: All checks passed
+    if: always()
+    needs: [build, dependency-review]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every required job passed
+        env:
+          BUILD: ${{ needs.build.result }}
+          REVIEW: ${{ needs.dependency-review.result }}
+        run: |
+          echo "build: $BUILD, dependency review: $REVIEW"
+          [ "$BUILD" = "success" ] || exit 1
+          # Dependency review only runs on pull requests
+          [ "$REVIEW" = "success" ] || [ "$REVIEW" = "skipped" ] || exit 1
