@@ -5,6 +5,10 @@ on:
     branches: ["master"]
   pull_request:
 
+# Jobs only read the repository. Anything needing more asks for it per job.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
