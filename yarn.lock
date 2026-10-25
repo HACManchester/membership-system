@@ -1670,8 +1670,6 @@ __metadata:
     "@testing-library/react": ^16.2.0
     "@types/react": ^19.1.0
     "@types/react-dom": ^19.1.1
-    "@typescript-eslint/eslint-plugin": ^8.39.1
-    "@typescript-eslint/parser": ^8.39.1
     babel-jest: ^29.7.0
     bootstrap: ^3.3.4
     eslint: ^9.33.0
@@ -2969,7 +2967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:8.39.1, @typescript-eslint/eslint-plugin@npm:^8.39.1":
+"@typescript-eslint/eslint-plugin@npm:8.39.1":
   version: 8.39.1
   resolution: "@typescript-eslint/eslint-plugin@npm:8.39.1"
   dependencies:
@@ -2990,7 +2988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:8.39.1, @typescript-eslint/parser@npm:^8.39.1":
+"@typescript-eslint/parser@npm:8.39.1":
   version: 8.39.1
   resolution: "@typescript-eslint/parser@npm:8.39.1"
   dependencies:
