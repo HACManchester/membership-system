@@ -68,7 +68,7 @@
     "config": {
         "preferred-install": "dist",
         "platform": {
-            "php": "8.4"
+            "php": "8.4.1"
         },
         "allow-plugins": {},
         "sort-packages": true,
