@@ -68,6 +68,9 @@
     },
     "config": {
         "preferred-install": "dist",
+        "platform": {
+            "php": "8.4"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "kylekatarnls/update-helper": true
