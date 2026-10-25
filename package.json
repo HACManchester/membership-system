@@ -65,7 +65,7 @@
     "laravel-mix": "^6.0.0",
     "less": "^4.2.2",
     "less-loader": "^7.3.0",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.23",
     "prettier": "^3.6.2",
     "react-refresh": "^0.16.0",
     "sass": "^1.85.1",
