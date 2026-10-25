@@ -26,3 +26,6 @@ _ide_helper*
 .yarn
 .pnp.cjs
 .pnp.loader.mjs
+
+# Laravel Boost skills, generated from boost.json by `php artisan boost:update`
+/.claude/skills/
