@@ -30,7 +30,7 @@ class PaymentRepositoryTest extends TestCase
         ]);
 
         $this->expectException(PaymentException::class);
-        $this->expectExceptionMessage('already uses it');
+        $this->expectExceptionMessageIsOrContains('already uses it');
 
         $this->paymentRepository->recordPayment(
             'subscription',

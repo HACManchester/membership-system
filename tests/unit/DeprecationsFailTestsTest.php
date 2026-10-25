@@ -15,7 +15,7 @@ class DeprecationsFailTestsTest extends TestCase
     public function a_deprecation_raised_during_a_test_throws()
     {
         $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage('this is deprecated');
+        $this->expectExceptionMessageIsOrContains('this is deprecated');
 
         trigger_error('this is deprecated', E_USER_DEPRECATED);
     }
@@ -28,7 +28,7 @@ class DeprecationsFailTestsTest extends TestCase
     public function a_silenced_deprecation_throws()
     {
         $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage('this is quietly deprecated');
+        $this->expectExceptionMessageIsOrContains('this is quietly deprecated');
 
         @trigger_error('this is quietly deprecated', E_USER_DEPRECATED);
     }
@@ -37,7 +37,7 @@ class DeprecationsFailTestsTest extends TestCase
     public function a_deprecation_raised_inside_vendor_throws()
     {
         $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage('vendor deprecation');
+        $this->expectExceptionMessageIsOrContains('vendor deprecation');
 
         $this->activeHandler()(E_USER_DEPRECATED, 'vendor deprecation', base_path('vendor/autoload.php'), 1);
     }
@@ -66,7 +66,7 @@ class DeprecationsFailTestsTest extends TestCase
     {
         // Laravel converts warnings to ErrorException itself; that must be unaffected
         $this->expectException(\ErrorException::class);
-        $this->expectExceptionMessage('this is a warning');
+        $this->expectExceptionMessageIsOrContains('this is a warning');
 
         trigger_error('this is a warning', E_USER_WARNING);
     }
