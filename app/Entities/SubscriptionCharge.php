@@ -53,6 +53,19 @@ class SubscriptionCharge extends Model
 
 
     /**
+     * The GoCardless Idempotency-Key for collecting this charge from $mandateId.
+     * GoCardless creates at most one payment per key (keys are honoured for at
+     * least 30 days) and answers a repeat with the payment it already made, so
+     * billing the same charge twice can't take the money twice. The member, date
+     * and mandate are part of the key so that a charge ID reused after a
+     * database restore can't pick up another charge's payment.
+     */
+    public function goCardlessIdempotencyKey(?string $mandateId): string
+    {
+        return sprintf('subscription-charge-%d-user-%d-%s-%s', $this->id, $this->user_id, $this->charge_date->format('Y-m-d'), $mandateId);
+    }
+
+    /**
      * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo

@@ -59,7 +59,12 @@ class SubscriptionChargeRepository extends DBRepository
         $charge = $this->createCharge($userId, $date, $amount, $status);
 
         try {
-            $bill = $this->goCardless->newBill($DDAuthId, $amount * 100, $this->goCardless->getNameFromReason('subscription'));
+            $bill = $this->goCardless->newBill(
+                $DDAuthId,
+                $amount * 100,
+                $this->goCardless->getNameFromReason('subscription'),
+                idempotencyKey: $charge->goCardlessIdempotencyKey($DDAuthId)
+            );
             $status = $bill->status;
             if ($status == 'pending_submission') {
                 $status = 'pending';

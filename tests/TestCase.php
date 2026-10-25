@@ -9,18 +9,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, RefreshDatabase;
 
-    /**
-     * Deprecations raised inside dependencies that we know about and can't fix
-     * from here. Each entry is a vendor path prefix and a message prefix, and
-     * says what removes it; delete the entry when that happens.
-     *
-     * @var list<array{path: string, message: string}>
-     */
-    private const KNOWN_VENDOR_DEPRECATIONS = [
-        // gocardless-pro 4.x sets undeclared properties (PHP 8.2+). Removed by the SDK 8 upgrade.
-        ['path' => 'vendor/gocardless/gocardless-pro/', 'message' => 'Creation of dynamic property GoCardlessPro\\'],
-    ];
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,9 +31,9 @@ abstract class TestCase extends BaseTestCase
      * our own code's, and those raised inside vendor/, which usually mean a
      * package needs upgrading or we're calling an API it has deprecated.
      * Silenced ones count too, because libraries (Faker, Symfony) report API
-     * misuse through a silenced trigger_error(). Only the known vendor
-     * deprecations listed above, and every other kind of error, pass through
-     * to Laravel unchanged.
+     * misuse through a silenced trigger_error(). Only known vendor
+     * deprecations (see knownVendorDeprecations()), and every other kind of
+     * error, pass through to Laravel unchanged.
      */
     private function failOnDeprecations(): void
     {
@@ -58,9 +46,21 @@ abstract class TestCase extends BaseTestCase
         });
     }
 
+    /**
+     * Deprecations raised inside dependencies that we know about and can't fix
+     * from here. Each entry is a vendor path prefix and a message prefix. Comment
+     * each one with what removes it, and delete it when that happens. None today.
+     *
+     * @return list<array{path: string, message: string}>
+     */
+    protected function knownVendorDeprecations(): array
+    {
+        return [];
+    }
+
     private function isKnownVendorDeprecation(string $message, string $file): bool
     {
-        foreach (self::KNOWN_VENDOR_DEPRECATIONS as $known) {
+        foreach ($this->knownVendorDeprecations() as $known) {
             if (str_starts_with((string) realpath($file), base_path($known['path']))
                 && str_starts_with($message, $known['message'])) {
                 return true;

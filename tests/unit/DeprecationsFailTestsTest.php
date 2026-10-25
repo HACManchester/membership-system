@@ -11,6 +11,11 @@ use Tests\TestCase;
  */
 class DeprecationsFailTestsTest extends TestCase
 {
+    protected function knownVendorDeprecations(): array
+    {
+        return [['path' => 'vendor/laravel/framework/', 'message' => 'Known vendor deprecation']];
+    }
+
     #[Test]
     public function a_deprecation_raised_during_a_test_throws()
     {
@@ -45,10 +50,10 @@ class DeprecationsFailTestsTest extends TestCase
     #[Test]
     public function a_known_vendor_deprecation_does_not_fail_the_test()
     {
-        $file = base_path('vendor/gocardless/gocardless-pro/lib/Client.php');
+        $file = base_path('vendor/laravel/framework/src/Illuminate/Foundation/Application.php');
 
         // Would throw ErrorException if the deprecation weren't recognised as known
-        $this->activeHandler()(E_DEPRECATED, 'Creation of dynamic property GoCardlessPro\Client::$x is deprecated', $file, 1);
+        $this->activeHandler()(E_DEPRECATED, 'Known vendor deprecation: details', $file, 1);
 
         $this->addToAssertionCount(1);
     }
@@ -58,7 +63,15 @@ class DeprecationsFailTestsTest extends TestCase
     {
         $this->expectException(\ErrorException::class);
 
-        $this->activeHandler()(E_DEPRECATED, 'Creation of dynamic property GoCardlessPro\Client::$x is deprecated', base_path('app/Helpers/GoCardlessHelper.php'), 1);
+        $this->activeHandler()(E_DEPRECATED, 'Known vendor deprecation: details', base_path('app/Helpers/GoCardlessHelper.php'), 1);
+    }
+
+    #[Test]
+    public function another_deprecation_from_a_known_vendor_path_still_throws()
+    {
+        $this->expectException(\ErrorException::class);
+
+        $this->activeHandler()(E_DEPRECATED, 'Some other deprecation', base_path('vendor/laravel/framework/src/Illuminate/Foundation/Application.php'), 1);
     }
 
     #[Test]
