@@ -30,9 +30,11 @@ class DiscourseSync implements ShouldQueue
             $client->post('admin/users/sync_sso', [
                 'base_uri' => config('discourse.url'),
                 'query' => compact('sso', 'sig'),
+                // Guzzle 8 rejects null header values, so an unset key would
+                // otherwise fail before sending; Discourse refuses empty ones
                 'headers' => [
-                    'Api-Key' => config('discourse.api_key'),
-                    'Api-Username' => config('discourse.api_username'),
+                    'Api-Key' => (string) config('discourse.api_key'),
+                    'Api-Username' => (string) config('discourse.api_username'),
                 ]
             ]);
         } catch (\Exception $e) {
