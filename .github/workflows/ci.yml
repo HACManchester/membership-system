@@ -89,8 +89,8 @@ jobs:
       - name: Composer audit
         run: composer audit --locked
 
-      - name: Npm install
-        run: yarn install
+      - name: Yarn install
+        run: yarn install --immutable
 
       - name: Frontend lint
         run: yarn lint
