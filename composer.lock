@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "596e91f59d904c7aa335bb4df8423e95",
+    "content-hash": "34b959e5462c4e38835aa65845adadae",
     "packages": [
         {
             "name": "brick/math",
@@ -584,29 +584,29 @@
         },
         {
             "name": "gocardless/gocardless-pro",
-            "version": "4.28.0",
+            "version": "8.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gocardless/gocardless-pro-php.git",
-                "reference": "d843a4a94cbe20ab5c0533eb805c48a87600abdf"
+                "reference": "f7340ff930be3c25b82547bc86a1859073e00208"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/d843a4a94cbe20ab5c0533eb805c48a87600abdf",
-                "reference": "d843a4a94cbe20ab5c0533eb805c48a87600abdf",
+                "url": "https://api.github.com/repos/gocardless/gocardless-pro-php/zipball/f7340ff930be3c25b82547bc86a1859073e00208",
+                "reference": "f7340ff930be3c25b82547bc86a1859073e00208",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "guzzlehttp/guzzle": "^6.0 | ^7.0",
-                "php": ">=5.6"
+                "guzzlehttp/guzzle": "^7.4|^8.0",
+                "php": ">=8.2"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^7.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "phpstan/phpstan": "^2.3.1",
+                "phpunit/phpunit": "^9.6.38",
+                "squizlabs/php_codesniffer": "^4.0.4"
             },
             "type": "library",
             "autoload": {
@@ -624,7 +624,7 @@
                     "homepage": "https://github.com/gocardless/gocardless-pro-php/contributors"
                 }
             ],
-            "description": "GoCardless Pro PHP Client Library",
+            "description": "GoCardless PHP Client Library",
             "homepage": "https://gocardless.com/",
             "keywords": [
                 "api",
@@ -633,9 +633,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gocardless/gocardless-pro-php/issues",
-                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v4.28.0"
+                "source": "https://github.com/gocardless/gocardless-pro-php/tree/v8.15.2"
             },
-            "time": "2023-04-11T17:13:38+00:00"
+            "time": "2026-10-23T10:26:40+00:00"
         },
         {
             "name": "graham-campbell/result-type",

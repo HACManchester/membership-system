@@ -11,7 +11,7 @@
     "type": "project",
     "require": {
         "php": "^8.4",
-        "gocardless/gocardless-pro": "^4.28",
+        "gocardless/gocardless-pro": "^8.15",
         "guzzlehttp/guzzle": "^7.15.2",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^4.4",
