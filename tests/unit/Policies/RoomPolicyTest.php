@@ -31,7 +31,7 @@ class RoomPolicyTest extends TestCase
         );
         $admin->assignRole($adminRole);
 
-        $room = factory(Room::class)->create();
+        $room = Room::factory()->create();
 
         $this->assertTrue($admin->can('viewAny', Room::class));
         $this->assertTrue($admin->can('view', $room));
@@ -43,7 +43,7 @@ class RoomPolicyTest extends TestCase
     public function test_all_users_can_view_rooms()
     {
         $user = factory(User::class)->create();
-        $room = factory(Room::class)->create();
+        $room = Room::factory()->create();
 
         $this->assertTrue($this->policy->viewAny($user));
         $this->assertTrue($this->policy->view($user, $room));
@@ -52,7 +52,7 @@ class RoomPolicyTest extends TestCase
     public function test_a_regular_member_cannot_manage_rooms()
     {
         $user = factory(User::class)->create();
-        $room = factory(Room::class)->create();
+        $room = Room::factory()->create();
 
         $this->assertFalse($this->policy->create($user));
         $this->assertFalse($this->policy->update($user, $room));
@@ -69,7 +69,7 @@ class RoomPolicyTest extends TestCase
         $maintainer = factory(User::class)->create();
         $maintainer->maintainerGroups()->attach(factory(MaintainerGroup::class)->create());
 
-        $room = factory(Room::class)->create();
+        $room = Room::factory()->create();
 
         $this->assertTrue($this->policy->create($equipmentUser));
         $this->assertTrue($this->policy->update($maintainer, $room));

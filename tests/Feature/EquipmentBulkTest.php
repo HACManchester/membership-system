@@ -20,7 +20,7 @@ class EquipmentBulkTest extends TestCase
 
     public function test_admin_can_bulk_create_equipment()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
             'room_id' => $room->id,
@@ -37,7 +37,7 @@ class EquipmentBulkTest extends TestCase
 
     public function test_bulk_create_links_a_course_and_flags_induction()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = factory(Course::class)->create();
 
         $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
@@ -53,7 +53,7 @@ class EquipmentBulkTest extends TestCase
 
     public function test_duplicate_slug_within_the_batch_is_rejected()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
             'room_id' => $room->id,
@@ -68,7 +68,7 @@ class EquipmentBulkTest extends TestCase
 
     public function test_duplicate_slug_against_existing_equipment_is_rejected()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         factory(Equipment::class)->create(['slug' => 'existing-tool']);
 
         $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
@@ -79,7 +79,7 @@ class EquipmentBulkTest extends TestCase
 
     public function test_non_authorised_user_cannot_bulk_create()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $user = factory(User::class)->create();
 
         $this->actingAs($user)->post(route('equipment.bulk-store'), [

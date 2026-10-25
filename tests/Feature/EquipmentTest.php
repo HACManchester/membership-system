@@ -113,7 +113,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function equipment_index_exposes_room_display_from_the_related_room()
     {
-        $room = factory(Room::class)->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
+        $room = Room::factory()->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
         $equipment = factory(Equipment::class)->create(['room_id' => $room->id]);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
@@ -140,7 +140,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function admin_can_create_equipment_with_room()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'New Drill',
@@ -157,7 +157,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function slug_is_generated_from_name_when_omitted()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Big Lathe',
@@ -170,7 +170,7 @@ class EquipmentTest extends TestCase
     public function empty_optional_foreign_keys_are_stored_as_null()
     {
         // The Inertia form submits these as '' when nothing is chosen.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Loose Tool',
@@ -191,7 +191,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function usage_cost_is_no_longer_required()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Free Tool',
@@ -204,7 +204,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function attaching_a_course_links_it_and_marks_induction_required()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = factory(Course::class)->create();
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
@@ -222,7 +222,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function attaching_a_course_does_not_detach_its_other_equipment()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = factory(Course::class)->create();
         $existing = factory(Equipment::class)->create(['slug' => 'existing-tool']);
         $course->equipment()->attach($existing->id);
@@ -244,7 +244,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function detaching_a_course_on_update_removes_the_link()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = factory(Course::class)->create();
         $equipment = factory(Equipment::class)->create([
             'name' => 'Linked Tool',
@@ -847,7 +847,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = factory(Course::class)->create();
         $equipment = factory(Equipment::class)->create([
             'name' => 'Course Item',
@@ -878,7 +878,7 @@ class EquipmentTest extends TestCase
     {
         // A hidden legacy category that predates alpha_dash validation must not
         // silently block editing an item that no longer requires an induction.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $equipment = factory(Equipment::class)->create([
             'name' => 'Bandsaw',
             'slug' => 'bandsaw',
@@ -905,7 +905,7 @@ class EquipmentTest extends TestCase
         // A former holder who has since left leaves a now-invalid id on a hidden
         // field; switching off permaloan must not be blocked by it, and it must be
         // cleared rather than stored.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $holder = factory(User::class)->create();
         $equipment = factory(Equipment::class)->create([
             'name' => 'Drill',
@@ -937,7 +937,7 @@ class EquipmentTest extends TestCase
     {
         // A group-less item has no maintainer/area to manage it, so a maintainer of
         // some other group is simply denied — without tripping over the null group.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $equipment = factory(Equipment::class)->create([
             'name' => 'Loose Tool',
             'slug' => 'loose-tool',
@@ -955,7 +955,7 @@ class EquipmentTest extends TestCase
     {
         // e.g. a course was detached, leaving requires_induction set with no legacy
         // category — the (hidden) legacy fields must not block the save.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $equipment = factory(Equipment::class)->create([
             'name' => 'Orphan',
             'slug' => 'orphan',
@@ -980,7 +980,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function updating_the_slug_redirects_to_the_new_slug()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $equipment = factory(Equipment::class)->create([
             'name' => 'Old Name',
             'slug' => 'old-slug',

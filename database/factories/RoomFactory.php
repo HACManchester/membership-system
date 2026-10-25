@@ -1,17 +1,29 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use BB\Entities\Room;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-$factory->define(Room::class, function (Faker $faker) {
-    $name = $faker->unique()->words(2, true);
+/**
+ * @extends Factory<Room>
+ */
+class RoomFactory extends Factory
+{
+    protected $model = Room::class;
 
-    return [
-        'name' => ucfirst($name),
-        'slug' => Str::slug($name),
-        'description' => $faker->optional()->sentence(),
-    ];
-});
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $name = $this->faker->unique()->words(2, true);
+
+        return [
+            'name' => ucfirst($name),
+            'slug' => Str::slug($name),
+            'description' => $this->faker->optional()->sentence(),
+        ];
+    }
+}

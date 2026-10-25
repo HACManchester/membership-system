@@ -221,7 +221,7 @@ class RouteSmokeTest extends TestCase
             'equipment'       => factory(Equipment::class)->create(),
             'equipmentArea'   => factory(EquipmentArea::class)->create(),
             'maintainerGroup' => factory(MaintainerGroup::class)->create(),
-            'room'            => factory(Room::class)->create(),
+            'room'            => Room::factory()->create(),
         ];
     }
 }
