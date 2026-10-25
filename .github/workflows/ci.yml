@@ -85,6 +85,10 @@ jobs:
       - name: Composer install
         run: composer install --prefer-dist
 
+      # setup-php disables Composer's own audit on install (COMPOSER_NO_AUDIT)
+      - name: Composer audit
+        run: composer audit --locked
+
       - name: Npm install
         run: yarn install
 
