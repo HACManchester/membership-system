@@ -52,8 +52,9 @@ that don't run in CI (see below).
   converts to class-based factories as a separate step.
 - CI (`.github/workflows/ci.yml`): a matrix of the PHP version production runs and the next one the
   upgrade moves to. The next version is non-blocking (`continue-on-error`) until it goes green.
-  Each leg runs composer + yarn install, ESLint, production build, PHPStan, PHPUnit. (There is no
-  JS test step — none exist yet.)
+  A single `frontend` job runs yarn install, ESLint, Jest and the production build, and hands the
+  built assets to the PHP legs (Blade's `mix()` needs the manifest). Each PHP leg runs composer
+  install and audit, PHPStan and PHPUnit.
 
 ## Quality conventions
 
@@ -120,7 +121,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Roles admin / RoleUsersController | ✅ Good | `RoleManagementTest`: assign/remove, admin-grants-admin (pinned), non-admin denied |
 | General induction | ✅ Good | `GeneralInductionTest`: correct/incorrect code, case-insensitivity, fob registration |
 | Gifts, stats, leaderboard | 🟡 Smoke only | Pages render without error; no behaviour assertions. Lower risk |
-| JS frontend | 🔴 None | Jest is configured (`jest.config.js`) but no tests exist and it is not in CI |
+| JS frontend | 🔴 Minimal | Jest runs in CI, but only two legacy component suites exist (`PaymentModule`, `Select` under `resources/assets/js`). `jest.config.js` only matches `.jsx`, so nothing in `resources/js` (TypeScript) is tested |
 
 ## Improvement plan
 

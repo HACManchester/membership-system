@@ -26,7 +26,7 @@ The local dev environment is Docker (Laravel Sail-style, `docker-compose.yml`).
   yarn dev        # Mix dev build
   yarn build      # production build
   yarn lint       # ESLint
-  yarn test       # Jest (no JS tests exist yet)
+  yarn test       # Jest (two legacy .jsx suites so far)
   ```
 
 Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
