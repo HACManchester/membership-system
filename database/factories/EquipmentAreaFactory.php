@@ -1,14 +1,26 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use BB\Entities\EquipmentArea;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(EquipmentArea::class, function (Faker $faker) {
-    return [
-        'name' => $faker->unique()->word(),
-        'slug' => $faker->unique()->slug(),
-        'description' => $faker->sentence(),
-    ];
-});
+/**
+ * @extends Factory<EquipmentArea>
+ */
+class EquipmentAreaFactory extends Factory
+{
+    protected $model = EquipmentArea::class;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->unique()->word(),
+            'slug' => $this->faker->unique()->slug(),
+            'description' => $this->faker->sentence(),
+        ];
+    }
+}

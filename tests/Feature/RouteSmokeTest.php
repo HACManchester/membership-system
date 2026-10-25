@@ -219,7 +219,7 @@ class RouteSmokeTest extends TestCase
             'role'            => Role::where('name', 'admin')->firstOrFail(),
             'course'          => factory(Course::class)->create(),
             'equipment'       => factory(Equipment::class)->create(),
-            'equipmentArea'   => factory(EquipmentArea::class)->create(),
+            'equipmentArea'   => EquipmentArea::factory()->create(),
             'maintainerGroup' => MaintainerGroup::factory()->create(),
             'room'            => Room::factory()->create(),
         ];

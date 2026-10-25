@@ -20,7 +20,7 @@ class MaintainerGroupTest extends TestCase
     public function test_index_renders_inertia()
     {
         MaintainerGroup::factory()->create([
-            'equipment_area_id' => factory(EquipmentArea::class)->create()->id,
+            'equipment_area_id' => EquipmentArea::factory()->create()->id,
         ]);
 
         $this->actingAs($this->admin())->get(route('maintainer_groups.index'))
@@ -33,7 +33,7 @@ class MaintainerGroupTest extends TestCase
     public function test_create_and_edit_render_inertia()
     {
         $admin = $this->admin();
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
 
         $this->actingAs($admin)->get(route('maintainer_groups.create'))
             ->assertInertia(function ($page) {
@@ -50,7 +50,7 @@ class MaintainerGroupTest extends TestCase
     public function test_admin_can_create_a_group_with_area_and_maintainers()
     {
         $admin = $this->admin();
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
         $maintainers = factory(User::class, 2)->create();
 
         $response = $this->actingAs($admin)->post(route('maintainer_groups.store'), [
@@ -82,8 +82,8 @@ class MaintainerGroupTest extends TestCase
     public function test_update_replaces_maintainers_and_area()
     {
         $admin = $this->admin();
-        $areaA = factory(EquipmentArea::class)->create();
-        $areaB = factory(EquipmentArea::class)->create();
+        $areaA = EquipmentArea::factory()->create();
+        $areaB = EquipmentArea::factory()->create();
         $group = MaintainerGroup::factory()->create([
             'name' => 'Metalwork',
             'slug' => 'metalwork',
@@ -106,7 +106,7 @@ class MaintainerGroupTest extends TestCase
 
     public function test_area_coordinator_can_manage_but_plain_member_cannot()
     {
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
 
         $coordinator = factory(User::class)->create();
         $coordinator->equipmentAreas()->attach($area);

@@ -54,7 +54,7 @@ class EquipmentTest extends TestCase
         $this->trainerUser = factory(User::class)->create();
 
         // Create equipment area and maintainer group
-        $this->equipmentArea = factory(EquipmentArea::class)->create([
+        $this->equipmentArea = EquipmentArea::factory()->create([
             'name' => 'Test Area',
             'slug' => 'test-area'
         ]);

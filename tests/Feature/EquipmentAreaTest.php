@@ -18,7 +18,7 @@ class EquipmentAreaTest extends TestCase
 
     public function test_index_renders_inertia_with_areas()
     {
-        factory(EquipmentArea::class)->create();
+        EquipmentArea::factory()->create();
 
         $this->actingAs($this->admin())->get(route('equipment_area.index'))
             ->assertStatus(200)
@@ -35,7 +35,7 @@ class EquipmentAreaTest extends TestCase
                 $page->component('EquipmentAreas/Create')->has('searchUrl');
             });
 
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
         $this->actingAs($admin)->get(route('equipment_area.edit', $area))
             ->assertInertia(function ($page) use ($area) {
                 $page->component('EquipmentAreas/Edit')->where('area.id', $area->id);
@@ -74,7 +74,7 @@ class EquipmentAreaTest extends TestCase
     public function test_update_replaces_the_coordinator_set()
     {
         $admin = $this->admin();
-        $area = factory(EquipmentArea::class)->create(['name' => 'Metalwork', 'slug' => 'metalwork']);
+        $area = EquipmentArea::factory()->create(['name' => 'Metalwork', 'slug' => 'metalwork']);
         $original = factory(User::class)->create();
         $replacement = factory(User::class)->create();
         $area->areaCoordinators()->sync([$original->id]);
@@ -90,7 +90,7 @@ class EquipmentAreaTest extends TestCase
 
     public function test_duplicate_name_is_rejected()
     {
-        factory(EquipmentArea::class)->create(['name' => 'Woodwork', 'slug' => 'woodwork']);
+        EquipmentArea::factory()->create(['name' => 'Woodwork', 'slug' => 'woodwork']);
 
         $this->actingAs($this->admin())->post(route('equipment_area.store'), [
             'name' => 'Woodwork',
@@ -101,7 +101,7 @@ class EquipmentAreaTest extends TestCase
     public function test_non_admin_cannot_create_or_update_or_delete()
     {
         $user = factory(User::class)->create();
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
 
         $this->actingAs($user)->post(route('equipment_area.store'), ['name' => 'Nope'])->assertForbidden();
         $this->actingAs($user)->put(route('equipment_area.update', $area), [
