@@ -27,12 +27,12 @@ class GoCardlessHelper
 
     public function getPayment($paymentId)
     {
-        return $this->client->payments()->get($paymentId);
+        return $this->client->payments()->get($this->requireId($paymentId, 'payment'));
     }
 
     public function cancelPayment($paymentId)
     {
-        return $this->client->payments()->cancel($paymentId);
+        return $this->client->payments()->cancel($this->requireId($paymentId, 'payment'));
     }
 
     public function newPreAuthUrl($user, $paymentDetails)
@@ -51,7 +51,7 @@ class GoCardlessHelper
     public function confirmResource($user, $confirm_params)
     {
         return $this->client->redirectFlows()->complete(
-            $user->gocardless_setup_id,
+            $this->requireId($user->gocardless_setup_id, 'redirect flow'),
 
             ["params" => ["session_token" => 'user-token-' . $user->id]]
         );
@@ -79,7 +79,22 @@ class GoCardlessHelper
     }
     public function cancelSubscription($id)
     {
-        return $this->client->subscriptions()->cancel($id);
+        return $this->client->subscriptions()->cancel($this->requireId($id, 'subscription'));
+    }
+
+    /**
+     * An empty ID would otherwise reach the SDK, which turns it into a request
+     * for the wrong URL (4.x) or its own URL-parameter exception (8.12+).
+     * Failing here gives one clear error, whichever SDK is installed, without
+     * contacting GoCardless.
+     */
+    private function requireId(?string $id, string $resource): string
+    {
+        if ($id === null || $id === '') {
+            throw new \InvalidArgumentException("No GoCardless {$resource} ID given");
+        }
+
+        return $id;
     }
 
     /**
