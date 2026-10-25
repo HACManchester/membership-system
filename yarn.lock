@@ -1684,7 +1684,7 @@ __metadata:
     "@emotion/styled": ^11.14.0
     "@eslint/js": ^9.33.0
     "@fontsource/roboto": ^5.2.5
-    "@inertiajs/react": ^2.0.5
+    "@inertiajs/react": ^2.3.29
     "@mui/icons-material": ^6.4.7
     "@mui/material": ^6.4.7
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.0-rc.0
@@ -1767,26 +1767,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inertiajs/core@npm:2.0.17":
-  version: 2.0.17
-  resolution: "@inertiajs/core@npm:2.0.17"
+"@inertiajs/core@npm:2.3.29":
+  version: 2.3.29
+  resolution: "@inertiajs/core@npm:2.3.29"
   dependencies:
-    axios: ^1.8.2
-    es-toolkit: ^1.34.1
-    qs: ^6.9.0
-  checksum: 2777ec768200943fed08b5f84c0148415b3fbe29ee0144da92455fb247070db29e52df289ff0f7945c505afc8acccaa8d2b9579fe8904fa8eb8a57854e100eb2
+    "@types/lodash-es": ^4.17.12
+    axios: ^1.20.0
+    laravel-precognition: ^1.0.2
+    lodash-es: ^4.18.1
+    qs: ^6.16.0
+  checksum: 1e7d65d2886b89f76984cecd899cf43c74da39bad73a2339c58ec5c2c2a2efc667e642f4a47b460b34139cc4b00b9328dbf1b588a64ad3f769c86ce0538c7048
   languageName: node
   linkType: hard
 
-"@inertiajs/react@npm:^2.0.5":
-  version: 2.0.17
-  resolution: "@inertiajs/react@npm:2.0.17"
+"@inertiajs/react@npm:^2.3.29":
+  version: 2.3.29
+  resolution: "@inertiajs/react@npm:2.3.29"
   dependencies:
-    "@inertiajs/core": 2.0.17
-    es-toolkit: ^1.33.0
+    "@inertiajs/core": 2.3.29
+    "@types/lodash-es": ^4.17.12
+    laravel-precognition: ^1.0.2
+    lodash-es: ^4.18.1
   peerDependencies:
     react: ^16.9.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: ce2a79dca15972302c5c4668e162daae61d2420724e4a0cec7ef203c8851f3e2879d77ba2c3b7e47536d37692948ecb6715909affac810299c565d853183f303
+    react-dom: ^16.9.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: f429b765ca62aacbb66834e0b441f309aa832ab68d31b6b4b7a2d481fb82da37a0190e30c57a8b39032f6a3b9d88a65091a6294d171143e5aed6dfcca4e776df
   languageName: node
   linkType: hard
 
@@ -2783,6 +2788,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash-es@npm:^4.17.12":
+  version: 4.17.12
+  resolution: "@types/lodash-es@npm:4.17.12"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 990a99e2243bebe9505cb5ad19fbc172beb4a8e00f9075c99fc06c46c2801ffdb40bc2867271cf580d5f48994fc9fb076ec92cd60a20e621603bf22114e5b077
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.17.27
+  resolution: "@types/lodash@npm:4.17.27"
+  checksum: abdc4b1d03a42d8b1048e097e1c5d5b2093e787464f0e7684141736f92c84d4d26eaac283afa128a2e2bf87251bc6003b78f454bb86551c9a6d4d7778b03ed26
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^4.0.0":
   version: 4.0.4
   resolution: "@types/mdast@npm:4.0.4"
@@ -3759,7 +3780,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.8.2":
+"axios@npm:^1.20.0, axios@npm:^1.4.0":
   version: 1.20.0
   resolution: "axios@npm:1.20.0"
   dependencies:
@@ -5706,18 +5727,6 @@ __metadata:
     is-date-object: ^1.0.5
     is-symbol: ^1.0.4
   checksum: 966965880356486cd4d1fe9a523deda2084c81b3702d951212c098f5f2ee93605d1b7c1840062efb48a07d892641c7ed1bc194db563645c0dd2b919cb6d65b93
-  languageName: node
-  linkType: hard
-
-"es-toolkit@npm:^1.33.0, es-toolkit@npm:^1.34.1":
-  version: 1.39.7
-  resolution: "es-toolkit@npm:1.39.7"
-  dependenciesMeta:
-    "@trivago/prettier-plugin-sort-imports@4.3.0":
-      unplugged: true
-    prettier-plugin-sort-re-exports@0.0.1:
-      unplugged: true
-  checksum: 67dc43feff6843bd32f0ee419788552fe8ec3cea1fad558c155a5ac842e7eec5ad5f8a45fb3004bcb309a55e0fd71689a907684644c31447a539f29886b09f46
   languageName: node
   linkType: hard
 
@@ -8476,6 +8485,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"laravel-precognition@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "laravel-precognition@npm:1.0.2"
+  dependencies:
+    axios: ^1.4.0
+    lodash-es: ^4.17.21
+  checksum: 805da02bbf48c50ec4e27817c74824b7de7554ea4a5d331c1d3beaa79ff73a609c06cf082f684c0070182531c0f7a4e993226ca93fe30380ff28f5e386fd376b
+  languageName: node
+  linkType: hard
+
 "launch-editor@npm:^2.6.0":
   version: 2.14.2
   resolution: "launch-editor@npm:2.14.2"
@@ -8610,6 +8629,13 @@ __metadata:
   dependencies:
     p-locate: ^5.0.0
   checksum: 72eb661788a0368c099a184c59d2fee760b3831c9c1c33955e8a19ae4a21b4116e53fa736dc086cdeb9fce9f7cc508f2f92d2d3aae516f133e16a2bb59a39f5a
+  languageName: node
+  linkType: hard
+
+"lodash-es@npm:^4.17.21, lodash-es@npm:^4.18.1":
+  version: 4.18.1
+  resolution: "lodash-es@npm:4.18.1"
+  checksum: 578993943cfa779e784aeed96766484ec6ab15cd855e52c79631de6371ac49fadd6dd9f4719f8d1223ab2bcb0dfbece484f548191dd34d3dd8b39e1af712a343
   languageName: node
   linkType: hard
 
@@ -10684,16 +10710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.12.3, qs@npm:^6.9.0":
-  version: 6.14.0
-  resolution: "qs@npm:6.14.0"
-  dependencies:
-    side-channel: ^1.1.0
-  checksum: 189b52ad4e9a0da1a16aff4c58b2a554a8dad9bd7e287c7da7446059b49ca2e33a49e570480e8be406b87fccebf134f51c373cbce36c8c83859efa0c9b71d635
-  languageName: node
-  linkType: hard
-
-"qs@npm:~6.16.0":
+"qs@npm:^6.12.3, qs@npm:^6.16.0, qs@npm:~6.16.0":
   version: 6.16.1
   resolution: "qs@npm:6.16.1"
   dependencies:
