@@ -21,22 +21,44 @@ class DeprecationsFailTestsTest extends TestCase
     }
 
     /**
-     * Deprecations inside dependencies aren't ours to fix — e.g. Laravel 8's own
-     * Timebox on PHP 8.1 — so they're handed to Laravel, not failed.
+     * Libraries such as Faker report deprecated API use through a silenced
+     * trigger_error(), so the `@` mustn't hide it.
      */
     #[Test]
-    public function a_deprecation_raised_inside_vendor_does_not_fail_the_test()
+    public function a_silenced_deprecation_throws()
     {
-        // Read the active handler (the one Tests\TestCase installed) without replacing it
-        $handler = set_error_handler(function () {
-            return true;
-        });
-        restore_error_handler();
+        $this->expectException(\ErrorException::class);
+        $this->expectExceptionMessage('this is quietly deprecated');
 
-        // Would throw ErrorException if the deprecation were treated as ours
-        $handler(E_USER_DEPRECATED, 'vendor deprecation', base_path('vendor/autoload.php'), 1);
+        @trigger_error('this is quietly deprecated', E_USER_DEPRECATED);
+    }
+
+    #[Test]
+    public function a_deprecation_raised_inside_vendor_throws()
+    {
+        $this->expectException(\ErrorException::class);
+        $this->expectExceptionMessage('vendor deprecation');
+
+        $this->activeHandler()(E_USER_DEPRECATED, 'vendor deprecation', base_path('vendor/autoload.php'), 1);
+    }
+
+    #[Test]
+    public function a_known_vendor_deprecation_does_not_fail_the_test()
+    {
+        $file = base_path('vendor/gocardless/gocardless-pro/lib/Client.php');
+
+        // Would throw ErrorException if the deprecation weren't recognised as known
+        $this->activeHandler()(E_DEPRECATED, 'Creation of dynamic property GoCardlessPro\Client::$x is deprecated', $file, 1);
 
         $this->addToAssertionCount(1);
+    }
+
+    #[Test]
+    public function a_known_vendor_message_raised_elsewhere_still_throws()
+    {
+        $this->expectException(\ErrorException::class);
+
+        $this->activeHandler()(E_DEPRECATED, 'Creation of dynamic property GoCardlessPro\Client::$x is deprecated', base_path('app/Helpers/GoCardlessHelper.php'), 1);
     }
 
     #[Test]
@@ -47,5 +69,18 @@ class DeprecationsFailTestsTest extends TestCase
         $this->expectExceptionMessage('this is a warning');
 
         trigger_error('this is a warning', E_USER_WARNING);
+    }
+
+    /**
+     * The handler Tests\TestCase installed, read without replacing it.
+     */
+    private function activeHandler(): callable
+    {
+        $handler = set_error_handler(function () {
+            return true;
+        });
+        restore_error_handler();
+
+        return $handler;
     }
 }
