@@ -31,9 +31,9 @@ jobs:
           # Production's engine, and composer.json's config.platform.php.
           - php: "8.4"
             experimental: false
-          # Laravel 13 also supports 8.5, production's next engine.
+          # Production's next engine, which Laravel 13 supports. Green, so it blocks.
           - php: "8.5"
-            experimental: true
+            experimental: false
 
     steps:
       # Actions are pinned to commit SHAs (version in the comment); Dependabot updates both
