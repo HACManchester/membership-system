@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# A new push to a PR supersedes its running build. Builds on master always finish.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
