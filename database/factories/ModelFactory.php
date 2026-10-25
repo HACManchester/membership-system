@@ -19,11 +19,11 @@ use Illuminate\Support\Str;
 
 $factory->define('BB\Entities\User', function (Generator $faker) {
     return [
-        'given_name'          => $faker->firstName,
-        'display_name'        => $faker->firstName,
-        'family_name'         => $faker->lastName,
-        'announce_name'       => $faker->lastName,
-        'email'               => $faker->email,
+        'given_name'          => $faker->firstName(),
+        'display_name'        => $faker->firstName(),
+        'family_name'         => $faker->lastName(),
+        'announce_name'       => $faker->lastName(),
+        'email'               => $faker->email(),
         'password'            => Str::random(10),
         'remember_token'      => Str::random(10),
         'hash'                => Str::random(32),
@@ -49,15 +49,15 @@ $factory->define('BB\Entities\ProfileData', function (Generator $faker) {
         'new_profile_photo'     => false,
         'profile_photo_private' => false,
         'profile_photo_on_wall' => false,
-        'tagline'               => $faker->sentence,
+        'tagline'               => $faker->sentence(),
     ];
 });
 
 $factory->define('BB\Entities\Role', function (Generator $faker) {
     return [
-        'name'        => $faker->word,
-        'title'       => $faker->word,
-        'description' => $faker->sentence,
+        'name'        => $faker->word(),
+        'title'       => $faker->word(),
+        'description' => $faker->sentence(),
     ];
 });
 
