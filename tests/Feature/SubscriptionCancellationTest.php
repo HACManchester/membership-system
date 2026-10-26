@@ -35,12 +35,12 @@ class SubscriptionCancellationTest extends TestCase
     #[Test]
     public function a_variable_dd_member_can_cancel_and_their_charges_are_cancelled()
     {
-        $member = factory(User::class)->create([
+        $member = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD123',
         ]);
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $member->id,
             'charge_date' => Carbon::now()->addDays(5),
             'status' => 'pending',
@@ -64,7 +64,7 @@ class SubscriptionCancellationTest extends TestCase
     #[Test]
     public function a_legacy_dd_cancellation_failure_does_not_cancel_locally()
     {
-        $member = factory(User::class)->create([
+        $member = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless',
             'subscription_id' => 'SB123',
@@ -87,12 +87,12 @@ class SubscriptionCancellationTest extends TestCase
     #[Test]
     public function a_legacy_dd_already_cancelled_at_gocardless_cancels_locally()
     {
-        $member = factory(User::class)->create([
+        $member = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless',
             'subscription_id' => 'SB123',
         ]);
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $member->id,
             'charge_date' => Carbon::now()->addDays(5),
             'status' => 'due',

@@ -1,0 +1,833 @@
+<?php
+
+namespace Tests\Unit\Services;
+
+use BB\Entities\User;
+use BB\Entities\SubscriptionCharge;
+use BB\Entities\Payment;
+use BB\Helpers\GoCardlessHelper;
+use BB\Services\MemberSubscriptionCharges;
+use BB\Repo\PaymentRepository;
+use BB\Repo\SubscriptionChargeRepository;
+use BB\Repo\UserRepository;
+use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use Tests\TestCase;
+use Tests\Concerns\MakesGoCardlessExceptions;
+
+// The GoCardless mock is shared by every test. Some set expectations on it,
+// others only stub it, so the stub-only tests mustn't raise a PHPUnit notice
+#[AllowMockObjectsWithoutExpectations]
+class MemberSubscriptionChargesTest extends TestCase
+{
+    use MakesGoCardlessExceptions;
+
+    private $service;
+    private $mockGoCardless;
+    private $userRepository;
+    private $subscriptionChargeRepository;
+    private $paymentRepository;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        
+        // Get real repositories for database interactions
+        $this->userRepository = app(UserRepository::class);
+        $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
+        $this->paymentRepository = app(PaymentRepository::class);
+        
+        // Mock GoCardless and Telegram to avoid external calls
+        $this->mockGoCardless = $this->createMock(GoCardlessHelper::class);
+        $mockTelegramHelper = $this->createStub(\BB\Helpers\TelegramHelper::class);
+        $this->app->instance(\BB\Helpers\TelegramHelper::class, $mockTelegramHelper);
+        
+        $this->service = new MemberSubscriptionCharges(
+            $this->userRepository,
+            $this->subscriptionChargeRepository,
+            $this->mockGoCardless,
+            $this->paymentRepository
+        );
+    }
+
+    public function testCreateSubscriptionChargesForMatchingPaymentDay()
+    {
+        $paymentDay = 15; // Use a day that exists in all months
+        $otherDay = 10; // Different payment day
+        
+        // Create active users with payment day matching target date
+        $user1 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        $user2 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 17,
+        ]);
+
+        // Create user with different payment day (should be ignored)
+        $user3 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $otherDay,
+            'monthly_subscription' => 27,
+        ]);
+
+        // Set target date to match the payment day
+        $targetDate = Carbon::now()->setDay($paymentDay);
+        
+        $this->service->createSubscriptionCharges($targetDate);
+
+        // Verify charges were created for matching users
+        $charge1 = SubscriptionCharge::where('user_id', $user1->id)
+            ->whereDate('charge_date', $targetDate)
+            ->first();
+        $this->assertNotNull($charge1);
+        $this->assertEquals(22, $charge1->amount);
+        $this->assertEquals('pending', $charge1->status);
+
+        $charge2 = SubscriptionCharge::where('user_id', $user2->id)
+            ->whereDate('charge_date', $targetDate)
+            ->first();
+        $this->assertNotNull($charge2);
+        $this->assertEquals(17, $charge2->amount);
+
+        // Verify no charge created for non-matching payment day
+        $charge3 = SubscriptionCharge::where('user_id', $user3->id)
+            ->whereDate('charge_date', $targetDate)
+            ->first();
+        $this->assertNull($charge3);
+    }
+
+    public function testCreateSubscriptionChargesIgnoresMembersWhoCancelled()
+    {
+        $paymentDay = 15;
+
+        // Cancelling clears the payment method but leaves the member active until the
+        // daily check retires them - a window we used to raise a charge a month in
+        $user = User::factory()->create([
+            'status' => 'leaving',
+            'active' => true,
+            'payment_method' => '',
+            'mandate_id' => '',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        $targetDate = Carbon::now()->setDay($paymentDay);
+
+        $this->service->createSubscriptionCharges($targetDate);
+
+        $this->assertEquals(0, SubscriptionCharge::where('user_id', $user->id)->count());
+    }
+
+    public function testCreateSubscriptionChargesIgnoresInactiveUsers()
+    {
+        $paymentDay = 15; // Use a day that exists in all months
+        $targetDate = Carbon::now()->setDay($paymentDay);
+        
+        $suspendedUser = User::factory()->create([
+            'status' => 'suspended',
+            'active' => false,
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        $leftUser = User::factory()->create([
+            'status' => 'left',
+            'active' => false,
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        $this->service->createSubscriptionCharges($targetDate);
+
+        $suspendedCharge = SubscriptionCharge::where('user_id', $suspendedUser->id)
+            ->whereDate('charge_date', $targetDate)
+            ->count();
+        $this->assertEquals(0, $suspendedCharge);
+
+        $leftCharge = SubscriptionCharge::where('user_id', $leftUser->id)
+            ->whereDate('charge_date', $targetDate)
+            ->count();
+        $this->assertEquals(0, $leftCharge);
+    }
+
+    public function testCreateSubscriptionChargesContinuesWhenOneUserFails()
+    {
+        $paymentDay = 15;
+        $targetDate = Carbon::now()->setDay($paymentDay);
+
+        User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+        User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 17,
+        ]);
+
+        $mockChargeRepo = $this->createMock(SubscriptionChargeRepository::class);
+        $mockChargeRepo->method('chargeExists')->willReturn(false);
+        $mockChargeRepo->expects($this->exactly(2))
+            ->method('createCharge')
+            ->willReturnCallback($this->consecutive(
+                new \Exception('database error'),
+                SubscriptionCharge::factory()->make(['user_id' => 1])
+            ));
+
+        $service = new MemberSubscriptionCharges(
+            $this->userRepository,
+            $mockChargeRepo,
+            $this->mockGoCardless,
+            $this->paymentRepository
+        );
+
+        $result = $service->createSubscriptionCharges($targetDate);
+
+        $this->assertCount(1, $result['created']);
+        $this->assertCount(1, $result['failed']);
+    }
+
+    public function testCreateSubscriptionChargesPreventsDuplicates()
+    {
+        $paymentDay = 15; // Use a day that exists in all months
+        $targetDate = Carbon::now()->setDay($paymentDay);
+        
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'payment_day' => $paymentDay,
+            'monthly_subscription' => 22,
+        ]);
+
+        $this->service->createSubscriptionCharges($targetDate);
+        $this->service->createSubscriptionCharges($targetDate);
+
+        $chargeCount = SubscriptionCharge::where('user_id', $user->id)
+            ->whereDate('charge_date', $targetDate)
+            ->count();
+        $this->assertEquals(1, $chargeCount);
+    }
+
+    public function testMakeChargesDueUpdatesChargesForCurrentAndPastDates()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+        ]);
+
+        $todayCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'pending',
+        ]);
+
+        $pastCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now()->subDays(2),
+            'status' => 'pending',
+        ]);
+
+        $futureCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now()->addDays(2),
+            'status' => 'pending',
+        ]);
+
+        $this->service->makeChargesDue();
+
+        $todayCharge->refresh();
+        $this->assertEquals('due', $todayCharge->status);
+
+        $pastCharge->refresh();
+        $this->assertEquals('due', $pastCharge->status);
+
+        $futureCharge->refresh();
+        $this->assertEquals('pending', $futureCharge->status);
+    }
+
+    public function testBillMembersCreatesGoCardlessPaymentsForCorrectAmounts()
+    {
+        $user1 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $user2 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 17,
+            'mandate_id' => 'MD987654321',
+        ]);
+
+        $charge1 = SubscriptionCharge::factory()->create([
+            'user_id' => $user1->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $charge2 = SubscriptionCharge::factory()->create([
+            'user_id' => $user2->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $mockBill1 = (object)['id' => 'PM123456789', 'status' => 'pending_submission'];
+        $mockBill2 = (object)['id' => 'PM987654321', 'status' => 'pending_submission'];
+
+        $bills = [$mockBill1, $mockBill2];
+        $newBillCalls = [];
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('newBill')
+            ->willReturnCallback(function ($mandateId, $amount, $name) use (&$bills, &$newBillCalls) {
+                $newBillCalls[] = [$mandateId, $amount, $name];
+
+                return array_shift($bills);
+            });
+
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('getNameFromReason')
+            ->with('subscription')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // Loose comparison, as withConsecutive() made: amounts may arrive as floats
+        $this->assertEquals([
+            ['MD123456789', 2200, 'Monthly subscription'],
+            ['MD987654321', 1700, 'Monthly subscription'],
+        ], $newBillCalls);
+
+        $payment1 = Payment::where('user_id', $user1->id)
+            ->where('reference', $charge1->id)
+            ->first();
+        $this->assertNotNull($payment1);
+        $this->assertEquals(22, $payment1->amount);
+        $this->assertEquals('pending', $payment1->status);
+        $this->assertEquals('PM123456789', $payment1->source_id);
+
+        $payment2 = Payment::where('user_id', $user2->id)
+            ->where('reference', $charge2->id)
+            ->first();
+        $this->assertNotNull($payment2);
+        $this->assertEquals(17, $payment2->amount);
+        $this->assertEquals('pending', $payment2->status);
+        $this->assertEquals('PM987654321', $payment2->source_id);
+    }
+
+    public function testBillMembersUsesChargeAmountWhenAvailable()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 27,
+            'status' => 'due',
+        ]);
+
+        $mockBill = (object)['id' => 'PM123456789', 'status' => 'pending_submission'];
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->with('MD123456789', 2700, 'Monthly subscription')
+            ->willReturn($mockBill);
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        $payment = Payment::where('user_id', $user->id)->first();
+        $this->assertEquals(27, $payment->amount);
+    }
+
+    public function testBillMembersOnlyProcessesGoCardlessUsers()
+    {
+        $goCardlessUser = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $balanceUser = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'balance',
+            'monthly_subscription' => 22,
+        ]);
+
+        SubscriptionCharge::factory()->create([
+            'user_id' => $goCardlessUser->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        SubscriptionCharge::factory()->create([
+            'user_id' => $balanceUser->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $mockBill = (object)['id' => 'PM123456789', 'status' => 'pending_submission'];
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->willReturn($mockBill);
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        $goCardlessPayment = Payment::where('user_id', $goCardlessUser->id)->first();
+        $this->assertNotNull($goCardlessPayment);
+
+        $balancePayment = Payment::where('user_id', $balanceUser->id)->first();
+        $this->assertNull($balancePayment);
+    }
+
+    public function testBillMembersCancelsChargesForMembersWithNoPaymentMethod()
+    {
+        // The state a cancelled mandate leaves behind - see UserRepository::subscriptionCancelled
+        $user = User::factory()->create([
+            'status' => 'leaving',
+            'active' => true,
+            'payment_method' => '',
+            'mandate_id' => '',
+            'monthly_subscription' => 22,
+        ]);
+
+        $charges = collect([3, 2, 1])->map(function ($monthsAgo) use ($user) {
+            return SubscriptionCharge::factory()->create([
+                'user_id' => $user->id,
+                'charge_date' => Carbon::now()->subMonths($monthsAgo),
+                'status' => 'due',
+            ]);
+        });
+
+        $this->mockGoCardless->expects($this->never())->method('newBill');
+
+        $this->service->billMembers();
+
+        foreach ($charges as $charge) {
+            $this->assertEquals('cancelled', $charge->fresh()->status);
+        }
+        $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
+    }
+
+    public function testBillMembersCancelsChargesForAGoCardlessMemberWithNoMandate()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'active' => true,
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => '',
+            'monthly_subscription' => 22,
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->never())->method('newBill');
+
+        $this->service->billMembers();
+
+        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
+    }
+
+    public function testBillMembersCancelsChargesForInactiveMembers()
+    {
+        $user = User::factory()->create([
+            'status' => 'suspended',
+            'active' => false,
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD123456789',
+            'monthly_subscription' => 22,
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->never())->method('newBill');
+
+        $this->service->billMembers();
+
+        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
+    }
+
+    public function testBillMembersLeavesChargesForMembersPayingByHand()
+    {
+        // Standing order and cash members keep a payment method - their charges wait
+        // here to be settled manually and must not be cancelled out from under them
+        $user = User::factory()->create([
+            'status' => 'active',
+            'active' => true,
+            'payment_method' => 'standing-order',
+            'monthly_subscription' => 22,
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->never())->method('newBill');
+
+        $this->service->billMembers();
+
+        $this->assertEquals('due', $charge->fresh()->status);
+    }
+
+    public function testBillMembersWillNotCollectABackdatedCharge()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'active' => true,
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD123456789',
+            'monthly_subscription' => 22,
+        ]);
+
+        $maxAge = config('membership.billing.max_charge_age_days');
+
+        $staleCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now()->subDays($maxAge + 1),
+            'status' => 'due',
+        ]);
+
+        $currentCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $mockBill = (object)['id' => 'PM123456789', 'status' => 'pending_submission'];
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->willReturn($mockBill);
+
+        $this->mockGoCardless->method('getNameFromReason')->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // Left alone rather than cancelled - the money may still be owed, but a human
+        // decides that, and only the current charge is collected
+        $this->assertEquals('due', $staleCharge->fresh()->status);
+        $this->assertEquals(1, Payment::where('user_id', $user->id)->count());
+        $this->assertEquals(
+            (string) $currentCharge->id,
+            Payment::where('user_id', $user->id)->first()->reference
+        );
+    }
+
+    public function testBillMembersHandlesGoCardlessFailures()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->willThrowException($this->gocardlessValidationFailed('Invalid mandate'));
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        $payment = Payment::where('user_id', $user->id)->first();
+        $this->assertNotNull($payment);
+        $this->assertEquals('failed', $payment->status);
+        $this->assertNull($payment->source_id);
+        $this->assertEquals(22, $payment->amount);
+
+        // No GoCardless payment exists so no failure webhook will ever arrive - the
+        // run itself must put the member through the failure flow
+        $charge->refresh();
+        $this->assertEquals('cancelled', $charge->status);
+
+        $user->refresh();
+        $this->assertEquals('payment-warning', $user->status);
+        $this->assertTrue($user->active);
+    }
+
+    public function testBillMembersContinuesAfterFailureWithoutReusingPreviousBillId()
+    {
+        $goodUser1 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD111',
+        ]);
+        $failingUser = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD222',
+        ]);
+        $goodUser2 = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD333',
+        ]);
+
+        foreach ([$goodUser1, $failingUser, $goodUser2] as $user) {
+            SubscriptionCharge::factory()->create([
+                'user_id' => $user->id,
+                'charge_date' => Carbon::now(),
+                'amount' => 0,
+                'status' => 'due',
+            ]);
+        }
+
+        $this->mockGoCardless->expects($this->exactly(3))
+            ->method('newBill')
+            ->willReturnCallback($this->consecutive(
+                (object)['id' => 'PM111', 'status' => 'pending_submission'],
+                $this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate'),
+                (object)['id' => 'PM333', 'status' => 'pending_submission']
+            ));
+
+        $this->mockGoCardless->expects($this->exactly(3))
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // The failed payment must not pick up the previous member's GoCardless payment ID
+        $failedPayment = Payment::where('user_id', $failingUser->id)->first();
+        $this->assertNotNull($failedPayment);
+        $this->assertEquals('failed', $failedPayment->status);
+        $this->assertNull($failedPayment->source_id);
+
+        // Members after the failure still get billed
+        $payment2 = Payment::where('user_id', $goodUser2->id)->first();
+        $this->assertNotNull($payment2);
+        $this->assertEquals('PM333', $payment2->source_id);
+        $this->assertEquals('pending', $payment2->status);
+    }
+
+    public function testBillMembersSurvivesFailureForMemberWithOlderOutstandingCharge()
+    {
+        // The 2026-07-01 incident: a member whose billing fails while they already
+        // have an older unpaid charge must not abort the whole run
+        $failingUser = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD222',
+        ]);
+        $laterUser = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 17,
+            'mandate_id' => 'MD333',
+        ]);
+
+        // Older charge from a previous failed month, with its failed payment attached
+        // so the retry filter skips it
+        $oldCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $failingUser->id,
+            'charge_date' => Carbon::now()->subMonth(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+        Payment::factory()->create([
+            'user_id' => $failingUser->id,
+            'source' => 'gocardless-variable',
+            'source_id' => null,
+            'reason' => 'subscription',
+            'status' => 'failed',
+            'reference' => (string)$oldCharge->id,
+        ]);
+
+        $newCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $failingUser->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+        $laterCharge = SubscriptionCharge::factory()->create([
+            'user_id' => $laterUser->id,
+            'charge_date' => Carbon::now(),
+            'amount' => 0,
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('newBill')
+            ->willReturnCallback($this->consecutive(
+                $this->gocardlessValidationFailed('currency must be EUR for a sepa_core mandate'),
+                (object)['id' => 'PM333', 'status' => 'pending_submission']
+            ));
+
+        $this->mockGoCardless->expects($this->exactly(2))
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        // The new charge went through the failure flow; the old one is untouched
+        $newCharge->refresh();
+        $this->assertEquals('cancelled', $newCharge->status);
+        $oldCharge->refresh();
+        $this->assertEquals('due', $oldCharge->status);
+
+        // The member processed after the failure was still billed
+        $laterCharge->refresh();
+        $laterPayment = Payment::where('user_id', $laterUser->id)
+            ->where('reference', $laterCharge->id)
+            ->first();
+        $this->assertNotNull($laterPayment);
+        $this->assertEquals('PM333', $laterPayment->source_id);
+    }
+
+    public function testBillMembersSkipsChargesWithExistingPayments()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        Payment::factory()->create([
+            'user_id' => $user->id,
+            'reference' => (string)$charge->id,
+            'source' => 'gocardless-variable',
+            'status' => 'failed',
+            'reason' => 'subscription',
+        ]);
+
+        $this->mockGoCardless->expects($this->never())
+            ->method('newBill');
+
+        $this->service->billMembers();
+
+        $paymentCount = Payment::where('user_id', $user->id)
+            ->where('reference', $charge->id)
+            ->count();
+        $this->assertEquals(1, $paymentCount);
+    }
+
+    public function testBillMembersHandlesInvalidStateException()
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'payment_method' => 'gocardless-variable',
+            'mandate_id' => 'MD_TEST',
+            'monthly_subscription' => 22,
+            'mandate_id' => 'MD123456789',
+        ]);
+
+        $charge = SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now(),
+            'status' => 'due',
+        ]);
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('newBill')
+            ->willThrowException($this->gocardlessInvalidState('Payment cannot be created'));
+
+        $this->mockGoCardless->expects($this->once())
+            ->method('getNameFromReason')
+            ->willReturn('Monthly subscription');
+
+        $this->service->billMembers();
+
+        $payment = Payment::where('user_id', $user->id)->first();
+        $this->assertNotNull($payment);
+        $this->assertEquals('failed', $payment->status);
+
+        $charge->refresh();
+        $this->assertEquals('cancelled', $charge->status);
+
+        $user->refresh();
+        $this->assertEquals('payment-warning', $user->status);
+    }
+
+    /**
+     * A stub that returns each result in turn, throwing any that is an exception.
+     */
+    private function consecutive(...$results): \Closure
+    {
+        return function () use (&$results) {
+            $result = array_shift($results);
+            if ($result instanceof \Throwable) {
+                throw $result;
+            }
+
+            return $result;
+        };
+    }
+}

@@ -30,9 +30,9 @@ class CourseTrainingTrainTest extends TestCase
 
         Event::fake();
 
-        $this->admin = factory(User::class)->state('admin')->create();
-        $this->member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        $this->course = factory(Course::class)->create();
+        $this->admin = User::factory()->admin()->create();
+        $this->member = User::factory()->create(['status' => 'active', 'active' => true]);
+        $this->course = Course::factory()->create();
         $this->record = new TrainingRecord([
             'user_id' => $this->member->id,
             'key' => $this->course->slug,
@@ -69,7 +69,7 @@ class CourseTrainingTrainTest extends TestCase
     #[Test]
     public function a_member_who_is_not_a_trainer_cannot_train()
     {
-        $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))
+        $this->actingAs(User::factory()->create(['status' => 'active', 'active' => true]))
             ->post(route('courses.training.train', [$this->course, $this->member]))
             ->assertForbidden();
 
@@ -79,7 +79,7 @@ class CourseTrainingTrainTest extends TestCase
     #[Test]
     public function bulk_training_marks_each_member_as_trained()
     {
-        $newcomer = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $newcomer = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $this->actingAs($this->admin)
             ->post(route('courses.training.bulk-train', $this->course), [
@@ -111,7 +111,7 @@ class CourseTrainingTrainTest extends TestCase
     #[Test]
     public function a_member_who_is_not_a_trainer_cannot_bulk_train()
     {
-        $this->actingAs(factory(User::class)->create(['status' => 'active', 'active' => true]))
+        $this->actingAs(User::factory()->create(['status' => 'active', 'active' => true]))
             ->post(route('courses.training.bulk-train', $this->course), [
                 'user_ids' => [$this->member->id],
             ])

@@ -43,7 +43,7 @@ class AccountPageWithoutSubscriptionTest extends TestCase
     #[Test]
     public function an_admin_can_view_a_cash_member_without_a_subscription_amount()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
         $member = $this->memberWithoutSubscription(['status' => 'active', 'active' => true, 'payment_method' => 'cash']);
 
         $this->actingAs($admin)
@@ -54,8 +54,8 @@ class AccountPageWithoutSubscriptionTest extends TestCase
 
     private function memberWithoutSubscription(array $attributes): User
     {
-        $member = factory(User::class)->create(['monthly_subscription' => null] + $attributes);
-        factory(ProfileData::class)->create(['user_id' => $member->id]);
+        $member = User::factory()->create(['monthly_subscription' => null] + $attributes);
+        ProfileData::factory()->create(['user_id' => $member->id]);
 
         return $member;
     }

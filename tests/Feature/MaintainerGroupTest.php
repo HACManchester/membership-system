@@ -14,13 +14,13 @@ class MaintainerGroupTest extends TestCase
 
     private function admin(): User
     {
-        return factory(User::class)->state('admin')->create();
+        return User::factory()->admin()->create();
     }
 
     public function test_index_renders_inertia()
     {
-        factory(MaintainerGroup::class)->create([
-            'equipment_area_id' => factory(EquipmentArea::class)->create()->id,
+        MaintainerGroup::factory()->create([
+            'equipment_area_id' => EquipmentArea::factory()->create()->id,
         ]);
 
         $this->actingAs($this->admin())->get(route('maintainer_groups.index'))
@@ -33,14 +33,14 @@ class MaintainerGroupTest extends TestCase
     public function test_create_and_edit_render_inertia()
     {
         $admin = $this->admin();
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
 
         $this->actingAs($admin)->get(route('maintainer_groups.create'))
             ->assertInertia(function ($page) {
                 $page->component('MaintainerGroups/Create')->has('equipmentAreaOptions')->has('searchUrl');
             });
 
-        $group = factory(MaintainerGroup::class)->create(['equipment_area_id' => $area->id]);
+        $group = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         $this->actingAs($admin)->get(route('maintainer_groups.edit', $group))
             ->assertInertia(function ($page) use ($group) {
                 $page->component('MaintainerGroups/Edit')->where('maintainerGroup.id', $group->id);
@@ -50,8 +50,8 @@ class MaintainerGroupTest extends TestCase
     public function test_admin_can_create_a_group_with_area_and_maintainers()
     {
         $admin = $this->admin();
-        $area = factory(EquipmentArea::class)->create();
-        $maintainers = factory(User::class, 2)->create();
+        $area = EquipmentArea::factory()->create();
+        $maintainers = User::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->post(route('maintainer_groups.store'), [
             'name' => 'Woodwork',
@@ -82,15 +82,15 @@ class MaintainerGroupTest extends TestCase
     public function test_update_replaces_maintainers_and_area()
     {
         $admin = $this->admin();
-        $areaA = factory(EquipmentArea::class)->create();
-        $areaB = factory(EquipmentArea::class)->create();
-        $group = factory(MaintainerGroup::class)->create([
+        $areaA = EquipmentArea::factory()->create();
+        $areaB = EquipmentArea::factory()->create();
+        $group = MaintainerGroup::factory()->create([
             'name' => 'Metalwork',
             'slug' => 'metalwork',
             'equipment_area_id' => $areaA->id,
         ]);
-        $original = factory(User::class)->create();
-        $replacement = factory(User::class)->create();
+        $original = User::factory()->create();
+        $replacement = User::factory()->create();
         $group->maintainers()->sync([$original->id]);
 
         $this->actingAs($admin)->put(route('maintainer_groups.update', $group), [
@@ -106,9 +106,9 @@ class MaintainerGroupTest extends TestCase
 
     public function test_area_coordinator_can_manage_but_plain_member_cannot()
     {
-        $area = factory(EquipmentArea::class)->create();
+        $area = EquipmentArea::factory()->create();
 
-        $coordinator = factory(User::class)->create();
+        $coordinator = User::factory()->create();
         $coordinator->equipmentAreas()->attach($area);
 
         // Area coordinator may create.
@@ -118,7 +118,7 @@ class MaintainerGroupTest extends TestCase
         ])->assertRedirect();
 
         // Plain member may not.
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $this->actingAs($member)->post(route('maintainer_groups.store'), [
             'name' => 'Nope',
             'equipment_area_id' => $area->id,

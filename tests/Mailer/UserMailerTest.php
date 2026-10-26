@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Mailer;
+
 use BB\Entities\User;
 use BB\Mail\ConfirmationEmail;
 use BB\Mail\EquipmentNotificationEmail;
@@ -12,6 +14,7 @@ use BB\Mail\WelcomeMember;
 use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mailer\UserMailer;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UserMailerTest extends TestCase
@@ -22,7 +25,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'display_name' => 'John Doe',
             'online_only' => false,
@@ -42,7 +45,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'display_name' => 'John Doe',
             'online_only' => true,
@@ -62,7 +65,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
             'display_name' => 'John Doe',
         ]);
@@ -81,7 +84,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 
@@ -99,7 +102,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 
@@ -117,7 +120,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 
@@ -135,7 +138,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 
@@ -155,7 +158,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 
@@ -175,7 +178,7 @@ class UserMailerTest extends TestCase
     {
         Mail::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'test@example.com',
         ]);
 

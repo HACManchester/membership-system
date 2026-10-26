@@ -22,7 +22,7 @@ class SidebarItemsTest extends TestCase
     {
         // A regular member cannot create Rooms, so that middle item is filtered
         // out of the resources group — the exact case that used to leave a gap.
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($member);
         $groups = (new SidebarItems)->getItems();

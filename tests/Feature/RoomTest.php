@@ -15,8 +15,8 @@ class RoomTest extends TestCase
 
     public function test_user_can_view_rooms_index()
     {
-        $user = factory(User::class)->state('admin')->create();
-        factory(Room::class)->create();
+        $user = User::factory()->admin()->create();
+        Room::factory()->create();
 
         $response = $this->actingAs($user)->get(route('room.index'));
 
@@ -28,7 +28,7 @@ class RoomTest extends TestCase
 
     public function test_admin_can_create_room()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->post(route('room.store'), [
             'name' => 'Test Room',
@@ -45,7 +45,7 @@ class RoomTest extends TestCase
 
     public function test_slug_is_generated_from_name_when_omitted()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->post(route('room.store'), [
             'name' => 'The Big Workshop',
@@ -56,8 +56,8 @@ class RoomTest extends TestCase
 
     public function test_duplicate_name_is_rejected()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        factory(Room::class)->create(['name' => 'Woodwork', 'slug' => 'woodwork']);
+        $admin = User::factory()->admin()->create();
+        Room::factory()->create(['name' => 'Woodwork', 'slug' => 'woodwork']);
 
         $response = $this->actingAs($admin)->post(route('room.store'), [
             'name' => 'Woodwork',
@@ -69,8 +69,8 @@ class RoomTest extends TestCase
 
     public function test_admin_can_update_room()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $room = factory(Room::class)->create(['name' => 'Old Name', 'slug' => 'old-name']);
+        $admin = User::factory()->admin()->create();
+        $room = Room::factory()->create(['name' => 'Old Name', 'slug' => 'old-name']);
 
         $response = $this->actingAs($admin)->put(route('room.update', $room), [
             'name' => 'New Name',
@@ -83,8 +83,8 @@ class RoomTest extends TestCase
 
     public function test_admin_can_delete_empty_room()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $room = factory(Room::class)->create();
+        $admin = User::factory()->admin()->create();
+        $room = Room::factory()->create();
 
         $response = $this->actingAs($admin)->delete(route('room.destroy', $room));
 
@@ -94,9 +94,9 @@ class RoomTest extends TestCase
 
     public function test_room_with_equipment_cannot_be_deleted()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $room = factory(Room::class)->create();
-        factory(Equipment::class)->create(['room_id' => $room->id]);
+        $admin = User::factory()->admin()->create();
+        $room = Room::factory()->create();
+        Equipment::factory()->create(['room_id' => $room->id]);
 
         $response = $this->actingAs($admin)->delete(route('room.destroy', $room));
 
@@ -106,7 +106,7 @@ class RoomTest extends TestCase
 
     public function test_non_admin_cannot_create_room()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post(route('room.store'), [
             'name' => 'Nope',
@@ -118,8 +118,8 @@ class RoomTest extends TestCase
 
     public function test_non_admin_cannot_update_room()
     {
-        $user = factory(User::class)->create();
-        $room = factory(Room::class)->create();
+        $user = User::factory()->create();
+        $room = Room::factory()->create();
 
         $response = $this->actingAs($user)->put(route('room.update', $room), [
             'name' => 'Hacked',
@@ -131,8 +131,8 @@ class RoomTest extends TestCase
 
     public function test_non_admin_cannot_delete_room()
     {
-        $user = factory(User::class)->create();
-        $room = factory(Room::class)->create();
+        $user = User::factory()->create();
+        $room = Room::factory()->create();
 
         $response = $this->actingAs($user)->delete(route('room.destroy', $room));
 

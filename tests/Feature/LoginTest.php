@@ -17,7 +17,7 @@ class LoginTest extends TestCase
     public function a_member_can_log_in_with_valid_credentials()
     {
         $password = Str::random(10);
-        $user = factory(User::class)->create(['password' => $password]);
+        $user = User::factory()->create(['password' => $password]);
 
         $this->post(route('session.store'), [
             'email'    => $user->email,
@@ -41,7 +41,7 @@ class LoginTest extends TestCase
     #[Test]
     public function a_password_stored_without_bcrypt_is_a_failed_login_not_an_error()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         DB::table('users')->where('id', $user->id)->update(['password' => md5('old-password')]);
 
         $this->from(route('login'))->post(route('session.store'), [
@@ -56,7 +56,7 @@ class LoginTest extends TestCase
     public function logging_in_rehashes_a_password_saved_with_an_older_cost()
     {
         $password = Str::random(10);
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $oldHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 5]);
         DB::table('users')->where('id', $user->id)->update(['password' => $oldHash]);
 

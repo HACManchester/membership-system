@@ -38,13 +38,13 @@ class TrainingRecordTest extends TestCase
     protected function setUpTestData(): void
     {
         // Create users
-        $this->admin = factory(User::class)->state('admin')->create();
-        $this->trainer = factory(User::class)->create();
-        $this->regularUser = factory(User::class)->create();
-        $this->anotherUser = factory(User::class)->create();
+        $this->admin = User::factory()->admin()->create();
+        $this->trainer = User::factory()->create();
+        $this->regularUser = User::factory()->create();
+        $this->anotherUser = User::factory()->create();
 
         // Create equipment
-        $this->equipment = factory(Equipment::class)->create([
+        $this->equipment = Equipment::factory()->create([
             'name' => 'Test Equipment',
             'slug' => 'test-equipment',
             'requires_induction' => true,
@@ -91,7 +91,7 @@ class TrainingRecordTest extends TestCase
     {
         Event::fake();
 
-        $newUser = factory(User::class)->create();
+        $newUser = User::factory()->create();
 
         $response = $this->actingAs($newUser)
             ->post(route('equipment_training.create', $this->equipment));
@@ -116,7 +116,7 @@ class TrainingRecordTest extends TestCase
     {
         Event::fake();
 
-        $newUser = factory(User::class)->create();
+        $newUser = User::factory()->create();
 
         $response = $this->actingAs($this->trainer)
             ->post(route('equipment_training.create', $this->equipment), [
@@ -140,7 +140,7 @@ class TrainingRecordTest extends TestCase
     {
         Event::fake();
 
-        $newUser = factory(User::class)->create();
+        $newUser = User::factory()->create();
 
         $response = $this->actingAs($this->admin)
             ->post(route('equipment_training.create', $this->equipment), [
@@ -160,7 +160,7 @@ class TrainingRecordTest extends TestCase
     #[Test]
     public function regular_user_cannot_request_training_for_others()
     {
-        $newUser = factory(User::class)->create();
+        $newUser = User::factory()->create();
 
         $response = $this->actingAs($this->regularUser)
             ->post(route('equipment_training.create', $this->equipment), [
@@ -412,7 +412,7 @@ class TrainingRecordTest extends TestCase
     public function non_trainer_for_different_equipment_cannot_train()
     {
         // Create trainer for different equipment
-        $otherTrainer = factory(User::class)->create();
+        $otherTrainer = User::factory()->create();
         $otherTrainerTrainingRecord = new TrainingRecord([
             'key' => 'other-equipment',
             'user_id' => $otherTrainer->id,

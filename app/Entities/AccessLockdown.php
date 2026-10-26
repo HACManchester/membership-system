@@ -3,7 +3,10 @@
 namespace BB\Entities;
 
 use Carbon\Carbon;
+use Database\Factories\AccessLockdownFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -26,8 +29,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon      $created_at
  * @property Carbon      $updated_at
  */
+#[UseFactory(AccessLockdownFactory::class)]
 class AccessLockdown extends Model
 {
+    /** @use HasFactory<AccessLockdownFactory> */
+    use HasFactory;
+
     protected $fillable = ['started_by', 'reason', 'roles', 'lifted_by', 'lifted_at'];
 
     protected $casts = [

@@ -92,14 +92,14 @@ class GoCardlessWebhookTest extends TestCase
 
     private function activeUserWithCharge(string $chargeStatus, string $paymentId = 'PM_TEST_123')
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
             'subscription_expires' => Carbon::now(),
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'payment_date' => null,
@@ -107,7 +107,7 @@ class GoCardlessWebhookTest extends TestCase
             'status' => $chargeStatus,
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'user_id' => $user->id,
             'reason' => 'subscription',
             'source' => 'gocardless-variable',
@@ -205,7 +205,7 @@ class GoCardlessWebhookTest extends TestCase
     #[Test]
     public function a_cancelled_mandate_clears_payment_details_and_marks_the_member_leaving()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -227,20 +227,20 @@ class GoCardlessWebhookTest extends TestCase
     #[Test]
     public function a_cancelled_mandate_cancels_the_outstanding_charges_it_leaves_behind()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST_123',
         ]);
 
-        $pending = factory(SubscriptionCharge::class)->create([
+        $pending = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->addDays(7),
             'status' => 'pending',
         ]);
 
-        $due = factory(SubscriptionCharge::class)->create([
+        $due = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -292,7 +292,7 @@ class GoCardlessWebhookTest extends TestCase
      */
     private function legacyMemberWithCharge(float $chargeAmount = 22.0)
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless',
@@ -302,7 +302,7 @@ class GoCardlessWebhookTest extends TestCase
         ]);
 
         // subscription_charges.amount is in pounds, like payments.amount
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'payment_date' => null,
@@ -497,7 +497,7 @@ class GoCardlessWebhookTest extends TestCase
         [, , $submitted] = $this->activeUserWithCharge('processing', 'PM_A');
         $submitted->update(['status' => 'pending_submission']);
         [$confirmedUser, $confirmedCharge, $confirmed] = $this->activeUserWithCharge('processing', 'PM_B');
-        $leaving = factory(User::class)->create([
+        $leaving = User::factory()->create([
             'status' => 'active', 'active' => true,
             'payment_method' => 'gocardless-variable', 'mandate_id' => 'MD_LEAVING',
         ]);

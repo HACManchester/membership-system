@@ -20,8 +20,8 @@ class ProfilePhotoInputTest extends TestCase
     public function a_single_photo_is_still_uploaded_for_approval()
     {
         Storage::fake('public');
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        factory(ProfileData::class)->create(['user_id' => $member->id, 'new_profile_photo' => false]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
+        ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => false]);
 
         $this->actingAs($member)
             ->put(route('account.profile.update', $member->id), [
@@ -41,8 +41,8 @@ class ProfilePhotoInputTest extends TestCase
     #[Test]
     public function a_profile_update_with_an_array_of_photos_is_handled_without_error()
     {
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        factory(ProfileData::class)->create(['user_id' => $member->id, 'new_profile_photo' => false]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
+        ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => false]);
 
         $this->actingAs($member)
             ->put(route('account.profile.update', $member->id), [

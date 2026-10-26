@@ -23,9 +23,9 @@ class CourseTrainingWaitlistTest extends TestCase
     {
         parent::setUp();
 
-        $this->course = factory(Course::class)->create(['frequency' => 'regular']);
+        $this->course = Course::factory()->create(['frequency' => 'regular']);
 
-        $this->trainer = factory(User::class)->create();
+        $this->trainer = User::factory()->create();
         $this->record($this->trainer, [
             'trained' => Carbon::now()->subYear(),
             'is_trainer' => true,
@@ -57,9 +57,9 @@ class CourseTrainingWaitlistTest extends TestCase
     public function waitlist_is_ordered_longest_waiting_first()
     {
         // Created in shuffled order so insertion order can't mask a sort bug
-        $middle = $this->waitlistRecord(factory(User::class)->create(), 5);
-        $newest = $this->waitlistRecord(factory(User::class)->create(), 1);
-        $oldest = $this->waitlistRecord(factory(User::class)->create(), 10);
+        $middle = $this->waitlistRecord(User::factory()->create(), 5);
+        $newest = $this->waitlistRecord(User::factory()->create(), 1);
+        $oldest = $this->waitlistRecord(User::factory()->create(), 10);
 
         $response = $this->actingAs($this->trainer)
             ->get(route('courses.training.index', $this->course));
@@ -77,19 +77,19 @@ class CourseTrainingWaitlistTest extends TestCase
     #[Test]
     public function waitlist_only_contains_members_awaiting_training()
     {
-        $waiting = $this->waitlistRecord(factory(User::class)->create(), 3);
+        $waiting = $this->waitlistRecord(User::factory()->create(), 3);
 
         // Expired sign-off requests drop back onto the waitlist
-        $expiredSignOff = $this->record(factory(User::class)->create(), [
+        $expiredSignOff = $this->record(User::factory()->create(), [
             'sign_off_requested_at' => Carbon::now()->subDays(8),
         ]);
 
         // None of these belong on the waitlist
-        $this->record(factory(User::class)->create(), ['trained' => Carbon::now()]);
-        $this->record(factory(User::class)->create(), [
+        $this->record(User::factory()->create(), ['trained' => Carbon::now()]);
+        $this->record(User::factory()->create(), [
             'sign_off_requested_at' => Carbon::now()->subHour(),
         ]);
-        $this->record(factory(User::class)->create(['active' => false]));
+        $this->record(User::factory()->create(['active' => false]));
 
         $response = $this->actingAs($this->trainer)
             ->get(route('courses.training.index', $this->course));
@@ -106,7 +106,7 @@ class CourseTrainingWaitlistTest extends TestCase
     public function trainer_can_remove_a_member_from_the_waitlist()
     {
         Event::fake([TrainingInterestWithdrawnEvent::class]);
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $record = $this->waitlistRecord($member, 3);
 
         $response = $this->actingAs($this->trainer)
@@ -126,7 +126,7 @@ class CourseTrainingWaitlistTest extends TestCase
     #[Test]
     public function trained_members_cannot_be_removed_via_the_waitlist()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $record = $this->record($member, ['trained' => Carbon::now()]);
 
         $response = $this->actingAs($this->trainer)
@@ -142,10 +142,10 @@ class CourseTrainingWaitlistTest extends TestCase
     #[Test]
     public function non_trainers_cannot_remove_members_from_the_waitlist()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $record = $this->waitlistRecord($member, 3);
 
-        $response = $this->actingAs(factory(User::class)->create())
+        $response = $this->actingAs(User::factory()->create())
             ->delete(route('courses.training.remove-from-waitlist', [
                 'course' => $this->course,
                 'user' => $member,
@@ -158,8 +158,8 @@ class CourseTrainingWaitlistTest extends TestCase
     #[Test]
     public function admins_can_remove_members_from_the_waitlist()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $member = factory(User::class)->create();
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create();
         $record = $this->waitlistRecord($member, 3);
 
         $response = $this->actingAs($admin)

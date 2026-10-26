@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class User
@@ -60,10 +63,12 @@ use Illuminate\Notifications\Notifiable;
  * 
  * @package BB\Entities
  */
+#[UseFactory(UserFactory::class)]
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
 
-    use UserRoleTrait, PresentableTrait, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, UserRoleTrait, PresentableTrait, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * The database table used by the model.

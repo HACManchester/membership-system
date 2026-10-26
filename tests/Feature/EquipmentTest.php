@@ -38,8 +38,8 @@ class EquipmentTest extends TestCase
     protected function setUpTestData(): void
     {
         // Create users with different roles
-        $this->admin = factory(User::class)->state('admin')->create();
-        $this->equipmentRoleUser = factory(User::class)->create();
+        $this->admin = User::factory()->admin()->create();
+        $this->equipmentRoleUser = User::factory()->create();
         
         // Create equipment role and assign to user
         $equipmentRole = Role::firstOrCreate(
@@ -48,25 +48,25 @@ class EquipmentTest extends TestCase
         );
         $this->equipmentRoleUser->assignRole($equipmentRole);
 
-        $this->regularUser = factory(User::class)->create();
-        $this->maintainerUser = factory(User::class)->create();
-        $this->areaCoordinatorUser = factory(User::class)->create();
-        $this->trainerUser = factory(User::class)->create();
+        $this->regularUser = User::factory()->create();
+        $this->maintainerUser = User::factory()->create();
+        $this->areaCoordinatorUser = User::factory()->create();
+        $this->trainerUser = User::factory()->create();
 
         // Create equipment area and maintainer group
-        $this->equipmentArea = factory(EquipmentArea::class)->create([
+        $this->equipmentArea = EquipmentArea::factory()->create([
             'name' => 'Test Area',
             'slug' => 'test-area'
         ]);
 
-        $this->maintainerGroup = factory(MaintainerGroup::class)->create([
+        $this->maintainerGroup = MaintainerGroup::factory()->create([
             'name' => 'Test Maintainers',
             'slug' => 'test-maintainers',
             'equipment_area_id' => $this->equipmentArea->id,
         ]);
 
         // Create equipment
-        $this->equipment = factory(Equipment::class)->create([
+        $this->equipment = Equipment::factory()->create([
             'name' => 'Test Equipment',
             'slug' => 'test-equipment',
             'requires_induction' => true,
@@ -75,7 +75,7 @@ class EquipmentTest extends TestCase
             'maintainer_group_id' => $this->maintainerGroup->id,
         ]);
 
-        $this->equipmentWithAccessCode = factory(Equipment::class)->create([
+        $this->equipmentWithAccessCode = Equipment::factory()->create([
             'name' => 'Secure Equipment',
             'slug' => 'secure-equipment',
             'requires_induction' => true,
@@ -113,8 +113,8 @@ class EquipmentTest extends TestCase
     #[Test]
     public function equipment_index_exposes_room_display_from_the_related_room()
     {
-        $room = factory(Room::class)->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
-        $equipment = factory(Equipment::class)->create(['room_id' => $room->id]);
+        $room = Room::factory()->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
+        $equipment = Equipment::factory()->create(['room_id' => $room->id]);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
 
@@ -140,7 +140,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function admin_can_create_equipment_with_room()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'New Drill',
@@ -157,7 +157,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function slug_is_generated_from_name_when_omitted()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Big Lathe',
@@ -170,7 +170,7 @@ class EquipmentTest extends TestCase
     public function empty_optional_foreign_keys_are_stored_as_null()
     {
         // The Inertia form submits these as '' when nothing is chosen.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Loose Tool',
@@ -191,7 +191,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function usage_cost_is_no_longer_required()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
 
         $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Free Tool',
@@ -204,8 +204,8 @@ class EquipmentTest extends TestCase
     #[Test]
     public function attaching_a_course_links_it_and_marks_induction_required()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = Course::factory()->create();
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Course Tool',
@@ -222,9 +222,9 @@ class EquipmentTest extends TestCase
     #[Test]
     public function attaching_a_course_does_not_detach_its_other_equipment()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
-        $existing = factory(Equipment::class)->create(['slug' => 'existing-tool']);
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = Course::factory()->create();
+        $existing = Equipment::factory()->create(['slug' => 'existing-tool']);
         $course->equipment()->attach($existing->id);
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
@@ -244,9 +244,9 @@ class EquipmentTest extends TestCase
     #[Test]
     public function detaching_a_course_on_update_removes_the_link()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->create([
             'name' => 'Linked Tool',
             'slug' => 'linked-tool',
             'room_id' => $room->id,
@@ -266,7 +266,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function edit_exposes_the_attached_course_id()
     {
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
         $this->equipment->courses()->attach($course->id);
 
         $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
@@ -278,7 +278,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function edit_exposes_the_permaloan_holder_and_a_member_search_url()
     {
-        $holder = factory(User::class)->create();
+        $holder = User::factory()->create();
         $this->equipment->forceFill([
             'permaloan' => true,
             'permaloan_user_id' => $holder->id,
@@ -456,7 +456,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_to_trained_users()
     {
         // Create a trained user
-        $trainedUser = factory(User::class)->create();
+        $trainedUser = User::factory()->create();
         $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
@@ -477,7 +477,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_to_trainers()
     {
         // Create trainer for secure equipment
-        $trainer = factory(User::class)->create();
+        $trainer = User::factory()->create();
         $trainerTrainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainer->id,
@@ -515,7 +515,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayNotHasKey('trainer_instructions', $props);
 
         // A member part-way through induction sees the induction instructions only.
-        $pending = factory(User::class)->create();
+        $pending = User::factory()->create();
         (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $pending->id, 'active' => true]))->save();
         $props = $propsFor($pending);
         $this->assertArrayHasKey('induction_instructions', $props);
@@ -524,7 +524,7 @@ class EquipmentTest extends TestCase
 
         // A trained (non-trainer) member sees the instructions for use, not the
         // trainer instructions.
-        $trained = factory(User::class)->create();
+        $trained = User::factory()->create();
         (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $trained->id, 'trained' => now(), 'active' => true]))->save();
         $props = $propsFor($trained);
         $this->assertArrayHasKey('trained_instructions', $props);
@@ -540,7 +540,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_in_equipment_index_for_trained_users()
     {
         // Create a trained user
-        $trainedUser = factory(User::class)->create();
+        $trainedUser = User::factory()->create();
         $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
@@ -647,7 +647,7 @@ class EquipmentTest extends TestCase
         ]);
         $pendingTrainingRecord->save();
 
-        $anotherUser = factory(User::class)->create();
+        $anotherUser = User::factory()->create();
         $response = $this->actingAs($anotherUser)
             ->post(route('equipment_training.train', [$this->equipment, $pendingTrainingRecord]), [
                 'trainer_user_id' => $anotherUser->id,
@@ -671,7 +671,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function equipment_without_access_code_works_normally()
     {
-        $equipmentWithoutCode = factory(Equipment::class)->create([
+        $equipmentWithoutCode = Equipment::factory()->create([
             'name' => 'Simple Equipment',
             'slug' => 'simple-equipment',
             'requires_induction' => false,
@@ -734,7 +734,7 @@ class EquipmentTest extends TestCase
         // requires_induction is on, but there is no legacy category and no course,
         // so there is no functional way to record a request. The legacy path must
         // stay off rather than offer a button that creates an orphaned record.
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Misconfigured Tool',
             'slug' => 'misconfigured-tool',
             'requires_induction' => true,
@@ -753,7 +753,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function requesting_induction_on_equipment_without_a_category_or_course_creates_no_record()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Misconfigured Tool',
             'slug' => 'misconfigured-tool',
             'requires_induction' => true,
@@ -772,7 +772,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function show_embeds_a_live_course_interface_and_suppresses_legacy_training()
     {
-        $course = factory(Course::class)->create([
+        $course = Course::factory()->create([
             'slug' => 'laser-cutting',
             'frequency' => 'regular',
             'live' => true,
@@ -814,7 +814,7 @@ class EquipmentTest extends TestCase
         $legacyRecord->course_id = null;
         $legacyRecord->save();
 
-        $course = factory(Course::class)->create(['slug' => 'a-different-slug', 'live' => true]);
+        $course = Course::factory()->create(['slug' => 'a-different-slug', 'live' => true]);
         $this->equipment->courses()->attach($course->id);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
@@ -831,7 +831,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function show_does_not_embed_a_non_live_course()
     {
-        $course = factory(Course::class)->create(['slug' => 'draft-course', 'live' => false]);
+        $course = Course::factory()->create(['slug' => 'draft-course', 'live' => false]);
         $this->equipment->courses()->attach($course->id);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
@@ -847,9 +847,9 @@ class EquipmentTest extends TestCase
     #[Test]
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->create([
             'name' => 'Course Item',
             'slug' => 'course-item',
             'room_id' => $room->id,
@@ -878,8 +878,8 @@ class EquipmentTest extends TestCase
     {
         // A hidden legacy category that predates alpha_dash validation must not
         // silently block editing an item that no longer requires an induction.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = Equipment::factory()->create([
             'name' => 'Bandsaw',
             'slug' => 'bandsaw',
             'room_id' => $room->id,
@@ -905,9 +905,9 @@ class EquipmentTest extends TestCase
         // A former holder who has since left leaves a now-invalid id on a hidden
         // field; switching off permaloan must not be blocked by it, and it must be
         // cleared rather than stored.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $holder = factory(User::class)->create();
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $holder = User::factory()->create();
+        $equipment = Equipment::factory()->create([
             'name' => 'Drill',
             'slug' => 'drill',
             'room_id' => $room->id,
@@ -937,8 +937,8 @@ class EquipmentTest extends TestCase
     {
         // A group-less item has no maintainer/area to manage it, so a maintainer of
         // some other group is simply denied — without tripping over the null group.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = Equipment::factory()->create([
             'name' => 'Loose Tool',
             'slug' => 'loose-tool',
             'room_id' => $room->id,
@@ -955,8 +955,8 @@ class EquipmentTest extends TestCase
     {
         // e.g. a course was detached, leaving requires_induction set with no legacy
         // category — the (hidden) legacy fields must not block the save.
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = Equipment::factory()->create([
             'name' => 'Orphan',
             'slug' => 'orphan',
             'room_id' => $room->id,
@@ -980,8 +980,8 @@ class EquipmentTest extends TestCase
     #[Test]
     public function updating_the_slug_redirects_to_the_new_slug()
     {
-        $room = factory(Room::class)->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+        $equipment = Equipment::factory()->create([
             'name' => 'Old Name',
             'slug' => 'old-slug',
             'room_id' => $room->id,

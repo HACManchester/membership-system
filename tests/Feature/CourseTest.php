@@ -16,8 +16,8 @@ class CourseTest extends TestCase
 
     public function test_user_can_view_courses_index()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
 
         $response = $this->actingAs($user)
             ->get(route('courses.index'));
@@ -31,8 +31,8 @@ class CourseTest extends TestCase
 
     public function test_admin_can_create_course()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $equipment = factory(Equipment::class)->times(3)->create();
+        $admin = User::factory()->admin()->create();
+        $equipment = Equipment::factory()->count(3)->create();
 
         $courseData = [
             'name' => 'Test Course',
@@ -59,7 +59,7 @@ class CourseTest extends TestCase
 
     public function test_non_admin_cannot_create_course()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)
             ->post(route('courses.store'), [
@@ -72,10 +72,10 @@ class CourseTest extends TestCase
 
     public function test_admin_can_update_course()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $course = factory(Course::class)->create();
-        $oldEquipment = factory(Equipment::class)->times(2)->create();
-        $newEquipment = factory(Equipment::class)->times(3)->create();
+        $admin = User::factory()->admin()->create();
+        $course = Course::factory()->create();
+        $oldEquipment = Equipment::factory()->count(2)->create();
+        $newEquipment = Equipment::factory()->count(3)->create();
         
         // Attach old equipment
         $course->equipment()->attach($oldEquipment);
@@ -110,9 +110,9 @@ class CourseTest extends TestCase
 
     public function test_slug_change_maintains_equipment_relationships()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $course = factory(Course::class)->create(['slug' => 'old-slug']);
-        $equipment = factory(Equipment::class)->times(3)->create();
+        $admin = User::factory()->admin()->create();
+        $course = Course::factory()->create(['slug' => 'old-slug']);
+        $equipment = Equipment::factory()->count(3)->create();
         
         $course->equipment()->attach($equipment);
 
@@ -138,9 +138,9 @@ class CourseTest extends TestCase
 
     public function test_admin_can_delete_course()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $course = factory(Course::class)->create();
-        $equipment = factory(Equipment::class)->times(2)->create();
+        $admin = User::factory()->admin()->create();
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->count(2)->create();
         
         $course->equipment()->attach($equipment);
 
@@ -157,8 +157,8 @@ class CourseTest extends TestCase
 
     public function test_validation_requires_unique_slug()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        factory(Course::class)->create(['slug' => 'existing-slug']);
+        $admin = User::factory()->admin()->create();
+        Course::factory()->create(['slug' => 'existing-slug']);
 
         $response = $this->actingAs($admin)
             ->post(route('courses.store'), [
@@ -173,11 +173,11 @@ class CourseTest extends TestCase
 
     public function test_equipment_can_belong_to_multiple_courses()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $equipment = factory(Equipment::class)->create();
+        $admin = User::factory()->admin()->create();
+        $equipment = Equipment::factory()->create();
         
-        $course1 = factory(Course::class)->create();
-        $course2 = factory(Course::class)->create();
+        $course1 = Course::factory()->create();
+        $course2 = Course::factory()->create();
         
         $course1->equipment()->attach($equipment);
         $course2->equipment()->attach($equipment);
@@ -189,8 +189,8 @@ class CourseTest extends TestCase
 
     public function test_course_show_page_loads()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
 
         $response = $this->actingAs($user)
             ->get(route('courses.show', $course));
@@ -200,9 +200,9 @@ class CourseTest extends TestCase
 
     public function test_course_show_page_loads_when_equipment_has_no_maintainer_group()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
-        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => null]));
 
         $response = $this->actingAs($user)
             ->get(route('courses.show', $course));
@@ -215,9 +215,9 @@ class CourseTest extends TestCase
 
     public function test_admin_can_view_edit_page()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $course = factory(Course::class)->create();
-        $equipment = factory(Equipment::class)->times(2)->create();
+        $admin = User::factory()->admin()->create();
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->count(2)->create();
         $course->equipment()->attach($equipment);
 
         $response = $this->actingAs($admin)
@@ -237,8 +237,8 @@ class CourseTest extends TestCase
 
     public function test_non_admin_cannot_view_edit_page()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
 
         $response = $this->actingAs($user)
             ->get(route('courses.edit', $course));
@@ -248,8 +248,8 @@ class CourseTest extends TestCase
 
     public function test_non_admin_cannot_update_course()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
 
         $response = $this->actingAs($user)
             ->put(route('courses.update', $course), [
@@ -268,8 +268,8 @@ class CourseTest extends TestCase
 
     public function test_non_admin_cannot_delete_course()
     {
-        $user = factory(User::class)->create();
-        $course = factory(Course::class)->create();
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
 
         $response = $this->actingAs($user)
             ->delete(route('courses.destroy', $course));

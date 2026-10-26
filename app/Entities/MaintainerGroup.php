@@ -4,15 +4,20 @@ namespace BB\Entities;
 
 use BB\Entities\EquipmentArea;
 use BB\Entities\User;
+use Database\Factories\MaintainerGroupFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[UseFactory(MaintainerGroupFactory::class)]
 class MaintainerGroup extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<MaintainerGroupFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'slug', 'description', 'equipment_area_id'];
 

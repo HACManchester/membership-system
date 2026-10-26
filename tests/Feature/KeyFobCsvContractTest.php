@@ -96,12 +96,12 @@ class KeyFobCsvContractTest extends TestCase
 
     private function activeMemberWithFob(string $announceName, string $keyId): User
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => true,
             'announce_name' => $announceName,
         ]);
 
-        factory(KeyFob::class)->create([
+        KeyFob::factory()->create([
             'key_id' => $keyId,
             'active' => true,
             'user_id' => $user->id,

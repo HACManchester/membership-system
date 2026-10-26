@@ -13,15 +13,15 @@ class MembersTest extends TestCase
 
     private function memberWithProfile(array $attributes = []): User
     {
-        $user = factory(User::class)->create($attributes);
-        factory(ProfileData::class)->create(['user_id' => $user->id]);
+        $user = User::factory()->create($attributes);
+        ProfileData::factory()->create(['user_id' => $user->id]);
 
         return $user;
     }
 
     public function test_index_renders_the_member_grid()
     {
-        $viewer = factory(User::class)->create();
+        $viewer = User::factory()->create();
         $this->memberWithProfile();
 
         $this->actingAs($viewer)->get(route('members.index'))
@@ -33,7 +33,7 @@ class MembersTest extends TestCase
 
     public function test_show_renders_a_public_active_member_profile()
     {
-        $viewer = factory(User::class)->create();
+        $viewer = User::factory()->create();
         $member = $this->memberWithProfile();
 
         $this->actingAs($viewer)->get(route('members.show', $member->id))
@@ -58,7 +58,7 @@ class MembersTest extends TestCase
 
     public function test_show_redirects_when_a_non_admin_views_an_inactive_member()
     {
-        $viewer = factory(User::class)->create();
+        $viewer = User::factory()->create();
         $inactive = $this->memberWithProfile(['active' => false, 'status' => 'left']);
 
         $this->actingAs($viewer)->get(route('members.show', $inactive->id))
@@ -67,7 +67,7 @@ class MembersTest extends TestCase
 
     public function test_admin_can_view_an_inactive_member()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
         $inactive = $this->memberWithProfile(['active' => false, 'status' => 'left']);
 
         $this->actingAs($admin)->get(route('members.show', $inactive->id))

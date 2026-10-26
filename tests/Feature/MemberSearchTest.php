@@ -12,21 +12,21 @@ class MemberSearchTest extends TestCase
 
     public function test_it_returns_matching_active_members_only()
     {
-        $viewer = factory(User::class)->state('admin')->create();
+        $viewer = User::factory()->admin()->create();
 
-        $ada = factory(User::class)->create([
+        $ada = User::factory()->create([
             'display_name' => 'Ada',
             'given_name' => 'Ada',
             'family_name' => 'Lovelace',
             'active' => true,
         ]);
-        $bob = factory(User::class)->create([
+        $bob = User::factory()->create([
             'display_name' => 'Bob',
             'given_name' => 'Bob',
             'family_name' => 'Smith',
             'active' => true,
         ]);
-        $inactive = factory(User::class)->create([
+        $inactive = User::factory()->create([
             'display_name' => 'AdaB',
             'given_name' => 'Ada',
             'family_name' => 'Byron',
@@ -50,7 +50,7 @@ class MemberSearchTest extends TestCase
 
     public function test_it_is_forbidden_for_members_who_dont_manage_inductions()
     {
-        $regular = factory(User::class)->create();
+        $regular = User::factory()->create();
 
         $this->actingAs($regular)
             ->getJson(route('members.search', ['q' => 'Ada']))
@@ -59,7 +59,7 @@ class MemberSearchTest extends TestCase
 
     public function test_a_trainer_may_search()
     {
-        $trainer = factory(User::class)->create();
+        $trainer = User::factory()->create();
         (new \BB\Entities\TrainingRecord([
             'user_id' => $trainer->id,
             'key' => 'some-tool',

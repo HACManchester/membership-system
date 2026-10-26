@@ -15,7 +15,7 @@ class UpdateSubscriptionAmountTest extends TestCase
     #[Test]
     public function a_member_can_update_their_subscription_amount()
     {
-        $member = factory(User::class)->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 22]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -29,7 +29,7 @@ class UpdateSubscriptionAmountTest extends TestCase
     #[Test]
     public function a_non_numeric_amount_is_rejected()
     {
-        $member = factory(User::class)->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 22]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -43,7 +43,7 @@ class UpdateSubscriptionAmountTest extends TestCase
     #[Test]
     public function a_member_cannot_go_below_the_minimum_price()
     {
-        $member = factory(User::class)->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 22]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -57,8 +57,8 @@ class UpdateSubscriptionAmountTest extends TestCase
     #[Test]
     public function an_admin_can_set_an_amount_below_the_minimum()
     {
-        $member = factory(User::class)->create(['monthly_subscription' => 22]);
-        $admin = factory(User::class)->create();
+        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $admin = User::factory()->create();
         $admin->assignRole(Role::findByName('admin'));
 
         $this->actingAs($admin)

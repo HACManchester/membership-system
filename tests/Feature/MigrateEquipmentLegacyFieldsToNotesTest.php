@@ -13,7 +13,7 @@ class MigrateEquipmentLegacyFieldsToNotesTest extends TestCase
 
     public function test_it_copies_legacy_fields_into_admin_notes()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'serial_number' => 'SN123',
             'colour' => 'Blue',
             'asset_tag_id' => 'AT-1',
@@ -32,7 +32,7 @@ class MigrateEquipmentLegacyFieldsToNotesTest extends TestCase
 
     public function test_it_skips_equipment_with_no_legacy_data()
     {
-        $equipment = factory(Equipment::class)->create(['obtained_at' => null]);
+        $equipment = Equipment::factory()->create(['obtained_at' => null]);
 
         Artisan::call('equipment:migrate-legacy-fields-to-notes');
 
@@ -41,7 +41,7 @@ class MigrateEquipmentLegacyFieldsToNotesTest extends TestCase
 
     public function test_it_is_idempotent()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'serial_number' => 'SN123',
             'obtained_at' => null,
         ]);
@@ -57,7 +57,7 @@ class MigrateEquipmentLegacyFieldsToNotesTest extends TestCase
 
     public function test_dry_run_writes_nothing()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'serial_number' => 'SN123',
             'obtained_at' => null,
         ]);

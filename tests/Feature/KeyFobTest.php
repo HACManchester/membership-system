@@ -15,7 +15,7 @@ class KeyFobTest extends TestCase
 
     private function admin()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $user->assignRole(Role::findByName('admin'));
 
         return $user;
@@ -24,7 +24,7 @@ class KeyFobTest extends TestCase
     #[Test]
     public function general_induction_is_required_before_adding_access_methods()
     {
-        $user = factory(User::class)->create(['induction_completed' => false]);
+        $user = User::factory()->create(['induction_completed' => false]);
 
         $this->actingAs($user)
             ->get("/account/{$user->id}/keyfobs")
@@ -35,8 +35,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_can_view_their_own_keyfobs()
     {
-        $user = factory(User::class)->create(['induction_completed' => true]);
-        $fobs = factory(KeyFob::class)->times(3)->create(['user_id' => $user->id]);
+        $user = User::factory()->create(['induction_completed' => true]);
+        $fobs = KeyFob::factory()->count(3)->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get("/account/{$user->id}/keyfobs")->assertStatus(200);
         foreach ($fobs as $fob) {
@@ -47,8 +47,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_cannot_view_another_members_keyfobs()
     {
-        $user = factory(User::class)->create();
-        $other = factory(User::class)->create();
+        $user = User::factory()->create();
+        $other = User::factory()->create();
 
         $this->actingAs($user)->get("/account/{$other->id}/keyfobs")->assertStatus(403);
     }
@@ -56,8 +56,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function an_admin_can_view_another_members_keyfobs()
     {
-        $other = factory(User::class)->create();
-        $fobs = factory(KeyFob::class)->times(3)->create(['user_id' => $other->id]);
+        $other = User::factory()->create();
+        $fobs = KeyFob::factory()->count(3)->create(['user_id' => $other->id]);
 
         $response = $this->actingAs($this->admin())->get("/account/{$other->id}/keyfobs")->assertStatus(200);
         foreach ($fobs as $fob) {
@@ -68,7 +68,7 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_can_add_a_keyfob_to_themselves()
     {
-        $user = factory(User::class)->create(['induction_completed' => true]);
+        $user = User::factory()->create(['induction_completed' => true]);
         $keyId = sprintf('%08X', 0xABCDEF12);
 
         $this->actingAs($user)
@@ -81,8 +81,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_cannot_add_a_keyfob_to_another_member()
     {
-        $user = factory(User::class)->create();
-        $other = factory(User::class)->create(['induction_completed' => true]);
+        $user = User::factory()->create();
+        $other = User::factory()->create(['induction_completed' => true]);
 
         $this->actingAs($user)
             ->post("/account/{$other->id}/keyfobs", ['type' => 'keyfob', 'key_id' => sprintf('%08X', 0x11112222)])
@@ -94,7 +94,7 @@ class KeyFobTest extends TestCase
     #[Test]
     public function an_admin_can_add_a_keyfob_to_another_member()
     {
-        $other = factory(User::class)->create(['induction_completed' => true]);
+        $other = User::factory()->create(['induction_completed' => true]);
         $keyId = sprintf('%08X', 0x33334444);
 
         $this->actingAs($this->admin())
@@ -107,8 +107,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_can_mark_their_own_keyfob_as_lost()
     {
-        $user = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $user->id]);
+        $user = User::factory()->create(['induction_completed' => true]);
+        $fob = KeyFob::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user)
             ->delete("/account/{$user->id}/keyfobs/{$fob->id}")
@@ -120,9 +120,9 @@ class KeyFobTest extends TestCase
     #[Test]
     public function a_member_cannot_mark_another_members_keyfob_as_lost()
     {
-        $user = factory(User::class)->create();
-        $other = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $other->id]);
+        $user = User::factory()->create();
+        $other = User::factory()->create(['induction_completed' => true]);
+        $fob = KeyFob::factory()->create(['user_id' => $other->id]);
 
         $this->actingAs($user)
             ->delete("/account/{$other->id}/keyfobs/{$fob->id}")
@@ -134,8 +134,8 @@ class KeyFobTest extends TestCase
     #[Test]
     public function an_admin_can_mark_another_members_keyfob_as_lost()
     {
-        $other = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $other->id]);
+        $other = User::factory()->create(['induction_completed' => true]);
+        $fob = KeyFob::factory()->create(['user_id' => $other->id]);
 
         $this->actingAs($this->admin())
             ->delete("/account/{$other->id}/keyfobs/{$fob->id}")

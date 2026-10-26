@@ -70,7 +70,7 @@ class OnboardingTest extends TestCase
     #[Test]
     public function a_key_fob_cannot_be_registered_before_the_general_induction()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'online_only' => false,
             'induction_completed' => false,
         ]);

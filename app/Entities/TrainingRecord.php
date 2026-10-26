@@ -3,6 +3,9 @@
 namespace BB\Entities;
 
 
+use Database\Factories\TrainingRecordFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,8 +20,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\Carbon|null $sign_off_requested_at
  * @package BB\Entities
  */
+#[UseFactory(TrainingRecordFactory::class)]
 class TrainingRecord extends Model
 {
+    /** @use HasFactory<TrainingRecordFactory> */
+    use HasFactory;
 
     /**
      * The database table used by the model.

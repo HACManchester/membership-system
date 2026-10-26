@@ -5,6 +5,9 @@ namespace BB\Entities;
 use BB\Entities\Equipment;
 use BB\Entities\TrainingRecord;
 use BB\Presenters\CoursePresenter;
+use Database\Factories\CourseFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,9 +18,11 @@ use Laracasts\Presenter\PresentableTrait;
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
  */
+#[UseFactory(CourseFactory::class)]
 class Course extends Model
 {
-    use SoftDeletes, PresentableTrait;
+    /** @use HasFactory<CourseFactory> */
+    use HasFactory, SoftDeletes, PresentableTrait;
 
     protected $presenter = CoursePresenter::class;
 

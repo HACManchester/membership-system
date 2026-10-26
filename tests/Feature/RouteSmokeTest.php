@@ -7,6 +7,7 @@ use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\KeyFob;
 use BB\Entities\MaintainerGroup;
+use BB\Entities\ProfileData;
 use BB\Entities\Role;
 use BB\Entities\Room;
 use BB\Entities\User;
@@ -202,26 +203,26 @@ class RouteSmokeTest extends TestCase
      */
     private function seedWorld()
     {
-        $member = factory(User::class)->create();
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $member->id]);
+        $member = User::factory()->create();
+        ProfileData::factory()->create(['user_id' => $member->id]);
 
-        $trusted = factory(User::class)->create(['trusted' => true]);
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $trusted->id]);
+        $trusted = User::factory()->create(['trusted' => true]);
+        ProfileData::factory()->create(['user_id' => $trusted->id]);
 
-        $admin = factory(User::class)->state('admin')->create();
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $admin->id]);
+        $admin = User::factory()->admin()->create();
+        ProfileData::factory()->create(['user_id' => $admin->id]);
 
         return [
             'member'          => $member,
             'trusted'         => $trusted,
             'admin'           => $admin,
-            'keyfob'          => factory(KeyFob::class)->create(['user_id' => $member->id]),
+            'keyfob'          => KeyFob::factory()->create(['user_id' => $member->id]),
             'role'            => Role::where('name', 'admin')->firstOrFail(),
-            'course'          => factory(Course::class)->create(),
-            'equipment'       => factory(Equipment::class)->create(),
-            'equipmentArea'   => factory(EquipmentArea::class)->create(),
-            'maintainerGroup' => factory(MaintainerGroup::class)->create(),
-            'room'            => factory(Room::class)->create(),
+            'course'          => Course::factory()->create(),
+            'equipment'       => Equipment::factory()->create(),
+            'equipmentArea'   => EquipmentArea::factory()->create(),
+            'maintainerGroup' => MaintainerGroup::factory()->create(),
+            'room'            => Room::factory()->create(),
         ];
     }
 }

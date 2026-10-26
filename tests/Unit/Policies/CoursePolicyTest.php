@@ -1,0 +1,222 @@
+<?php
+
+namespace Tests\Unit\Policies;
+
+use BB\Entities\Course;
+use BB\Entities\Equipment;
+use BB\Entities\EquipmentArea;
+use BB\Entities\MaintainerGroup;
+use BB\Entities\Role;
+use BB\Entities\Settings;
+use BB\Entities\User;
+use BB\Policies\CoursePolicy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class CoursePolicyTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected $policy;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->policy = new CoursePolicy();
+    }
+
+    public function test_admin_can_do_everything()
+    {
+        $admin = User::factory()->create();
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'admin'],
+            ['title' => 'Admin', 'description' => 'Administrator']
+        );
+        $admin->assignRole($adminRole);
+        
+        $course = Course::factory()->create();
+
+        $this->assertTrue($admin->can('viewAny', Course::class));
+        $this->assertTrue($admin->can('view', $course));
+        $this->assertTrue($admin->can('create', Course::class));
+        $this->assertTrue($admin->can('update', $course));
+        $this->assertTrue($admin->can('delete', $course));
+        $this->assertTrue($admin->can('restore', $course));
+        $this->assertTrue($admin->can('forceDelete', $course));
+    }
+
+    public function test_all_users_can_view_courses()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->view($user, $course));
+    }
+
+    public function test_area_coordinator_can_create_courses()
+    {
+        $user = User::factory()->create();
+        $area = EquipmentArea::factory()->create();
+        $user->equipmentAreas()->attach($area);
+
+        $this->assertTrue($this->policy->create($user));
+    }
+
+    public function test_non_area_coordinator_cannot_create_courses()
+    {
+        $user = User::factory()->create();
+
+        $this->assertFalse($this->policy->create($user));
+    }
+
+    public function test_equipment_maintainer_can_update_and_delete_course()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->create();
+        $area = EquipmentArea::factory()->create();
+        $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
+        
+        // Setup relationships
+        $equipment->maintainerGroup()->associate($maintainerGroup);
+        $equipment->save();
+        $maintainerGroup->maintainers()->attach($user);
+        $course->equipment()->attach($equipment);
+        
+        // Reload course to ensure relationships are loaded
+        $course->load('equipment.maintainerGroup.maintainers', 'equipment.maintainerGroup.equipmentArea.areaCoordinators');
+
+        $this->assertTrue($this->policy->update($user, $course));
+        $this->assertTrue($this->policy->delete($user, $course));
+    }
+
+    public function test_area_coordinator_can_update_and_delete_course()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->create();
+        $area = EquipmentArea::factory()->create();
+        $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
+        
+        // Setup relationships
+        $equipment->maintainerGroup()->associate($maintainerGroup);
+        $equipment->save();
+        $area->areaCoordinators()->attach($user);
+        $course->equipment()->attach($equipment);
+        
+        // Reload course to ensure relationships are loaded
+        $course->load('equipment.maintainerGroup.maintainers', 'equipment.maintainerGroup.equipmentArea.areaCoordinators');
+
+        $this->assertTrue($this->policy->update($user, $course));
+        $this->assertTrue($this->policy->delete($user, $course));
+    }
+
+    public function test_non_maintainer_cannot_update_or_delete_course()
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $course = Course::factory()->create();
+        $equipment = Equipment::factory()->create();
+        $maintainerGroup = MaintainerGroup::factory()->create();
+        
+        // Setup relationships with different user
+        $equipment->maintainerGroup()->associate($maintainerGroup);
+        $equipment->save();
+        $maintainerGroup->maintainers()->attach($otherUser);
+        $course->equipment()->attach($equipment);
+
+        $this->assertFalse($this->policy->update($user, $course));
+        $this->assertFalse($this->policy->delete($user, $course));
+    }
+
+    public function test_equipment_without_a_maintainer_group_is_skipped()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+        $maintainerGroup = MaintainerGroup::factory()->create();
+        $maintainerGroup->maintainers()->attach($user);
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => null]));
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => $maintainerGroup->id]));
+
+        $this->assertTrue($this->policy->update($user, $course));
+        $this->assertFalse($this->policy->update(User::factory()->create(), $course));
+    }
+
+    public function test_restore_always_returns_false()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+
+        $this->assertFalse($this->policy->restore($user, $course));
+    }
+
+    public function test_force_delete_always_returns_false()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+
+        $this->assertFalse($this->policy->forceDelete($user, $course));
+    }
+
+    public function test_any_member_can_register_interest_in_trainer_led_courses()
+    {
+        $user = User::factory()->create();
+
+        $regular = Course::factory()->create(['frequency' => 'regular']);
+        $adHoc = Course::factory()->create(['frequency' => 'ad-hoc']);
+        $paused = Course::factory()->create(['frequency' => 'regular', 'paused_at' => now()]);
+
+        $this->assertTrue($this->policy->registerInterest($user, $regular));
+        $this->assertTrue($this->policy->registerInterest($user, $adHoc));
+        // The waitlist stays open while a course is paused, unlike sign-off
+        $this->assertTrue($this->policy->registerInterest($user, $paused));
+    }
+
+    public function test_members_cannot_register_interest_in_self_serve_courses()
+    {
+        $user = User::factory()->create();
+        $selfServe = Course::factory()->create(['frequency' => 'self-serve']);
+
+        $this->assertFalse($this->policy->registerInterest($user, $selfServe));
+    }
+
+    public function test_any_member_can_withdraw_interest()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create(['frequency' => 'regular']);
+
+        $this->assertTrue($this->policy->withdrawInterest($user, $course));
+    }
+
+    public function test_is_maintainer_or_coordinator_with_multiple_equipment()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create();
+        $area = EquipmentArea::factory()->create();
+        
+        // Create multiple equipment with different maintainer groups
+        $equipment1 = Equipment::factory()->create();
+        $equipment2 = Equipment::factory()->create();
+        $maintainerGroup1 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
+        $maintainerGroup2 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
+        
+        $equipment1->maintainerGroup()->associate($maintainerGroup1);
+        $equipment1->save();
+        $equipment2->maintainerGroup()->associate($maintainerGroup2);
+        $equipment2->save();
+        
+        // User is maintainer of only one equipment
+        $maintainerGroup1->maintainers()->attach($user);
+        
+        // Course has both equipment
+        $course->equipment()->attach([$equipment1->id, $equipment2->id]);
+        
+        // Reload course to ensure relationships are loaded
+        $course->load('equipment.maintainerGroup.maintainers', 'equipment.maintainerGroup.equipmentArea.areaCoordinators');
+
+        // User should still be able to update/delete since they maintain at least one equipment
+        $this->assertTrue($this->policy->update($user, $course));
+        $this->assertTrue($this->policy->delete($user, $course));
+    }
+}

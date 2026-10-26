@@ -49,7 +49,7 @@ class NotificationPreviewController extends Controller
     public function trainerInductionRequested()
     {
         $trainer = $this->getDummyUser();
-        $inductee = factory(User::class)->make([
+        $inductee = User::factory()->make([
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
@@ -102,7 +102,7 @@ class NotificationPreviewController extends Controller
     public function courseTrainerInductionRequested()
     {
         $trainer = $this->getDummyUser();
-        $inductee = factory(User::class)->make([
+        $inductee = User::factory()->make([
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
@@ -120,7 +120,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyUser()
     {
-        return factory(User::class)->make([
+        return User::factory()->make([
             'id' => 999,
             'status' => 'active',
             'active' => true,
@@ -143,7 +143,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyEquipment()
     {
-        $laserCutter = factory(Equipment::class)->make([
+        $laserCutter = Equipment::factory()->make([
             'id' => 1,
             'name' => 'Laser Cutter',
             'slug' => 'laser-cutter',
@@ -151,7 +151,7 @@ class NotificationPreviewController extends Controller
             'trained_instructions' => 'Remember to always check the extraction is running before use',
         ]);
 
-        $printer3d = factory(Equipment::class)->make([
+        $printer3d = Equipment::factory()->make([
             'id' => 2,
             'name' => '3D Printer',
             'slug' => '3d-printer',
@@ -164,7 +164,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyCourseTrainingRecord(User $user)
     {
-        $course = factory(Course::class)->make([
+        $course = Course::factory()->make([
             'id' => 1,
             'name' => 'Laser Cutting',
             'slug' => 'laser-cutting',

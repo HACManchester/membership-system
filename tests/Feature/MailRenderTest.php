@@ -35,7 +35,7 @@ class MailRenderTest extends TestCase
     #[Test]
     public function every_action_on_a_notification_renders_as_its_own_button()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)
             ->get(route('notification-preview.induction-completed'));
@@ -104,8 +104,8 @@ class MailRenderTest extends TestCase
 
     private function member($givenName, $email)
     {
-        $user = factory(User::class)->create(['given_name' => $givenName, 'email' => $email]);
-        factory(ProfileData::class)->create(['user_id' => $user->id]);
+        $user = User::factory()->create(['given_name' => $givenName, 'email' => $email]);
+        ProfileData::factory()->create(['user_id' => $user->id]);
 
         return $user;
     }

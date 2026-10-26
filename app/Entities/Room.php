@@ -2,6 +2,9 @@
 
 namespace BB\Entities;
 
+use Database\Factories\RoomFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,9 +14,11 @@ use Illuminate\Support\Str;
  * A physical location in the space that equipment can be assigned to.
  * Admin-editable; replaces the hardcoded BB\Support\RoomOptions list.
  */
+#[UseFactory(RoomFactory::class)]
 class Room extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<RoomFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'slug', 'description'];
 

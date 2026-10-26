@@ -1,0 +1,126 @@
+<?php
+
+namespace Tests\Unit\Process;
+
+use BB\Entities\User;
+use BB\Entities\SubscriptionCharge;
+use BB\Entities\Payment;
+use BB\Process\CheckPaymentWarnings;
+use BB\Repo\UserRepository;
+use Carbon\Carbon;
+use Tests\TestCase;
+
+class CheckPaymentWarningsTest extends TestCase
+{
+    private $process;
+    private $userRepository;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->userRepository = app(UserRepository::class);
+        $this->process = new CheckPaymentWarnings($this->userRepository);
+    }
+
+    public function testRunSuspendsUserWhenGracePeriodExpired()
+    {
+        $user = User::factory()->create([
+            'status' => 'payment-warning',
+            'active' => true,
+            'subscription_expires' => Carbon::now()->subDays(1), // Grace period expired
+            'suspended_at' => null,
+        ]);
+
+        $this->process->run();
+
+        $user->refresh();
+        $this->assertEquals('suspended', $user->status);
+        $this->assertFalse($user->active);
+        $this->assertNotNull($user->suspended_at);
+        $this->assertTrue($user->suspended_at->isToday());
+    }
+
+    public function testRunDoesNotSuspendUserWithinGracePeriod()
+    {
+        $user = User::factory()->create([
+            'status' => 'payment-warning',
+            'active' => true,
+            'subscription_expires' => Carbon::now()->addDays(3), // Still within grace period
+            'suspended_at' => null,
+        ]);
+
+        $this->process->run();
+
+        $user->refresh();
+        $this->assertEquals('payment-warning', $user->status);
+        $this->assertTrue($user->active);
+        $this->assertNull($user->suspended_at);
+    }
+
+    public function testRunIgnoresUsersNotInPaymentWarningStatus()
+    {
+        $activeUser = User::factory()->create([
+            'status' => 'active',
+            'active' => true,
+            'subscription_expires' => Carbon::now()->subDays(1),
+        ]);
+
+        $suspendedUser = User::factory()->create([
+            'status' => 'suspended',
+            'active' => false,
+            'subscription_expires' => Carbon::now()->subDays(1),
+        ]);
+
+        $this->process->run();
+
+        $activeUser->refresh();
+        $suspendedUser->refresh();
+
+        // Should not change status of users not in payment-warning
+        $this->assertEquals('active', $activeUser->status);
+        $this->assertEquals('suspended', $suspendedUser->status);
+    }
+
+    public function testRunHandlesUserWithNoSubscriptionExpires()
+    {
+        $user = User::factory()->create([
+            'status' => 'payment-warning',
+            'active' => true,
+            'subscription_expires' => null, // No expiry date
+        ]);
+
+        $this->process->run();
+
+        $user->refresh();
+        
+        // Should suspend user with no expiry date
+        $this->assertEquals('suspended', $user->status);
+        $this->assertFalse($user->active);
+    }
+
+    public function testRunDoesNotRecoverWithOldPayment()
+    {
+        $user = User::factory()->create([
+            'status' => 'payment-warning',
+            'active' => true,
+            'subscription_expires' => Carbon::now()->addDays(5), // Future date
+            'payment_method' => 'gocardless-variable',
+        ]);
+
+        // Create payment that's older than current subscription_expires
+        SubscriptionCharge::factory()->create([
+            'user_id' => $user->id,
+            'charge_date' => Carbon::now()->subDays(10),
+            'status' => 'paid',
+            'payment_date' => Carbon::now()->subDays(10),
+        ]);
+
+        $this->process->run();
+
+        $user->refresh();
+        
+        // Should not recover since payment is older than current expiry
+        $this->assertEquals('payment-warning', $user->status);
+        $this->assertTrue($user->active);
+    }
+}

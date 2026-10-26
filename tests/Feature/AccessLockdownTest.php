@@ -12,7 +12,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function an_admin_can_view_the_lockdown_page()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->get(route('access-lockdown.index'));
 
@@ -29,7 +29,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function the_default_roles_are_narrowed_to_roles_that_exist()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->get(route('access-lockdown.index'));
 
@@ -41,7 +41,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function an_admin_can_start_a_lockdown()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->post(route('access-lockdown.store'), [
             'reason' => 'Burst pipe in the wood shop',
@@ -62,7 +62,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function a_second_lockdown_cannot_be_started_while_one_is_running()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->post(route('access-lockdown.store'), [
             'reason' => 'First',
@@ -81,7 +81,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function a_lockdown_must_name_at_least_one_role()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->post(route('access-lockdown.store'), [
             'reason' => 'Nobody at all',
@@ -95,7 +95,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function a_lockdown_cannot_name_a_role_that_does_not_exist()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->post(route('access-lockdown.store'), [
             'roles' => ['not-a-real-role'],
@@ -108,7 +108,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function an_admin_can_lift_a_lockdown()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
         $lockdown = $this->runningLockdown($admin);
 
         $response = $this->actingAs($admin)->delete(route('access-lockdown.destroy'));
@@ -129,7 +129,7 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function lifting_clears_every_active_lockdown()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
         $this->runningLockdown($admin);
         $this->runningLockdown($admin);
 
@@ -142,8 +142,8 @@ class AccessLockdownTest extends TestCase
     #[Test]
     public function a_member_cannot_view_or_change_the_lockdown()
     {
-        $admin = factory(User::class)->state('admin')->create();
-        $member = factory(User::class)->create();
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create();
         $this->runningLockdown($admin);
 
         $this->actingAs($member)->get(route('access-lockdown.index'))->assertForbidden();

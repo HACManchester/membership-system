@@ -12,7 +12,7 @@ class AdminHomeTest extends TestCase
 
     public function test_admin_dashboard_renders_for_an_admin()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->get(route('admin'))
             ->assertStatus(200)
@@ -23,7 +23,7 @@ class AdminHomeTest extends TestCase
 
     public function test_admin_dashboard_is_forbidden_for_a_regular_member()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($member)->get(route('admin'))->assertStatus(403);
     }
@@ -39,7 +39,7 @@ class AdminHomeTest extends TestCase
 
     public function test_home_redirects_a_logged_in_member_to_their_account()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($member)->get(route('home'))
             ->assertRedirect(route('account.show', $member->id));

@@ -1,56 +1,40 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use BB\Entities\Equipment;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-$factory->define(Equipment::class, function (Faker $faker) {
-    $name = $faker->unique()->word();
-    $slug = Str::slug($name);
+/**
+ * @extends Factory<Equipment>
+ */
+class EquipmentFactory extends Factory
+{
+    protected $model = Equipment::class;
 
-    return [
-        'name' => $name,
-        // 'manufacturer' => '',
-        // 'model_number' => '',
-        // 'serial_number' => '',
-        // 'colour' => '',
-        // 'location' => '',
-        // 'room' => '',
-        // 'detail' => '',
-        'slug' => $slug,
-        // 'description' => '',
-        // 'help_text' => '',
-        // 'managing_role_id' => '',
-        // 'requires_induction' => '',
-        // 'induction_category' => '',
-        // 'working' => '',
-        // 'permaloan' => '',
-        // 'permaloan_user_id' => '',
-        // 'access_fee' => '',
-        'photos' => [], // Not sure why this can be omitted when not creating via factories?
-        // 'archive' => '',
-        'obtained_at' => $faker->dateTimeThisYear(),
-        // 'removed_at' => '',
-        // 'asset_tag_id' => '',
-        // 'usage_cost' => '',
-        'usage_cost_per' => 'hour',
-        // 'ppe' => '',
-        // 'dangerous' => '',
-        // 'induction_instructions' => '',
-        // 'trainer_instructions' => '',
-        // 'trained_instructions' => '',
-        // 'docs' => '',
-        // 'access_code' => '',
-        // 'accepting_inductions' => '',
-    ];
-});
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $name = $this->faker->unique()->word();
 
-$factory->state(Equipment::class, 'requiresInduction', function (Faker $faker) {
-    return [
-        'requires_induction'  => true,
-        'induction_category'  => $faker->word(),
-        'accepting_inductions' => true,
-    ];
-});
+        return [
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'photos' => [],
+            'obtained_at' => $this->faker->dateTimeThisYear(),
+            'usage_cost_per' => 'hour',
+        ];
+    }
+
+    public function requiresInduction(): static
+    {
+        return $this->state(fn (): array => [
+            'requires_induction' => true,
+            'induction_category' => $this->faker->word(),
+            'accepting_inductions' => true,
+        ]);
+    }
+}

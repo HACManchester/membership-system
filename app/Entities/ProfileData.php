@@ -1,5 +1,8 @@
 <?php namespace BB\Entities;
 
+use Database\Factories\ProfileDataFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
@@ -11,10 +14,12 @@ use Laracasts\Presenter\PresentableTrait;
  * @property bool $new_profile_photo
  * @package BB\Entities
  */
+#[UseFactory(ProfileDataFactory::class)]
 class ProfileData extends Model
 {
 
-    use PresentableTrait;
+    /** @use HasFactory<ProfileDataFactory> */
+    use HasFactory, PresentableTrait;
 
     protected $fillable = [
         'twitter', 'facebook', 'google_plus', 'github', 'irc', 'website', 'tagline', 'description', 'skills', 'profile_photo', 'profile_photo_private', 'new_profile_photo', 'profile_photo_on_wall'

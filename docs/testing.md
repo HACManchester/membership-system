@@ -8,8 +8,8 @@ retired in June 2026 — its coverage was ported to `tests/Feature/`):
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
 | Modern feature tests | `tests/Feature/` | 39 files | Good to excellent |
-| Integration tests | `tests/integration/` | 3 files | Excellent — the crown jewels |
-| Unit tests | `tests/unit/` | 26 files | Good, especially billing |
+| Integration tests | `tests/Integration/` | 3 files | Excellent — the crown jewels |
+| Unit tests | `tests/Unit/` | 26 files | Good, especially billing |
 | Mailer tests | `tests/Mailer/` | 1 file | Queue assertions only — rendering is covered elsewhere |
 
 **Strongest coverage:** the payment/membership lifecycle (creation → billing → failure → warning →
@@ -25,7 +25,7 @@ that don't run in CI (see below).
 - `phpunit.xml`: SQLite `:memory:`, array mail/cache, sync queue, Telegram disabled. Fast and
   isolated; `RefreshDatabase` migrates per test. No DB setup needed to run the suite.
 - Run via Docker: `docker compose exec laravel vendor/bin/phpunit`.
-- **GoCardless sandbox tests** (`tests/integration/GoCardlessSandboxTest.php`, group
+- **GoCardless sandbox tests** (`tests/Integration/GoCardlessSandboxTest.php`, group
   `gocardless-sandbox`) drive `GoCardlessHelper` against the real GoCardless sandbox API. They skip
   unless `GOCARDLESS_SANDBOX_ACCESS_TOKEN` is set, so CI never touches the network. Run them before
   and after any change to the GoCardless SDK, Guzzle, or `GoCardlessHelper`:
@@ -46,10 +46,13 @@ that don't run in CI (see below).
   turns them into exceptions. A test that "passes" while reading a property off `null` is now a
   failing test — that's intended. Note Laravel 9 stops throwing on deprecations, so this has to be
   re-enabled explicitly in `phpunit.xml` at that upgrade step.
-- Factories: mixed generations, all closure-style. `database/factories/ModelFactory.php` uses the
-  legacy `$factory->define()` style; newer factories (Payment, Course, Equipment…) are separate
-  files. Laravel 9 removes this API; the upgrade bridges it with `laravel/legacy-factories` and
-  converts to class-based factories as a separate step.
+- Factories: class-based, one per model in `database/factories/` (`Database\Factories\`). Each
+  entity opts in with `HasFactory` and `#[UseFactory(XFactory::class)]`, because Laravel's name
+  guessing looks for `App\Models`, not `BB\Entities`. Build records with `User::factory()`, and
+  use the named states (`User::factory()->admin()`, `Payment::factory()->fromCash()->paid()`)
+  rather than raw attributes. `ModelFactoriesTest` fails when a model has no factory, or when a
+  factory's defaults don't save a valid row. (The closure factories and `laravel/legacy-factories`
+  were removed in October 2026.)
 - CI (`.github/workflows/ci.yml`): a matrix of the PHP version production runs and the next one the
   upgrade moves to. The next version is non-blocking (`continue-on-error`) until it goes green.
   A single `frontend` job runs yarn install, ESLint, Jest and the production build. The PHP legs
@@ -60,14 +63,14 @@ that don't run in CI (see below).
 
 **What good looks like here** (use these as templates):
 
-- `tests/integration/PaymentFlowIntegrationTest.php` — end-to-end payment failure → grace period →
+- `tests/Integration/PaymentFlowIntegrationTest.php` — end-to-end payment failure → grace period →
   suspension with time travel (`Carbon::setTestNow`) and DB-state assertions at every step.
 - `tests/Feature/GoCardlessWebhookTest.php` — drives the real webhook endpoint with a valid HMAC
   signature, asserts each event type's resulting Payment/SubscriptionCharge/User state, and pins
   idempotency (duplicate delivery is harmless). Mocks only the outbound GoCardless API.
-- `tests/unit/Services/MemberSubscriptionChargesTest.php` — mocks `GoCardlessHelper`, verifies
+- `tests/Unit/Services/MemberSubscriptionChargesTest.php` — mocks `GoCardlessHelper`, verifies
   Payment rows created with the right amounts/statuses/source IDs.
-- `tests/unit/Policies/CoursePolicyTest.php` — exercises the maintainer/area-coordinator
+- `tests/Unit/Policies/CoursePolicyTest.php` — exercises the maintainer/area-coordinator
   authorization matrix with realistic relationships.
 - `tests/Feature/EquipmentTest.php` — access-state visibility, role-based authorization,
   induction lifecycle, `Event::fake()` assertions.
@@ -158,9 +161,8 @@ actually breaks:
 
 ### Phase 3 — raise the bar (ongoing)
 
-1. Convert factories to class-based once the upgrade has passed Laravel 9 (they're bridged with
-   `laravel/legacy-factories` until then); add factory states for the common personas (active
-   member, payment-warning member, trainer, admin) to cut setup noise.
+1. Factories are class-based (October 2026). Add factory states for the common personas (active
+   member, payment-warning member, trainer) to cut setup noise; `admin()` exists already.
 2. Start JS testing where logic lives: begin with pure functions/hooks in `resources/js`, then
    component tests for the course-training pages, and reinstate a CI step once tests exist.
 3. Adopt a coverage floor in CI (e.g. fail under 60%, ratchet up), so coverage only moves one

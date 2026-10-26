@@ -14,7 +14,7 @@ class CashPaymentTest extends TestCase
 
     private function admin()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $user->assignRole(Role::findByName('admin'));
 
         return $user;
@@ -23,7 +23,7 @@ class CashPaymentTest extends TestCase
     #[Test]
     public function an_admin_can_record_a_cash_payment_for_a_member()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($this->admin())
             ->post(route('account.payment.cash.create', $member->id), [
@@ -45,8 +45,8 @@ class CashPaymentTest extends TestCase
     #[Test]
     public function a_non_admin_cannot_record_a_cash_payment()
     {
-        $member = factory(User::class)->create();
-        $target = factory(User::class)->create();
+        $member = User::factory()->create();
+        $target = User::factory()->create();
 
         $this->actingAs($member)
             ->post(route('account.payment.cash.create', $target->id), [

@@ -50,7 +50,7 @@ class EmailPreviewController extends Controller
 
     public function suspended()
     {
-        $user = factory(User::class)->make([
+        $user = User::factory()->make([
             'id' => 999,
             'status' => 'suspended',
             'active' => false,
@@ -62,7 +62,7 @@ class EmailPreviewController extends Controller
 
     public function leaving()
     {
-        $user = factory(User::class)->make([
+        $user = User::factory()->make([
             'id' => 999,
             'status' => 'leaving',
             'active' => true,
@@ -74,7 +74,7 @@ class EmailPreviewController extends Controller
 
     public function left()
     {
-        $user = factory(User::class)->make([
+        $user = User::factory()->make([
             'id' => 999,
             'status' => 'left',
             'active' => false,
@@ -121,7 +121,7 @@ class EmailPreviewController extends Controller
 
     private function getDummyUser()
     {
-        return factory(User::class)->make([
+        return User::factory()->make([
             'id' => 999,
             'status' => 'active',
             'active' => true,

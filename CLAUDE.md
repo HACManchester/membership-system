@@ -94,8 +94,9 @@ These override the generic Laravel Boost guidance above wherever they differ. Th
 - **The frontend builds with Vite** (`vite.config.mjs`, Blade's `@vite`), not Laravel Mix. Rebuild
   with `yarn build`, or run `yarn hot` for the dev server. It needs Node 20.19+.
 - **Models live in `app/Entities/` under the `BB\` namespace**, not `App\Models`.
-- **Test factories are legacy closure factories** (`laravel/legacy-factories`, `factory(User::class)`).
-  Don't generate class-based factories for existing models without discussing it first.
+- **Test factories are class-based**, one per model in `database/factories/` (`Database\Factories\`).
+  Entities opt in with `HasFactory` plus `#[UseFactory(XFactory::class)]`, since name guessing looks in
+  `App\Models`. A new model needs a factory too: `ModelFactoriesTest` fails without one.
 - **Docblocks only where they add information** the signature can't express (generics, `@property`,
   untyped parameters, genuine prose). Don't add `@param`/`@return` that restate native types.
 - **Deployment is self-hosted** (the `membership-deployment` repo, manual deploys), not Laravel Cloud.

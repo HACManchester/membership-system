@@ -23,7 +23,7 @@ class InertiaSharedPropsTest extends TestCase
     #[Test]
     public function validation_errors_reach_the_page_after_a_failed_submission()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
             ->from(route('room.create'))
@@ -38,7 +38,7 @@ class InertiaSharedPropsTest extends TestCase
     #[Test]
     public function validation_errors_reach_a_client_side_visit()
     {
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
             ->from(route('room.create'))
@@ -60,8 +60,8 @@ class InertiaSharedPropsTest extends TestCase
     #[Test]
     public function a_flashed_message_reaches_the_page_after_a_submission()
     {
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        $equipment = factory(Equipment::class)->create(['induction_category' => null]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
+        $equipment = Equipment::factory()->create(['induction_category' => null]);
 
         $this->actingAs($member)
             ->followingRedirects()
