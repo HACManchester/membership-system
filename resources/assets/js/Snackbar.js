@@ -1,9 +1,8 @@
+import $ from 'jquery';
+
 class Snackbar {
 
     constructor() {
-
-
-        var $ = require('jquery');
 
 
         console.log("Snackbar Loading");

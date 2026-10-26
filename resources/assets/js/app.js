@@ -1,12 +1,14 @@
+// jQuery must be global before Bootstrap and select2 run, so it comes first
+import './jquery-global';
+import 'bootstrap';
+import 'select2/select2.js';
+
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import SiteInteraction from './SiteInteraction';
 import AdminForms from './AdminForms';
 import Snackbar from './Snackbar';
 import PaymentModule from './components/PaymentModule';
-
-global.jQuery = global.$ = require('jquery');
-require('bootstrap');
 
 new SiteInteraction();
 new AdminForms();

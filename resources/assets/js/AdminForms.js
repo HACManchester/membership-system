@@ -1,9 +1,8 @@
+import $ from 'jquery';
+
 class AdminForms {
 
     constructor() {
-
-
-        var $ = require('jquery');
 
 
         console.log("Admin Forms Loading");

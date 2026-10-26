@@ -8,7 +8,7 @@
     <title>@yield('meta-title', 'Member System') | Hackspace Manchester</title>
 
     <link href='https://fonts.googleapis.com/css?family=Asap:400,700,100' rel='stylesheet' type='text/css'>
-    <link href="{{ mix('/css/application.css') }}" rel="stylesheet">
+    @vite('resources/assets/less/application.less')
 
     @if (config('services.sentry.browser_dsn'))
         <script src="https://js.sentry-cdn.com/{{ config('services.sentry.browser_dsn') }}.min.js" crossorigin="anonymous"></script>

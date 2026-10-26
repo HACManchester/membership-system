@@ -65,8 +65,8 @@ Production packages needing attention:
 Dev packages: `fzaninotto/faker` is abandoned (replace with `fakerphp/faker`),
 `laravel/browser-kit-testing` blocks framework upgrades and should be removed with the legacy tests.
 
-Frontend: Node 16 in the Dockerfile (EOL), Laravel Mix 6 (consider Vite), Bootstrap 3.3.4 (2014)
-shipping alongside MUI 6.
+Frontend: Vite 8 on Yarn 4 (moved off Laravel Mix 6 in October 2026), Bootstrap 3 (2014) shipping
+alongside MUI 6.
 
 ## Dependency updates (Dependabot)
 
@@ -106,7 +106,7 @@ Removed in the June 2026 deletion pass:
 - `test.php` (empty), `npm-debug.log` (build artifact)
 - `automate.sh` — superseded by the scheduler in `app/Console/Kernel.php`
 - `phpspec.yml`, `scrutinizer.yml` — tools no longer in use (CI is GitHub Actions)
-- `elixir.json` — two build systems ago; the live one is `webpack.mix.js`
+- `elixir.json` — two build systems ago (Mix's `webpack.mix.js` followed it, and Vite replaced that)
 - `app/Exceptions/DatabaseException.php`, `DeviceException.php`, `UserImageFailedException.php` — never thrown
 
 Kept by decision:

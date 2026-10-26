@@ -1,10 +1,8 @@
+import jQuery from 'jquery';
+
 class SiteInteraction {
 
     constructor() {
-
-
-        //var jQuery = require('jquery');
-        var jQuery = global.jQuery;
 
 
         console.log("Site Interaction Loading");
@@ -26,11 +24,9 @@ class SiteInteraction {
 
 
         //Tooltips
-        //require('bootstrap');
         jQuery('[data-toggle=tooltip]').tooltip({});
 
         //Fancy dropdown
-        require('select2');
         jQuery(".js-advanced-dropdown").select2({dropdownAutoWidth:false});
 
 

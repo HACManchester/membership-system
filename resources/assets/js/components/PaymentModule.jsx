@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import Select from "./form/Select";
 
 class PaymentModule extends React.Component {
@@ -44,8 +45,6 @@ class PaymentModule extends React.Component {
   }
 
   handleSubmit() {
-    var $ = require("jquery");
-
     var parsedAmount = parseFloat(this.state.amount);
     // console.log(parsedAmount, this.state);
 

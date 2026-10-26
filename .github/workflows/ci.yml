@@ -15,9 +15,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Lints and builds the frontend once, rather than in every PHP leg. The PHP
-  # legs render Blade views, whose mix() calls need the built manifest, so the
-  # build output is handed to them as an artifact.
+  # Lints, tests and builds the frontend once, rather than in every PHP leg. The
+  # PHP tests don't need the built assets, so the PHP legs run alongside it.
   frontend:
     name: Frontend
     runs-on: ubuntu-latest
@@ -58,25 +57,10 @@ jobs:
         run: yarn test --ci
 
       - name: Build
-        run: yarn run production
-
-      # The paths share public/ as their root, so the artifact holds them
-      # relative to it
-      - name: Upload the built assets
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: frontend-assets
-          path: |
-            public/mix-manifest.json
-            public/js/
-            public/css/application.css
-            public/fonts/
-          if-no-files-found: error
-          retention-days: 1
+        run: yarn build
 
   build:
     name: PHP ${{ matrix.php }}${{ matrix.experimental && ' (next, non-blocking)' || '' }}
-    needs: frontend
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # The "next" PHP runs ahead of the upgrade so each engine bump promotes a
@@ -128,12 +112,6 @@ jobs:
       - name: Composer audit
         run: composer audit --locked
 
-      - name: Download the built assets
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: frontend-assets
-          path: public
-
       - name: Prepare the application
         run: |
           php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -171,10 +149,6 @@ jobs:
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
-          # node-forge's RSA signature-verification flaw has no fixed release. We
-          # only get node-forge through webpack-dev-server (selfsigned), used by
-          # `yarn hot`, never the production build, and it goes with the Vite move.
-          allow-ghsas: GHSA-86w9-cpqp-85rv
 
   # The one check branch protection requires. Matrix legs can be renamed, added or
   # removed without touching the repository settings.

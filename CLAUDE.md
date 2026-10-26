@@ -23,8 +23,9 @@ The local dev environment is Docker (Laravel Sail-style, `docker-compose.yml`).
 - **Node/yarn commands run directly on the host** (no prefix):
 
   ```sh
-  yarn dev        # Mix dev build
-  yarn build      # production build
+  yarn build      # production build (Vite, into public/build)
+  yarn dev        # unminified build with source maps; `yarn watch` rebuilds on change
+  yarn hot        # Vite dev server with hot reloading
   yarn lint       # ESLint
   yarn test       # Jest (two legacy .jsx suites so far)
   ```
@@ -90,8 +91,8 @@ These override the generic Laravel Boost guidance above wherever they differ. Th
 - **PHP runs in Docker.** Run Artisan, Composer, PHPUnit and PHPStan inside the container, e.g.
   `docker compose exec laravel php artisan route:list`, `docker compose exec laravel vendor/bin/phpunit`.
   Never run them with the host's `php`. Node and Yarn run on the host (`yarn dev`, `yarn build`).
-- **The frontend builds with Laravel Mix, not Vite.** Rebuild with `yarn dev` / `yarn build`. A Vite
-  migration is a separate frontend track.
+- **The frontend builds with Vite** (`vite.config.mjs`, Blade's `@vite`), not Laravel Mix. Rebuild
+  with `yarn build`, or run `yarn hot` for the dev server. It needs Node 20.19+.
 - **Models live in `app/Entities/` under the `BB\` namespace**, not `App\Models`.
 - **Test factories are legacy closure factories** (`laravel/legacy-factories`, `factory(User::class)`).
   Don't generate class-based factories for existing models without discussing it first.

@@ -140,7 +140,7 @@ Node isn't in the container — yarn runs on the host.
 Prerequisites:
 
 - [Docker](https://www.docker.com/) with Docker Compose
-- [Node.js](https://nodejs.org/) + [Yarn](https://yarnpkg.com/) on your host machine (frontend tooling runs on the host, not in the container)
+- [Node.js](https://nodejs.org/) 20.19 or newer on your host machine (frontend tooling runs on the host, not in the container). Run `corepack enable` once to get the Yarn version `package.json` pins.
 
 For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might be worth exploring as a more efficient alternative to Docker for Mac.
 
@@ -153,11 +153,13 @@ For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might b
    yarn install
    ```
 
-3. Build frontend assets (on the host):
+3. Build frontend assets (on the host) with Vite:
 
    ```sh
    yarn build
    ```
+
+   Or, while working on the frontend, run `yarn hot` for Vite's dev server with hot reloading.
 
 4. Start the local runtime with:
 
