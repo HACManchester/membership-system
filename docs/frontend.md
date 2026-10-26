@@ -4,15 +4,16 @@
 
 | | Legacy stack | Modern stack |
 | --- | --- | --- |
-| Rendering | ~121 Blade templates (`resources/views/`) | Inertia.js v2 + React (`resources/js/`) |
+| Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v2 + React (`resources/js/`) |
 | Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 6 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
 | Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, Jest (two legacy `.jsx` component suites; runs in CI) |
 
-Pages migrated to Inertia/React so far: courses, course training, equipment-adjacent pages,
-newsletter. Everything else (account, profile, members directory, payments/admin screens, storage
-boxes, stats) is still Blade + jQuery + Bootstrap 3.
+Pages migrated to Inertia/React so far: the home page, courses, course training, equipment,
+equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, and the admin
+index, access lockdown and settings pages. Everything else (account, profile, payments/finance
+screens, member admin, storage boxes, stats) is still Blade + jQuery + Bootstrap 3.
 
 ## Build tooling
 
@@ -60,8 +61,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 ### Suggested order (value ÷ effort)
 
-1. **Member-facing, high-traffic, simple**: members directory, leaderboard — small read-mostly
-   pages, good warm-ups.
+1. **Member-facing, high-traffic, simple**: leaderboard — a small read-mostly page, a good warm-up
+   (the members directory is done).
 2. **Account/profile cluster**: registration, profile edit, account settings. Biggest UX win;
    pairs with splitting `AccountController` (architecture.md). Includes the photo-upload/approval
    flow.
@@ -75,6 +76,9 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 - **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
   suites; `resources/js` has no tests yet.)
+- **Next**: type-check with `tsc` in CI (nothing runs it today; `tsconfig.json` is there).
+  Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` in one change. Then the
+  MUI majors.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 

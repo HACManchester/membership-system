@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 Membership management system for Hackspace Manchester (adopted from Build Brighton's open-source
-system — hence the `BB\` namespace). Laravel 7 (mid-upgrade), MySQL, GoCardless billing, mixed
-Blade + Inertia/React frontend.
+system — hence the `BB\` namespace). Laravel 13 on PHP 8.4, MySQL, GoCardless billing, mixed
+Blade + Inertia/React frontend built with Vite.
 
 **Read `docs/README.md` first** — it indexes documentation on project health, domain subsystems,
 architecture, frontend, testing, and a glossary of domain terms.

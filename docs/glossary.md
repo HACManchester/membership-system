@@ -71,4 +71,4 @@ prefer the precise terms below.
 | --- | --- |
 | **BB namespace** | `BB\` = Build Brighton — the hackspace whose open-source system this was adopted from. Kept to avoid churn. |
 | **Generation 1/2/3** | Shorthand from architecture.md for the three eras of code patterns coexisting in the repo. |
-| **The ladder** | The staged Laravel 7→8→9→10→11 upgrade path (architecture.md). |
+| **The ladder** | The staged Laravel 7→13 upgrade, one major per PR, finished in October 2026 (architecture.md). |

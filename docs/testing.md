@@ -2,14 +2,14 @@
 
 ## Summary
 
-69 test files / 505 tests (October 2026), in three quality bands (the legacy BrowserKit band was
+92 test files / 649 tests (October 2026), in three quality bands (the legacy BrowserKit band was
 retired in June 2026 — its coverage was ported to `tests/Feature/`):
 
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
-| Modern feature tests | `tests/Feature/` | 39 files | Good to excellent |
+| Modern feature tests | `tests/Feature/` | 52 files | Good to excellent |
 | Integration tests | `tests/Integration/` | 3 files | Excellent — the crown jewels |
-| Unit tests | `tests/Unit/` | 26 files | Good, especially billing |
+| Unit tests | `tests/Unit/` | 36 files | Good, especially billing |
 | Mailer tests | `tests/Mailer/` | 1 file | Queue assertions only — rendering is covered elsewhere |
 
 **Strongest coverage:** the payment/membership lifecycle (creation → billing → failure → warning →
@@ -43,9 +43,11 @@ that don't run in CI (see below).
   `laravel/browser-kit-testing` + `symfony/dom-crawler` dev dependencies were removed in June 2026.)
 - **PHP notices, warnings and deprecations fail the suite.** The app no longer suppresses them
   (an `error_reporting()` mask in `AppServiceProvider` was removed in October 2026), and Laravel
-  turns them into exceptions. A test that "passes" while reading a property off `null` is now a
-  failing test — that's intended. Note Laravel 9 stops throwing on deprecations, so this has to be
-  re-enabled explicitly in `phpunit.xml` at that upgrade step.
+  turns notices and warnings into exceptions. A test that "passes" while reading a property off
+  `null` is now a failing test — that's intended. Laravel no longer throws on deprecations, so
+  `Tests\TestCase` turns every one back into a failure, including silenced ones and those raised
+  inside `vendor/`. A vendor deprecation we can't fix goes in `knownVendorDeprecations()`, with a
+  comment saying what removes it; the list is empty today.
 - Factories: class-based, one per model in `database/factories/` (`Database\Factories\`). Each
   entity opts in with `HasFactory` and `#[UseFactory(XFactory::class)]`, because Laravel's name
   guessing looks for `App\Models`, not `BB\Entities`. Build records with `User::factory()`, and
@@ -53,9 +55,9 @@ that don't run in CI (see below).
   rather than raw attributes. `ModelFactoriesTest` fails when a model has no factory, or when a
   factory's defaults don't save a valid row. (The closure factories and `laravel/legacy-factories`
   were removed in October 2026.)
-- CI (`.github/workflows/ci.yml`): a matrix of the PHP version production runs and the next one the
-  upgrade moves to. The next version is non-blocking (`continue-on-error`) until it goes green.
-  A single `frontend` job runs yarn install, ESLint, Jest and the production build. The PHP legs
+- CI (`.github/workflows/ci.yml`): a PHP matrix of 8.4 (what production runs) and 8.5, both
+  blocking. A future PHP version can join as an `experimental` leg, which reports without
+  blocking (`continue-on-error`) until it goes green. A single `frontend` job runs yarn install, ESLint, Jest and the production build. The PHP legs
   run alongside it: `Tests\TestCase` stubs out the built-asset helpers, so the tests don't need
   a frontend build. Each PHP leg runs composer install and audit, PHPStan and PHPUnit.
 
@@ -114,7 +116,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Notification emails | ✅ Good | `NotificationEmailTest`: admin/trainer authorization, recipient resolution, body escaping |
 | Authorization middleware | ✅ Good | `HasRole` + `IsTrusted` unit tests pin current semantics |
 | Discourse sync | ✅ Good | Job payload + event→job dispatch tested |
-| Mail | ✅ Good | `UserMailerTest` (queue assertions); every Mailable and notification rendered via the preview routes in `RouteSmokeTest`; `MailRenderTest` covers multi-button notifications and the two raw-view sends, readable on SwiftMailer and Symfony Mailer alike |
+| Mail | ✅ Good | `UserMailerTest` (queue assertions); every Mailable and notification rendered via the preview routes in `RouteSmokeTest`; `MailRenderTest` covers multi-button notifications and the two raw-view sends |
 | Exception handling | ✅ Good | Telegram throttling tested |
 | Keyfobs | ✅ Good | `KeyFobTest` covers the view/add/mark-lost authorization matrix (self/other/admin) + induction gate; `KeyFobCsvTest` covers export and lockdown filtering; `KeyFobCsvContractTest` pins the format the door system parses. Access-code generation still untested |
 | Balance / cash payments | 🟡 Partial | `MoneyHandlingTest` + `CashPaymentTest` (admin records cash payment, non-admin denied); the `BalanceController` page is smoke-tested only |
@@ -148,8 +150,8 @@ onboarding flow has since been covered by `OnboardingTest`.)
 
 ### Pre-upgrade hardening ✅ done (October 2026)
 
-Ahead of the Laravel 7 → 12 / PHP 7.2 → 8.4 upgrade, aimed at what a framework or engine upgrade
-actually breaks:
+Done ahead of the Laravel 7 → 13 / PHP 7.2 → 8.4 upgrade, which has since finished. It was aimed
+at what a framework or engine upgrade actually breaks:
 
 - Removed the app-wide warning/notice suppression and fixed the latent nulls it was hiding.
 - `RouteSmokeTest` — every GET route as every persona; found and fixed three pre-existing 500s.
@@ -157,7 +159,7 @@ actually breaks:
 - `MoneyHandlingTest` — float/pence round-trips and grace periods ahead of PHP 8's comparison and
   float-to-int changes.
 - `MailRenderTest` — the mail paths most exposed to the Symfony Mailer swap.
-- CI runs the next PHP version alongside the current one.
+- CI runs a second PHP version alongside production's.
 
 ### Phase 3 — raise the bar (ongoing)
 
