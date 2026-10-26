@@ -8,8 +8,8 @@ retired in June 2026 — its coverage was ported to `tests/Feature/`):
 | Band | Where | Count | Verdict |
 | --- | --- | --- | --- |
 | Modern feature tests | `tests/Feature/` | 39 files | Good to excellent |
-| Integration tests | `tests/integration/` | 3 files | Excellent — the crown jewels |
-| Unit tests | `tests/unit/` | 26 files | Good, especially billing |
+| Integration tests | `tests/Integration/` | 3 files | Excellent — the crown jewels |
+| Unit tests | `tests/Unit/` | 26 files | Good, especially billing |
 | Mailer tests | `tests/Mailer/` | 1 file | Queue assertions only — rendering is covered elsewhere |
 
 **Strongest coverage:** the payment/membership lifecycle (creation → billing → failure → warning →
@@ -25,7 +25,7 @@ that don't run in CI (see below).
 - `phpunit.xml`: SQLite `:memory:`, array mail/cache, sync queue, Telegram disabled. Fast and
   isolated; `RefreshDatabase` migrates per test. No DB setup needed to run the suite.
 - Run via Docker: `docker compose exec laravel vendor/bin/phpunit`.
-- **GoCardless sandbox tests** (`tests/integration/GoCardlessSandboxTest.php`, group
+- **GoCardless sandbox tests** (`tests/Integration/GoCardlessSandboxTest.php`, group
   `gocardless-sandbox`) drive `GoCardlessHelper` against the real GoCardless sandbox API. They skip
   unless `GOCARDLESS_SANDBOX_ACCESS_TOKEN` is set, so CI never touches the network. Run them before
   and after any change to the GoCardless SDK, Guzzle, or `GoCardlessHelper`:
@@ -63,14 +63,14 @@ that don't run in CI (see below).
 
 **What good looks like here** (use these as templates):
 
-- `tests/integration/PaymentFlowIntegrationTest.php` — end-to-end payment failure → grace period →
+- `tests/Integration/PaymentFlowIntegrationTest.php` — end-to-end payment failure → grace period →
   suspension with time travel (`Carbon::setTestNow`) and DB-state assertions at every step.
 - `tests/Feature/GoCardlessWebhookTest.php` — drives the real webhook endpoint with a valid HMAC
   signature, asserts each event type's resulting Payment/SubscriptionCharge/User state, and pins
   idempotency (duplicate delivery is harmless). Mocks only the outbound GoCardless API.
-- `tests/unit/Services/MemberSubscriptionChargesTest.php` — mocks `GoCardlessHelper`, verifies
+- `tests/Unit/Services/MemberSubscriptionChargesTest.php` — mocks `GoCardlessHelper`, verifies
   Payment rows created with the right amounts/statuses/source IDs.
-- `tests/unit/Policies/CoursePolicyTest.php` — exercises the maintainer/area-coordinator
+- `tests/Unit/Policies/CoursePolicyTest.php` — exercises the maintainer/area-coordinator
   authorization matrix with realistic relationships.
 - `tests/Feature/EquipmentTest.php` — access-state visibility, role-based authorization,
   induction lifecycle, `Event::fake()` assertions.
