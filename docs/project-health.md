@@ -88,10 +88,7 @@ build or pages can't take them. Each rule in the file says what lifts it.
 - `gocardless/gocardless-pro`: needs a sandbox run.
 - Inertia (`inertiajs/inertia-laravel` and `@inertiajs/*`): the PHP and JS sides must move
   together.
-- Laravel Mix and its toolchain, until the Vite migration lands:
-  - `webpack` 5.106+;
-  - the Mix-tied loaders and `react-refresh`;
-  - Babel 8.
+- Babel 8 (used only by Jest): it needs Node 22.18+, and local development is on Node 20.
 - jQuery 4, Bootstrap 4 and Select2 4, until the legacy Blade pages are gone.
 - TypeScript 7, until typescript-eslint supports it.
 
