@@ -42,7 +42,7 @@ class CourseTrainingVisibilityTest extends TestCase
             'access_code' => 'COURSECODE',
         ]);
 
-        $this->course = factory(Course::class)->create(['slug' => 'modern-course']);
+        $this->course = Course::factory()->create(['slug' => 'modern-course']);
         $this->course->equipment()->attach($this->equipment);
     }
 

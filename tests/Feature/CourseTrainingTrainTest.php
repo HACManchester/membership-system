@@ -32,7 +32,7 @@ class CourseTrainingTrainTest extends TestCase
 
         $this->admin = factory(User::class)->state('admin')->create();
         $this->member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        $this->course = factory(Course::class)->create();
+        $this->course = Course::factory()->create();
         $this->record = new TrainingRecord([
             'user_id' => $this->member->id,
             'key' => $this->course->slug,

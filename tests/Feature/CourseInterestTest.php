@@ -24,7 +24,7 @@ class CourseInterestTest extends TestCase
     {
         parent::setUp();
 
-        $this->course = factory(Course::class)->create(['frequency' => 'regular']);
+        $this->course = Course::factory()->create(['frequency' => 'regular']);
         $this->user = factory(User::class)->create();
 
         Event::fake([
@@ -94,7 +94,7 @@ class CourseInterestTest extends TestCase
     #[Test]
     public function member_cannot_join_the_waitlist_of_a_self_serve_course()
     {
-        $selfServe = factory(Course::class)->create(['frequency' => 'self-serve']);
+        $selfServe = Course::factory()->create(['frequency' => 'self-serve']);
 
         $response = $this->actingAs($this->user)
             ->post(route('courses.interest.store', $selfServe));

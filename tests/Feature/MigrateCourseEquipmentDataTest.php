@@ -15,8 +15,8 @@ class MigrateCourseEquipmentDataTest extends TestCase
     public function test_migrates_equipment_with_matching_course_slugs()
     {
         // Create courses
-        $course1 = factory(Course::class)->create(['slug' => 'woodworking']);
-        $course2 = factory(Course::class)->create(['slug' => 'metalworking']);
+        $course1 = Course::factory()->create(['slug' => 'woodworking']);
+        $course2 = Course::factory()->create(['slug' => 'metalworking']);
 
         // Create equipment with induction_category matching course slugs
         $equipment1 = factory(Equipment::class)->create(['induction_category' => 'woodworking']);
@@ -53,7 +53,7 @@ class MigrateCourseEquipmentDataTest extends TestCase
 
     public function test_skips_equipment_without_induction_category()
     {
-        $course = factory(Course::class)->create(['slug' => 'test-course']);
+        $course = Course::factory()->create(['slug' => 'test-course']);
         
         // Create equipment without induction_category
         factory(Equipment::class)->create(['induction_category' => '']);
@@ -69,7 +69,7 @@ class MigrateCourseEquipmentDataTest extends TestCase
 
     public function test_handles_equipment_with_non_matching_course_slugs()
     {
-        $course = factory(Course::class)->create(['slug' => 'existing-course']);
+        $course = Course::factory()->create(['slug' => 'existing-course']);
         
         // Create equipment with induction_category that doesn't match any course
         factory(Equipment::class)->create(['induction_category' => 'non-existent-course']);
@@ -87,7 +87,7 @@ class MigrateCourseEquipmentDataTest extends TestCase
 
     public function test_skips_existing_relationships()
     {
-        $course = factory(Course::class)->create(['slug' => 'test-course']);
+        $course = Course::factory()->create(['slug' => 'test-course']);
         $equipment = factory(Equipment::class)->create(['induction_category' => 'test-course']);
 
         // Manually create the relationship first
@@ -107,7 +107,7 @@ class MigrateCourseEquipmentDataTest extends TestCase
 
     public function test_dry_run_mode()
     {
-        $course = factory(Course::class)->create(['slug' => 'test-course']);
+        $course = Course::factory()->create(['slug' => 'test-course']);
         $equipment = factory(Equipment::class)->create(['induction_category' => 'test-course']);
 
         $this->artisan('courses:migrate-equipment-data --dry-run')
@@ -125,8 +125,8 @@ class MigrateCourseEquipmentDataTest extends TestCase
     public function test_handles_mixed_scenarios()
     {
         // Create courses
-        $course1 = factory(Course::class)->create(['slug' => 'course-1']);
-        $course2 = factory(Course::class)->create(['slug' => 'course-2']);
+        $course1 = Course::factory()->create(['slug' => 'course-1']);
+        $course2 = Course::factory()->create(['slug' => 'course-2']);
 
         // Create equipment with various scenarios
         $equipment1 = factory(Equipment::class)->create(['induction_category' => 'course-1']); // Will migrate
@@ -153,7 +153,7 @@ class MigrateCourseEquipmentDataTest extends TestCase
 
     public function test_command_includes_timestamps_in_pivot_data()
     {
-        $course = factory(Course::class)->create(['slug' => 'test-course']);
+        $course = Course::factory()->create(['slug' => 'test-course']);
         $equipment = factory(Equipment::class)->create(['induction_category' => 'test-course']);
 
         $this->artisan('courses:migrate-equipment-data');

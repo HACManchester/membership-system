@@ -164,7 +164,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyCourseTrainingRecord(User $user)
     {
-        $course = factory(Course::class)->make([
+        $course = Course::factory()->make([
             'id' => 1,
             'name' => 'Laser Cutting',
             'slug' => 'laser-cutting',

@@ -205,7 +205,7 @@ class EquipmentTest extends TestCase
     public function attaching_a_course_links_it_and_marks_induction_required()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
             'name' => 'Course Tool',
@@ -223,7 +223,7 @@ class EquipmentTest extends TestCase
     public function attaching_a_course_does_not_detach_its_other_equipment()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
         $existing = factory(Equipment::class)->create(['slug' => 'existing-tool']);
         $course->equipment()->attach($existing->id);
 
@@ -245,7 +245,7 @@ class EquipmentTest extends TestCase
     public function detaching_a_course_on_update_removes_the_link()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
         $equipment = factory(Equipment::class)->create([
             'name' => 'Linked Tool',
             'slug' => 'linked-tool',
@@ -266,7 +266,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function edit_exposes_the_attached_course_id()
     {
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
         $this->equipment->courses()->attach($course->id);
 
         $this->actingAs($this->admin)->get(route('equipment.edit', $this->equipment))
@@ -772,7 +772,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function show_embeds_a_live_course_interface_and_suppresses_legacy_training()
     {
-        $course = factory(Course::class)->create([
+        $course = Course::factory()->create([
             'slug' => 'laser-cutting',
             'frequency' => 'regular',
             'live' => true,
@@ -814,7 +814,7 @@ class EquipmentTest extends TestCase
         $legacyRecord->course_id = null;
         $legacyRecord->save();
 
-        $course = factory(Course::class)->create(['slug' => 'a-different-slug', 'live' => true]);
+        $course = Course::factory()->create(['slug' => 'a-different-slug', 'live' => true]);
         $this->equipment->courses()->attach($course->id);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
@@ -831,7 +831,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function show_does_not_embed_a_non_live_course()
     {
-        $course = factory(Course::class)->create(['slug' => 'draft-course', 'live' => false]);
+        $course = Course::factory()->create(['slug' => 'draft-course', 'live' => false]);
         $this->equipment->courses()->attach($course->id);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment));
@@ -848,7 +848,7 @@ class EquipmentTest extends TestCase
     public function a_course_managed_item_without_a_legacy_category_can_be_edited()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
         $equipment = factory(Equipment::class)->create([
             'name' => 'Course Item',
             'slug' => 'course-item',

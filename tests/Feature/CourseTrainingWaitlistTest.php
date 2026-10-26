@@ -23,7 +23,7 @@ class CourseTrainingWaitlistTest extends TestCase
     {
         parent::setUp();
 
-        $this->course = factory(Course::class)->create(['frequency' => 'regular']);
+        $this->course = Course::factory()->create(['frequency' => 'regular']);
 
         $this->trainer = factory(User::class)->create();
         $this->record($this->trainer, [

@@ -38,7 +38,7 @@ class EquipmentBulkTest extends TestCase
     public function test_bulk_create_links_a_course_and_flags_induction()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $course = factory(Course::class)->create();
+        $course = Course::factory()->create();
 
         $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
             'room_id' => $room->id,
