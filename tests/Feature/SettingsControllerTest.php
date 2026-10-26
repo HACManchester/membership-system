@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\AuditLog;
 use BB\Entities\Settings;
 use BB\Entities\User;
 use BB\Support\SettingKey;
@@ -106,6 +107,25 @@ class SettingsControllerTest extends TestCase
     }
 
     #[Test]
+    public function a_change_is_audited_without_its_value()
+    {
+        $this->setInductionCode();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->put(route('settings.update', 'general_induction_code'), ['setting_value' => 'AUDITED-CODE']);
+
+        $this->assertDatabaseHas('audit_log', [
+            'user_id' => $admin->id,
+            'admin_id' => $admin->id,
+            'action' => 'setting_updated',
+            'description' => 'general_induction_code changed',
+        ]);
+        $this->assertSame(0, AuditLog::where('description', 'like', '%AUDITED-CODE%')->count());
+        $this->assertSame(0, AuditLog::where('description', 'like', '%' . self::INDUCTION_CODE . '%')->count());
+    }
+
+    #[Test]
     public function an_admin_can_set_a_known_setting_whose_row_is_missing()
     {
         DB::table('settings')->where('key', 'general_induction_code')->delete();
@@ -132,6 +152,7 @@ class SettingsControllerTest extends TestCase
 
         $response->assertRedirect(route('settings.index'));
         $this->assertDatabaseHas('settings', ['key' => 'general_induction_code', 'updated_by' => null]);
+        $this->assertDatabaseMissing('audit_log', ['action' => 'setting_updated']);
     }
 
     #[Test]

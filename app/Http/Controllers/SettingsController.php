@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\Settings;
+use BB\Events\SettingUpdated;
 use BB\Http\Requests\Admin\UpdateSettingRequest;
 use BB\Http\Resources\SettingResource;
 use BB\Support\CurrentUser;
@@ -36,8 +37,11 @@ class SettingsController extends Controller
         $setting->value = $request->validated('setting_value');
 
         if ($setting->isDirty('value')) {
-            $setting->updated_by = CurrentUser::get()->id;
+            $admin = CurrentUser::get();
+            $setting->updated_by = $admin->id;
             $setting->save();
+
+            event(new SettingUpdated($settingKey, $admin));
         }
 
         return redirect()
