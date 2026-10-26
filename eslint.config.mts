@@ -17,7 +17,7 @@ export default defineConfig([
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat['jsx-runtime'],
-  pluginReactHooks.configs['recommended-latest'],
+  pluginReactHooks.configs.flat['recommended-latest'],
   pluginReactPrettierRecommended,
   configPrettier,
 ]);
