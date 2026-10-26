@@ -11,6 +11,7 @@ use BB\Entities\EquipmentArea;
 use BB\Entities\TrainingRecord;
 use BB\Entities\KeyFob;
 use BB\Entities\Room;
+use BB\Entities\Settings;
 use BB\Entities\User;
 use BB\Entities\MaintainerGroup;
 use BB\Policies\AccessLockdownPolicy;
@@ -22,6 +23,7 @@ use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
 use BB\Policies\CoursePolicy;
 use BB\Policies\RolePolicy;
+use BB\Policies\SettingsPolicy;
 use BB\Policies\UserPolicy;
 use BB\Entities\Role;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -45,6 +47,7 @@ class AuthServiceProvider extends ServiceProvider
         Room::class => RoomPolicy::class,
         Role::class => RolePolicy::class,
         AccessLockdown::class => AccessLockdownPolicy::class,
+        Settings::class => SettingsPolicy::class,
     ];
 
     /**

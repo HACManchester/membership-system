@@ -212,6 +212,16 @@ export type AccessLockdownResource = {
   lifted_at: string | null;
 };
 
+export type SettingResource = {
+  key: string;
+  label: string;
+  description: string;
+  value: string | null;
+  updated_by: string | null;
+  updated_at: string | null;
+  update_url: string;
+};
+
 // Additional types for page props
 export type Member = {
   id: number;
