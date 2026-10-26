@@ -52,9 +52,9 @@ that don't run in CI (see below).
   converts to class-based factories as a separate step.
 - CI (`.github/workflows/ci.yml`): a matrix of the PHP version production runs and the next one the
   upgrade moves to. The next version is non-blocking (`continue-on-error`) until it goes green.
-  A single `frontend` job runs yarn install, ESLint, Jest and the production build, and hands the
-  built assets to the PHP legs (Blade's `mix()` needs the manifest). Each PHP leg runs composer
-  install and audit, PHPStan and PHPUnit.
+  A single `frontend` job runs yarn install, ESLint, Jest and the production build. The PHP legs
+  run alongside it: `Tests\TestCase` stubs out the built-asset helpers, so the tests don't need
+  a frontend build. Each PHP leg runs composer install and audit, PHPStan and PHPUnit.
 
 ## Quality conventions
 
