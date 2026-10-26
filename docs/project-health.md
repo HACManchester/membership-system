@@ -94,10 +94,9 @@ build or pages can't take them. Each rule in the file says what lifts it.
   - Babel 8.
 - jQuery 4, Bootstrap 4 and Select2 4, until the legacy Blade pages are gone.
 
-**Merging.** `.github/workflows/dependabot-automerge.yml` arms auto-merge only for PRs where every
-update is a patch or minor update to a dev dependency or a GitHub Action. It still waits for an
-approving review and "All checks passed". A human merges everything else. Merging never deploys:
-production deploys are always manual (see `operations.md`).
+**Merging.** Nothing merges automatically. Every Dependabot PR needs the code owner's review
+(`.github/CODEOWNERS`) and "All checks passed", and is merged by hand at review time. Merging never
+deploys: production deploys are always manual (see `operations.md`).
 
 ## Dead code
 

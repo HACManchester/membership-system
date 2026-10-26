@@ -15,14 +15,13 @@ class TrustProxies extends Middleware
     protected $proxies;
 
     /**
-     * The current proxy header mappings.
+     * Only the scheme is taken from the proxy. Both proxies (nginx in production,
+     * OrbStack locally) pass the real Host through, and production's Apache
+     * resolves the client IP itself with mod_remoteip. The proxy also passes
+     * client-sent X-Forwarded-Host through untouched, so trusting it would let
+     * anyone choose the host in password-reset links.
      *
      * @var int
      */
-    protected $headers =
-        Request::HEADER_X_FORWARDED_FOR |
-        Request::HEADER_X_FORWARDED_HOST |
-        Request::HEADER_X_FORWARDED_PORT |
-        Request::HEADER_X_FORWARDED_PROTO |
-        Request::HEADER_X_FORWARDED_AWS_ELB;
+    protected $headers = Request::HEADER_X_FORWARDED_PROTO;
 }
