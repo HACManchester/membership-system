@@ -1,5 +1,8 @@
 <?php namespace BB\Entities;
 
+use Database\Factories\AddressFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -16,8 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $approved
  * @package BB\Address
  */
+#[UseFactory(AddressFactory::class)]
 class Address extends Model
 {
+    /** @use HasFactory<AddressFactory> */
+    use HasFactory;
 
     /**
      * The database table used by the model.
