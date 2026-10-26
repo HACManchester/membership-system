@@ -21,9 +21,6 @@
     "react-transition-group": "^4.4.5",
     "select2": "^3.5.2-browserify"
   },
-  "browser": {
-    "select2": "./node_modules/select2/select2.js"
-  },
   "scripts": {
     "development": "mix",
     "watch": "mix watch",
