@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Repo;
+
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Exceptions\PaymentException;

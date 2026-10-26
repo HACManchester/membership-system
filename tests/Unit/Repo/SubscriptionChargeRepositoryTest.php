@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Repo;
+
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;

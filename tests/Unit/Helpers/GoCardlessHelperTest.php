@@ -1,14 +1,19 @@
 <?php
 
+namespace Tests\Unit\Helpers;
+
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use ReflectionProperty;
 use Tests\TestCase;
 
 class GoCardlessHelperTest extends TestCase

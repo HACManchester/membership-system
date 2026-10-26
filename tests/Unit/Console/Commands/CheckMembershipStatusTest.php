@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Console\Commands;
+
 use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
 use Carbon\Carbon;

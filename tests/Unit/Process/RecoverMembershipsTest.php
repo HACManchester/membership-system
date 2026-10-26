@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Process;
+
 use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
 use BB\Process\RecoverMemberships;

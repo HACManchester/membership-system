@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Policies;
 
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Role;

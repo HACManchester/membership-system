@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Listeners;
+
 use BB\Entities\User;
 use BB\Events\MemberBecameInactive;
 use BB\Events\MemberBecameActive;
@@ -7,6 +9,7 @@ use BB\Events\MemberDiscourseParamsChanged;
 use BB\Jobs\DiscourseSync;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class DiscourseSyncSubscriberTest extends TestCase

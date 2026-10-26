@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use BB\Entities\User;
 use Carbon\Carbon;
 use Tests\TestCase;

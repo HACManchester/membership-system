@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Helpers;
+
 use BB\Helpers\TelegramHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

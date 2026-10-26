@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Mailer;
+
 use BB\Entities\User;
 use BB\Mail\ConfirmationEmail;
 use BB\Mail\EquipmentNotificationEmail;
@@ -12,6 +14,7 @@ use BB\Mail\WelcomeMember;
 use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mailer\UserMailer;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UserMailerTest extends TestCase

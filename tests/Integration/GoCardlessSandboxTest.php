@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Integration;
+
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use GoCardlessPro\Core\Exception\ApiException;

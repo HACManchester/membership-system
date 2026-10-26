@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Integration;
+
 use BB\Entities\User;
 use BB\Entities\Payment;
 use BB\Handlers\SubChargeEventHandler;

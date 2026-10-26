@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use BB\Entities\User;
 use BB\Events\SubscriptionChargePaid;
 use Carbon\Carbon;

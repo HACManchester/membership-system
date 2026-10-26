@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Integration;
+
 use BB\Entities\User;
 use BB\Process\CheckPaymentWarnings;
 use BB\Process\CheckSuspendedUsers;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Jobs;
+
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Jobs\RecalculateBalance;

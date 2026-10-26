@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Observer;
+
 use BB\Entities\User;
 use BB\Events\MemberBecameActive;
 use BB\Events\MemberBecameInactive;

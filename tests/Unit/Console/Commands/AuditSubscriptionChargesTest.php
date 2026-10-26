@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Console\Commands;
+
 use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;

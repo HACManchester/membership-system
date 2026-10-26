@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Exceptions;
+
 use BB\Exceptions\Handler;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
