@@ -7,17 +7,17 @@ use Database\Factories\SettingsFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property integer $id
- * @property integer $key_fob_id
- * @property integer $user_id
- * @property User    $user
- * @property string  $service
- * @property string  $response
- * @property bool    $delayed
- * @property Carbon  $created_at
- * @package BB\Entities
+ * A site-wide value, such as the general induction code, keyed by name.
+ *
+ * @property string      $key
+ * @property string      $value
+ * @property int|null    $updated_by
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $updatedBy
  */
 #[UseFactory(SettingsFactory::class)]
 class Settings extends Model
@@ -25,11 +25,6 @@ class Settings extends Model
     /** @use HasFactory<SettingsFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'settings';
 
     protected $primaryKey = 'key';
@@ -38,9 +33,15 @@ class Settings extends Model
 
     public $incrementing = false;
 
-    public $timestamps = false;
-
     protected $fillable = ['key', 'value'];
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
     public static function put($key, $value)
     {
