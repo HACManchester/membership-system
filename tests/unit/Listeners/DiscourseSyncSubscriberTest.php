@@ -15,7 +15,7 @@ class DiscourseSyncSubscriberTest extends TestCase
     {
         Bus::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'display_name' => 'Listening Larry'
         ]);
 
@@ -32,7 +32,7 @@ class DiscourseSyncSubscriberTest extends TestCase
     {
         Bus::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'display_name' => 'Active Alan'
         ]);
 
@@ -49,7 +49,7 @@ class DiscourseSyncSubscriberTest extends TestCase
     {
         Bus::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'display_name' => 'Inactive Ivan'
         ]);
 
@@ -66,7 +66,7 @@ class DiscourseSyncSubscriberTest extends TestCase
     {
         Bus::fake();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'display_name' => 'Updated Ulysses'
         ]);
 

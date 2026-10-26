@@ -30,7 +30,7 @@ class NotificationEmailTest extends TestCase
             'requires_induction' => true,
         ]);
 
-        $trainer = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $trainer = User::factory()->create(['status' => 'active', 'active' => true]);
         (new TrainingRecord([
             'key' => 'test-tool',
             'user_id' => $trainer->id,
@@ -40,7 +40,7 @@ class NotificationEmailTest extends TestCase
             'trainer_user_id' => $trainer->id,
         ]))->save();
 
-        $trainedUser = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $trainedUser = User::factory()->create(['status' => 'active', 'active' => true]);
         (new TrainingRecord([
             'key' => 'test-tool',
             'user_id' => $trainedUser->id,
@@ -56,8 +56,8 @@ class NotificationEmailTest extends TestCase
     #[Test]
     public function an_admin_can_send_a_notification_to_all_active_members()
     {
-        $admin = factory(User::class)->state('admin')->create(['status' => 'active', 'active' => true]);
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $admin = User::factory()->admin()->create(['status' => 'active', 'active' => true]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $response = $this->actingAs($admin)->post(route('notificationemail.store'), [
             'subject' => 'Open evening',
@@ -75,7 +75,7 @@ class NotificationEmailTest extends TestCase
     #[Test]
     public function the_message_body_is_escaped_before_being_marked_up()
     {
-        $admin = factory(User::class)->state('admin')->create(['status' => 'active', 'active' => true]);
+        $admin = User::factory()->admin()->create(['status' => 'active', 'active' => true]);
 
         $this->actingAs($admin)->post(route('notificationemail.store'), [
             'subject' => 'Test',
@@ -97,7 +97,7 @@ class NotificationEmailTest extends TestCase
     #[Test]
     public function a_regular_member_cannot_send_to_all_members()
     {
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $response = $this->actingAs($member)->post(route('notificationemail.store'), [
             'subject' => 'Spam',
@@ -134,7 +134,7 @@ class NotificationEmailTest extends TestCase
         // Regression test: this path previously crashed with an undefined
         // $users variable instead of denying access.
         [$equipment] = $this->equipmentWithTrainerAndTrainedUser();
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $response = $this->actingAs($member)->post(route('notificationemail.store'), [
             'subject' => 'Not my tool',
@@ -153,7 +153,7 @@ class NotificationEmailTest extends TestCase
     {
         // Regression test: this path previously crashed with an undefined
         // $users variable instead of rejecting the recipient.
-        $admin = factory(User::class)->state('admin')->create(['status' => 'active', 'active' => true]);
+        $admin = User::factory()->admin()->create(['status' => 'active', 'active' => true]);
 
         $this->withoutExceptionHandling();
         $this->expectException(NotImplementedException::class);
@@ -169,7 +169,7 @@ class NotificationEmailTest extends TestCase
     #[Test]
     public function a_member_can_send_a_test_email_to_themselves()
     {
-        $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $member = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $response = $this->actingAs($member)->post(route('notificationemail.store'), [
             'subject' => 'Preview',

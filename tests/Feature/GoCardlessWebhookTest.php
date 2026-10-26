@@ -92,7 +92,7 @@ class GoCardlessWebhookTest extends TestCase
 
     private function activeUserWithCharge(string $chargeStatus, string $paymentId = 'PM_TEST_123')
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -205,7 +205,7 @@ class GoCardlessWebhookTest extends TestCase
     #[Test]
     public function a_cancelled_mandate_clears_payment_details_and_marks_the_member_leaving()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -227,7 +227,7 @@ class GoCardlessWebhookTest extends TestCase
     #[Test]
     public function a_cancelled_mandate_cancels_the_outstanding_charges_it_leaves_behind()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -292,7 +292,7 @@ class GoCardlessWebhookTest extends TestCase
      */
     private function legacyMemberWithCharge(float $chargeAmount = 22.0)
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless',
@@ -497,7 +497,7 @@ class GoCardlessWebhookTest extends TestCase
         [, , $submitted] = $this->activeUserWithCharge('processing', 'PM_A');
         $submitted->update(['status' => 'pending_submission']);
         [$confirmedUser, $confirmedCharge, $confirmed] = $this->activeUserWithCharge('processing', 'PM_B');
-        $leaving = factory(User::class)->create([
+        $leaving = User::factory()->create([
             'status' => 'active', 'active' => true,
             'payment_method' => 'gocardless-variable', 'mandate_id' => 'MD_LEAVING',
         ]);

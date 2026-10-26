@@ -18,8 +18,8 @@ class PaymentRepositoryTest extends TestCase
 
     public function testRecordPaymentRejectsSourceIdAlreadyUsedByAnotherUser()
     {
-        $existingUser = factory(User::class)->create();
-        $otherUser = factory(User::class)->create();
+        $existingUser = User::factory()->create();
+        $otherUser = User::factory()->create();
 
         Payment::factory()->create([
             'user_id' => $existingUser->id,
@@ -44,7 +44,7 @@ class PaymentRepositoryTest extends TestCase
 
     public function testRecordPaymentReturnsExistingRecordForSameUserAndSourceId()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $existing = Payment::factory()->create([
             'user_id' => $user->id,
@@ -69,8 +69,8 @@ class PaymentRepositoryTest extends TestCase
 
     public function testRecordPaymentAllowsPaymentsWithoutSourceId()
     {
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
         $id1 = $this->paymentRepository->recordPayment('subscription', $user1->id, 'gocardless-variable', null, 22, 'failed');
         $id2 = $this->paymentRepository->recordPayment('subscription', $user2->id, 'gocardless-variable', null, 17, 'failed');
@@ -80,7 +80,7 @@ class PaymentRepositoryTest extends TestCase
 
     public function testGetPaymentBySourceIdReturnsOldestRecord()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $first = Payment::factory()->create([
             'user_id' => $user->id,

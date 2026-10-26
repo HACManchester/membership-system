@@ -38,7 +38,7 @@ class AuditSubscriptionChargesTest extends TestCase
 
     public function testLeavesChargesForBillableMembersAlone()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -84,7 +84,7 @@ class AuditSubscriptionChargesTest extends TestCase
      */
     private function backdatedCollection(Carbon $chargeDate, Carbon $collectedAt)
     {
-        $user = factory(User::class)->create(['status' => 'active', 'active' => true]);
+        $user = User::factory()->create(['status' => 'active', 'active' => true]);
 
         $charge = factory(SubscriptionCharge::class)->create([
             'user_id' => $user->id,
@@ -143,7 +143,7 @@ class AuditSubscriptionChargesTest extends TestCase
      */
     private function orphanedCharge(?Carbon $chargeDate = null)
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'payment_method' => '',

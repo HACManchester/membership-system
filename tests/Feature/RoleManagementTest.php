@@ -14,7 +14,7 @@ class RoleManagementTest extends TestCase
 
     private function admin()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $user->assignRole(Role::findByName('admin'));
 
         return $user;
@@ -43,7 +43,7 @@ class RoleManagementTest extends TestCase
     public function the_role_edit_page_exposes_its_members()
     {
         $role = Role::findByName('finance');
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $member->assignRole($role);
 
         $this->actingAs($this->admin())->get(route('roles.edit', $role->id))
@@ -58,7 +58,7 @@ class RoleManagementTest extends TestCase
     public function an_admin_can_assign_a_role_to_a_member()
     {
         $role = Role::findByName('finance');
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($this->admin())
             ->put(route('roles.update', $role->id), $this->updateRole($role, [$member->id]))
@@ -71,7 +71,7 @@ class RoleManagementTest extends TestCase
     public function an_admin_can_remove_a_role_from_a_member()
     {
         $role = Role::findByName('finance');
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $member->assignRole($role);
 
         // Submitting the edit form with the member omitted removes them.
@@ -90,7 +90,7 @@ class RoleManagementTest extends TestCase
     public function an_admin_can_grant_the_admin_role()
     {
         $role = Role::findByName('admin');
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
 
         $this->actingAs($this->admin())
             ->put(route('roles.update', $role->id), $this->updateRole($role, [$member->id]))
@@ -156,8 +156,8 @@ class RoleManagementTest extends TestCase
     public function a_non_admin_cannot_manage_roles()
     {
         $role = Role::findByName('finance');
-        $member = factory(User::class)->create();
-        $target = factory(User::class)->create();
+        $member = User::factory()->create();
+        $target = User::factory()->create();
 
         $this->actingAs($member)
             ->put(route('roles.update', $role->id), $this->updateRole($role, [$target->id]))

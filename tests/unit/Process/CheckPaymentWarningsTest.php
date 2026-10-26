@@ -22,7 +22,7 @@ class CheckPaymentWarningsTest extends TestCase
 
     public function testRunSuspendsUserWhenGracePeriodExpired()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1), // Grace period expired
@@ -40,7 +40,7 @@ class CheckPaymentWarningsTest extends TestCase
 
     public function testRunDoesNotSuspendUserWithinGracePeriod()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(3), // Still within grace period
@@ -57,13 +57,13 @@ class CheckPaymentWarningsTest extends TestCase
 
     public function testRunIgnoresUsersNotInPaymentWarningStatus()
     {
-        $activeUser = factory(User::class)->create([
+        $activeUser = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1),
         ]);
 
-        $suspendedUser = factory(User::class)->create([
+        $suspendedUser = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(1),
@@ -81,7 +81,7 @@ class CheckPaymentWarningsTest extends TestCase
 
     public function testRunHandlesUserWithNoSubscriptionExpires()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => null, // No expiry date
@@ -98,7 +98,7 @@ class CheckPaymentWarningsTest extends TestCase
 
     public function testRunDoesNotRecoverWithOldPayment()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(5), // Future date

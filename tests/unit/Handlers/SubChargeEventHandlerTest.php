@@ -24,7 +24,7 @@ class SubChargeEventHandlerTest extends TestCase
 
     public function testOnPaymentFailureSetsPaymentWarning()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -55,7 +55,7 @@ class SubChargeEventHandlerTest extends TestCase
 
     public function testOnPaymentFailureDoesNotSetWarningWhenOtherPaymentsOutstanding()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -95,7 +95,7 @@ class SubChargeEventHandlerTest extends TestCase
 
     public function testOnPaymentFailureIgnoresPreviouslyFailedPayments()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',

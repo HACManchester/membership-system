@@ -17,35 +17,10 @@ use Illuminate\Support\Str;
 
 /** @var Factory $factory */
 
-$factory->define('BB\Entities\User', function (Generator $faker) {
-    return [
-        'given_name'          => $faker->firstName(),
-        'display_name'        => $faker->firstName(),
-        'family_name'         => $faker->lastName(),
-        'announce_name'       => $faker->lastName(),
-        'email'               => $faker->email(),
-        'password'            => Str::random(10),
-        'remember_token'      => Str::random(10),
-        'hash'                => Str::random(32),
-        'status'              => 'active',
-        'active'              => true,
-        'induction_completed' => false,
-        'trusted'             => false,
-        'key_holder'          => false,
-        'phone'               => false,
-        'profile_private'     => false,
-    ];
-});
-
-$factory->afterCreatingState(\BB\Entities\User::class, 'admin',  function (\BB\Entities\User $user, Generator $faker) {
-    $admin = \BB\Entities\Role::where('name', 'admin')->first();
-    $user->assignRole($admin);   
-});
-
 $factory->define('BB\Entities\SubscriptionCharge', function (Generator $faker) {
     return [
         'user_id' => function () {
-            return factory(\BB\Entities\User::class)->create()->id;
+            return \BB\Entities\User::factory()->create()->id;
         },
         'charge_date' => $faker->dateTimeBetween('-1 month', 'now'),
         'payment_date' => $faker->optional(0.7)->dateTimeBetween('-1 month', 'now'),

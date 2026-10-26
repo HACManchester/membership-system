@@ -30,7 +30,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithBalancePaymentUpdatesBalance()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'cash_balance' => 1000,
         ]);
 
@@ -67,7 +67,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithSubscriptionPaymentLinksToCharge()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
@@ -105,7 +105,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithSubscriptionPaymentMarksChargeAsPaid()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
@@ -141,7 +141,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithExistingReferenceValidatesTheReferencesMatch()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
@@ -175,7 +175,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithExistingReferenceUsesTheReferencedCharge()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
@@ -220,7 +220,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCreateWithReferenceToMissingChargeIsIgnored()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
         ]);
@@ -250,7 +250,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCancelMarksSubscriptionChargeAsCancelled()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $charge = factory(SubscriptionCharge::class)->create([
             'user_id' => $user->id,
@@ -282,7 +282,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCancelHandlesEmptyReferenceGracefully()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
@@ -308,7 +308,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnCancelIgnoresNonSubscriptionPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
@@ -334,7 +334,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnPaidMarksSubscriptionChargeAsPaid()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $paymentDate = Carbon::now();
 
         $charge = factory(SubscriptionCharge::class)->create([
@@ -367,7 +367,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnPaidIgnoresNonSubscriptionPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $paymentDate = Carbon::now();
 
         $payment = Payment::factory()->create([
@@ -397,7 +397,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnPaidIgnoresPaymentsWithoutReference()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $paymentDate = Carbon::now();
 
         $payment = Payment::factory()->create([
@@ -427,7 +427,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnDeleteWithBalancePaymentUpdatesBalance()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'cash_balance' => 1500,
         ]);
         
@@ -461,7 +461,7 @@ class PaymentEventHandlerTest extends TestCase
 
     public function testOnDeleteWithSubscriptionPaymentDoesNothing()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',

@@ -37,7 +37,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testCompleteNewMemberJourney()
     {
         // Step 1: New member registration
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'setting-up',
             'active' => false,
             'payment_method' => null,
@@ -171,7 +171,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testMemberCancellationFlow()
     {
         // Step 1: Active member decides to cancel
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -218,7 +218,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->checkLeavingUsers = new CheckLeavingUsers($this->userRepository);
         $billService = app(MemberSubscriptionCharges::class);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -267,7 +267,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testMemberReactivationAfterSuspension()
     {
         // Step 1: Member is suspended
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'payment_method' => 'gocardless-variable',
@@ -299,7 +299,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testHonoraryMemberExemption()
     {
         // Step 1: Create honorary member
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'honorary',
             'active' => true,
             'payment_method' => null,
@@ -320,7 +320,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testOnlineOnlyMemberFlow()
     {
         // Step 1: Create online-only member
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'online_only' => true,
@@ -367,7 +367,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $subscriptionAmounts = [1700, 2200, 2700]; // Low income, standard, supporter
 
         foreach ($subscriptionAmounts as $amount) {
-            $user = factory(User::class)->create([
+            $user = User::factory()->create([
                 'status' => 'active',
                 'active' => true,
                 'payment_method' => 'gocardless-variable',
@@ -403,21 +403,21 @@ class MembershipLifecycleIntegrationTest extends TestCase
         // Create multiple members in different states
         $users = collect([
             // Member 1: Active, will expire naturally
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'active',
                 'active' => true,
                 'subscription_expires' => Carbon::now()->subDays(20),
                 'payment_method' => 'gocardless-variable',
             ]),
             // Member 2: Payment warning, will be suspended
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'payment-warning',
                 'active' => true,
                 'subscription_expires' => Carbon::now()->subDays(1),
                 'payment_method' => 'gocardless-variable',
             ]),
             // Member 3: Suspended, will be marked as left
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'suspended',
                 'active' => false,
                 'suspended_at' => Carbon::now()->subDays(31),
@@ -451,7 +451,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
     public function testDataIntegrityThroughoutLifecycle()
     {
         // Create member with comprehensive data
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Notifications;
 
+use BB\Entities\User;
 use BB\Helpers\TelegramErrorHelper;
 use BB\Notifications\ErrorNotification;
 use NotificationChannels\Telegram\Telegram;
@@ -69,7 +70,7 @@ class ErrorNotificationTest extends TestCase
         });
         $this->app->instance(Telegram::class, $telegram);
 
-        $member = factory(\BB\Entities\User::class)->make(['id' => 7, 'display_name' => 'Bobby <b> Tables & Co']);
+        $member = User::factory()->make(['id' => 7, 'display_name' => 'Bobby <b> Tables & Co']);
         $this->actingAs($member);
 
         $exception = new \RuntimeException('Expected <int> & got <string>');

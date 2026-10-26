@@ -30,7 +30,7 @@ class CourseTrainingVisibilityTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = factory(User::class)->state('admin')->create();
+        $this->admin = User::factory()->admin()->create();
 
         // Equipment whose legacy category ('legacy-cat') is NOT the course slug.
         $this->equipment = Equipment::factory()->create([
@@ -69,7 +69,7 @@ class CourseTrainingVisibilityTest extends TestCase
     #[Test]
     public function account_page_shows_course_trained_member_as_trained()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->courseTrainingRecord($user);
 
         $response = $this->actingAs($user)->get(route('account.show', $user->id));
@@ -83,7 +83,7 @@ class CourseTrainingVisibilityTest extends TestCase
     #[Test]
     public function account_page_hides_access_code_when_member_has_no_training_record()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get(route('account.show', $user->id));
 
@@ -94,7 +94,7 @@ class CourseTrainingVisibilityTest extends TestCase
     #[Test]
     public function equipment_index_shows_access_code_to_course_trained_member()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->courseTrainingRecord($user);
 
         $response = $this->actingAs($user)->get(route('equipment.index'));
@@ -112,7 +112,7 @@ class CourseTrainingVisibilityTest extends TestCase
     #[Test]
     public function equipment_show_shows_access_code_to_course_trained_member()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->courseTrainingRecord($user);
 
         $response = $this->actingAs($user)->get(route('equipment.show', $this->equipment));
@@ -128,11 +128,11 @@ class CourseTrainingVisibilityTest extends TestCase
         $repo = app(TrainingRecordRepository::class);
 
         // Modern: course-trained member.
-        $courseUser = factory(User::class)->create();
+        $courseUser = User::factory()->create();
         $this->courseTrainingRecord($courseUser);
 
         // Legacy: trained purely via the induction_category↔key match.
-        $legacyUser = factory(User::class)->create();
+        $legacyUser = User::factory()->create();
         (new TrainingRecord([
             'user_id' => $legacyUser->id,
             'key' => 'legacy-cat',
@@ -170,7 +170,7 @@ class CourseTrainingVisibilityTest extends TestCase
         ]);
 
         // An unrelated record that must not leak through the empty-where guard.
-        $someoneElse = factory(User::class)->create();
+        $someoneElse = User::factory()->create();
         $this->courseTrainingRecord($someoneElse);
 
         $this->assertFalse($repo->isUserTrained($orphan, $someoneElse->id));
@@ -180,10 +180,10 @@ class CourseTrainingVisibilityTest extends TestCase
     #[Test]
     public function trainer_signed_off_via_course_can_train_and_request_for_others()
     {
-        $trainer = factory(User::class)->create();
+        $trainer = User::factory()->create();
         $this->courseTrainingRecord($trainer, true, true);
 
-        $other = factory(User::class)->create();
+        $other = User::factory()->create();
         $equipment = Equipment::find($this->equipment->id);
 
         // EquipmentPolicy::train and TrainingRecordPolicy::create both gate on

@@ -14,7 +14,7 @@ class MaintainerGroupTest extends TestCase
 
     private function admin(): User
     {
-        return factory(User::class)->state('admin')->create();
+        return User::factory()->admin()->create();
     }
 
     public function test_index_renders_inertia()
@@ -51,7 +51,7 @@ class MaintainerGroupTest extends TestCase
     {
         $admin = $this->admin();
         $area = EquipmentArea::factory()->create();
-        $maintainers = factory(User::class, 2)->create();
+        $maintainers = User::factory()->count(2)->create();
 
         $response = $this->actingAs($admin)->post(route('maintainer_groups.store'), [
             'name' => 'Woodwork',
@@ -89,8 +89,8 @@ class MaintainerGroupTest extends TestCase
             'slug' => 'metalwork',
             'equipment_area_id' => $areaA->id,
         ]);
-        $original = factory(User::class)->create();
-        $replacement = factory(User::class)->create();
+        $original = User::factory()->create();
+        $replacement = User::factory()->create();
         $group->maintainers()->sync([$original->id]);
 
         $this->actingAs($admin)->put(route('maintainer_groups.update', $group), [
@@ -108,7 +108,7 @@ class MaintainerGroupTest extends TestCase
     {
         $area = EquipmentArea::factory()->create();
 
-        $coordinator = factory(User::class)->create();
+        $coordinator = User::factory()->create();
         $coordinator->equipmentAreas()->attach($area);
 
         // Area coordinator may create.
@@ -118,7 +118,7 @@ class MaintainerGroupTest extends TestCase
         ])->assertRedirect();
 
         // Plain member may not.
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $this->actingAs($member)->post(route('maintainer_groups.store'), [
             'name' => 'Nope',
             'equipment_area_id' => $area->id,

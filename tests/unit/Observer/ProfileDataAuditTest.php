@@ -21,8 +21,8 @@ class ProfileDataAuditTest extends TestCase
     public function changing_an_audited_profile_field_is_recorded_against_the_member()
     {
         // Make sure the profile's id and its member's id differ
-        factory(User::class)->times(2)->create();
-        $member = factory(User::class)->create();
+        User::factory()->count(2)->create();
+        $member = User::factory()->create();
         $profile = ProfileData::factory()->create(['user_id' => $member->id, 'profile_photo_on_wall' => 0]);
         $this->assertNotEquals($member->id, $profile->id);
 
@@ -36,7 +36,7 @@ class ProfileDataAuditTest extends TestCase
     #[Test]
     public function changing_an_audited_member_field_is_recorded_against_the_member()
     {
-        $member = factory(User::class)->create(['trusted' => 0]);
+        $member = User::factory()->create(['trusted' => 0]);
 
         $member->update(['trusted' => 1]);
 

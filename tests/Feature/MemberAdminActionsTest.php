@@ -24,14 +24,14 @@ class MemberAdminActionsTest extends TestCase
 
     private function admin(): User
     {
-        return factory(User::class)->state('admin')->create();
+        return User::factory()->admin()->create();
     }
 
     #[Test]
     public function making_a_member_trusted_persists_and_fires_the_event()
     {
         Event::fake([MemberGivenTrustedStatus::class]);
-        $member = factory(User::class)->create(['trusted' => false]);
+        $member = User::factory()->create(['trusted' => false]);
 
         $this->actingAs($this->admin())
             ->put(route('account.admin-update', $member->id), ['trusted' => 1])
@@ -44,7 +44,7 @@ class MemberAdminActionsTest extends TestCase
     #[Test]
     public function membership_flags_update_and_the_ajax_form_gets_json()
     {
-        $member = factory(User::class)->create(['key_holder' => false]);
+        $member = User::factory()->create(['key_holder' => false]);
 
         // key_holder form posts via AJAX (wantsJson) — expect a 200 JSON response.
         $this->actingAs($this->admin())
@@ -64,8 +64,8 @@ class MemberAdminActionsTest extends TestCase
     #[Test]
     public function a_non_admin_cannot_use_the_admin_update_endpoint()
     {
-        $member = factory(User::class)->create();
-        $other = factory(User::class)->create();
+        $member = User::factory()->create();
+        $other = User::factory()->create();
 
         $this->actingAs($member)
             ->put(route('account.admin-update', $other->id), ['trusted' => 1])
@@ -79,7 +79,7 @@ class MemberAdminActionsTest extends TestCase
         $userImage->expects($this->once())->method('approveNewImage');
         $this->app->instance(\BB\Helpers\UserImage::class, $userImage);
 
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         ProfileData::factory()->create([
             'user_id' => $member->id,
             'new_profile_photo' => true,
@@ -102,7 +102,7 @@ class MemberAdminActionsTest extends TestCase
     {
         Event::fake([MemberPhotoWasDeclined::class]);
 
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => true]);
 
         $this->actingAs($this->admin())
@@ -116,7 +116,7 @@ class MemberAdminActionsTest extends TestCase
     #[Test]
     public function approving_a_pending_address_marks_it_approved()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $address = Address::create([
             'user_id' => $member->id,
             'line_1' => '1 Test Street',
@@ -138,7 +138,7 @@ class MemberAdminActionsTest extends TestCase
         $goCardless->method('createSubscription')->willReturn((object) ['id' => 'SUB123']);
         $this->app->instance(GoCardlessHelper::class, $goCardless);
 
-        $member = factory(User::class)->create([
+        $member = User::factory()->create([
             'mandate_id' => 'MANDATE1',
             'monthly_subscription' => 5,
             'payment_day' => 1,

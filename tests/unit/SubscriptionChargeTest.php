@@ -1,5 +1,6 @@
 <?php
 
+use BB\Entities\User;
 use BB\Events\SubscriptionChargePaid;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,7 +18,7 @@ class SubscriptionChargeTest extends TestCase
         /** @var \BB\Repo\SubscriptionChargeRepository $repo */
         $repo = $this->app->make(\BB\Repo\SubscriptionChargeRepository::class);
 
-        $user = factory('BB\Entities\User')->create();
+        $user = User::factory()->create();
         $paymentDate = Carbon::now();
         $charge = $repo->createCharge($user->id, Carbon::now(), 1700);
 

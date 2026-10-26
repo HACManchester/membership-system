@@ -12,7 +12,7 @@ class SubscriptionChargeRepositoryTest extends TestCase
     #[Test]
     public function a_charge_billed_immediately_is_billed_with_an_idempotency_key_identifying_it()
     {
-        $user = factory(User::class)->create(['mandate_id' => 'MD123456789']);
+        $user = User::factory()->create(['mandate_id' => 'MD123456789']);
 
         $sentKey = null;
         $goCardless = $this->createMock(GoCardlessHelper::class);

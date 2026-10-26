@@ -49,7 +49,7 @@ class NotificationPreviewController extends Controller
     public function trainerInductionRequested()
     {
         $trainer = $this->getDummyUser();
-        $inductee = factory(User::class)->make([
+        $inductee = User::factory()->make([
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
@@ -102,7 +102,7 @@ class NotificationPreviewController extends Controller
     public function courseTrainerInductionRequested()
     {
         $trainer = $this->getDummyUser();
-        $inductee = factory(User::class)->make([
+        $inductee = User::factory()->make([
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
@@ -120,7 +120,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyUser()
     {
-        return factory(User::class)->make([
+        return User::factory()->make([
             'id' => 999,
             'status' => 'active',
             'active' => true,

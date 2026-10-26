@@ -21,7 +21,7 @@ class FinanceAccessTest extends TestCase
     #[Test]
     public function a_regular_member_cannot_view_the_payments_page()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)->get('/payments')->assertStatus(403);
     }
@@ -29,7 +29,7 @@ class FinanceAccessTest extends TestCase
     #[Test]
     public function a_finance_role_member_can_view_the_payments_page()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $user->assignRole(Role::findByName('finance'));
 
         $this->actingAs($user)->get('/payments')->assertStatus(200);

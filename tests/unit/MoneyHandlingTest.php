@@ -38,7 +38,7 @@ class MoneyHandlingTest extends TestCase
     #[Test]
     public function a_balance_recalculation_lands_on_exact_pence(array $amounts, $expectedPence)
     {
-        $user = factory(User::class)->create(['cash_balance' => 0]);
+        $user = User::factory()->create(['cash_balance' => 0]);
 
         foreach ($amounts as $amount) {
             $this->balancePayment($user, $amount);
@@ -69,7 +69,7 @@ class MoneyHandlingTest extends TestCase
     #[Test]
     public function spends_are_subtracted_from_the_balance()
     {
-        $user = factory(User::class)->create(['cash_balance' => 0]);
+        $user = User::factory()->create(['cash_balance' => 0]);
 
         $this->balancePayment($user, 20.00);
         $this->balanceSpend($user, 5.55);
@@ -119,7 +119,7 @@ class MoneyHandlingTest extends TestCase
     #[Test]
     public function a_balance_is_reported_in_pounds()
     {
-        $user = factory(User::class)->create(['cash_balance' => 1999]);
+        $user = User::factory()->create(['cash_balance' => 1999]);
         $credit = $this->creditFor($user);
 
         $this->assertSame(19.99, $credit->getBalance());
@@ -137,8 +137,8 @@ class MoneyHandlingTest extends TestCase
     #[Test]
     public function a_sub_one_pound_debt_currently_reports_as_positive()
     {
-        $inDebtByFiftyPence = factory(User::class)->create(['cash_balance' => -50]);
-        $inDebtByAPound = factory(User::class)->create(['cash_balance' => -100]);
+        $inDebtByFiftyPence = User::factory()->create(['cash_balance' => -50]);
+        $inDebtByAPound = User::factory()->create(['cash_balance' => -100]);
 
         $this->assertSame('positive', $this->creditFor($inDebtByFiftyPence)->getBalanceSign());
         $this->assertSame('negative', $this->creditFor($inDebtByAPound)->getBalanceSign());

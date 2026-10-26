@@ -16,11 +16,11 @@ class KeyFobCsvTest extends TestCase
     {
         $token = \BB\Entities\ApiKey::create(['api_token' => Str::random(), 'description' => 'Test Key', 'active' => true]);
 
-        $user_1 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => 'User One']);
-        $user_2 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => null]);
-        $user_3 = factory('BB\Entities\User')->create(['active' => false, 'announce_name' => 'Inactive User']);
-        $user_4 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => 'Inactive Fob']);
-        $user_5 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => 'No fob']);
+        $user_1 = User::factory()->create(['active' => true, 'announce_name' => 'User One']);
+        $user_2 = User::factory()->create(['active' => true, 'announce_name' => null]);
+        $user_3 = User::factory()->create(['active' => false, 'announce_name' => 'Inactive User']);
+        $user_4 = User::factory()->create(['active' => true, 'announce_name' => 'Inactive Fob']);
+        $user_5 = User::factory()->create(['active' => true, 'announce_name' => 'No fob']);
 
         $keyfob_1 = KeyFob::factory()->create(['key_id' => 'keyfob_1', 'active' => true, 'user_id' => $user_1->id]);
         $keyfob_2 = KeyFob::factory()->create(['key_id' => 'keyfob_2', 'active' => true, 'user_id' => $user_2->id]);
@@ -131,7 +131,7 @@ CSV;
 
     private function memberWithFob(string $announceName, string $keyId, ?string $role = null): User
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => true,
             'announce_name' => $announceName,
         ]);
@@ -155,7 +155,7 @@ CSV;
     private function startLockdown(array $roles): AccessLockdown
     {
         return AccessLockdown::create([
-            'started_by' => factory(User::class)->create()->id,
+            'started_by' => User::factory()->create()->id,
             'reason' => 'Testing',
             'roles' => $roles,
         ]);

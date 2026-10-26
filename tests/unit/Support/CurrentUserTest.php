@@ -14,7 +14,7 @@ class CurrentUserTest extends TestCase
     #[Test]
     public function it_returns_the_signed_in_member()
     {
-        $member = factory(User::class)->create();
+        $member = User::factory()->create();
         $this->actingAs($member);
 
         $this->assertTrue($member->is(CurrentUser::get()));

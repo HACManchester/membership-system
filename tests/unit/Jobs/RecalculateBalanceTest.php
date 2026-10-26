@@ -9,7 +9,7 @@ class RecalculateBalanceTest extends TestCase
 {
     public function testUserHasNoPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         RecalculateBalance::dispatchSync($user);
 
@@ -18,7 +18,7 @@ class RecalculateBalanceTest extends TestCase
 
     public function testUserBalanceZeroWithPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
@@ -39,7 +39,7 @@ class RecalculateBalanceTest extends TestCase
 
     public function testUserWithPositiveBalance()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
@@ -59,7 +59,7 @@ class RecalculateBalanceTest extends TestCase
 
     public function testUserWithNegativeBalance()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
@@ -79,7 +79,7 @@ class RecalculateBalanceTest extends TestCase
 
     public function testIncludesPendingPaymentsCancelledPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Payment::factory()->fromCash()->pending()->create([
             'reason' => 'balance',
@@ -100,7 +100,7 @@ class RecalculateBalanceTest extends TestCase
 
     public function testIgnoresCancelledPayments()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Payment::factory()->fromCash()->cancelled()->create([
             'reason' => 'balance',

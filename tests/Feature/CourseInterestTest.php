@@ -25,7 +25,7 @@ class CourseInterestTest extends TestCase
         parent::setUp();
 
         $this->course = Course::factory()->create(['frequency' => 'regular']);
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory()->create();
 
         Event::fake([
             TrainingInterestRegisteredEvent::class,

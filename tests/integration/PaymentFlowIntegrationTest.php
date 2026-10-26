@@ -35,7 +35,7 @@ class PaymentFlowIntegrationTest extends TestCase
     public function testCompletePaymentFailureToSuspensionFlow()
     {
         // Setup: Create an active member with GoCardless Variable payment method
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -96,7 +96,7 @@ class PaymentFlowIntegrationTest extends TestCase
     public function testPaymentFailureWithRecovery()
     {
         // Setup: Create an active member
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -159,7 +159,7 @@ class PaymentFlowIntegrationTest extends TestCase
     public function testPaymentFailureWithMultiplePaymentsInFlight()
     {
         // Setup: Create an active member
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -200,7 +200,7 @@ class PaymentFlowIntegrationTest extends TestCase
     public function testGoCardlessVariableGracePeriod()
     {
         // Setup: Create user with gocardless-variable payment method
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -235,7 +235,7 @@ class PaymentFlowIntegrationTest extends TestCase
     public function testMembershipLifecycleWithPaymentFailures()
     {
         // Setup: Create a new member
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'setting-up',
             'active' => false,
             'payment_method' => null,
@@ -337,21 +337,21 @@ class PaymentFlowIntegrationTest extends TestCase
         // Setup: Create multiple members with different scenarios
         $users = collect([
             // User 1: Will fail and be suspended
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'active',
                 'active' => true,
                 'payment_method' => 'gocardless-variable',
                 'display_name' => 'User 1',
             ]),
             // User 2: Will fail but recover
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'active',
                 'active' => true,
                 'payment_method' => 'gocardless-variable',
                 'display_name' => 'User 2',
             ]),
             // User 3: Will fail and remain in warning
-            factory(User::class)->create([
+            User::factory()->create([
                 'status' => 'active',
                 'active' => true,
                 'payment_method' => 'gocardless-variable',
@@ -425,7 +425,7 @@ class PaymentFlowIntegrationTest extends TestCase
         $endOfMonth = Carbon::createFromDate(2024, 2, 28); // February 28th
         Carbon::setTestNow($endOfMonth);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',

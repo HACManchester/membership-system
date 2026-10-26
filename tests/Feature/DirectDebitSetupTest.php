@@ -103,7 +103,7 @@ class DirectDebitSetupTest extends TestCase
 
     private function rejoiningMember()
     {
-        return factory(User::class)->create([
+        return User::factory()->create([
             'given_name' => 'Ada',
             'family_name' => 'Lovelace',
             'email' => 'ada@example.test',

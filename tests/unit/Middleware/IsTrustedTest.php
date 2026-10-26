@@ -51,7 +51,7 @@ class IsTrustedTest extends TestCase
     #[Test]
     public function a_trusted_user_passes()
     {
-        $this->actingAs(factory(User::class)->create(['trusted' => true]));
+        $this->actingAs(User::factory()->create(['trusted' => true]));
 
         $this->assertEquals('PASSED', $this->runMiddleware());
     }
@@ -59,7 +59,7 @@ class IsTrustedTest extends TestCase
     #[Test]
     public function an_admin_passes_even_when_not_flagged_trusted()
     {
-        $this->actingAs(factory(User::class)->state('admin')->create(['trusted' => false]));
+        $this->actingAs(User::factory()->admin()->create(['trusted' => false]));
 
         $this->assertEquals('PASSED', $this->runMiddleware());
     }
@@ -67,7 +67,7 @@ class IsTrustedTest extends TestCase
     #[Test]
     public function an_untrusted_non_admin_is_rejected()
     {
-        $this->actingAs(factory(User::class)->create(['trusted' => false]));
+        $this->actingAs(User::factory()->create(['trusted' => false]));
 
         $this->expectException(AuthenticationException::class);
         $this->runMiddleware();
@@ -76,7 +76,7 @@ class IsTrustedTest extends TestCase
     #[Test]
     public function a_banned_user_is_rejected_even_when_trusted()
     {
-        $this->actingAs(factory(User::class)->create(['trusted' => true, 'banned' => true]));
+        $this->actingAs(User::factory()->create(['trusted' => true, 'banned' => true]));
 
         $this->expectException(AuthenticationException::class);
         $this->runMiddleware();

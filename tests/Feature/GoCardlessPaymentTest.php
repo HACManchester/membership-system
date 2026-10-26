@@ -34,7 +34,7 @@ class GoCardlessPaymentTest extends TestCase
 
     private function memberWithDueCharge($monthlySubscription = 22)
     {
-        $member = factory(User::class)->create([
+        $member = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => $monthlySubscription,

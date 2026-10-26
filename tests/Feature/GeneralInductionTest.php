@@ -25,7 +25,7 @@ class GeneralInductionTest extends TestCase
     #[Test]
     public function completing_the_induction_with_the_correct_code_marks_the_member_inducted()
     {
-        $user = factory(User::class)->create(['induction_completed' => false]);
+        $user = User::factory()->create(['induction_completed' => false]);
 
         $this->actingAs($user)
             ->put(route('general-induction.update'), ['induction_code' => self::CODE])
@@ -37,7 +37,7 @@ class GeneralInductionTest extends TestCase
     #[Test]
     public function the_code_is_case_and_whitespace_insensitive()
     {
-        $user = factory(User::class)->create(['induction_completed' => false]);
+        $user = User::factory()->create(['induction_completed' => false]);
 
         $this->actingAs($user)
             ->put(route('general-induction.update'), ['induction_code' => '  open-sesame  '])
@@ -49,7 +49,7 @@ class GeneralInductionTest extends TestCase
     #[Test]
     public function an_incorrect_code_does_not_complete_the_induction()
     {
-        $user = factory(User::class)->create(['induction_completed' => false]);
+        $user = User::factory()->create(['induction_completed' => false]);
 
         $this->from(route('general-induction.show'))
             ->actingAs($user)
@@ -62,7 +62,7 @@ class GeneralInductionTest extends TestCase
     #[Test]
     public function a_key_fob_can_be_registered_during_induction()
     {
-        $user = factory(User::class)->create(['induction_completed' => false]);
+        $user = User::factory()->create(['induction_completed' => false]);
         $keyId = sprintf('%08X', 0xCAFEBABE);
 
         $this->actingAs($user)

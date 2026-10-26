@@ -38,7 +38,7 @@ class DiscourseSyncTest extends TestCase
     {
         $this->mock->append(new Response(200, [], null));
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'suppress_real_name' => false,
             'display_name' => 'JDoe',
             'given_name' => 'John',
@@ -64,7 +64,7 @@ class DiscourseSyncTest extends TestCase
     {
         $this->mock->append(new Response(200, [], null));
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'suppress_real_name' => true,
             'display_name' => 'JDoe',
             'given_name' => 'John',
@@ -86,7 +86,7 @@ class DiscourseSyncTest extends TestCase
     {
         $this->mock->append(new Response(200, [], null));
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => true,
             'status' => 'active',
         ]);
@@ -103,7 +103,7 @@ class DiscourseSyncTest extends TestCase
     {
         $this->mock->append(new Response(200, [], null));
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => false,
             'status' => 'left',
         ]);
@@ -121,7 +121,7 @@ class DiscourseSyncTest extends TestCase
         config(['discourse.api_key' => 'key123', 'discourse.api_username' => 'system']);
         $this->mock->append(new Response(200, [], null));
 
-        (new DiscourseSync(factory(User::class)->create()))->handle($this->client);
+        (new DiscourseSync(User::factory()->create()))->handle($this->client);
 
         $request = $this->container[0]['request'];
         $this->assertSame('key123', $request->getHeaderLine('Api-Key'));
@@ -138,7 +138,7 @@ class DiscourseSyncTest extends TestCase
         config(['discourse.api_key' => null, 'discourse.api_username' => null]);
         $this->mock->append(new Response(200, [], null));
 
-        (new DiscourseSync(factory(User::class)->create()))->handle($this->client);
+        (new DiscourseSync(User::factory()->create()))->handle($this->client);
 
         $this->assertCount(1, $this->container);
         $this->assertSame('', $this->container[0]['request']->getHeaderLine('Api-Key'));

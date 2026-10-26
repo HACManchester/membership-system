@@ -38,8 +38,8 @@ class EquipmentTest extends TestCase
     protected function setUpTestData(): void
     {
         // Create users with different roles
-        $this->admin = factory(User::class)->state('admin')->create();
-        $this->equipmentRoleUser = factory(User::class)->create();
+        $this->admin = User::factory()->admin()->create();
+        $this->equipmentRoleUser = User::factory()->create();
         
         // Create equipment role and assign to user
         $equipmentRole = Role::firstOrCreate(
@@ -48,10 +48,10 @@ class EquipmentTest extends TestCase
         );
         $this->equipmentRoleUser->assignRole($equipmentRole);
 
-        $this->regularUser = factory(User::class)->create();
-        $this->maintainerUser = factory(User::class)->create();
-        $this->areaCoordinatorUser = factory(User::class)->create();
-        $this->trainerUser = factory(User::class)->create();
+        $this->regularUser = User::factory()->create();
+        $this->maintainerUser = User::factory()->create();
+        $this->areaCoordinatorUser = User::factory()->create();
+        $this->trainerUser = User::factory()->create();
 
         // Create equipment area and maintainer group
         $this->equipmentArea = EquipmentArea::factory()->create([
@@ -278,7 +278,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function edit_exposes_the_permaloan_holder_and_a_member_search_url()
     {
-        $holder = factory(User::class)->create();
+        $holder = User::factory()->create();
         $this->equipment->forceFill([
             'permaloan' => true,
             'permaloan_user_id' => $holder->id,
@@ -456,7 +456,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_to_trained_users()
     {
         // Create a trained user
-        $trainedUser = factory(User::class)->create();
+        $trainedUser = User::factory()->create();
         $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
@@ -477,7 +477,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_to_trainers()
     {
         // Create trainer for secure equipment
-        $trainer = factory(User::class)->create();
+        $trainer = User::factory()->create();
         $trainerTrainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainer->id,
@@ -515,7 +515,7 @@ class EquipmentTest extends TestCase
         $this->assertArrayNotHasKey('trainer_instructions', $props);
 
         // A member part-way through induction sees the induction instructions only.
-        $pending = factory(User::class)->create();
+        $pending = User::factory()->create();
         (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $pending->id, 'active' => true]))->save();
         $props = $propsFor($pending);
         $this->assertArrayHasKey('induction_instructions', $props);
@@ -524,7 +524,7 @@ class EquipmentTest extends TestCase
 
         // A trained (non-trainer) member sees the instructions for use, not the
         // trainer instructions.
-        $trained = factory(User::class)->create();
+        $trained = User::factory()->create();
         (new TrainingRecord(['key' => 'test-equipment', 'user_id' => $trained->id, 'trained' => now(), 'active' => true]))->save();
         $props = $propsFor($trained);
         $this->assertArrayHasKey('trained_instructions', $props);
@@ -540,7 +540,7 @@ class EquipmentTest extends TestCase
     public function access_code_visible_in_equipment_index_for_trained_users()
     {
         // Create a trained user
-        $trainedUser = factory(User::class)->create();
+        $trainedUser = User::factory()->create();
         $trainingRecord = new TrainingRecord([
             'key' => 'secure-equipment',
             'user_id' => $trainedUser->id,
@@ -647,7 +647,7 @@ class EquipmentTest extends TestCase
         ]);
         $pendingTrainingRecord->save();
 
-        $anotherUser = factory(User::class)->create();
+        $anotherUser = User::factory()->create();
         $response = $this->actingAs($anotherUser)
             ->post(route('equipment_training.train', [$this->equipment, $pendingTrainingRecord]), [
                 'trainer_user_id' => $anotherUser->id,
@@ -906,7 +906,7 @@ class EquipmentTest extends TestCase
         // field; switching off permaloan must not be blocked by it, and it must be
         // cleared rather than stored.
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $holder = factory(User::class)->create();
+        $holder = User::factory()->create();
         $equipment = Equipment::factory()->create([
             'name' => 'Drill',
             'slug' => 'drill',

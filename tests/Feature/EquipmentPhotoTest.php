@@ -20,7 +20,7 @@ class EquipmentPhotoTest extends TestCase
     public function an_uploaded_photo_is_resized_stored_and_recorded_on_the_equipment()
     {
         Storage::fake('public');
-        $admin = factory(User::class)->state('admin')->create();
+        $admin = User::factory()->admin()->create();
         $equipment = Equipment::factory()->create();
 
         $this->actingAs($admin)

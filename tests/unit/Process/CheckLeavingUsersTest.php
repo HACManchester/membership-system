@@ -19,7 +19,7 @@ class CheckLeavingUsersTest extends TestCase
 
     public function testMarksLeavingUserAsLeftOnceTheirMembershipExpires()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDay(),
@@ -34,7 +34,7 @@ class CheckLeavingUsersTest extends TestCase
 
     public function testLeavesAPaidUpLeavingUserAlone()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(10),
@@ -52,7 +52,7 @@ class CheckLeavingUsersTest extends TestCase
         // These used to sit here forever: the old code logged an error and moved on, so
         // the member stayed active and the nightly run raised a charge every month that
         // nothing could collect
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => null,
@@ -67,7 +67,7 @@ class CheckLeavingUsersTest extends TestCase
 
     public function testCancelsOutstandingChargesWhenTheMemberLeaves()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => null,

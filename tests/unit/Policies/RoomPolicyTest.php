@@ -24,7 +24,7 @@ class RoomPolicyTest extends TestCase
 
     public function test_admin_can_do_everything()
     {
-        $admin = factory(User::class)->create();
+        $admin = User::factory()->create();
         $adminRole = Role::firstOrCreate(
             ['name' => 'admin'],
             ['title' => 'Admin', 'description' => 'Administrator']
@@ -42,7 +42,7 @@ class RoomPolicyTest extends TestCase
 
     public function test_all_users_can_view_rooms()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $room = Room::factory()->create();
 
         $this->assertTrue($this->policy->viewAny($user));
@@ -51,7 +51,7 @@ class RoomPolicyTest extends TestCase
 
     public function test_a_regular_member_cannot_manage_rooms()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $room = Room::factory()->create();
 
         $this->assertFalse($this->policy->create($user));
@@ -61,12 +61,12 @@ class RoomPolicyTest extends TestCase
 
     public function test_equipment_managers_can_manage_rooms()
     {
-        $equipmentUser = factory(User::class)->create();
+        $equipmentUser = User::factory()->create();
         $equipmentUser->assignRole(
             Role::firstOrCreate(['name' => 'equipment'], ['title' => 'Equipment'])
         );
 
-        $maintainer = factory(User::class)->create();
+        $maintainer = User::factory()->create();
         $maintainer->maintainerGroups()->attach(MaintainerGroup::factory()->create());
 
         $room = Room::factory()->create();

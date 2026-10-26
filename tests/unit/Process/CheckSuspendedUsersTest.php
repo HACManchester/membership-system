@@ -18,7 +18,7 @@ class CheckSuspendedUsersTest extends TestCase
 
     public function testMarksUserAsLeftAfterThirtyDaysSuspended()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => Carbon::now()->subDays(31),
@@ -32,7 +32,7 @@ class CheckSuspendedUsersTest extends TestCase
 
     public function testLeavesRecentlySuspendedUserAlone()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => Carbon::now()->subDays(10),
@@ -46,7 +46,7 @@ class CheckSuspendedUsersTest extends TestCase
 
     public function testBackfillsMissingSuspensionDateSoTheClockStarts()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => null,

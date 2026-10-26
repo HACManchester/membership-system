@@ -54,7 +54,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $otherDay = 10; // Different payment day
         
         // Create active users with payment day matching target date
-        $user1 = factory(User::class)->create([
+        $user1 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -62,7 +62,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        $user2 = factory(User::class)->create([
+        $user2 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -71,7 +71,7 @@ class MemberSubscriptionChargesTest extends TestCase
         ]);
 
         // Create user with different payment day (should be ignored)
-        $user3 = factory(User::class)->create([
+        $user3 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -111,7 +111,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         // Cancelling clears the payment method but leaves the member active until the
         // daily check retires them - a window we used to raise a charge a month in
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'payment_method' => '',
@@ -132,14 +132,14 @@ class MemberSubscriptionChargesTest extends TestCase
         $paymentDay = 15; // Use a day that exists in all months
         $targetDate = Carbon::now()->setDay($paymentDay);
         
-        $suspendedUser = factory(User::class)->create([
+        $suspendedUser = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
 
-        $leftUser = factory(User::class)->create([
+        $leftUser = User::factory()->create([
             'status' => 'left',
             'active' => false,
             'payment_day' => $paymentDay,
@@ -164,14 +164,14 @@ class MemberSubscriptionChargesTest extends TestCase
         $paymentDay = 15;
         $targetDate = Carbon::now()->setDay($paymentDay);
 
-        factory(User::class)->create([
+        User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
             'monthly_subscription' => 22,
         ]);
-        factory(User::class)->create([
+        User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -206,7 +206,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $paymentDay = 15; // Use a day that exists in all months
         $targetDate = Carbon::now()->setDay($paymentDay);
         
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -225,7 +225,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testMakeChargesDueUpdatesChargesForCurrentAndPastDates()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -263,7 +263,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersCreatesGoCardlessPaymentsForCorrectAmounts()
     {
-        $user1 = factory(User::class)->create([
+        $user1 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -271,7 +271,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $user2 = factory(User::class)->create([
+        $user2 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -338,7 +338,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersUsesChargeAmountWhenAvailable()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -372,7 +372,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersOnlyProcessesGoCardlessUsers()
     {
-        $goCardlessUser = factory(User::class)->create([
+        $goCardlessUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -380,7 +380,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $balanceUser = factory(User::class)->create([
+        $balanceUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'balance',
             'monthly_subscription' => 22,
@@ -420,7 +420,7 @@ class MemberSubscriptionChargesTest extends TestCase
     public function testBillMembersCancelsChargesForMembersWithNoPaymentMethod()
     {
         // The state a cancelled mandate leaves behind - see UserRepository::subscriptionCancelled
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'payment_method' => '',
@@ -448,7 +448,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersCancelsChargesForAGoCardlessMemberWithNoMandate()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -472,7 +472,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersCancelsChargesForInactiveMembers()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'payment_method' => 'gocardless-variable',
@@ -498,7 +498,7 @@ class MemberSubscriptionChargesTest extends TestCase
     {
         // Standing order and cash members keep a payment method - their charges wait
         // here to be settled manually and must not be cancelled out from under them
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'standing-order',
@@ -520,7 +520,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersWillNotCollectABackdatedCharge()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -564,7 +564,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersHandlesGoCardlessFailures()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -607,21 +607,21 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersContinuesAfterFailureWithoutReusingPreviousBillId()
     {
-        $goodUser1 = factory(User::class)->create([
+        $goodUser1 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'monthly_subscription' => 22,
             'mandate_id' => 'MD111',
         ]);
-        $failingUser = factory(User::class)->create([
+        $failingUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'monthly_subscription' => 22,
             'mandate_id' => 'MD222',
         ]);
-        $goodUser2 = factory(User::class)->create([
+        $goodUser2 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -669,14 +669,14 @@ class MemberSubscriptionChargesTest extends TestCase
     {
         // The 2026-07-01 incident: a member whose billing fails while they already
         // have an older unpaid charge must not abort the whole run
-        $failingUser = factory(User::class)->create([
+        $failingUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'monthly_subscription' => 22,
             'mandate_id' => 'MD222',
         ]);
-        $laterUser = factory(User::class)->create([
+        $laterUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -744,7 +744,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersSkipsChargesWithExistingPayments()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -779,7 +779,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
     public function testBillMembersHandlesInvalidStateException()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',

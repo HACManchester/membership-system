@@ -65,7 +65,7 @@ class GoCardlessSandboxTest extends TestCase
     #[Test]
     public function a_redirect_flow_is_created_and_its_id_stored_on_the_member()
     {
-        $user = factory(User::class)->create(['given_name' => 'Sandbox', 'family_name' => 'Member']);
+        $user = User::factory()->create(['given_name' => 'Sandbox', 'family_name' => 'Member']);
 
         $url = $this->helper->newPreAuthUrl($user, [
             'description' => 'Hackspace Manchester',
@@ -86,7 +86,7 @@ class GoCardlessSandboxTest extends TestCase
     #[Test]
     public function completing_an_unvisited_redirect_flow_fails_with_an_api_exception()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->helper->newPreAuthUrl($user, [
             'description' => 'Hackspace Manchester',
             'success_redirect_url' => 'https://example.test/return',

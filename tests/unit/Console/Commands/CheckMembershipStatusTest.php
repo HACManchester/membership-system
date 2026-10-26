@@ -17,7 +17,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testPaymentWarningUsersGetSuspended()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -34,7 +34,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testPaymentWarningUsersWithinGracePeriodNotSuspended()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -50,7 +50,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testSuspendedUsersGetMarkedAsLeft()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => Carbon::now()->subDays(31), // Past 30 day grace period
@@ -66,7 +66,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testRecentlySuspendedUsersNotMarkedAsLeft()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => Carbon::now()->subDays(10),
@@ -82,7 +82,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testLeavingUsersGetMarkedAsLeftWhenSubscriptionExpires()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1),
@@ -98,7 +98,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testActiveUsersWithRecentPaymentStayActive()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'payment_method' => 'gocardless-variable',
@@ -122,19 +122,19 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testMultipleUsersProcessedCorrectly()
     {
-        $warningUser = factory(User::class)->create([
+        $warningUser = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1),
         ]);
 
-        $suspendedUser = factory(User::class)->create([
+        $suspendedUser = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'suspended_at' => Carbon::now()->subDays(35),
         ]);
 
-        $activeUser = factory(User::class)->create([
+        $activeUser = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(10),
@@ -154,7 +154,7 @@ class CheckMembershipStatusTest extends TestCase
 
     public function testHonoraryMembersNotAffected()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'honorary',
             'active' => true,
             'subscription_expires' => Carbon::now()->subMonths(6),

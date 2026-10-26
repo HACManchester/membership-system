@@ -17,7 +17,7 @@ class CheckExpiredActiveUsersTest extends TestCase
 
     public function testRunFlagsActiveUserWithLongLapsedExpiry()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(30),
@@ -33,7 +33,7 @@ class CheckExpiredActiveUsersTest extends TestCase
 
     public function testRunLeavesRecentlyExpiredUserAloneWhileBacsClears()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(2),
@@ -47,7 +47,7 @@ class CheckExpiredActiveUsersTest extends TestCase
 
     public function testRunLeavesPaidUpUserAlone()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(20),
@@ -61,7 +61,7 @@ class CheckExpiredActiveUsersTest extends TestCase
 
     public function testRunFlagsEstablishedActiveUserWithNoExpiryDate()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => null,
@@ -78,7 +78,7 @@ class CheckExpiredActiveUsersTest extends TestCase
     public function testRunLeavesNewUserWithNoExpiryDateAlone()
     {
         // A brand new member's first payment may still be working through GoCardless
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => null,
@@ -92,20 +92,20 @@ class CheckExpiredActiveUsersTest extends TestCase
 
     public function testRunIgnoresSpecialCaseAndNonActiveUsers()
     {
-        $honoraryUser = factory(User::class)->create([
+        $honoraryUser = User::factory()->create([
             'status' => 'honorary',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(30),
         ]);
 
-        $giftedUser = factory(User::class)->create([
+        $giftedUser = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(30),
             'gift_expires' => Carbon::now()->addMonth(),
         ]);
 
-        $suspendedUser = factory(User::class)->create([
+        $suspendedUser = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(30),

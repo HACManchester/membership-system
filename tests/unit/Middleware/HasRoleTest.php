@@ -60,7 +60,7 @@ class HasRoleTest extends TestCase
     #[Test]
     public function a_user_with_the_required_role_passes()
     {
-        $this->actingAs(factory(User::class)->state('admin')->create());
+        $this->actingAs(User::factory()->admin()->create());
 
         $this->assertEquals('PASSED', $this->runMiddleware('admin'));
     }
@@ -68,7 +68,7 @@ class HasRoleTest extends TestCase
     #[Test]
     public function a_user_without_the_required_role_is_rejected()
     {
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         $this->expectException(AuthenticationException::class);
         $this->runMiddleware('admin');
@@ -81,7 +81,7 @@ class HasRoleTest extends TestCase
     #[Test]
     public function role_member_lets_any_logged_in_user_through_regardless_of_roles()
     {
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         $this->assertEquals('PASSED', $this->runMiddleware('member'));
     }
@@ -89,7 +89,7 @@ class HasRoleTest extends TestCase
     #[Test]
     public function a_banned_user_is_rejected_even_for_a_member_route()
     {
-        $this->actingAs(factory(User::class)->create(['banned' => true]));
+        $this->actingAs(User::factory()->create(['banned' => true]));
 
         $this->expectException(AuthenticationException::class);
         $this->runMiddleware('member');
@@ -98,7 +98,7 @@ class HasRoleTest extends TestCase
     #[Test]
     public function a_banned_user_who_has_the_required_role_is_still_rejected()
     {
-        $this->actingAs(factory(User::class)->state('admin')->create(['banned' => true]));
+        $this->actingAs(User::factory()->admin()->create(['banned' => true]));
 
         $this->expectException(AuthenticationException::class);
         $this->runMiddleware('admin');

@@ -8,7 +8,7 @@ class UserPaymentStatusTest extends TestCase
 {
     public function testSetPaymentWarningWithDefaultGracePeriod()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(5),
@@ -26,7 +26,7 @@ class UserPaymentStatusTest extends TestCase
 
     public function testSetPaymentWarningWithCustomGracePeriod()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
         ]);
@@ -42,7 +42,7 @@ class UserPaymentStatusTest extends TestCase
 
     public function testSetSuspendedRecordsTimestamp()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'suspended_at' => null,
@@ -60,7 +60,7 @@ class UserPaymentStatusTest extends TestCase
     public function testSetSuspendedUpdatesExistingSuspendedAt()
     {
         $oldSuspendedAt = Carbon::now()->subDays(5);
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'suspended_at' => $oldSuspendedAt,

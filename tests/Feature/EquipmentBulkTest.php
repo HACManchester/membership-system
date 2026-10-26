@@ -15,7 +15,7 @@ class EquipmentBulkTest extends TestCase
 
     private function admin(): User
     {
-        return factory(User::class)->state('admin')->create();
+        return User::factory()->admin()->create();
     }
 
     public function test_admin_can_bulk_create_equipment()
@@ -80,7 +80,7 @@ class EquipmentBulkTest extends TestCase
     public function test_non_authorised_user_cannot_bulk_create()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)->post(route('equipment.bulk-store'), [
             'room_id' => $room->id,

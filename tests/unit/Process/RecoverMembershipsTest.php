@@ -21,7 +21,7 @@ class RecoverMembershipsTest extends TestCase
      */
     public function testRecoverActiveUserWithExpiredMembership()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(5), // Expired 5 days ago
@@ -49,7 +49,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testFixesTheSubscriptionDateOfActiveUser()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->addDays(15), // Still valid
@@ -76,7 +76,7 @@ class RecoverMembershipsTest extends TestCase
      */
     public function testRecoverPaymentWarningUser()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1), // Grace period expired
@@ -104,7 +104,7 @@ class RecoverMembershipsTest extends TestCase
      */
     public function testRecoverSuspendedUser()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(10),
@@ -131,7 +131,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testDoesNotRecoverUserWithOldPayments()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(5),
@@ -156,7 +156,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testIgnoresLeavingUsers()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'leaving',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1),
@@ -178,7 +178,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testIgnoresLeftUsers()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'left',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(30),
@@ -201,7 +201,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testHandlesUsersWithNoPayments()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(5),
@@ -221,7 +221,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testOnlyConsidersPaidSubscriptionCharges()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'subscription_expires' => Carbon::now()->subDays(5),
@@ -254,7 +254,7 @@ class RecoverMembershipsTest extends TestCase
 
     public function testRecoveryRespectsPaymentMethod()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'payment-warning',
             'active' => true,
             'subscription_expires' => Carbon::now()->subDays(1),

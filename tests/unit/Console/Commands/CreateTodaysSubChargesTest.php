@@ -13,7 +13,7 @@ class CreateTodaysSubChargesTest extends TestCase
         // payment_day > 28 gets converted to 1 by User mutator
         $targetDay = 15;
 
-        $user1 = factory(User::class)->create([
+        $user1 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -21,7 +21,7 @@ class CreateTodaysSubChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        $user2 = factory(User::class)->create([
+        $user2 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -60,7 +60,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $customOffset = 14;
         $paymentDay = 10; // Use a day that exists in all months
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -91,7 +91,7 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $paymentDay = 20; // Use a day that exists in all months
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -121,7 +121,7 @@ class CreateTodaysSubChargesTest extends TestCase
         $negativeOffset = -3;
         $paymentDay = 25; // Use a day that exists in all months
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -151,7 +151,7 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $paymentDay = 15;
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -179,14 +179,14 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $targetDate = Carbon::now()->addDays(7);
         
-        $suspendedUser = factory(User::class)->create([
+        $suspendedUser = User::factory()->create([
             'status' => 'suspended',
             'active' => false,
             'payment_day' => $targetDate->day,
             'monthly_subscription' => 22,
         ]);
 
-        $leftUser = factory(User::class)->create([
+        $leftUser = User::factory()->create([
             'status' => 'left',
             'active' => false,
             'payment_day' => $targetDate->day,
@@ -212,7 +212,7 @@ class CreateTodaysSubChargesTest extends TestCase
     {
         $paymentDay = 15; // Use a day that exists in all months
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
@@ -251,7 +251,7 @@ class CreateTodaysSubChargesTest extends TestCase
         Carbon::setTestNow(Carbon::now()->setDay($paymentDay)->subDays(7));
 
         foreach ($amounts as $amount => $type) {
-            $user = factory(User::class)->create([
+            $user = User::factory()->create([
                 'status' => 'active',
                 'payment_method' => 'gocardless-variable',
                 'mandate_id' => 'MD_TEST',

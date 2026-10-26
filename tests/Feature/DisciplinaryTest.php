@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Assert;
 use Illuminate\Support\Carbon;
@@ -22,8 +23,8 @@ class DisciplinaryTest extends TestCase
         $now = Carbon::now()->startOfMinute();
         Carbon::setTestNow($now);
 
-        $admin = factory('BB\Entities\User')->states('admin')->create();
-        $user = factory('BB\Entities\User')->create();
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->create();
 
         Assert::assertArraySubset(
             [
@@ -60,8 +61,8 @@ class DisciplinaryTest extends TestCase
         $now = Carbon::now()->startOfMinute();
         Carbon::setTestNow($now);
 
-        $admin = factory('BB\Entities\User')->states('admin')->create();
-        $user = factory('BB\Entities\User')->create([
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->create([
             'active' => false,
             'status' => 'left',
             'banned' => true,
@@ -97,8 +98,8 @@ class DisciplinaryTest extends TestCase
     #[Test]
     public function a_non_admin_cannot_ban_a_member()
     {
-        $member = factory('BB\Entities\User')->create();
-        $target = factory('BB\Entities\User')->create();
+        $member = User::factory()->create();
+        $target = User::factory()->create();
 
         $this->actingAs($member)
             ->post(route('disciplinary.ban', $target), ['reason' => 'because'])
@@ -110,7 +111,7 @@ class DisciplinaryTest extends TestCase
     #[Test]
     public function an_admin_cannot_ban_themselves()
     {
-        $admin = factory('BB\Entities\User')->states('admin')->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
             ->post(route('disciplinary.ban', $admin), ['reason' => 'oops'])
@@ -122,8 +123,8 @@ class DisciplinaryTest extends TestCase
     #[Test]
     public function a_non_admin_cannot_unban_a_member()
     {
-        $member = factory('BB\Entities\User')->create();
-        $banned = factory('BB\Entities\User')->create([
+        $member = User::factory()->create();
+        $banned = User::factory()->create([
             'active' => false,
             'status' => 'left',
             'banned' => true,

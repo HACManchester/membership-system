@@ -27,7 +27,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_admin_can_do_everything()
     {
-        $admin = factory(User::class)->create();
+        $admin = User::factory()->create();
         $adminRole = Role::firstOrCreate(
             ['name' => 'admin'],
             ['title' => 'Admin', 'description' => 'Administrator']
@@ -47,7 +47,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_all_users_can_view_courses()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
 
         $this->assertTrue($this->policy->viewAny($user));
@@ -56,7 +56,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_area_coordinator_can_create_courses()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $area = EquipmentArea::factory()->create();
         $user->equipmentAreas()->attach($area);
 
@@ -65,14 +65,14 @@ class CoursePolicyTest extends TestCase
 
     public function test_non_area_coordinator_cannot_create_courses()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->assertFalse($this->policy->create($user));
     }
 
     public function test_equipment_maintainer_can_update_and_delete_course()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
         $equipment = Equipment::factory()->create();
         $area = EquipmentArea::factory()->create();
@@ -93,7 +93,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_area_coordinator_can_update_and_delete_course()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
         $equipment = Equipment::factory()->create();
         $area = EquipmentArea::factory()->create();
@@ -114,8 +114,8 @@ class CoursePolicyTest extends TestCase
 
     public function test_non_maintainer_cannot_update_or_delete_course()
     {
-        $user = factory(User::class)->create();
-        $otherUser = factory(User::class)->create();
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
         $course = Course::factory()->create();
         $equipment = Equipment::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create();
@@ -132,7 +132,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_equipment_without_a_maintainer_group_is_skipped()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create();
         $maintainerGroup->maintainers()->attach($user);
@@ -140,12 +140,12 @@ class CoursePolicyTest extends TestCase
         $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => $maintainerGroup->id]));
 
         $this->assertTrue($this->policy->update($user, $course));
-        $this->assertFalse($this->policy->update(factory(User::class)->create(), $course));
+        $this->assertFalse($this->policy->update(User::factory()->create(), $course));
     }
 
     public function test_restore_always_returns_false()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
 
         $this->assertFalse($this->policy->restore($user, $course));
@@ -153,7 +153,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_force_delete_always_returns_false()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
 
         $this->assertFalse($this->policy->forceDelete($user, $course));
@@ -161,7 +161,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_any_member_can_register_interest_in_trainer_led_courses()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $regular = Course::factory()->create(['frequency' => 'regular']);
         $adHoc = Course::factory()->create(['frequency' => 'ad-hoc']);
@@ -175,7 +175,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_members_cannot_register_interest_in_self_serve_courses()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $selfServe = Course::factory()->create(['frequency' => 'self-serve']);
 
         $this->assertFalse($this->policy->registerInterest($user, $selfServe));
@@ -183,7 +183,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_any_member_can_withdraw_interest()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create(['frequency' => 'regular']);
 
         $this->assertTrue($this->policy->withdrawInterest($user, $course));
@@ -191,7 +191,7 @@ class CoursePolicyTest extends TestCase
 
     public function test_is_maintainer_or_coordinator_with_multiple_equipment()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $course = Course::factory()->create();
         $area = EquipmentArea::factory()->create();
         

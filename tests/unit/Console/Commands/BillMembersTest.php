@@ -31,7 +31,7 @@ class BillMembersTest extends TestCase
 
     public function testBillsCreatedForCorrectAmountFromUserSubscription()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,
@@ -80,7 +80,7 @@ class BillMembersTest extends TestCase
      */
     public function testEachChargeIsBilledWithAnIdempotencyKeyIdentifyingTheCharge()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,
@@ -111,7 +111,7 @@ class BillMembersTest extends TestCase
 
     public function testBillsCreatedUsingChargeAmountIfSet()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,
@@ -154,7 +154,7 @@ class BillMembersTest extends TestCase
         $expectedAmounts = [17, 22, 27];
 
         foreach ($expectedAmounts as $index => $amount) {
-            $user = factory(User::class)->create([
+            $user = User::factory()->create([
                 'status' => 'active',
                 'payment_method' => 'gocardless-variable',
                 'monthly_subscription' => $amount,
@@ -208,7 +208,7 @@ class BillMembersTest extends TestCase
 
     public function testGoCardlessFailureRecorded()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,
@@ -240,14 +240,14 @@ class BillMembersTest extends TestCase
 
     public function testOnlyGoCardlessUsersAreBilled()
     {
-        $goCardlessUser = factory(User::class)->create([
+        $goCardlessUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,
             'mandate_id' => 'MD123456789',
         ]);
 
-        $balanceUser = factory(User::class)->create([
+        $balanceUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'balance',
             'monthly_subscription' => 22,
@@ -284,7 +284,7 @@ class BillMembersTest extends TestCase
 
     public function testChargesWithExistingPaymentsSkipped()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'monthly_subscription' => 22,

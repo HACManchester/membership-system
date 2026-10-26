@@ -13,7 +13,7 @@ class UserObserverTest extends TestCase
     {
         Event::fake([MemberBecameActive::class]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => false,
             'status' => 'setting-up',
         ]);
@@ -32,7 +32,7 @@ class UserObserverTest extends TestCase
     {
         Event::fake([MemberBecameInactive::class]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'active' => true,
             'status' => 'active',
         ]);
@@ -51,7 +51,7 @@ class UserObserverTest extends TestCase
     {
         Event::fake([MemberDiscourseParamsChanged::class]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'given_name' => 'John',
         ]);
 
