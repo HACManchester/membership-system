@@ -1,8 +1,7 @@
 <?php
 
-use BB\Entities\Settings;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddTrainingCodeSetting extends Migration
 {
@@ -13,7 +12,7 @@ class AddTrainingCodeSetting extends Migration
      */
     public function up()
     {
-        Settings::put('general_induction_code', 'DBOF');
+        DB::table('settings')->insert(['key' => 'general_induction_code', 'value' => 'DBOF']);
     }
 
     /**
