@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\KeyFob;
 use BB\Entities\Settings;
 use BB\Entities\User;
+use BB\Support\SettingKey;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -18,8 +19,7 @@ class GeneralInductionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // The settings row is seeded by a migration, so update it rather than insert a duplicate.
-        Settings::change('general_induction_code', self::CODE);
+        Settings::set(SettingKey::GeneralInductionCode, self::CODE);
     }
 
     #[Test]
@@ -82,7 +82,7 @@ class GeneralInductionTest extends TestCase
     #[Test]
     public function the_page_shows_an_inducted_member_the_code_escaped()
     {
-        Settings::change('general_induction_code', '<b>OPEN</b>');
+        Settings::set(SettingKey::GeneralInductionCode, '<b>OPEN</b>');
         $user = User::factory()->create(['induction_completed' => true]);
 
         $response = $this->actingAs($user)->get(route('general-induction.show'));

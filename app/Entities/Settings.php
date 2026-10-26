@@ -2,6 +2,7 @@
 
 namespace BB\Entities;
 
+use BB\Support\SettingKey;
 use Carbon\Carbon;
 use Database\Factories\SettingsFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -43,21 +44,16 @@ class Settings extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public static function put($key, $value)
+    /**
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<self> when the row is missing
+     */
+    public static function get(SettingKey $key): string
     {
-        self::create(['key' => $key, 'value' => $value]);
+        return self::findOrFail($key->value)->value;
     }
 
-    public static function get(string $key)
+    public static function set(SettingKey $key, string $value): self
     {
-        $setting = self::findOrFail($key);
-        return $setting->value;
-    }
-
-    public static function change(string $key, $value)
-    {
-        $setting = self::findOrFail($key);
-        $setting->value = $value;
-        $setting->save();
+        return self::updateOrCreate(['key' => $key->value], ['value' => $value]);
     }
 }
