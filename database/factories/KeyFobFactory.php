@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use BB\Entities\KeyFob;
+use BB\Entities\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,7 @@ class KeyFobFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => 0,
+            'user_id' => User::factory(),
             // Upper case: a key_id starting "ff" is an access code, shown differently
             'key_id' => Str::upper(Str::random(12)),
             'active' => 1,
