@@ -68,6 +68,37 @@ Dev packages: `fzaninotto/faker` is abandoned (replace with `fakerphp/faker`),
 Frontend: Node 16 in the Dockerfile (EOL), Laravel Mix 6 (consider Vite), Bootstrap 3.3.4 (2014)
 shipping alongside MUI 6.
 
+## Dependency updates (Dependabot)
+
+Dependabot (`.github/dependabot.yml`) checks Composer, npm (Yarn) and GitHub Actions every
+Monday morning. Releases have to be 7 days old before they're proposed; security updates skip this
+wait.
+
+**Grouping:**
+
+- Minor and patch updates are grouped per ecosystem, split into dev and production groups.
+- `gocardless/gocardless-pro` always gets its own PR.
+- Majors arrive one PR each.
+- Security updates are grouped per ecosystem.
+
+**Ignored majors.** These are held back because they're planned upgrades, or because the current
+build or pages can't take them. Each rule in the file says what lifts it.
+
+- Planned upgrades: `laravel/framework`, `phpunit/phpunit` and `@mui/*`.
+- `gocardless/gocardless-pro`: needs a sandbox run.
+- Inertia (`inertiajs/inertia-laravel` and `@inertiajs/*`): the PHP and JS sides must move
+  together.
+- Laravel Mix and its toolchain, until the Vite migration lands:
+  - `webpack` 5.106+;
+  - the Mix-tied loaders and `react-refresh`;
+  - Babel 8.
+- jQuery 4, Bootstrap 4 and Select2 4, until the legacy Blade pages are gone.
+
+**Merging.** `.github/workflows/dependabot-automerge.yml` arms auto-merge only for PRs where every
+update is a patch or minor update to a dev dependency or a GitHub Action. It still waits for an
+approving review and "All checks passed". A human merges everything else. Merging never deploys:
+production deploys are always manual (see `operations.md`).
+
 ## Dead code
 
 Removed in the June 2026 deletion pass:
