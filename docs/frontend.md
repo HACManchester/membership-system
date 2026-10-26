@@ -16,20 +16,29 @@ boxes, stats) is still Blade + jQuery + Bootstrap 3.
 
 ## Build tooling
 
-- **Laravel Mix 6** (`webpack.mix.js`) compiles *both* stacks: the legacy LESS + `resources/assets/js`
-  bundle and the modern `resources/js/react-app.tsx` bundle.
-- `elixir.json` is a leftover from the pre-Mix build — dead, delete it.
-- Node 16 in the Dockerfile (EOL) — bump to current LTS.
-- No Vite. Mix works, but Vite is the Laravel default since 9.x and brings HMR + much faster
-  builds; the swap is mechanical for an Inertia app (`vite.config.ts`, `@vite` directive replaces
-  `mix()` helpers).
+- **Vite** (`vite.config.mjs`, with `laravel-vite-plugin` and `@vitejs/plugin-react`) builds *both*
+  stacks from three inputs: the legacy `resources/assets/js/app.js` and
+  `resources/assets/less/application.less`, and the modern `resources/js/react-app.tsx`. Output goes
+  to `public/build/` (gitignored) with a `manifest.json` that Blade's `@vite` directive reads.
+- Scripts: `yarn build` (or `yarn production`) for a production build; `yarn dev` / `yarn watch`
+  for an unminified build with source maps (once / on every change); `yarn hot` runs the Vite dev
+  server with hot reloading, and writes `public/hot` so `@vite` serves from it while it runs.
+- Vite 8 needs **Node 20.19+** (CI uses Node 24). Yarn 4 comes from Corepack (`corepack enable`),
+  pinned by `packageManager` in `package.json`. Dependency install scripts are off (Yarn 4's
+  default); allow one with `dependenciesMeta.<name>.built: true` only if a package truly needs it.
+- Legacy-bundle quirks: Bootstrap 3, select2 3 and inline Blade scripts expect a global jQuery, so
+  `app.js` imports `jquery-global.js` before them. The Bootstrap/Material icon fonts and the CSS
+  images are referenced relative to the Less, so Vite bundles them into `public/build/assets/`;
+  don't use root-absolute `url(/...)` in the Less, which breaks under the dev server.
+- Jest still compiles with Babel (`.babelrc`, `babel-jest`); Vite doesn't use Babel.
+- PHP tests don't need a frontend build: `Tests\TestCase` calls `withoutVite()`.
 
 Note: yarn/node commands run directly on the host; PHP commands run inside the Docker container
 (see CLAUDE.md / the README).
 
 ## How the modern stack is wired
 
-`resources/views/app.blade.php` loads the Mix-built `react-app.js`, sets up browser-side Sentry,
+`resources/views/app.blade.php` loads `react-app.tsx` through `@vite`, sets up browser-side Sentry,
 and renders the `@inertia` root. Controllers return `Inertia::render('Page', [...props])`; props
 are serialized via `app/Http/Resources/*` (e.g. `TrainingRecordResource`, `CourseResource`).
 
@@ -64,14 +73,13 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 ### Tooling milestones along the way
 
-- **Now**: delete `elixir.json`; bump Node. (Jest runs in CI again, covering the two legacy
-  `.jsx` suites; `resources/js` has no tests yet.)
-- **With the Laravel 9 hop**: switch Mix → Vite (the natural moment, since Laravel 9 ships Vite).
+- **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
+  suites; `resources/js` has no tests yet.)
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 
 ### Definition of done
 
-The frontend migration is finished when `resources/assets/` is deleted, `webpack.mix.js` is
-replaced by `vite.config.ts`, Bootstrap 3 / jQuery / select2 leave `package.json`, and the only
+The frontend migration is finished when `resources/assets/` is deleted (and with it the legacy
+inputs in `vite.config.mjs`), Bootstrap 3 / jQuery / select2 leave `package.json`, and the only
 Blade templates remaining are emails, the Inertia root, and (optionally) auth pages.
