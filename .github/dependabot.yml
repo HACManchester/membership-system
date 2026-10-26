@@ -1,0 +1,146 @@
+# Dependabot version updates. See docs/project-health.md ("Dependency updates") for the policy.
+#
+# Every ecosystem runs on Monday morning, so a week's updates arrive in one batch.
+# Minor and patch updates are grouped; majors come as individual PRs, because each one is
+# an upgrade to plan. Security updates are grouped too, and ignore the cooldown.
+#
+# The ignore rules hold back majors that are planned work or that the current build can't
+# take. Each says what lifts it; delete the rule when that happens.
+#
+# Merging is never deployment: production is deployed by hand. The auto-merge workflow
+# (.github/workflows/dependabot-automerge.yml) only arms auto-merge for dev dependencies and
+# GitHub Actions at patch/minor level.
+version: 2
+updates:
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/London
+    # A release has a week to be yanked (or found compromised) before we take it.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels: [dependencies, php]
+    ignore:
+      # Framework majors are planned upgrades (upgrade-notes/laravel-*.md).
+      # Lifted: delete when starting the next Laravel upgrade.
+      - dependency-name: laravel/framework
+        update-types: ["version-update:semver-major"]
+      # Revenue-critical. Every major needs a GoCardless sandbox run
+      # (vendor/bin/phpunit --group gocardless-sandbox) and a billing-aware deploy.
+      # Lifted: never; majors are done by hand.
+      - dependency-name: gocardless/gocardless-pro
+        update-types: ["version-update:semver-major"]
+      # Must move in step with @inertiajs/react (the npm block ignores it too).
+      # Lifted: never; Inertia majors are coordinated by hand across both ecosystems.
+      - dependency-name: inertiajs/inertia-laravel
+        update-types: ["version-update:semver-major"]
+      # PHPUnit majors change the test API and its PHP floor (13 needed PHP 8.4).
+      # Lifted: delete when starting the next PHPUnit upgrade.
+      - dependency-name: phpunit/phpunit
+        update-types: ["version-update:semver-major"]
+    groups:
+      composer-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      # gocardless/gocardless-pro gets its own PR even at minor/patch: it needs a sandbox run.
+      gocardless:
+        patterns: ["gocardless/*"]
+        update-types: [minor, patch]
+      # Split by dependency type so the dev group can be auto-merged on its own.
+      composer-dev:
+        dependency-type: development
+        update-types: [minor, patch]
+      composer-production:
+        dependency-type: production
+        update-types: [minor, patch]
+
+  # Yarn Berry (packageManager in package.json) is handled by the npm ecosystem.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/London
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels: [dependencies, javascript]
+    ignore:
+      # See inertiajs/inertia-laravel above.
+      # Lifted: never; Inertia majors are coordinated by hand.
+      - dependency-name: "@inertiajs/*"
+        update-types: ["version-update:semver-major"]
+      # Laravel Mix 6 breaks on webpack 5.106+ (#237 caps it at ~5.105.4).
+      # Lifted: delete when the Vite migration removes Mix and webpack.
+      - dependency-name: webpack
+        versions: [">=5.106.0"]
+      # Mix 6 peer-requires webpack-cli ^4 and checks for sass-loader ^12 and
+      # @pmmmwh/react-refresh-webpack-plugin ^0.5 at build time; the other loaders and
+      # react-refresh are wired into its webpack config. Majors of these broke the build
+      # before (#205). Lifted: delete when the Vite migration removes Mix.
+      - dependency-name: laravel-mix
+        update-types: ["version-update:semver-major"]
+      - dependency-name: webpack-cli
+        update-types: ["version-update:semver-major"]
+      - dependency-name: less-loader
+        update-types: ["version-update:semver-major"]
+      - dependency-name: sass-loader
+        update-types: ["version-update:semver-major"]
+      - dependency-name: ts-loader
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-refresh
+        update-types: ["version-update:semver-major"]
+      # Still 0.x, so 0.6 is the breaking release.
+      - dependency-name: "@pmmmwh/react-refresh-webpack-plugin"
+        versions: [">=0.6.0"]
+      # Babel 8 breaks Mix 6, which peer-requires @babel/core ^7 (#227 failed on it), and
+      # the presets must move with the core.
+      # Lifted: delete when the Vite migration removes Babel.
+      - dependency-name: "@babel/*"
+        update-types: ["version-update:semver-major"]
+      # The legacy Blade pages (including payment and admin pages) are built on jQuery 3,
+      # Bootstrap 3 and Select2 3. Lifted: delete each when the last Blade page using it
+      # moves to Inertia.
+      - dependency-name: jquery
+        versions: [">=4.0.0"]
+      - dependency-name: bootstrap
+        versions: [">=4.0.0"]
+      - dependency-name: select2
+        versions: [">=4.0.0"]
+      # MUI majors change component APIs across every Inertia page.
+      # Lifted: never; MUI majors are done by hand.
+      - dependency-name: "@mui/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      npm-dev:
+        dependency-type: development
+        update-types: [minor, patch]
+      npm-production:
+        dependency-type: production
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/London
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    # No "github_actions" label exists, and setting labels stops Dependabot creating one.
+    labels: [dependencies]
+    groups:
+      # Majors stay separate so a grouped PR can still be auto-merged.
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]
