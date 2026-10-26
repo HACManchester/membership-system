@@ -45,7 +45,7 @@ class AuditSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -86,7 +86,7 @@ class AuditSubscriptionChargesTest extends TestCase
     {
         $user = User::factory()->create(['status' => 'active', 'active' => true]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => $chargeDate,
             'status' => 'paid',
@@ -150,7 +150,7 @@ class AuditSubscriptionChargesTest extends TestCase
             'mandate_id' => '',
         ]);
 
-        return factory(SubscriptionCharge::class)->create([
+        return SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => $chargeDate ?: Carbon::now()->subMonths(2),
             'status' => 'due',

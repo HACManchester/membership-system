@@ -73,7 +73,7 @@ class CheckLeavingUsersTest extends TestCase
             'subscription_expires' => null,
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',

@@ -72,7 +72,7 @@ class PaymentEventHandlerTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'due',
             'amount' => 0, // Will be updated from payment
@@ -110,7 +110,7 @@ class PaymentEventHandlerTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'due',
             'amount' => 0,
@@ -146,7 +146,7 @@ class PaymentEventHandlerTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'due',
         ]);
@@ -182,13 +182,13 @@ class PaymentEventHandlerTest extends TestCase
 
         // An older outstanding charge, e.g. from a previous failed billing month -
         // it must not be picked up in place of the charge the payment was made for
-        $olderCharge = factory(SubscriptionCharge::class)->create([
+        $olderCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'due',
             'charge_date' => Carbon::now()->subDays(2),
         ]);
 
-        $laterCharge = factory(SubscriptionCharge::class)->create([
+        $laterCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'due',
             'charge_date' => Carbon::now()->subDays(1),
@@ -252,7 +252,7 @@ class PaymentEventHandlerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'processing',
             'amount' => 2200,
@@ -337,7 +337,7 @@ class PaymentEventHandlerTest extends TestCase
         $user = User::factory()->create();
         $paymentDate = Carbon::now();
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'status' => 'processing',
         ]);

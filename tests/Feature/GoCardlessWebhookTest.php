@@ -99,7 +99,7 @@ class GoCardlessWebhookTest extends TestCase
             'subscription_expires' => Carbon::now(),
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'payment_date' => null,
@@ -234,13 +234,13 @@ class GoCardlessWebhookTest extends TestCase
             'mandate_id' => 'MD_TEST_123',
         ]);
 
-        $pending = factory(SubscriptionCharge::class)->create([
+        $pending = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->addDays(7),
             'status' => 'pending',
         ]);
 
-        $due = factory(SubscriptionCharge::class)->create([
+        $due = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -302,7 +302,7 @@ class GoCardlessWebhookTest extends TestCase
         ]);
 
         // subscription_charges.amount is in pounds, like payments.amount
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'payment_date' => null,

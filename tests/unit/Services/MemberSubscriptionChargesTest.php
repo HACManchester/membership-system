@@ -185,7 +185,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->method('createCharge')
             ->willReturnCallback($this->consecutive(
                 new \Exception('database error'),
-                factory(SubscriptionCharge::class)->make(['user_id' => 1])
+                SubscriptionCharge::factory()->make(['user_id' => 1])
             ));
 
         $service = new MemberSubscriptionCharges(
@@ -231,19 +231,19 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD_TEST',
         ]);
 
-        $todayCharge = factory(SubscriptionCharge::class)->create([
+        $todayCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'pending',
         ]);
 
-        $pastCharge = factory(SubscriptionCharge::class)->create([
+        $pastCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(2),
             'status' => 'pending',
         ]);
 
-        $futureCharge = factory(SubscriptionCharge::class)->create([
+        $futureCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->addDays(2),
             'status' => 'pending',
@@ -279,14 +279,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD987654321',
         ]);
 
-        $charge1 = factory(SubscriptionCharge::class)->create([
+        $charge1 = SubscriptionCharge::factory()->create([
             'user_id' => $user1->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
             'status' => 'due',
         ]);
 
-        $charge2 = factory(SubscriptionCharge::class)->create([
+        $charge2 = SubscriptionCharge::factory()->create([
             'user_id' => $user2->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -346,7 +346,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 27,
@@ -386,13 +386,13 @@ class MemberSubscriptionChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $goCardlessUser->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $balanceUser->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -429,7 +429,7 @@ class MemberSubscriptionChargesTest extends TestCase
         ]);
 
         $charges = collect([3, 2, 1])->map(function ($monthsAgo) use ($user) {
-            return factory(SubscriptionCharge::class)->create([
+            return SubscriptionCharge::factory()->create([
                 'user_id' => $user->id,
                 'charge_date' => Carbon::now()->subMonths($monthsAgo),
                 'status' => 'due',
@@ -456,7 +456,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -480,7 +480,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -505,7 +505,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -530,13 +530,13 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $maxAge = config('membership.billing.max_charge_age_days');
 
-        $staleCharge = factory(SubscriptionCharge::class)->create([
+        $staleCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays($maxAge + 1),
             'status' => 'due',
         ]);
 
-        $currentCharge = factory(SubscriptionCharge::class)->create([
+        $currentCharge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -572,7 +572,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -630,7 +630,7 @@ class MemberSubscriptionChargesTest extends TestCase
         ]);
 
         foreach ([$goodUser1, $failingUser, $goodUser2] as $user) {
-            factory(SubscriptionCharge::class)->create([
+            SubscriptionCharge::factory()->create([
                 'user_id' => $user->id,
                 'charge_date' => Carbon::now(),
                 'amount' => 0,
@@ -686,7 +686,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         // Older charge from a previous failed month, with its failed payment attached
         // so the retry filter skips it
-        $oldCharge = factory(SubscriptionCharge::class)->create([
+        $oldCharge = SubscriptionCharge::factory()->create([
             'user_id' => $failingUser->id,
             'charge_date' => Carbon::now()->subMonth(),
             'amount' => 0,
@@ -701,13 +701,13 @@ class MemberSubscriptionChargesTest extends TestCase
             'reference' => (string)$oldCharge->id,
         ]);
 
-        $newCharge = factory(SubscriptionCharge::class)->create([
+        $newCharge = SubscriptionCharge::factory()->create([
             'user_id' => $failingUser->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
             'status' => 'due',
         ]);
-        $laterCharge = factory(SubscriptionCharge::class)->create([
+        $laterCharge = SubscriptionCharge::factory()->create([
             'user_id' => $laterUser->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -752,7 +752,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -787,7 +787,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',

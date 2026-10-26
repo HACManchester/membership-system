@@ -105,7 +105,7 @@ class CheckMembershipStatusTest extends TestCase
             'subscription_expires' => Carbon::now()->subDays(5), // Appears expired
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(10),
             'payment_date' => Carbon::now()->subDays(8),

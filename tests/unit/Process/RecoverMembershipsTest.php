@@ -29,7 +29,7 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Create a valid payment that extends beyond expiry
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(2),
             'status' => 'paid',
@@ -57,7 +57,7 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Even with a newer payment, shouldn't extend if already valid
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(1),
             'status' => 'paid',
@@ -84,7 +84,7 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Create payment that should recover membership
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(3),
             'status' => 'paid',
@@ -113,7 +113,7 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Create recent payment
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(1),
             'status' => 'paid',
@@ -140,7 +140,7 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Payment is older than current expiry
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(40),
             'status' => 'paid',
@@ -163,7 +163,7 @@ class RecoverMembershipsTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'paid',
@@ -185,7 +185,7 @@ class RecoverMembershipsTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'paid',
@@ -229,14 +229,14 @@ class RecoverMembershipsTest extends TestCase
         ]);
 
         // Create unpaid charges
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'pending',
             'payment_date' => null,
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(1),
             'status' => 'cancelled',
@@ -261,7 +261,7 @@ class RecoverMembershipsTest extends TestCase
             'payment_method' => 'cash', // Different payment method
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'paid',

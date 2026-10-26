@@ -40,7 +40,7 @@ class SubscriptionCancellationTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD123',
         ]);
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $member->id,
             'charge_date' => Carbon::now()->addDays(5),
             'status' => 'pending',
@@ -92,7 +92,7 @@ class SubscriptionCancellationTest extends TestCase
             'payment_method' => 'gocardless',
             'subscription_id' => 'SB123',
         ]);
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $member->id,
             'charge_date' => Carbon::now()->addDays(5),
             'status' => 'due',

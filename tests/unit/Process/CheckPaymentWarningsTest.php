@@ -106,7 +106,7 @@ class CheckPaymentWarningsTest extends TestCase
         ]);
 
         // Create payment that's older than current subscription_expires
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now()->subDays(10),
             'status' => 'paid',

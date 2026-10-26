@@ -1,6 +1,9 @@
 <?php namespace BB\Entities;
 
 use Carbon\Carbon;
+use Database\Factories\SubscriptionChargeFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
@@ -17,10 +20,12 @@ use Laracasts\Presenter\PresentableTrait;
  * @property-read User|null $user
  * @package BB\Entities
  */
+#[UseFactory(SubscriptionChargeFactory::class)]
 class SubscriptionCharge extends Model
 {
 
-    use PresentableTrait;
+    /** @use HasFactory<SubscriptionChargeFactory> */
+    use HasFactory, PresentableTrait;
 
     protected $presenter = 'BB\Presenters\SubscriptionChargePresenter';
 

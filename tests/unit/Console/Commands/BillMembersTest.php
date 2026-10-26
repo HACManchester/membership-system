@@ -39,7 +39,7 @@ class BillMembersTest extends TestCase
             'display_name' => 'Test User',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -87,7 +87,7 @@ class BillMembersTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::parse('2026-10-01'),
             'amount' => 0,
@@ -118,7 +118,7 @@ class BillMembersTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 27,
@@ -161,7 +161,7 @@ class BillMembersTest extends TestCase
                 'mandate_id' => "MD{$index}",
             ]);
 
-            $charge = factory(SubscriptionCharge::class)->create([
+            $charge = SubscriptionCharge::factory()->create([
                 'user_id' => $user->id,
                 'charge_date' => Carbon::now(),
                 'amount' => 0,
@@ -215,7 +215,7 @@ class BillMembersTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'amount' => 0,
@@ -253,13 +253,13 @@ class BillMembersTest extends TestCase
             'monthly_subscription' => 22,
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $goCardlessUser->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
         ]);
 
-        factory(SubscriptionCharge::class)->create([
+        SubscriptionCharge::factory()->create([
             'user_id' => $balanceUser->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
@@ -291,7 +291,7 @@ class BillMembersTest extends TestCase
             'mandate_id' => 'MD123456789',
         ]);
 
-        $charge = factory(SubscriptionCharge::class)->create([
+        $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
             'status' => 'due',
