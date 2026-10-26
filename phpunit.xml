@@ -21,6 +21,7 @@
     <server name="TELESCOPE_ENABLED" value="false"/>
     <server name="FORCE_SECURE" value="false"/>
     <server name="TELEGRAM_NOTIFICATIONS_DISABLED" value="true"/>
+    <server name="TRUSTED_PROXIES" value="10.0.0.1" force="true"/>
   </php>
   <source>
     <include>

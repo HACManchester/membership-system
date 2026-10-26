@@ -74,3 +74,9 @@ Mailhog in the compose stack catches everything.
 The live system is self-hosted with Docker Compose, deployed from this repository's `master`
 branch. Database changes go through Laravel migrations. For deployment access or environment
 details, contact the membership committee.
+
+The app sits behind an HTTPS reverse proxy, and Laravel only knows a request was HTTPS if it trusts
+that proxy. Set `TRUSTED_PROXIES` to the proxy's address: a comma-separated list of IPs or CIDR
+ranges, or `*` if nothing but the proxy can reach the app (`config/trustedproxy.php`). Without it,
+generated URLs are `http://`, and browsers block them from the `https://` page. That breaks Vite's
+module scripts and Inertia's redirects.
