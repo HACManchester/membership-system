@@ -46,7 +46,8 @@ admin updates, and subscription changes; boolean casting on `User` is incomplete
 **Purpose:** a one-time health-and-safety induction gate that unlocks physical access features.
 
 **Key code:** `app/Http/Controllers/GeneralInductionController.php`,
-`User.induction_completed` / `inducted_by`, `GeneralInductionCodeRule` (code stored in Settings).
+`User.induction_completed` / `inducted_by`, `GeneralInductionCodeRule` (code stored in Settings,
+see below).
 
 **Flow:** member attends an induction, receives a code, submits it at `/general_induction`
 (optionally registering a key fob in the same step). `UserRepository::recordInductionCompleted()`
@@ -54,6 +55,27 @@ records completion and who inducted them.
 
 **What it gates:** key fob / access code registration (`KeyFobController@store` checks
 `induction_completed`), and is a prerequisite for equipment training flows.
+
+**Who sees the code:** inducted members, on the induction page, so they can induct others. Members
+who haven't been inducted never receive it.
+
+**Settings:** the code lives in the `settings` table (`BB\Entities\Settings`, keyed by `key`).
+The settings the app knows about are the cases of `BB\Support\SettingKey`, each with its label,
+description and validation rules. Read one with `Settings::get(SettingKey::...)` and write one
+with `Settings::set(...)`.
+
+Admins change them at **Admin → Settings** (`/admin/settings`, `SettingsController`).
+
+- **Authorization:** `SettingsPolicy` allows admins only, with `role:admin` on the routes as
+  defence in depth.
+- **Keys:** the update route binds the enum, so a key that isn't a `SettingKey` case is a 404.
+  To add a setting, add a case and a structure-only migration if needed. Seeding its value is a
+  data step, so agree how it gets set rather than putting it in a migration.
+- **Display:** values are masked on the page until an admin shows them.
+- **Auditing:** each change records `updated_by`/`updated_at` on the row and writes an
+  `audit_log` row (`setting_updated`, `"<key> changed"`) via the `SettingUpdated` event.
+  The value is never logged. The form field (`setting_value`) is in the exception handler's
+  `dontFlash` list, so a rejected value isn't kept in the session either.
 
 **Good:** small, single-purpose; combines fob registration to reduce onboarding friction.
 
@@ -205,7 +227,8 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
 - **Auditing** — `owen-it/laravel-auditing` is installed but no model uses its `Auditable` trait
   (so the package is currently dormant). The live audit mechanism
   is the custom `UserAuditObserver` writing to an `AuditLog` table for three User flags
-  (`induction_completed`, `trusted`, `key_holder`). Worth unifying.
+  (`induction_completed`, `trusted`, `key_holder`), plus `setting_updated` rows from the
+  settings page (key and admin only, no value). Worth unifying.
 - **TelegramHelper** — leveled notifications (job/log/render/error/warning) to an operational
   chat; gracefully no-ops when unconfigured. Exception notifications are rate-limited
   (`app/Exceptions/Handler.php`).
