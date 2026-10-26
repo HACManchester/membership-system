@@ -53,14 +53,6 @@ $factory->define('BB\Entities\ProfileData', function (Generator $faker) {
     ];
 });
 
-$factory->define('BB\Entities\Role', function (Generator $faker) {
-    return [
-        'name'        => $faker->word(),
-        'title'       => $faker->word(),
-        'description' => $faker->sentence(),
-    ];
-});
-
 $factory->define('BB\Entities\KeyFob', function (Generator $faker) {
     return [
         'user_id' => 0,
