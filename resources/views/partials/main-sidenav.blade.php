@@ -86,7 +86,7 @@
 <nav class="mainSidenav" role="navigation">
     <div class="sidenav-brand">
         <a href="{{ route('home') }}">
-            <img src="{{ mix('/img/logo-new.png') }}" height="100" />
+            <img src="{{ asset('img/logo-new.png') }}" height="100" />
         </a>
     </div>
 

@@ -14,7 +14,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         // Blade views reference the built frontend assets, which tests don't need
-        $this->withoutMix();
+        $this->withoutVite();
 
         $this->failOnDeprecations();
     }

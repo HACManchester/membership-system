@@ -12,6 +12,7 @@ storage/tmp
 database.sqlite
 yarn-error.log
 /public/build
+/public/hot
 /public/css/*.css
 /public/mix-manifest.json
 /public/fonts

@@ -74,8 +74,10 @@
 //
 //## Specify custom location and filename of the included Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
-//** Load fonts from this directory.
-@icon-font-path: "/fonts/";
+//** Load fonts from this directory. Relative to application.less, which Vite
+//** resolves url()s against, so the fonts are bundled from the package.
+@icon-font-path: "../../../node_modules/bootstrap/fonts/";
+@material-icon-font-path: "../../../node_modules/material-design-icons/iconfont/";
 //** File name for all font files.
 @icon-font-name: "glyphicons-halflings-regular";
 //** Element ID within SVG icon file.
