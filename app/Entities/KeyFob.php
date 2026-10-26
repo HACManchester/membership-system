@@ -1,5 +1,8 @@
 <?php namespace BB\Entities;
 
+use Database\Factories\KeyFobFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,8 +16,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property User    $user
  * @package BB\Entities
  */
+#[UseFactory(KeyFobFactory::class)]
 class KeyFob extends Model
 {
+    /** @use HasFactory<KeyFobFactory> */
+    use HasFactory;
+
 
     /**
      * The database table used by the model.

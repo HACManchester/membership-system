@@ -36,7 +36,7 @@ class KeyFobTest extends TestCase
     public function a_member_can_view_their_own_keyfobs()
     {
         $user = factory(User::class)->create(['induction_completed' => true]);
-        $fobs = factory(KeyFob::class)->times(3)->create(['user_id' => $user->id]);
+        $fobs = KeyFob::factory()->count(3)->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get("/account/{$user->id}/keyfobs")->assertStatus(200);
         foreach ($fobs as $fob) {
@@ -57,7 +57,7 @@ class KeyFobTest extends TestCase
     public function an_admin_can_view_another_members_keyfobs()
     {
         $other = factory(User::class)->create();
-        $fobs = factory(KeyFob::class)->times(3)->create(['user_id' => $other->id]);
+        $fobs = KeyFob::factory()->count(3)->create(['user_id' => $other->id]);
 
         $response = $this->actingAs($this->admin())->get("/account/{$other->id}/keyfobs")->assertStatus(200);
         foreach ($fobs as $fob) {
@@ -108,7 +108,7 @@ class KeyFobTest extends TestCase
     public function a_member_can_mark_their_own_keyfob_as_lost()
     {
         $user = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $user->id]);
+        $fob = KeyFob::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user)
             ->delete("/account/{$user->id}/keyfobs/{$fob->id}")
@@ -122,7 +122,7 @@ class KeyFobTest extends TestCase
     {
         $user = factory(User::class)->create();
         $other = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $other->id]);
+        $fob = KeyFob::factory()->create(['user_id' => $other->id]);
 
         $this->actingAs($user)
             ->delete("/account/{$other->id}/keyfobs/{$fob->id}")
@@ -135,7 +135,7 @@ class KeyFobTest extends TestCase
     public function an_admin_can_mark_another_members_keyfob_as_lost()
     {
         $other = factory(User::class)->create(['induction_completed' => true]);
-        $fob = factory(KeyFob::class)->create(['user_id' => $other->id]);
+        $fob = KeyFob::factory()->create(['user_id' => $other->id]);
 
         $this->actingAs($this->admin())
             ->delete("/account/{$other->id}/keyfobs/{$fob->id}")

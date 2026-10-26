@@ -53,16 +53,6 @@ $factory->define('BB\Entities\ProfileData', function (Generator $faker) {
     ];
 });
 
-$factory->define('BB\Entities\KeyFob', function (Generator $faker) {
-    return [
-        'user_id' => 0,
-        // Upper case: a key_id starting "ff" is an access code, shown differently
-        'key_id'  => Str::upper(Str::random(12)),
-        'active'  => 1,
-        'lost'    => 0,
-    ];
-});
-
 $factory->define('BB\Entities\SubscriptionCharge', function (Generator $faker) {
     return [
         'user_id' => function () {

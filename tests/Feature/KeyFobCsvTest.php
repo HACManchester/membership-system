@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\AccessLockdown;
+use BB\Entities\KeyFob;
 use BB\Entities\Role;
 use BB\Entities\User;
 use PHPUnit\Framework\Attributes\Test;
@@ -21,10 +22,10 @@ class KeyFobCsvTest extends TestCase
         $user_4 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => 'Inactive Fob']);
         $user_5 = factory('BB\Entities\User')->create(['active' => true, 'announce_name' => 'No fob']);
 
-        $keyfob_1 = factory('BB\Entities\KeyFob')->create(['key_id' => 'keyfob_1', 'active' => true, 'user_id' => $user_1->id]);
-        $keyfob_2 = factory('BB\Entities\KeyFob')->create(['key_id' => 'keyfob_2', 'active' => true, 'user_id' => $user_2->id]);
-        $keyfob_3 = factory('BB\Entities\KeyFob')->create(['key_id' => 'keyfob_3', 'active' => true, 'user_id' => $user_3->id]);
-        $keyfob_4 = factory('BB\Entities\KeyFob')->create(['key_id' => 'keyfob_4', 'active' => false, 'user_id' => $user_4->id]);
+        $keyfob_1 = KeyFob::factory()->create(['key_id' => 'keyfob_1', 'active' => true, 'user_id' => $user_1->id]);
+        $keyfob_2 = KeyFob::factory()->create(['key_id' => 'keyfob_2', 'active' => true, 'user_id' => $user_2->id]);
+        $keyfob_3 = KeyFob::factory()->create(['key_id' => 'keyfob_3', 'active' => true, 'user_id' => $user_3->id]);
+        $keyfob_4 = KeyFob::factory()->create(['key_id' => 'keyfob_4', 'active' => false, 'user_id' => $user_4->id]);
 
         $response = $this->get('/api/keyfobs/csv?api_token=' . $token->api_token);
 
@@ -139,7 +140,7 @@ CSV;
             $user->assignRole(Role::findByName($role));
         }
 
-        factory('BB\Entities\KeyFob')->create([
+        KeyFob::factory()->create([
             'key_id' => $keyId,
             'active' => true,
             'user_id' => $user->id,

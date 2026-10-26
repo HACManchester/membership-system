@@ -101,7 +101,7 @@ class KeyFobCsvContractTest extends TestCase
             'announce_name' => $announceName,
         ]);
 
-        factory(KeyFob::class)->create([
+        KeyFob::factory()->create([
             'key_id' => $keyId,
             'active' => true,
             'user_id' => $user->id,
