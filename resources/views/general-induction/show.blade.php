@@ -113,7 +113,7 @@
                         <strong>General Induction code</strong>
                         <p>For members to prove they've attended a general induction, they will need to enter this code when
                             logged in on the members system.</p>
-                        <div class="infobox__code text-center">{!! $general_induction_code !!}</div>
+                        <div class="infobox__code text-center">{{ $general_induction_code }}</div>
                         <div class="text-center">
                             <p><strong>Only share this code after the general induction.</strong></p>
                         </div>

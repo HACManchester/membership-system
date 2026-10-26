@@ -2,6 +2,7 @@
 
 namespace BB\Providers;
 
+use BB\Events\SettingUpdated;
 use BB\Events\TrainingRecords\TrainingRecordCompletedEvent;
 use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
@@ -9,6 +10,7 @@ use BB\Listeners\DiscourseSyncSubscriber;
 use BB\Listeners\EmailMemberAboutDeclinedPhoto;
 use BB\Listeners\EmailMemberAboutTrustedStatus;
 use BB\Listeners\ExtendMembership;
+use BB\Listeners\RecordSettingChangeInAuditLog;
 use BB\Listeners\Notifications\TrainingRecords\TrainingRecordCompletedListener;
 use BB\Listeners\Notifications\TrainingRecords\TrainingRecordMarkedAsTrainerListener;
 use BB\Listeners\Notifications\TrainingRecords\TrainingRecordRequestedListener;
@@ -57,6 +59,9 @@ class EventServiceProvider extends ServiceProvider
 		],
 		TrainingRecordMarkedAsTrainerEvent::class => [
 			TrainingRecordMarkedAsTrainerListener::class
+		],
+		SettingUpdated::class => [
+			RecordSettingChangeInAuditLog::class
 		]
 	];
 

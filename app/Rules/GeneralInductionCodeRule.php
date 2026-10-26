@@ -3,6 +3,7 @@
 namespace BB\Rules;
 
 use BB\Entities\Settings;
+use BB\Support\SettingKey;
 use Illuminate\Contracts\Validation\Rule;
 
 class GeneralInductionCodeRule implements Rule
@@ -16,7 +17,7 @@ class GeneralInductionCodeRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $actual_induction_code = Settings::get("general_induction_code");
+        $actual_induction_code = Settings::get(SettingKey::GeneralInductionCode);
 
         return trim(strtolower($value)) === trim(strtolower($actual_induction_code));
     }

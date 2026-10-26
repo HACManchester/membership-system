@@ -240,6 +240,16 @@ Route::group(array('middleware' => 'role:admin'), function () {
 
 
 ##########################
+# Settings
+##########################
+
+Route::group(array('middleware' => 'role:admin'), function () {
+    Route::get('admin/settings', ['as' => 'settings.index', 'uses' => 'SettingsController@index']);
+    Route::put('admin/settings/{settingKey}', ['as' => 'settings.update', 'uses' => 'SettingsController@update']);
+});
+
+
+##########################
 # Disciplinary
 ##########################
 

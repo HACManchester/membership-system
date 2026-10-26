@@ -3,7 +3,6 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
-use BB\Entities\Settings;
 use BB\Support\CurrentUser;
 
 class AccountController extends Controller
@@ -88,13 +87,10 @@ class AccountController extends Controller
         $this->bbCredit->setUserId($user->id);
         $memberBalance = $this->bbCredit->getBalanceFormatted();
 
-        $doorCode = Settings::get("emergency_door_key_storage_pin");
-
         $hasSubscriptionPaymentsInProgress = $this->hasSubscriptionPaymentsInProgress($user);
 
         return \View::make('account.show')
             ->with('user', $user)
-            ->with('doorCode', $doorCode)
             ->with('equipmentRequiringInduction', $equipmentRequiringInduction)
             ->with('newAddress', $newAddress)
             ->with('subscriptionCharges', $subscriptionCharges)

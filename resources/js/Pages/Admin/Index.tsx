@@ -21,6 +21,7 @@ type Props = {
     payments: string;
     subCharges: string;
     accessLockdown: string;
+    settings: string;
   };
 };
 
@@ -51,6 +52,10 @@ const Index = ({ urls }: Props) => {
     {
       title: 'Space Access Lockdown',
       links: [{ label: 'Shut the space to general membership', href: urls.accessLockdown }],
+    },
+    {
+      title: 'Settings',
+      links: [{ label: 'Change the general induction code', href: urls.settings }],
     },
   ];
 

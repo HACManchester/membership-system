@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use BB\Entities\Settings;
 use BB\Entities\User;
+use BB\Support\SettingKey;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,7 +24,7 @@ class OnboardingTest extends TestCase
     #[Test]
     public function a_new_member_can_progress_through_the_full_onboarding_journey()
     {
-        Settings::change('general_induction_code', self::INDUCTION_CODE);
+        Settings::set(SettingKey::GeneralInductionCode, self::INDUCTION_CODE);
 
         $email = $this->faker->unique()->safeEmail();
 

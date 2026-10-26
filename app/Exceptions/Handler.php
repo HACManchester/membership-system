@@ -40,6 +40,8 @@ class Handler extends ExceptionHandler
         'current_password',
         'password',
         'password_confirmation',
+        // Settings hold secrets such as the general induction code.
+        'setting_value',
     ];
 
     /**

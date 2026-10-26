@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use BB\Entities\Settings;
 use BB\Rules\GeneralInductionCodeRule;
 use BB\Rules\KeyFobRule;
+use BB\Support\SettingKey;
 use Illuminate\Validation\Rules\Unique;
 
 class GeneralInductionController extends Controller
@@ -30,7 +31,7 @@ class GeneralInductionController extends Controller
     public function show(Request $request)
     {
         $user = CurrentUser::get();
-        $induction_code = Settings::get("general_induction_code");
+        $induction_code = Settings::get(SettingKey::GeneralInductionCode);
         $prefill_code = $request->has('code') ? $request->input('code') : '';
 
         return view('general-induction.show')
