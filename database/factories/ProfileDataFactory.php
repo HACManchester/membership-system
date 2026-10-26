@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use BB\Entities\ProfileData;
+use BB\Entities\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class ProfileDataFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => null,
+            'user_id' => User::factory(),
             'profile_photo' => false,
             'new_profile_photo' => false,
             'profile_photo_private' => false,
