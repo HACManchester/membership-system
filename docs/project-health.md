@@ -41,7 +41,7 @@ tests/                Feature/, Integration/, Unit/, Mailer/; shared helpers in 
 | --- | --- | --- |
 | Framework & dependencies | 4/5 | Laravel 13 on PHP 8.4, Vite 8 on Node 20.19+, Dependabot proposing updates weekly. Still behind: Inertia 2, MUI 6, and the legacy Bootstrap 3 / jQuery / select2 stack. |
 | Tests | 4/5 | 92 files, 649 tests. Excellent payment-lifecycle integration tests; every GET route smoke-tested; the GoCardless webhook endpoint and authorization middleware covered; any deprecation fails the suite. The JS frontend is barely tested. See testing.md. |
-| Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 29 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
+| Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 30 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
 | Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators/Presenters vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
 | Frontend | 3/5 | Healthy direction (Inertia + React + TS + MUI, ESLint flat config, Prettier) but the legacy Blade/jQuery/Bootstrap-3 stack still serves most pages. See frontend.md. |
 | Docs & dev experience | 4/5 | Strong README, complete `.env.example`, documented Docker setup, this docs folder. |
@@ -130,8 +130,7 @@ Kept by decision:
 ### Medium (weeks)
 
 1. Turn on PHPStan's missing-type checks (level 6) a file at a time.
-2. Split the god classes: `app/Entities/User.php` (~561 lines) and
-   `app/Http/Controllers/AccountController.php` (~557 lines).
+2. Split the god class `app/Entities/User.php` (~585 lines). (`AccountController` has been split.)
 3. Normalise money units (`payments.amount` and `monthly_subscription` are pounds —
    the former as floats — while `cash_balance` and `config/membership.php` are pence; migrate to
    integer pence throughout).

@@ -64,8 +64,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 1. **Member-facing, high-traffic, simple**: leaderboard — a small read-mostly page, a good warm-up
    (the members directory is done).
 2. **Account/profile cluster**: registration, profile edit, account settings. Biggest UX win;
-   pairs with splitting `AccountController` (architecture.md). Includes the photo-upload/approval
-   flow.
+   `AccountController` is already split into smaller controllers, which can convert one at a
+   time. Includes the photo-upload/approval flow.
 3. **Admin screens**: member admin list + detail (the 389-line
    `member-admin-action-bar.blade.php` is the largest legacy template in the repo), payments/
    finance screens, stats.

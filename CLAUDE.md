@@ -75,8 +75,8 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
   signature-verified — keep it that way.
 - The keyfob CSV export (`KeyFobCsvController`) is a de-facto contract with the door system —
   coordinate any output change with the acs team.
-- `User.php` and `AccountController.php` are ~560-line god classes scheduled for splitting — avoid
-  adding to them; extract instead.
+- `User.php` is a ~585-line god class scheduled for splitting — avoid adding to it; extract
+  instead.
 
 ===
 

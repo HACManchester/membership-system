@@ -108,21 +108,25 @@ In order of value:
 
 ### Step 3 — shrink the god classes
 
-- `app/Entities/User.php` (~561 lines): extract concerns into traits/services along its natural
+- `app/Entities/User.php` (~585 lines): extract concerns into traits/services along its natural
   seams — payment/subscription methods, role methods (already partly in `UserRoleTrait`), and the
   lifecycle transitions (`setPaymentWarning`, `setSuspended`, …) into a guarded `MembershipStatus`
   service or small state machine.
-- `AccountController` (~557 lines): split into Registration, Profile (admin), and Subscription
-  settings controllers as those pages go Inertia.
+- `AccountController` ✅ done: registration, email confirmation, subscription changes and admin
+  updates now have their own controllers (`MemberRegistrationController`,
+  `EmailConfirmationController`, `AccountSubscriptionController`, `MemberAdminController` and
+  others).
 
 ### Step 4 — ratchet quality
 
 - PHPStan 2 (Larastan 3) runs at level 8, with level 6's missing-type checks (`missingType.*`)
   switched off: those are ~870 findings across most files, best turned on a file at a time.
   Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
-  needs to know their models. `phpstan-baseline.neon` holds 29 entries, all checked and found
+  needs to know their models. `phpstan-baseline.neon` holds 30 entries, all checked and found
   safe: mostly guarantees PHPStan can't see, such as a member always having a profile row, or a
-  charge's member having been checked before billing. New errors must be baselined
+  charge's member having been checked before billing. The 30th came with Carbon 3, which types
+  `Carbon::create()` as possibly null: `PaymentController::index()` builds its date range from a
+  fixed `Carbon::create(2009, 7, 1)`, a valid date that never returns null. New errors must be baselined
   *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
   visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.

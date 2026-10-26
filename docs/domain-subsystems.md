@@ -11,7 +11,8 @@ operational picture ([operations.md](operations.md)).
 **Purpose:** registration, profile data, photo approval, email confirmation, leaving/rejoining.
 
 **Key code:** `app/Entities/User.php`, `app/Entities/ProfileData.php`, `app/Entities/Address.php`,
-`app/Http/Controllers/AccountController.php`, `ProfileController.php`, `app/Observer/UserObserver.php`.
+`app/Http/Controllers/AccountController.php`, `MemberRegistrationController.php`,
+`ProfileController.php`, `MemberAdminController.php`, `app/Observer/UserObserver.php`.
 
 **Data held:** `User` carries identity (given/family/display/announce name, pronouns, contact
 details), lifecycle (`status`, `active`, `banned`, `induction_completed`, `trusted`, `key_holder`),
@@ -21,9 +22,9 @@ with an `approved` flag.
 
 **Flows:**
 
-- **Registration** (`AccountController@store`): full members provide address + photo; users start
-  in `status='setting-up'` and must confirm email. **Online-only** registration
-  (`@createOnlineOnly`) skips physical details.
+- **Registration** (`MemberRegistrationController@store`): full members provide address +
+  photo; users start in `status='setting-up'` and must confirm email. **Online-only**
+  registration (`@createOnlineOnly`) skips physical details.
 - **Email confirmation:** changing email clears verification and re-triggers confirmation
   (`UserObserver` `updating` hook).
 - **Photo approval:** uploads land as `new_profile_photo` pending admin approval; declines fire
@@ -35,8 +36,7 @@ with an `approved` flag.
 
 **Good:** clear status lifecycle; observer-driven side effects keep controllers thin; explicit
 audit fields for sensitive flags (`User::$auditFields`).
-**Could improve:** `AccountController` is a ~557-line god controller mixing registration, profile,
-admin updates, and subscription changes; boolean casting on `User` is incomplete (TODO at
+**Could improve:** boolean casting on `User` is incomplete (TODO at
 `User.php:141`); deletion doesn't cascade to related records.
 
 ---
@@ -224,11 +224,10 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
 - **`UserObserver`** (`app/Observer/UserObserver.php`) — the heart of lifecycle side effects:
   status-transition events, welcome/warning/suspension/leaving emails, Telegram notices, Discourse
   param tracking. Powerful but increasingly crowded; candidates for extraction into listeners.
-- **Auditing** — `owen-it/laravel-auditing` is installed but no model uses its `Auditable` trait
-  (so the package is currently dormant). The live audit mechanism
-  is the custom `UserAuditObserver` writing to an `AuditLog` table for three User flags
-  (`induction_completed`, `trusted`, `key_holder`), plus `setting_updated` rows from the
-  settings page (key and admin only, no value). Worth unifying.
+- **Auditing** — the custom `UserAuditObserver` writes to an `AuditLog` table for three User
+  flags (`induction_completed`, `trusted`, `key_holder`), plus `setting_updated` rows from the
+  settings page (key and admin only, no value). (`owen-it/laravel-auditing`, never used, was
+  removed during the upgrade.)
 - **TelegramHelper** — leveled notifications (job/log/render/error/warning) to an operational
   chat; gracefully no-ops when unconfigured. Exception notifications are rate-limited
   (`app/Exceptions/Handler.php`).

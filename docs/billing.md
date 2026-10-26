@@ -77,6 +77,13 @@ project-health.md.
 These run daily on the Laravel scheduler — see `app/Console/Kernel.php` for the exact times and
 `docs/operations.md` for the operational picture.
 
+**Billing a charge twice can't collect twice.** A charge's Payment row is written only after
+GoCardless has created the payment, so a failure in between leaves the charge looking unbilled and
+the next run bills it again. Each bill for a charge therefore sends an `Idempotency-Key`
+(`SubscriptionCharge::goCardlessIdempotencyKey()`: charge ID, member, charge date and mandate).
+GoCardless makes at most one payment per key and answers a repeat with the existing payment,
+which is recorded instead. One-off payments (top-ups, fees) keep the SDK's random per-call key.
+
 ---
 
 ## 3. Webhooks (`GoCardlessWebhookController`)
