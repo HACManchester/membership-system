@@ -69,7 +69,8 @@ Each step below is independently shippable.
 Laravel 7 → 8 → 9 → 10 → 11, one PR per hop, CI green at each rung. Per-hop highlights:
 
 - **7→8**: class-based factories (mechanical but touches every test), `Models` namespace optional
-  (keep `Entities` to reduce churn), PHP 7.3+.
+  (keep `Entities` to reduce churn), PHP 7.3+. The factories were bridged with
+  `laravel/legacy-factories` instead, and converted after the ladder reached Laravel 13.
 - **8→9**: PHP 8.0+, Symfony 6, `fideloper/proxy` and `fruitcake/laravel-cors` deleted (built in),
   Flysystem 3.
 - **9→10**: PHP 8.1+, native type declarations land across the skeleton.
