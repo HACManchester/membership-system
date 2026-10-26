@@ -7,6 +7,7 @@ use BB\Entities\Equipment;
 use BB\Entities\EquipmentArea;
 use BB\Entities\KeyFob;
 use BB\Entities\MaintainerGroup;
+use BB\Entities\ProfileData;
 use BB\Entities\Role;
 use BB\Entities\Room;
 use BB\Entities\User;
@@ -203,13 +204,13 @@ class RouteSmokeTest extends TestCase
     private function seedWorld()
     {
         $member = factory(User::class)->create();
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $member->id]);
+        ProfileData::factory()->create(['user_id' => $member->id]);
 
         $trusted = factory(User::class)->create(['trusted' => true]);
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $trusted->id]);
+        ProfileData::factory()->create(['user_id' => $trusted->id]);
 
         $admin = factory(User::class)->state('admin')->create();
-        factory(\BB\Entities\ProfileData::class)->create(['user_id' => $admin->id]);
+        ProfileData::factory()->create(['user_id' => $admin->id]);
 
         return [
             'member'          => $member,

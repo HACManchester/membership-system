@@ -42,17 +42,6 @@ $factory->afterCreatingState(\BB\Entities\User::class, 'admin',  function (\BB\E
     $user->assignRole($admin);   
 });
 
-$factory->define('BB\Entities\ProfileData', function (Generator $faker) {
-    return [
-        'user_id'               => null,
-        'profile_photo'         => false,
-        'new_profile_photo'     => false,
-        'profile_photo_private' => false,
-        'profile_photo_on_wall' => false,
-        'tagline'               => $faker->sentence(),
-    ];
-});
-
 $factory->define('BB\Entities\SubscriptionCharge', function (Generator $faker) {
     return [
         'user_id' => function () {

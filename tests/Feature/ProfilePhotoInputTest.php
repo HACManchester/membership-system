@@ -21,7 +21,7 @@ class ProfilePhotoInputTest extends TestCase
     {
         Storage::fake('public');
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        factory(ProfileData::class)->create(['user_id' => $member->id, 'new_profile_photo' => false]);
+        ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => false]);
 
         $this->actingAs($member)
             ->put(route('account.profile.update', $member->id), [
@@ -42,7 +42,7 @@ class ProfilePhotoInputTest extends TestCase
     public function a_profile_update_with_an_array_of_photos_is_handled_without_error()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        factory(ProfileData::class)->create(['user_id' => $member->id, 'new_profile_photo' => false]);
+        ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => false]);
 
         $this->actingAs($member)
             ->put(route('account.profile.update', $member->id), [

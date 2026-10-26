@@ -23,7 +23,7 @@ class ProfileDataAuditTest extends TestCase
         // Make sure the profile's id and its member's id differ
         factory(User::class)->times(2)->create();
         $member = factory(User::class)->create();
-        $profile = factory(ProfileData::class)->create(['user_id' => $member->id, 'profile_photo_on_wall' => 0]);
+        $profile = ProfileData::factory()->create(['user_id' => $member->id, 'profile_photo_on_wall' => 0]);
         $this->assertNotEquals($member->id, $profile->id);
 
         $profile->update(['profile_photo_on_wall' => 1]);

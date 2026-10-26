@@ -80,7 +80,7 @@ class MemberAdminActionsTest extends TestCase
         $this->app->instance(\BB\Helpers\UserImage::class, $userImage);
 
         $member = factory(User::class)->create();
-        factory(ProfileData::class)->create([
+        ProfileData::factory()->create([
             'user_id' => $member->id,
             'new_profile_photo' => true,
             'profile_photo' => false,
@@ -103,7 +103,7 @@ class MemberAdminActionsTest extends TestCase
         Event::fake([MemberPhotoWasDeclined::class]);
 
         $member = factory(User::class)->create();
-        factory(ProfileData::class)->create(['user_id' => $member->id, 'new_profile_photo' => true]);
+        ProfileData::factory()->create(['user_id' => $member->id, 'new_profile_photo' => true]);
 
         $this->actingAs($this->admin())
             ->put(route('account.photo-approval', $member->id), ['photo_approved' => 0])

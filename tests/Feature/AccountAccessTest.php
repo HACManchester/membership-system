@@ -15,7 +15,7 @@ class AccountAccessTest extends TestCase
     private function memberWithProfile(array $attributes = [])
     {
         $user = factory(User::class)->create($attributes);
-        factory(ProfileData::class)->create(['user_id' => $user->id]);
+        ProfileData::factory()->create(['user_id' => $user->id]);
 
         return $user;
     }

@@ -105,7 +105,7 @@ class MailRenderTest extends TestCase
     private function member($givenName, $email)
     {
         $user = factory(User::class)->create(['given_name' => $givenName, 'email' => $email]);
-        factory(ProfileData::class)->create(['user_id' => $user->id]);
+        ProfileData::factory()->create(['user_id' => $user->id]);
 
         return $user;
     }

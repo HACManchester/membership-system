@@ -55,7 +55,7 @@ class AccountPageWithoutSubscriptionTest extends TestCase
     private function memberWithoutSubscription(array $attributes): User
     {
         $member = factory(User::class)->create(['monthly_subscription' => null] + $attributes);
-        factory(ProfileData::class)->create(['user_id' => $member->id]);
+        ProfileData::factory()->create(['user_id' => $member->id]);
 
         return $member;
     }
