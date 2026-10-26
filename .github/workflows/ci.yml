@@ -149,10 +149,6 @@ jobs:
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
-          # node-forge's RSA signature-verification flaw has no fixed release. We
-          # only get node-forge through webpack-dev-server (selfsigned), used by
-          # `yarn hot`, never the production build, and it goes with the Vite move.
-          allow-ghsas: GHSA-86w9-cpqp-85rv
 
   # The one check branch protection requires. Matrix legs can be renamed, added or
   # removed without touching the repository settings.
