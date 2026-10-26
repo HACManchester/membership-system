@@ -21,7 +21,7 @@ class EquipmentPhotoTest extends TestCase
     {
         Storage::fake('public');
         $admin = factory(User::class)->state('admin')->create();
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
 
         $this->actingAs($admin)
             ->post(route('equipment.photo.store', $equipment), [

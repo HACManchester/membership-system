@@ -96,7 +96,7 @@ class RoomTest extends TestCase
     {
         $admin = factory(User::class)->state('admin')->create();
         $room = Room::factory()->create();
-        factory(Equipment::class)->create(['room_id' => $room->id]);
+        Equipment::factory()->create(['room_id' => $room->id]);
 
         $response = $this->actingAs($admin)->delete(route('room.destroy', $room));
 

@@ -61,7 +61,7 @@ class InertiaSharedPropsTest extends TestCase
     public function a_flashed_message_reaches_the_page_after_a_submission()
     {
         $member = factory(User::class)->create(['status' => 'active', 'active' => true]);
-        $equipment = factory(Equipment::class)->create(['induction_category' => null]);
+        $equipment = Equipment::factory()->create(['induction_category' => null]);
 
         $this->actingAs($member)
             ->followingRedirects()

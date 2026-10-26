@@ -33,7 +33,7 @@ class CourseTrainingVisibilityTest extends TestCase
         $this->admin = factory(User::class)->state('admin')->create();
 
         // Equipment whose legacy category ('legacy-cat') is NOT the course slug.
-        $this->equipment = factory(Equipment::class)->create([
+        $this->equipment = Equipment::factory()->create([
             'name' => 'Laser Cutter',
             'slug' => 'laser-cutter',
             'requires_induction' => true,
@@ -163,7 +163,7 @@ class CourseTrainingVisibilityTest extends TestCase
     {
         $repo = app(TrainingRecordRepository::class);
 
-        $orphan = factory(Equipment::class)->create([
+        $orphan = Equipment::factory()->create([
             'slug' => 'orphan',
             'requires_induction' => true,
             'induction_category' => null,

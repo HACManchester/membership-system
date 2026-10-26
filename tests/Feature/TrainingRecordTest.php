@@ -44,7 +44,7 @@ class TrainingRecordTest extends TestCase
         $this->anotherUser = factory(User::class)->create();
 
         // Create equipment
-        $this->equipment = factory(Equipment::class)->create([
+        $this->equipment = Equipment::factory()->create([
             'name' => 'Test Equipment',
             'slug' => 'test-equipment',
             'requires_induction' => true,

@@ -218,7 +218,7 @@ class RouteSmokeTest extends TestCase
             'keyfob'          => factory(KeyFob::class)->create(['user_id' => $member->id]),
             'role'            => Role::where('name', 'admin')->firstOrFail(),
             'course'          => Course::factory()->create(),
-            'equipment'       => factory(Equipment::class)->create(),
+            'equipment'       => Equipment::factory()->create(),
             'equipmentArea'   => EquipmentArea::factory()->create(),
             'maintainerGroup' => MaintainerGroup::factory()->create(),
             'room'            => Room::factory()->create(),

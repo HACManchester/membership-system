@@ -66,7 +66,7 @@ class EquipmentTest extends TestCase
         ]);
 
         // Create equipment
-        $this->equipment = factory(Equipment::class)->create([
+        $this->equipment = Equipment::factory()->create([
             'name' => 'Test Equipment',
             'slug' => 'test-equipment',
             'requires_induction' => true,
@@ -75,7 +75,7 @@ class EquipmentTest extends TestCase
             'maintainer_group_id' => $this->maintainerGroup->id,
         ]);
 
-        $this->equipmentWithAccessCode = factory(Equipment::class)->create([
+        $this->equipmentWithAccessCode = Equipment::factory()->create([
             'name' => 'Secure Equipment',
             'slug' => 'secure-equipment',
             'requires_induction' => true,
@@ -114,7 +114,7 @@ class EquipmentTest extends TestCase
     public function equipment_index_exposes_room_display_from_the_related_room()
     {
         $room = Room::factory()->create(['name' => 'The Workshop', 'slug' => 'the-workshop']);
-        $equipment = factory(Equipment::class)->create(['room_id' => $room->id]);
+        $equipment = Equipment::factory()->create(['room_id' => $room->id]);
 
         $response = $this->actingAs($this->regularUser)->get(route('equipment.index'));
 
@@ -224,7 +224,7 @@ class EquipmentTest extends TestCase
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = Course::factory()->create();
-        $existing = factory(Equipment::class)->create(['slug' => 'existing-tool']);
+        $existing = Equipment::factory()->create(['slug' => 'existing-tool']);
         $course->equipment()->attach($existing->id);
 
         $this->actingAs($this->admin)->post(route('equipment.store'), [
@@ -246,7 +246,7 @@ class EquipmentTest extends TestCase
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Linked Tool',
             'slug' => 'linked-tool',
             'room_id' => $room->id,
@@ -671,7 +671,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function equipment_without_access_code_works_normally()
     {
-        $equipmentWithoutCode = factory(Equipment::class)->create([
+        $equipmentWithoutCode = Equipment::factory()->create([
             'name' => 'Simple Equipment',
             'slug' => 'simple-equipment',
             'requires_induction' => false,
@@ -734,7 +734,7 @@ class EquipmentTest extends TestCase
         // requires_induction is on, but there is no legacy category and no course,
         // so there is no functional way to record a request. The legacy path must
         // stay off rather than offer a button that creates an orphaned record.
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Misconfigured Tool',
             'slug' => 'misconfigured-tool',
             'requires_induction' => true,
@@ -753,7 +753,7 @@ class EquipmentTest extends TestCase
     #[Test]
     public function requesting_induction_on_equipment_without_a_category_or_course_creates_no_record()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Misconfigured Tool',
             'slug' => 'misconfigured-tool',
             'requires_induction' => true,
@@ -849,7 +849,7 @@ class EquipmentTest extends TestCase
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Course Item',
             'slug' => 'course-item',
             'room_id' => $room->id,
@@ -879,7 +879,7 @@ class EquipmentTest extends TestCase
         // A hidden legacy category that predates alpha_dash validation must not
         // silently block editing an item that no longer requires an induction.
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Bandsaw',
             'slug' => 'bandsaw',
             'room_id' => $room->id,
@@ -907,7 +907,7 @@ class EquipmentTest extends TestCase
         // cleared rather than stored.
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
         $holder = factory(User::class)->create();
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Drill',
             'slug' => 'drill',
             'room_id' => $room->id,
@@ -938,7 +938,7 @@ class EquipmentTest extends TestCase
         // A group-less item has no maintainer/area to manage it, so a maintainer of
         // some other group is simply denied — without tripping over the null group.
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Loose Tool',
             'slug' => 'loose-tool',
             'room_id' => $room->id,
@@ -956,7 +956,7 @@ class EquipmentTest extends TestCase
         // e.g. a course was detached, leaving requires_induction set with no legacy
         // category — the (hidden) legacy fields must not block the save.
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Orphan',
             'slug' => 'orphan',
             'room_id' => $room->id,
@@ -981,7 +981,7 @@ class EquipmentTest extends TestCase
     public function updating_the_slug_redirects_to_the_new_slug()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'name' => 'Old Name',
             'slug' => 'old-slug',
             'room_id' => $room->id,

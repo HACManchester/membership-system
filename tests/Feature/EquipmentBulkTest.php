@@ -69,7 +69,7 @@ class EquipmentBulkTest extends TestCase
     public function test_duplicate_slug_against_existing_equipment_is_rejected()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
-        factory(Equipment::class)->create(['slug' => 'existing-tool']);
+        Equipment::factory()->create(['slug' => 'existing-tool']);
 
         $this->actingAs($this->admin())->post(route('equipment.bulk-store'), [
             'room_id' => $room->id,

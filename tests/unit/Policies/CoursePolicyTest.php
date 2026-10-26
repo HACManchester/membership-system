@@ -74,7 +74,7 @@ class CoursePolicyTest extends TestCase
     {
         $user = factory(User::class)->create();
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
         $area = EquipmentArea::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         
@@ -95,7 +95,7 @@ class CoursePolicyTest extends TestCase
     {
         $user = factory(User::class)->create();
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
         $area = EquipmentArea::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         
@@ -117,7 +117,7 @@ class CoursePolicyTest extends TestCase
         $user = factory(User::class)->create();
         $otherUser = factory(User::class)->create();
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create();
         
         // Setup relationships with different user
@@ -136,8 +136,8 @@ class CoursePolicyTest extends TestCase
         $course = Course::factory()->create();
         $maintainerGroup = MaintainerGroup::factory()->create();
         $maintainerGroup->maintainers()->attach($user);
-        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
-        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => $maintainerGroup->id]));
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => null]));
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => $maintainerGroup->id]));
 
         $this->assertTrue($this->policy->update($user, $course));
         $this->assertFalse($this->policy->update(factory(User::class)->create(), $course));
@@ -196,8 +196,8 @@ class CoursePolicyTest extends TestCase
         $area = EquipmentArea::factory()->create();
         
         // Create multiple equipment with different maintainer groups
-        $equipment1 = factory(Equipment::class)->create();
-        $equipment2 = factory(Equipment::class)->create();
+        $equipment1 = Equipment::factory()->create();
+        $equipment2 = Equipment::factory()->create();
         $maintainerGroup1 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         $maintainerGroup2 = MaintainerGroup::factory()->create(['equipment_area_id' => $area->id]);
         

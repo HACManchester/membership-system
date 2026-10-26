@@ -32,7 +32,7 @@ class CourseTest extends TestCase
     public function test_admin_can_create_course()
     {
         $admin = factory(User::class)->state('admin')->create();
-        $equipment = factory(Equipment::class)->times(3)->create();
+        $equipment = Equipment::factory()->count(3)->create();
 
         $courseData = [
             'name' => 'Test Course',
@@ -74,8 +74,8 @@ class CourseTest extends TestCase
     {
         $admin = factory(User::class)->state('admin')->create();
         $course = Course::factory()->create();
-        $oldEquipment = factory(Equipment::class)->times(2)->create();
-        $newEquipment = factory(Equipment::class)->times(3)->create();
+        $oldEquipment = Equipment::factory()->count(2)->create();
+        $newEquipment = Equipment::factory()->count(3)->create();
         
         // Attach old equipment
         $course->equipment()->attach($oldEquipment);
@@ -112,7 +112,7 @@ class CourseTest extends TestCase
     {
         $admin = factory(User::class)->state('admin')->create();
         $course = Course::factory()->create(['slug' => 'old-slug']);
-        $equipment = factory(Equipment::class)->times(3)->create();
+        $equipment = Equipment::factory()->count(3)->create();
         
         $course->equipment()->attach($equipment);
 
@@ -140,7 +140,7 @@ class CourseTest extends TestCase
     {
         $admin = factory(User::class)->state('admin')->create();
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->times(2)->create();
+        $equipment = Equipment::factory()->count(2)->create();
         
         $course->equipment()->attach($equipment);
 
@@ -174,7 +174,7 @@ class CourseTest extends TestCase
     public function test_equipment_can_belong_to_multiple_courses()
     {
         $admin = factory(User::class)->state('admin')->create();
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
         
         $course1 = Course::factory()->create();
         $course2 = Course::factory()->create();
@@ -202,7 +202,7 @@ class CourseTest extends TestCase
     {
         $user = factory(User::class)->create();
         $course = Course::factory()->create();
-        $course->equipment()->attach(factory(Equipment::class)->create(['maintainer_group_id' => null]));
+        $course->equipment()->attach(Equipment::factory()->create(['maintainer_group_id' => null]));
 
         $response = $this->actingAs($user)
             ->get(route('courses.show', $course));
@@ -217,7 +217,7 @@ class CourseTest extends TestCase
     {
         $admin = factory(User::class)->state('admin')->create();
         $course = Course::factory()->create();
-        $equipment = factory(Equipment::class)->times(2)->create();
+        $equipment = Equipment::factory()->count(2)->create();
         $course->equipment()->attach($equipment);
 
         $response = $this->actingAs($admin)

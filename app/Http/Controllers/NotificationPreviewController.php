@@ -143,7 +143,7 @@ class NotificationPreviewController extends Controller
 
     private function getDummyEquipment()
     {
-        $laserCutter = factory(Equipment::class)->make([
+        $laserCutter = Equipment::factory()->make([
             'id' => 1,
             'name' => 'Laser Cutter',
             'slug' => 'laser-cutter',
@@ -151,7 +151,7 @@ class NotificationPreviewController extends Controller
             'trained_instructions' => 'Remember to always check the extraction is running before use',
         ]);
 
-        $printer3d = factory(Equipment::class)->make([
+        $printer3d = Equipment::factory()->make([
             'id' => 2,
             'name' => '3D Printer',
             'slug' => '3d-printer',

@@ -25,7 +25,7 @@ class NotificationEmailTest extends TestCase
 
     private function equipmentWithTrainerAndTrainedUser()
     {
-        $equipment = factory(Equipment::class)->create([
+        $equipment = Equipment::factory()->create([
             'induction_category' => 'test-tool',
             'requires_induction' => true,
         ]);

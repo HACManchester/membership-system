@@ -18,7 +18,7 @@ class BackfillEquipmentRoomsTest extends TestCase
      */
     private function equipmentInRoom(?string $room): Equipment
     {
-        $equipment = factory(Equipment::class)->create();
+        $equipment = Equipment::factory()->create();
         $equipment->room = $room;
         $equipment->save();
 
