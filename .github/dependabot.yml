@@ -111,6 +111,10 @@ updates:
         versions: [">=4.0.0"]
       - dependency-name: select2
         versions: [">=4.0.0"]
+      # TypeScript 7 is the native (Go) compiler; typescript-eslint supports only
+      # TypeScript <6.1 (#250). Lifted: delete when typescript-eslint supports TypeScript 7.
+      - dependency-name: typescript
+        versions: [">=7.0.0"]
       # MUI majors change component APIs across every Inertia page.
       # Lifted: never; MUI majors are done by hand.
       - dependency-name: "@mui/*"

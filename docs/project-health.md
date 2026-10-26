@@ -93,6 +93,7 @@ build or pages can't take them. Each rule in the file says what lifts it.
   - the Mix-tied loaders and `react-refresh`;
   - Babel 8.
 - jQuery 4, Bootstrap 4 and Select2 4, until the legacy Blade pages are gone.
+- TypeScript 7, until typescript-eslint supports it.
 
 **Merging.** Nothing merges automatically. Every Dependabot PR needs the code owner's review
 (`.github/CODEOWNERS`) and "All checks passed", and is merged by hand at review time. Merging never
