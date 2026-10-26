@@ -107,7 +107,7 @@ class GoCardlessWebhookTest extends TestCase
             'status' => $chargeStatus,
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'user_id' => $user->id,
             'reason' => 'subscription',
             'source' => 'gocardless-variable',

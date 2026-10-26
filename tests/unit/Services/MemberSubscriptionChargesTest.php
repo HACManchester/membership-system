@@ -692,7 +692,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'amount' => 0,
             'status' => 'due',
         ]);
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $failingUser->id,
             'source' => 'gocardless-variable',
             'source_id' => null,
@@ -758,7 +758,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'due',
         ]);
 
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => (string)$charge->id,
             'source' => 'gocardless-variable',

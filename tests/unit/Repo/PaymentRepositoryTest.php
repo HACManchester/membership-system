@@ -21,7 +21,7 @@ class PaymentRepositoryTest extends TestCase
         $existingUser = factory(User::class)->create();
         $otherUser = factory(User::class)->create();
 
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $existingUser->id,
             'source' => 'gocardless-variable',
             'source_id' => 'PM123456789',
@@ -46,7 +46,7 @@ class PaymentRepositoryTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $existing = factory(Payment::class)->create([
+        $existing = Payment::factory()->create([
             'user_id' => $user->id,
             'source' => 'gocardless-variable',
             'source_id' => 'PM123456789',
@@ -82,14 +82,14 @@ class PaymentRepositoryTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $first = factory(Payment::class)->create([
+        $first = Payment::factory()->create([
             'user_id' => $user->id,
             'source' => 'gocardless-variable',
             'source_id' => 'PM123456789',
             'reason' => 'subscription',
             'status' => 'pending',
         ]);
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'source' => 'gocardless-variable',
             'source_id' => 'PM123456789',

@@ -69,7 +69,7 @@ class SubChargeEventHandlerTest extends TestCase
         );
 
         // Create another payment for the same charge that's still pending
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => $subscriptionCharge->id,
             'status' => 'pending',
@@ -109,7 +109,7 @@ class SubChargeEventHandlerTest extends TestCase
         );
 
         // Create a failed payment (shouldn't prevent warning)
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => $subscriptionCharge->id,
             'status' => 'failed',
@@ -117,7 +117,7 @@ class SubChargeEventHandlerTest extends TestCase
         ]);
 
         // Create a cancelled payment (shouldn't prevent warning)  
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => $subscriptionCharge->id,
             'status' => 'cancelled',

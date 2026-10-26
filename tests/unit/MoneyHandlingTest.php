@@ -146,7 +146,7 @@ class MoneyHandlingTest extends TestCase
 
     private function balancePayment(User $user, $pounds)
     {
-        return factory(Payment::class)->create([
+        return Payment::factory()->create([
             'user_id' => $user->id,
             'reason'  => 'balance',
             'source'  => 'gocardless',
@@ -157,7 +157,7 @@ class MoneyHandlingTest extends TestCase
 
     private function balanceSpend(User $user, $pounds)
     {
-        return factory(Payment::class)->create([
+        return Payment::factory()->create([
             'user_id' => $user->id,
             'reason'  => 'equipment-fee',
             'source'  => 'balance',

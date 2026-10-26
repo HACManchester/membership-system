@@ -92,7 +92,7 @@ class AuditSubscriptionChargesTest extends TestCase
             'status' => 'paid',
         ]);
 
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reason' => 'subscription',
             'source' => 'gocardless-variable',

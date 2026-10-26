@@ -297,7 +297,7 @@ class BillMembersTest extends TestCase
             'status' => 'due',
         ]);
 
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => $charge->id,
             'source' => 'gocardless-variable',

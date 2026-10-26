@@ -3,13 +3,18 @@
 namespace BB\Entities;
 
 
+use Database\Factories\PaymentFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 
+#[UseFactory(PaymentFactory::class)]
 class Payment extends Model
 {
-    use PresentableTrait;
+    /** @use HasFactory<PaymentFactory> */
+    use HasFactory, PresentableTrait;
 
     const STATUS_PENDING = 'pending';
     const STATUS_PENDING_SUBMISSION = 'pending_submission';

@@ -20,12 +20,12 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        factory(Payment::class, 2)->states(['fromCash', 'paid'])->create([
+        Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
             'amount' => 20,
         ]);
-        factory(Payment::class, 4)->states(['fromBalance', 'paid'])->create([
+        Payment::factory()->count(4)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
@@ -41,12 +41,12 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        factory(Payment::class, 2)->states(['fromCash', 'paid'])->create([
+        Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
             'amount' => 20,
         ]);
-        factory(Payment::class, 3)->states(['fromBalance', 'paid'])->create([
+        Payment::factory()->count(3)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
@@ -61,12 +61,12 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        factory(Payment::class, 2)->states(['fromCash', 'paid'])->create([
+        Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
             'amount' => 20,
         ]);
-        factory(Payment::class, 6)->states(['fromBalance', 'paid'])->create([
+        Payment::factory()->count(6)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
@@ -81,13 +81,13 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        factory(Payment::class)->states(['fromCash', 'pending'])->create([
+        Payment::factory()->fromCash()->pending()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
             'amount' => 20,
         ]);
 
-        factory(Payment::class)->states(['fromBalance', 'paid'])->create([
+        Payment::factory()->fromBalance()->paid()->create([
             'reason' => 'not-balance',
             'user_id' => $user->id,
             'amount' => 20,
@@ -102,13 +102,13 @@ class RecalculateBalanceTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        factory(Payment::class)->states(['fromCash', 'cancelled'])->create([
+        Payment::factory()->fromCash()->cancelled()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
             'amount' => 20,
         ]);
 
-        factory(Payment::class)->states(['fromBalance', 'paid'])->create([
+        Payment::factory()->fromBalance()->paid()->create([
             'reason' => 'not-balance',
             'user_id' => $user->id,
             'amount' => 20,

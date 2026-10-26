@@ -174,7 +174,7 @@ class PaymentFlowIntegrationTest extends TestCase
         );
 
         // Step 2: Create another payment for the same charge that's still pending
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'user_id' => $user->id,
             'reference' => $subscriptionCharge->id,
             'status' => 'pending',

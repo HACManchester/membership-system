@@ -38,7 +38,7 @@ class PaymentEventHandlerTest extends TestCase
         // non-'balance' value: recalculate() treats source='balance' payments as
         // spends (negative), and the factory's random source otherwise picks 'balance'
         // ~1 in 6 runs, which would subtract this top-up and make the test flaky.
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -46,7 +46,7 @@ class PaymentEventHandlerTest extends TestCase
             'status' => 'paid',
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -78,7 +78,7 @@ class PaymentEventHandlerTest extends TestCase
             'amount' => 0, // Will be updated from payment
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -116,7 +116,7 @@ class PaymentEventHandlerTest extends TestCase
             'amount' => 0,
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -151,7 +151,7 @@ class PaymentEventHandlerTest extends TestCase
             'status' => 'due',
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -194,7 +194,7 @@ class PaymentEventHandlerTest extends TestCase
             'charge_date' => Carbon::now()->subDays(1),
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -225,7 +225,7 @@ class PaymentEventHandlerTest extends TestCase
             'payment_method' => 'gocardless-variable',
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -258,7 +258,7 @@ class PaymentEventHandlerTest extends TestCase
             'amount' => 2200,
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -284,7 +284,7 @@ class PaymentEventHandlerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -310,7 +310,7 @@ class PaymentEventHandlerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -342,7 +342,7 @@ class PaymentEventHandlerTest extends TestCase
             'status' => 'processing',
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -370,7 +370,7 @@ class PaymentEventHandlerTest extends TestCase
         $user = factory(User::class)->create();
         $paymentDate = Carbon::now();
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -400,7 +400,7 @@ class PaymentEventHandlerTest extends TestCase
         $user = factory(User::class)->create();
         $paymentDate = Carbon::now();
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
@@ -432,7 +432,7 @@ class PaymentEventHandlerTest extends TestCase
         ]);
         
         // Previous payment for the initial balance
-        factory(Payment::class)->create([
+        Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -440,7 +440,7 @@ class PaymentEventHandlerTest extends TestCase
             'status' => 'paid',
         ]);
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
@@ -463,7 +463,7 @@ class PaymentEventHandlerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $payment = factory(Payment::class)->create([
+        $payment = Payment::factory()->create([
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'subscription',
