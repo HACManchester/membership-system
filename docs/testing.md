@@ -46,10 +46,13 @@ that don't run in CI (see below).
   turns them into exceptions. A test that "passes" while reading a property off `null` is now a
   failing test — that's intended. Note Laravel 9 stops throwing on deprecations, so this has to be
   re-enabled explicitly in `phpunit.xml` at that upgrade step.
-- Factories: mixed generations, all closure-style. `database/factories/ModelFactory.php` uses the
-  legacy `$factory->define()` style; newer factories (Payment, Course, Equipment…) are separate
-  files. Laravel 9 removes this API; the upgrade bridges it with `laravel/legacy-factories` and
-  converts to class-based factories as a separate step.
+- Factories: class-based, one per model in `database/factories/` (`Database\Factories\`). Each
+  entity opts in with `HasFactory` and `#[UseFactory(XFactory::class)]`, because Laravel's name
+  guessing looks for `App\Models`, not `BB\Entities`. Build records with `User::factory()`, and
+  use the named states (`User::factory()->admin()`, `Payment::factory()->fromCash()->paid()`)
+  rather than raw attributes. `ModelFactoriesTest` fails when a model has no factory, or when a
+  factory's defaults don't save a valid row. (The closure factories and `laravel/legacy-factories`
+  were removed in October 2026.)
 - CI (`.github/workflows/ci.yml`): a matrix of the PHP version production runs and the next one the
   upgrade moves to. The next version is non-blocking (`continue-on-error`) until it goes green.
   A single `frontend` job runs yarn install, ESLint, Jest and the production build. The PHP legs
@@ -158,9 +161,8 @@ actually breaks:
 
 ### Phase 3 — raise the bar (ongoing)
 
-1. Convert factories to class-based once the upgrade has passed Laravel 9 (they're bridged with
-   `laravel/legacy-factories` until then); add factory states for the common personas (active
-   member, payment-warning member, trainer, admin) to cut setup noise.
+1. Factories are class-based (October 2026). Add factory states for the common personas (active
+   member, payment-warning member, trainer) to cut setup noise; `admin()` exists already.
 2. Start JS testing where logic lives: begin with pure functions/hooks in `resources/js`, then
    component tests for the course-training pages, and reinstate a CI step once tests exist.
 3. Adopt a coverage floor in CI (e.g. fail under 60%, ratchet up), so coverage only moves one
