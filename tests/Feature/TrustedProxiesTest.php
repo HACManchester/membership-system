@@ -8,9 +8,9 @@ use Tests\TestCase;
 
 /**
  * The app runs behind an HTTPS proxy (OrbStack locally, nginx in production).
- * URLs it generates must use the scheme and host the proxy forwarded, or
- * browsers block http:// assets and redirects from the https:// page, but
- * only a configured proxy may say so.
+ * URLs it generates must use the scheme the proxy forwarded, or browsers block
+ * http:// assets and redirects from the https:// page, but only a configured
+ * proxy may say so. Nothing else is taken from forwarded headers.
  */
 class TrustedProxiesTest extends TestCase
 {
@@ -19,14 +19,35 @@ class TrustedProxiesTest extends TestCase
         parent::setUp();
 
         Route::get('/_test/generated-url', fn () => url('/somewhere'));
+        Route::get('/_test/client-ip', fn () => request()->ip());
     }
 
     #[Test]
-    public function urls_use_the_scheme_and_host_a_trusted_proxy_forwarded()
+    public function urls_use_the_scheme_a_trusted_proxy_forwarded()
     {
         // phpunit.xml sets TRUSTED_PROXIES=10.0.0.1
         $this->forwardedThrough('10.0.0.1')
-            ->assertSeeText('https://members.example.test/somewhere');
+            ->assertSeeText('https://app.internal/somewhere');
+    }
+
+    #[Test]
+    public function a_forwarded_host_is_ignored_even_from_a_trusted_proxy()
+    {
+        // The production proxy passes a client-sent X-Forwarded-Host through,
+        // which would otherwise put an attacker's domain in password-reset links
+        $this->forwardedThrough('10.0.0.1')
+            ->assertDontSeeText('members.example.test');
+    }
+
+    #[Test]
+    public function a_forwarded_client_ip_is_ignored_even_from_a_trusted_proxy()
+    {
+        // Production's Apache has already set REMOTE_ADDR to the client, so
+        // whatever X-Forwarded-For is left over came from the client
+        $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.1'])
+            ->withHeaders(['X-Forwarded-For' => '203.0.113.7'])
+            ->get('http://app.internal/_test/client-ip')
+            ->assertContent('10.0.0.1');
     }
 
     #[Test]
@@ -51,7 +72,7 @@ class TrustedProxiesTest extends TestCase
         config(['trustedproxy.proxies' => '*']);
 
         $this->forwardedThrough('192.168.97.1')
-            ->assertSeeText('https://members.example.test/somewhere');
+            ->assertSeeText('https://app.internal/somewhere');
     }
 
     private function forwardedThrough(string $proxyAddress): \Illuminate\Testing\TestResponse
