@@ -1748,7 +1748,7 @@ __metadata:
     jquery: "npm:^3.7.1"
     laravel-vite-plugin: "npm:^3.2.0"
     less: "npm:^4.9.1"
-    material-design-icons: "npm:^2.2.3"
+    material-design-icons: "npm:^3.0.1"
     prettier: "npm:^3.9.10"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -6765,10 +6765,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"material-design-icons@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "material-design-icons@npm:2.2.3"
-  checksum: 10c0/8fbc50061aa20227327b8450b5dc9cbde308e36514228089e7ab079ea8dc6ce6ac829f374cf3e1747463979cbeae72e7868dd949bf1159d54c6816d781076fb0
+"material-design-icons@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "material-design-icons@npm:3.0.1"
+  checksum: 10c0/80c02f73dd45ce07c3180f49d12d9120f76de51df11b016b09e61f3cc590691104aa44be37b609e31b7cef70d1f214db22f51204b8b0f3f1a83a21f84735b336
   languageName: node
   linkType: hard
 
