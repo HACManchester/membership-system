@@ -7,9 +7,8 @@
 # The ignore rules hold back majors that are planned work or that the current build can't
 # take. Each says what lifts it; delete the rule when that happens.
 #
-# Merging is never deployment: production is deployed by hand. The auto-merge workflow
-# (.github/workflows/dependabot-automerge.yml) only arms auto-merge for dev dependencies and
-# GitHub Actions at patch/minor level.
+# Every PR is reviewed and merged by hand (CODEOWNERS), and merging is never deployment:
+# production is deployed by hand.
 version: 2
 updates:
   - package-ecosystem: composer
@@ -50,7 +49,7 @@ updates:
       gocardless:
         patterns: ["gocardless/*"]
         update-types: [minor, patch]
-      # Split by dependency type so the dev group can be auto-merged on its own.
+      # Split by dependency type: a dev-only group can't affect production, so it's a quicker review.
       composer-dev:
         dependency-type: development
         update-types: [minor, patch]
@@ -140,7 +139,7 @@ updates:
     # No "github_actions" label exists, and setting labels stops Dependabot creating one.
     labels: [dependencies]
     groups:
-      # Majors stay separate so a grouped PR can still be auto-merged.
+      # Majors stay separate, so each can be checked against its release notes.
       actions:
         patterns: ["*"]
         update-types: [minor, patch]
