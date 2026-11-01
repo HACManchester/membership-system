@@ -64,12 +64,12 @@ Hackspace Manchester Balance
                 </thead>
                 <tbody>
                 @foreach ($payments as $payment)
-                <tr class="{{ $payment->present()->balanceRowClass }}">
-                    <td >{{ $payment->present()->reason }}</td>
-                    <td>{{ $payment->present()->method }}</td>
-                    <td>{{ $payment->present()->date }}</td>
-                    <td>{{ $payment->present()->balanceAmount }}</td>
-                    <td>{{ $payment->present()->status }}</td>
+                <tr class="{{ $payment->source == 'balance' ? 'danger' : ($payment->reason == 'balance' ? 'success' : '') }}">
+                    <td >{{ $payment->reason_label }}</td>
+                    <td>{{ $payment->method_label }}</td>
+                    <td>{{ $payment->created_at->toFormattedDateString() }}</td>
+                    <td>@if ($payment->source == 'balance')-£{{ $payment->amount }}@elseif ($payment->reason == 'balance')£{{ $payment->amount }}@endif</td>
+                    <td>{{ $payment->status_label }}</td>
                 </tr>
                 @endforeach
                 </tbody>
