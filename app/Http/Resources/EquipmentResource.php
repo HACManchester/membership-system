@@ -3,6 +3,7 @@
 namespace BB\Http\Resources;
 
 use BB\Support\CurrentUser;
+use BB\Support\PpeOptions;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -43,7 +44,7 @@ class EquipmentResource extends JsonResource
             'lone_working' => $this->lone_working,
             'room' => optional($this->roomModel)->slug,
             'room_display' => optional($this->roomModel)->name,
-            'ppe' => $this->present()->ppeLabels(),
+            'ppe' => PpeOptions::getLabels($this->ppe),
             'photo_url' => $this->hasPhoto() ? $this->getPhotoUrl(0) : null,
             'induction_category' => $this->induction_category,
             

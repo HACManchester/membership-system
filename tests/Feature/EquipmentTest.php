@@ -314,6 +314,43 @@ class EquipmentTest extends TestCase
     }
 
     #[Test]
+    public function show_formats_the_manufacturer_purchase_date_and_usage_cost()
+    {
+        $this->equipment->forceFill([
+            'manufacturer' => 'Trotec',
+            'model_number' => 'Speedy 400',
+            'obtained_at' => '2024-03-05',
+            'usage_cost' => 2.5,
+            'usage_cost_per' => 'hour',
+        ])->save();
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->where('equipment.manufacturer_model', 'Trotec (Speedy 400)')
+                    ->where('equipment.purchase_date', 'Mar 5, 2024')
+                    ->where('equipment.usage_cost', '£2.50 per hour');
+            });
+    }
+
+    #[Test]
+    public function show_leaves_out_an_unknown_manufacturer_purchase_date_and_usage_cost()
+    {
+        $this->equipment->forceFill([
+            'manufacturer' => null,
+            'model_number' => null,
+            'obtained_at' => null,
+            'usage_cost' => 0,
+        ])->save();
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->where('equipment.manufacturer_model', null)
+                    ->where('equipment.purchase_date', null)
+                    ->where('equipment.usage_cost', null);
+            });
+    }
+
+    #[Test]
     public function show_exposes_legacy_training_data_for_legacy_equipment()
     {
         // $this->equipment has an induction_category and no course, so the legacy

@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracasts\Presenter\PresentableTrait;
 
 /**
  * Class Equipment
@@ -20,7 +19,7 @@ use Laracasts\Presenter\PresentableTrait;
  * @property array   $photos
  * @property string  $slug
  * @property array   $ppe
- * @property Carbon  $obtained_at
+ * @property Carbon|null $obtained_at
  * @property Carbon  $removed_at
  * @property integer $usageCost
  * @property string  $induction_category
@@ -31,9 +30,7 @@ use Laracasts\Presenter\PresentableTrait;
 class Equipment extends Model
 {
     /** @use HasFactory<EquipmentFactory> */
-    use HasFactory, PresentableTrait, SoftDeletes;
-
-    protected $presenter = 'BB\Presenters\EquipmentPresenter';
+    use HasFactory, SoftDeletes;
 
     /**
      * The database table used by the model.
