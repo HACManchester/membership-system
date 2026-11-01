@@ -72,7 +72,8 @@ alongside MUI 6.
 
 Dependabot (`.github/dependabot.yml`) checks Composer, npm (Yarn) and GitHub Actions every
 Monday morning. Releases have to be 7 days old before they're proposed; security updates skip this
-wait.
+wait. Yarn applies the same 7 days locally (`npmMinimalAgeGate` in `.yarnrc.yml`), so `yarn add` and
+`yarn up` won't pick a newer release; list a package in `npmPreapprovedPackages` to take an urgent fix.
 
 **Grouping:**
 
@@ -88,11 +89,11 @@ build or pages can't take them. Each rule in the file says what lifts it.
 - `gocardless/gocardless-pro`: needs a sandbox run.
 - Inertia (`inertiajs/inertia-laravel` and `@inertiajs/*`): the PHP and JS sides must move
   together.
-- Laravel Mix and its toolchain, until the Vite migration lands:
-  - `webpack` 5.106+;
-  - the Mix-tied loaders and `react-refresh`;
-  - Babel 8.
+- Babel 8 (used only by Jest): it needs Node 22.18+, and local development is on Node 20.
 - jQuery 4, Bootstrap 4 and Select2 4, until the legacy Blade pages are gone.
+- TypeScript 7, until typescript-eslint supports it.
+- ESLint 10 (`eslint`, `@eslint/js`), until `eslint-plugin-react` supports it.
+- `@testing-library/jest-dom` 7, which needs Node 22.
 
 **Merging.** Nothing merges automatically. Every Dependabot PR needs the code owner's review
 (`.github/CODEOWNERS`) and "All checks passed", and is merged by hand at review time. Merging never

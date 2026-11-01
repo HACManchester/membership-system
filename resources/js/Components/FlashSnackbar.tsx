@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { Snackbar, Alert } from '@mui/material';
 
@@ -16,18 +16,15 @@ type FlashPageProps = {
  */
 const FlashSnackbar: React.FC = () => {
   const { flash } = usePage<FlashPageProps>().props;
-  const [open, setOpen] = useState(false);
+  const [dismissedFlash, setDismissedFlash] = useState<FlashPageProps['flash']>();
 
   const message = flash?.error || flash?.success || null;
   const severity = flash?.error ? 'error' : 'success';
 
-  // flash is a fresh object on every Inertia response, so this re-opens the
-  // snackbar even when the same message is flashed twice in a row
-  useEffect(() => {
-    if (message) {
-      setOpen(true);
-    }
-  }, [flash, message]);
+  // flash is a fresh object on every Inertia response, so the snackbar re-opens
+  // even when the same message is flashed twice in a row
+  const open = flash !== dismissedFlash;
+  const close = () => setDismissedFlash(flash);
 
   if (!message) {
     return null;
@@ -39,12 +36,12 @@ const FlashSnackbar: React.FC = () => {
       autoHideDuration={6000}
       onClose={(_, reason) => {
         if (reason !== 'clickaway') {
-          setOpen(false);
+          close();
         }
       }}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
     >
-      <Alert severity={severity} variant="filled" onClose={() => setOpen(false)}>
+      <Alert severity={severity} variant="filled" onClose={close}>
         {message}
       </Alert>
     </Snackbar>

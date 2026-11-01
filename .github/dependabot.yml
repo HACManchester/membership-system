@@ -74,32 +74,9 @@ updates:
       # Lifted: never; Inertia majors are coordinated by hand.
       - dependency-name: "@inertiajs/*"
         update-types: ["version-update:semver-major"]
-      # Laravel Mix 6 breaks on webpack 5.106+ (#237 caps it at ~5.105.4).
-      # Lifted: delete when the Vite migration removes Mix and webpack.
-      - dependency-name: webpack
-        versions: [">=5.106.0"]
-      # Mix 6 peer-requires webpack-cli ^4 and checks for sass-loader ^12 and
-      # @pmmmwh/react-refresh-webpack-plugin ^0.5 at build time; the other loaders and
-      # react-refresh are wired into its webpack config. Majors of these broke the build
-      # before (#205). Lifted: delete when the Vite migration removes Mix.
-      - dependency-name: laravel-mix
-        update-types: ["version-update:semver-major"]
-      - dependency-name: webpack-cli
-        update-types: ["version-update:semver-major"]
-      - dependency-name: less-loader
-        update-types: ["version-update:semver-major"]
-      - dependency-name: sass-loader
-        update-types: ["version-update:semver-major"]
-      - dependency-name: ts-loader
-        update-types: ["version-update:semver-major"]
-      - dependency-name: react-refresh
-        update-types: ["version-update:semver-major"]
-      # Still 0.x, so 0.6 is the breaking release.
-      - dependency-name: "@pmmmwh/react-refresh-webpack-plugin"
-        versions: [">=0.6.0"]
-      # Babel 8 breaks Mix 6, which peer-requires @babel/core ^7 (#227 failed on it), and
-      # the presets must move with the core.
-      # Lifted: delete when the Vite migration removes Babel.
+      # Babel now only transforms the Jest suites (babel-jest, which accepts Babel 8).
+      # Babel 8 needs Node 22.18+, and local development is on Node 20; the presets must
+      # move with the core. Lifted: delete when local development moves to Node 22.18+.
       - dependency-name: "@babel/*"
         update-types: ["version-update:semver-major"]
       # The legacy Blade pages (including payment and admin pages) are built on jQuery 3,
@@ -111,6 +88,20 @@ updates:
         versions: [">=4.0.0"]
       - dependency-name: select2
         versions: [">=4.0.0"]
+      # eslint-plugin-react (last released April 2025) peer-requires ESLint <=9 (#244).
+      # @eslint/js moves with eslint. Lifted: delete when eslint-plugin-react supports ESLint 10.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      # @testing-library/jest-dom 7 needs Node 22; local development is on Node 20.
+      # Lifted: delete when local development moves to Node 22.
+      - dependency-name: "@testing-library/jest-dom"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 is the native (Go) compiler; typescript-eslint supports only
+      # TypeScript <6.1 (#250). Lifted: delete when typescript-eslint supports TypeScript 7.
+      - dependency-name: typescript
+        versions: [">=7.0.0"]
       # MUI majors change component APIs across every Inertia page.
       # Lifted: never; MUI majors are done by hand.
       - dependency-name: "@mui/*"
