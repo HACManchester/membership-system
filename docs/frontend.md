@@ -8,7 +8,7 @@
 | Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 6 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
-| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, Jest (two legacy `.jsx` component suites; runs in CI) |
+| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (two legacy `.jsx` component suites); all run in CI |
 
 Pages migrated to Inertia/React so far: the home page, courses, course training, equipment,
 equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, and the admin
@@ -76,9 +76,9 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 - **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
   suites; `resources/js` has no tests yet.)
-- **Next**: type-check with `tsc` in CI (nothing runs it today; `tsconfig.json` is there).
-  Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` in one change. Then the
-  MUI majors.
+- **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs.
+- **Next**: Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` in one
+  change. Then the MUI majors.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 

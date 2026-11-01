@@ -27,6 +27,7 @@ The local dev environment is Docker (Laravel Sail-style, `docker-compose.yml`).
   yarn dev        # unminified build with source maps; `yarn watch` rebuilds on change
   yarn hot        # Vite dev server with hot reloading
   yarn lint       # ESLint
+  yarn typecheck  # tsc --noEmit
   yarn test       # Jest (two legacy .jsx suites so far)
   ```
 
