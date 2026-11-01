@@ -43,30 +43,6 @@ parameters:
 			path: app/Http/Controllers/PaymentController.php
 
 		-
-			message: '#^Cannot access property \$description on BB\\Entities\\ProfileData\|null\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Resources/MemberProfileResource.php
-
-		-
-			message: '#^Cannot access property \$profile_photo on BB\\Entities\\ProfileData\|null\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Resources/MemberProfileResource.php
-
-		-
-			message: '#^Cannot access property \$profile_photo_private on BB\\Entities\\ProfileData\|null\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Resources/MemberProfileResource.php
-
-		-
-			message: '#^Cannot call method present\(\) on BB\\Entities\\ProfileData\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: app/Http/Resources/MemberProfileResource.php
-
-		-
 			message: '#^Cannot access property \$hash on BB\\Entities\\User\|null\.$#'
 			identifier: property.nonObject
 			count: 1

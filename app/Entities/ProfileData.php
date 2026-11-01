@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laracasts\Presenter\PresentableTrait;
 
 /**
  * Class ProfileData
@@ -19,7 +18,7 @@ class ProfileData extends Model
 {
 
     /** @use HasFactory<ProfileDataFactory> */
-    use HasFactory, PresentableTrait;
+    use HasFactory;
 
     /**
      * profile_photo (the approval flag) and profile_photo_on_wall are admin-only,
@@ -30,8 +29,6 @@ class ProfileData extends Model
     ];
 
     protected $table = 'profile_data';
-
-    protected $presenter = 'BB\Presenters\ProfileDataPresenter';
 
     protected $auditFields = array('profile_photo', 'profile_photo_on_wall');
 
