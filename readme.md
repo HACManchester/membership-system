@@ -2,7 +2,7 @@
 
 To manage many aspects of member's access & use of the space and its equipment, we maintain our own Hackspace Manchester Membership System. This began as a fork of [ArthurGuy/BBMembershipSystem](https://github.com/ArthurGuy/BBMembershipSystem), but has since diverged to suit the unique needs of our space & equipment.
 
-The system is built on PHP/Laravel (currently Laravel 7, being upgraded incrementally) with a
+The system is built on PHP/Laravel (Laravel 13 on PHP 8.4) with a
 frontend that is migrating from Blade/jQuery to Inertia.js + React + TypeScript. See the
 [`docs/`](./docs/README.md) folder for contributor documentation: project health, domain
 subsystems, architecture, frontend, testing, and a glossary of domain terms.
@@ -115,12 +115,12 @@ These can be configured via environmental variables, or by setting up a `.env` f
 
 We don't use any third-party Cloud providers for storage of files.
 
-All user-uploaded content is stored via the [public storage disk](https://laravel.com/docs/7.x/filesystem#the-public-disk) at `storage/app/public`. There is a symlink pointing to this directory at `/public/storage`.
+All user-uploaded content is stored via the [public storage disk](https://laravel.com/docs/13.x/filesystem#the-public-disk) at `storage/app/public`. There is a symlink pointing to this directory at `/public/storage`.
 
 ## Development
 
-The system is built on the PHP Laravel framework (currently Laravel 7, with an incremental upgrade
-underway — see [`docs/architecture.md`](./docs/architecture.md)), backed by MySQL.
+The system is built on the PHP Laravel framework (Laravel 13 on PHP 8.4 — see
+[`docs/architecture.md`](./docs/architecture.md)), backed by MySQL.
 
 A `.env` file needs to be set up — copy `.env.example` and adjust. Notes:
 
@@ -133,7 +133,7 @@ A `.env` file needs to be set up — copy `.env.example` and adjust. Notes:
 
 We have a Docker runtime adapted from Laravel Sail ([GitHub](https://github.com/laravel/sail)).
 It's built on the official PHP image with the same extensions as the live environment, for
-whichever PHP version `SAIL_PHP_VERSION` in `.env` selects (default 8.4, which production runs; 8.0–8.4 images build).
+whichever PHP version `SAIL_PHP_VERSION` in `.env` selects (default 8.4, which production runs; `composer.json` needs 8.4 or newer).
 Each version builds to its own image, so switching is `docker compose up -d` after changing it.
 Node isn't in the container — yarn runs on the host.
 
@@ -218,7 +218,7 @@ tests are most valuable.
 If you have any issues, see if the docker logs have any useful information:
 
 ```sh
-docker-compose logs laravel
+docker compose logs laravel
 ```
 
 Or the Laravel log file at [storage/logs/laravel-DATE.log](./storage/logs):
@@ -241,15 +241,15 @@ contact the membership committee.
 
 Database access information is kept private.
 
-Database changes should be made via [Laravel Migrations](https://laravel.com/docs/7.x/migrations).
+Database changes should be made via [Laravel Migrations](https://laravel.com/docs/13.x/migrations).
 If you believe any changes need making directly to the database, please contact the membership
 committee.
 
 ### Frontend assets
 
 The frontend is mid-migration: legacy pages use Blade templates with LESS/Bootstrap 3, while newer
-pages (courses, training, newsletter) use Inertia.js + React + TypeScript with Material-UI. Both
-are built by Laravel Mix (`webpack.mix.js`). New pages should use the modern stack — see
+pages (courses, equipment, members directory, admin settings and more) use Inertia.js + React +
+TypeScript with Material-UI. Vite (`vite.config.mjs`) builds both. New pages should use the modern stack — see
 [`docs/frontend.md`](./docs/frontend.md) for the migration plan.
 
 ### Routes

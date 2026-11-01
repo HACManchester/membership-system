@@ -17,7 +17,7 @@ use Tests\TestCase;
  * Mailable and notification through the preview pages, but only asserts they
  * don't 500.
  *
- * Laravel 9 replaces SwiftMailer with Symfony Mailer, and these are the two
+ * Laravel 9 replaced SwiftMailer with Symfony Mailer, and these were the two
  * places most exposed to that:
  *
  *  - Our MailMessage subclass overrides the framework's with()/action() so a
@@ -26,9 +26,10 @@ use Tests\TestCase;
  *  - Two listeners send raw views via the closure-based Mailer::send() API
  *    rather than a Mailable.
  *
- * Sent messages are read through sentMessage*() helpers that understand both
- * Swift_Message and Symfony's Email, so the same assertions hold either side
- * of the swap — which is the point.
+ * Sent messages are read from the MessageSent event, whose message is a
+ * Symfony Mime Email, through sentMessage*() helpers. They were written to
+ * read SwiftMailer's messages too, so the same assertions held either side of
+ * the swap; the SwiftMailer branches are no longer reached.
  */
 class MailRenderTest extends TestCase
 {
@@ -114,7 +115,7 @@ class MailRenderTest extends TestCase
      * Collects every message the real mailer sends. Mail::fake() can't be used:
      * it only records Mailables and silently drops raw view sends.
      *
-     * @return \ArrayObject<int,object>
+     * @return \ArrayObject<int,\Symfony\Component\Mime\Email>
      */
     private function captureSentMail()
     {
@@ -128,14 +129,14 @@ class MailRenderTest extends TestCase
     }
 
     /**
-     * @param \Swift_Message|\Symfony\Component\Mime\Email $message
+     * @param \Symfony\Component\Mime\Email $message
      * @return string[]
      */
     private function sentMessageRecipients($message)
     {
         $to = $message->getTo();
 
-        // Swift: ['email' => 'name']; Symfony: Address[]
+        // Symfony returns Address[]; the keyed ['email' => 'name'] form was SwiftMailer's
         if (is_array($to) && ! isset($to[0])) {
             return array_keys($to);
         }

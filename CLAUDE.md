@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 Membership management system for Hackspace Manchester (adopted from Build Brighton's open-source
-system — hence the `BB\` namespace). Laravel 7 (mid-upgrade), MySQL, GoCardless billing, mixed
-Blade + Inertia/React frontend.
+system — hence the `BB\` namespace). Laravel 13 on PHP 8.4, MySQL, GoCardless billing, mixed
+Blade + Inertia/React frontend built with Vite.
 
 **Read `docs/README.md` first** — it indexes documentation on project health, domain subsystems,
 architecture, frontend, testing, and a glossary of domain terms.
@@ -75,8 +75,8 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
   signature-verified — keep it that way.
 - The keyfob CSV export (`KeyFobCsvController`) is a de-facto contract with the door system —
   coordinate any output change with the acs team.
-- `User.php` and `AccountController.php` are ~560-line god classes scheduled for splitting — avoid
-  adding to them; extract instead.
+- `User.php` is a ~585-line god class scheduled for splitting — avoid adding to it; extract
+  instead.
 
 ===
 

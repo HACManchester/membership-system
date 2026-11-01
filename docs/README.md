@@ -23,6 +23,6 @@ works well, and where it's heading — so contributions can push in the same dir
 
 ## Keeping these up to date
 
-This codebase is in active migration (Laravel 7 → modern Laravel, Blade → Inertia, legacy patterns
-→ current ones). When you complete a migration step described here, update the relevant doc in the
-same PR. Each doc's "plan" section is a living backlog.
+This codebase is in active migration (Blade → Inertia, legacy patterns → current ones; the Laravel
+7 → 13 upgrade finished in October 2026). When you complete a migration step described here,
+update the relevant doc in the same PR. Each doc's "plan" section is a living backlog.

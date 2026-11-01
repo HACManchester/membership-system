@@ -26,7 +26,7 @@ belongs to tells you how much to trust it and how to extend it.
 
 - **FormRequests carrying authorization**: e.g. `TrainCourseMemberRequest::authorize()` calls the
   policy — validation and authz in one place
-- **Policies** (`app/Policies/`, 9 classes) with `before()` admin short-circuits and
+- **Policies** (`app/Policies/`, 11 classes) with `before()` admin short-circuits and
   `authorizeResource()` in constructors
 - **Event classes + listeners** (`app/Events/Inductions/*`, `app/Listeners/`)
 - **Queued jobs** (`DiscourseSync`)
@@ -59,26 +59,36 @@ Keep it boring and native — this is a small-team community project, not a DDD 
 The rule that has already been working in this repo: **modernise what you touch, don't big-bang.**
 Each step below is independently shippable.
 
-### Step 0 — prerequisites (do first)
+### Step 0 — prerequisites ✅ done (June 2026)
 
-1. Pin current behavior with tests around the areas being changed (see testing.md).
-2. Remove BrowserKit tests + the `laravel/browser-kit-testing` dependency.
+Behaviour around the areas being changed is pinned by tests (see testing.md), and the BrowserKit
+tests and `laravel/browser-kit-testing` are gone.
 
-### Step 1 — the framework ladder (the strategic move)
+### Step 1 — the framework ladder ✅ done (October 2026)
 
-Laravel 7 → 8 → 9 → 10 → 11, one PR per hop, CI green at each rung. Per-hop highlights:
+Laravel 7 → 13 and PHP 7.2 → 8.4, one PR per hop, CI green at each rung. Along the way:
 
-- **7→8**: class-based factories (mechanical but touches every test), `Models` namespace optional
-  (keep `Entities` to reduce churn), PHP 7.3+. The factories were bridged with
-  `laravel/legacy-factories` instead, and converted after the ladder reached Laravel 13.
-- **8→9**: PHP 8.0+, Symfony 6, `fideloper/proxy` and `fruitcake/laravel-cors` deleted (built in),
-  Flysystem 3.
-- **9→10**: PHP 8.1+, native type declarations land across the skeleton.
-- **10→11**: PHP 8.2+, slim skeleton (optional adoption), per-second rate limiting.
+- `fideloper/proxy` and `fruitcake/laravel-cors` went (Laravel has both built in). The trusted
+  proxies are set by `TRUSTED_PROXIES` (`config/trustedproxy.php`).
+- `fzaninotto/faker` became `fakerphp/faker`; PHPUnit is on 13, Symfony on 8.
+- The factories were bridged with `laravel/legacy-factories`, then converted to class-based
+  factories after the ladder reached Laravel 13.
+- The GoCardless SDK moved from 4.x to 8.x, with idempotency keys on billing calls (billing.md),
+  and Guzzle from 7 to 8.
+- The test suite fails on every deprecation, including those raised in `vendor/`
+  (`Tests\TestCase::knownVendorDeprecations()` lists any we can't fix; it's empty today).
+- The app kept its pre-Laravel 11 skeleton (`app/Http/Kernel.php`, `app/Console/Kernel.php`);
+  adopting the slim one is optional.
 
-Update the Dockerfile PHP version in lockstep; bump Node to current LTS at the same time. After
-the ladder: adopt **Sanctum** to modernise API token auth, and replace `fzaninotto/faker` with
-`fakerphp/faker`.
+Still to do, in this order:
+
+1. The frontend (frontend.md): Inertia 3, moving `inertiajs/inertia-laravel` and
+   `@inertiajs/react` together; the MUI majors; and type-checking with `tsc` in CI. jQuery,
+   Bootstrap 3 and select2 go as the last Blade pages using them move to Inertia.
+2. Infrastructure, last: production MySQL 5.7 → 8.x, production PHP 8.5 (CI already runs it),
+   deployment hardening, and swapping the local mysql and mailhog images.
+
+Optional later: Sanctum, to modernise the door system's API token auth.
 
 ### Step 2 — kill generation 1, subsystem by subsystem
 
@@ -98,27 +108,31 @@ In order of value:
 
 ### Step 3 — shrink the god classes
 
-- `app/Entities/User.php` (~561 lines): extract concerns into traits/services along its natural
+- `app/Entities/User.php` (~585 lines): extract concerns into traits/services along its natural
   seams — payment/subscription methods, role methods (already partly in `UserRoleTrait`), and the
   lifecycle transitions (`setPaymentWarning`, `setSuspended`, …) into a guarded `MembershipStatus`
   service or small state machine.
-- `AccountController` (~557 lines): split into Registration, Profile (admin), and Subscription
-  settings controllers as those pages go Inertia.
+- `AccountController` ✅ done: registration, email confirmation, subscription changes and admin
+  updates now have their own controllers (`MemberRegistrationController`,
+  `EmailConfirmationController`, `AccountSubscriptionController`, `MemberAdminController` and
+  others).
 
 ### Step 4 — ratchet quality
 
 - PHPStan 2 (Larastan 3) runs at level 8, with level 6's missing-type checks (`missingType.*`)
   switched off: those are ~870 findings across most files, best turned on a file at a time.
   Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
-  needs to know their models. `phpstan-baseline.neon` holds 29 entries, all checked and found
+  needs to know their models. `phpstan-baseline.neon` holds 30 entries, all checked and found
   safe: mostly guarantees PHPStan can't see, such as a member always having a profile row, or a
-  charge's member having been checked before billing. New errors must be baselined
+  charge's member having been checked before billing. The 30th came with Carbon 3, which types
+  `Carbon::create()` as possibly null: `PaymentController::index()` builds its date range from a
+  fixed `Carbon::create(2009, 7, 1)`, a valid date that never returns null. New errors must be baselined
   *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
   visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.
 
 ## How to sequence against other work
 
-The framework ladder (step 1) and the frontend migration (frontend.md) are independent tracks. The
-generation-1 cleanup (step 2) is best done *after* 7→8/9 because the upgrade mechanically touches
-the same files (factories, events) — doing it once avoids double churn.
+The remaining upgrades (step 1) and the frontend migration (frontend.md) are independent tracks.
+With the framework ladder done, the generation-1 cleanup (step 2) no longer risks double churn,
+so it can go ahead whenever the code is touched.
