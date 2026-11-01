@@ -24,7 +24,8 @@ screens, member admin, storage boxes, stats) is still Blade + jQuery + Bootstrap
 - Scripts: `yarn build` (or `yarn production`) for a production build; `yarn dev` / `yarn watch`
   for an unminified build with source maps (once / on every change); `yarn hot` runs the Vite dev
   server with hot reloading, and writes `public/hot` so `@vite` serves from it while it runs.
-- Vite 8 needs **Node 20.19+** (CI uses Node 24). Yarn 4 comes from Corepack (`corepack enable`),
+- Local development uses **Node 22** (`.mise.toml`), as production's build does; CI uses Node 24.
+  `engines` in `package.json` gives the minimum. Yarn 4 comes from Corepack (`corepack enable`),
   pinned by `packageManager` in `package.json`. Dependency install scripts are off (Yarn 4's
   default); allow one with `dependenciesMeta.<name>.built: true` only if a package truly needs it.
 - Legacy-bundle quirks: Bootstrap 3, select2 3 and inline Blade scripts expect a global jQuery, so

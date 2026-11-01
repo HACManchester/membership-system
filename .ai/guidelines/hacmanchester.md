@@ -7,7 +7,7 @@ These override the generic Laravel Boost guidance above wherever they differ. Th
   `docker compose exec laravel php artisan route:list`, `docker compose exec laravel vendor/bin/phpunit`.
   Never run them with the host's `php`. Node and Yarn run on the host (`yarn dev`, `yarn build`).
 - **The frontend builds with Vite** (`vite.config.mjs`, Blade's `@vite`), not Laravel Mix. Rebuild
-  with `yarn build`, or run `yarn hot` for the dev server. It needs Node 20.19+.
+  with `yarn build`, or run `yarn hot` for the dev server. It needs Node 22 (`.mise.toml`).
 - **Models live in `app/Entities/` under the `BB\` namespace**, not `App\Models`.
 - **Test factories are class-based**, one per model in `database/factories/` (`Database\Factories\`).
   Entities opt in with `HasFactory` plus `#[UseFactory(XFactory::class)]`, since name guessing looks in
