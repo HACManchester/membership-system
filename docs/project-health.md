@@ -72,7 +72,8 @@ alongside MUI 6.
 
 Dependabot (`.github/dependabot.yml`) checks Composer, npm (Yarn) and GitHub Actions every
 Monday morning. Releases have to be 7 days old before they're proposed; security updates skip this
-wait.
+wait. Yarn applies the same 7 days locally (`npmMinimalAgeGate` in `.yarnrc.yml`), so `yarn add` and
+`yarn up` won't pick a newer release; list a package in `npmPreapprovedPackages` to take an urgent fix.
 
 **Grouping:**
 
