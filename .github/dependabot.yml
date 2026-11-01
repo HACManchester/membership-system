@@ -94,10 +94,6 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@eslint/js"
         update-types: ["version-update:semver-major"]
-      # @testing-library/jest-dom 7 needs Node 22; local development is on Node 20.
-      # Lifted: delete when local development moves to Node 22.
-      - dependency-name: "@testing-library/jest-dom"
-        update-types: ["version-update:semver-major"]
       # TypeScript 7 is the native (Go) compiler; typescript-eslint supports only
       # TypeScript <6.1 (#250). Lifted: delete when typescript-eslint supports TypeScript 7.
       - dependency-name: typescript
