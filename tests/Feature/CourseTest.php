@@ -198,6 +198,32 @@ class CourseTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_course_show_page_labels_the_format_and_frequency()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create(['format' => 'quiz', 'frequency' => 'ad-hoc']);
+
+        $this->actingAs($user)
+            ->get(route('courses.show', $course))
+            ->assertInertia(function ($page) {
+                $page->where('course.format', ['label' => 'Online Quiz', 'value' => 'quiz'])
+                    ->where('course.frequency', ['label' => 'On-demand', 'value' => 'ad-hoc']);
+            });
+    }
+
+    public function test_course_show_page_shows_an_unrecognised_format_and_frequency_as_stored()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create(['format' => 'workshop', 'frequency' => 'monthly']);
+
+        $this->actingAs($user)
+            ->get(route('courses.show', $course))
+            ->assertInertia(function ($page) {
+                $page->where('course.format.label', 'workshop')
+                    ->where('course.frequency.label', 'monthly');
+            });
+    }
+
     public function test_course_show_page_loads_when_equipment_has_no_maintainer_group()
     {
         $user = User::factory()->create();

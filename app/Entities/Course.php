@@ -4,27 +4,26 @@ namespace BB\Entities;
 
 use BB\Entities\Equipment;
 use BB\Entities\TrainingRecord;
-use BB\Presenters\CoursePresenter;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracasts\Presenter\PresentableTrait;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
+ * @property-read string $format_label
+ * @property-read string $frequency_label
  */
 #[UseFactory(CourseFactory::class)]
 class Course extends Model
 {
     /** @use HasFactory<CourseFactory> */
-    use HasFactory, SoftDeletes, PresentableTrait;
-
-    protected $presenter = CoursePresenter::class;
+    use HasFactory, SoftDeletes;
 
     // TODO: Think about dependencies between courses? Too much complexity to build in (for now)?
 
@@ -94,6 +93,34 @@ class Course extends Model
         ]);
     }
 
+
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function formatLabel(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->format) {
+            'group' => 'Group class',
+            'quiz' => 'Online Quiz',
+            'one-on-one' => 'One-on-one',
+            'unknown' => 'Unknown',
+            default => $this->format,
+        });
+    }
+
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function frequencyLabel(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->frequency) {
+            'self-serve' => 'Self-serve',
+            'regular' => 'Regular',
+            'ad-hoc' => 'On-demand',
+            'unknown' => 'Unknown',
+            default => $this->frequency,
+        });
+    }
 
     /**
      * Check if the course is currently paused
