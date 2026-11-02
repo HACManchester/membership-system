@@ -161,6 +161,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'seen_at' => 'datetime',
         'suspended_at' => 'datetime',
         'suppress_real_name' => 'boolean',
+        // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
+        'password' => 'hashed',
     ];
 
 
@@ -265,11 +267,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getNameAttribute()
     {
         return $this->attributes['display_name'];
-    }
-
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = Hash::make($password);
     }
 
     public function setPaymentDayAttribute($value)
