@@ -2,15 +2,17 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Presenters\UserPresenter;
 use BB\Exceptions\AuthenticationException;
+use BB\Observer\UserAuditObserver;
+use BB\Observer\UserObserver;
 use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use BB\Entities\MaintainerGroup;
-use Hash;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -22,78 +24,82 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class User
+ * Uncast boolean columns read back from the database as 0/1, hence bool|int.
  *
- * @property integer $id
- * @property string $email
- * @property string $display_name
- * @property string $name
+ * @property int $id
+ * @property string|null $hash
  * @property string $given_name
- * @property string $announce_name
- * @property string $online_only
  * @property string $family_name
- * @property string $hash
- * @property bool $active
- * @property bool $key_holder
- * @property bool $trusted
- * @property bool $banned
- * @property bool $email_verified
- * @property bool $induction_completed
- * @property integer $inducted_by
- * @property integer $payment_day
- * @property string $status
- * @property string $payment_method
- * @property string $subscription_id
- * @property Carbon|null $subscription_expires
- * @property Carbon|null $banned_date
+ * @property string|null $display_name
+ * @property string|null $announce_name
+ * @property string|null $pronouns
+ * @property bool $suppress_real_name
+ * @property string|null $import_match_string
+ * @property string $email
+ * @property bool|int $email_verified
+ * @property string|null $secondary_email
+ * @property string|null $password
+ * @property string|null $remember_token
  * @property string $phone
- * @property integer $storage_box_payment_id
- * @property ProfileData|null $profile
+ * @property string|null $emergency_contact
+ * @property string|null $notes
+ * @property bool $active
+ * @property bool|int $founder
+ * @property string $status
+ * @property bool|int $trusted
+ * @property bool|int $key_holder
+ * @property int|null $key_deposit_payment_id
+ * @property int|null $storage_box_payment_id
+ * @property bool|int $induction_completed
+ * @property int|null $inducted_by
+ * @property string|null $payment_method
  * @property string|null $secondary_payment_method
+ * @property int $payment_day
+ * @property int|null $monthly_subscription in pounds
+ * @property string|null $subscription_id
  * @property string|null $mandate_id
- * @property int $monthly_subscription
  * @property string|null $gocardless_setup_id
- * @property bool $postFob (false=collect, true=post)
- * @property \Carbon\Carbon|null $seen_at
- * @property-read \BB\Entities\Address|null $address
- * 
- * @package BB\Entities
+ * @property string|null $last_subscription_payment Y-m-d
+ * @property Carbon|null $subscription_expires
+ * @property Carbon|null $suspended_at
+ * @property int $cash_balance in pence
+ * @property bool|int $profile_private
+ * @property bool $banned
+ * @property string|null $banned_reason
+ * @property Carbon|null $banned_date
+ * @property Carbon|null $rules_agreed
+ * @property Carbon|null $seen_at
+ * @property string|null $find_us
+ * @property bool|int|null $online_only
+ * @property bool|int|null $postFob false to collect the fob, true to have it posted
+ * @property string|null $gift
+ * @property string|null $gift_expires Y-m-d
+ * @property bool|int $newsletter
+ * @property bool $visited_forum
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read string|null $name the display name
  */
+#[ObservedBy([UserObserver::class, UserAuditObserver::class])]
 #[UseFactory(UserFactory::class)]
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, UserRoleTrait, PresentableTrait, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use HasFactory, UserRoleTrait, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
     protected $hidden = array('password', 'remember_token');
 
     protected $auditFields = array('induction_completed', 'trusted', 'key_holder');
 
-    protected $presenter = 'BB\Presenters\UserPresenter';
 
-
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'given_name',
         'family_name',
@@ -142,45 +148,31 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'cash_balance'          => 0,
     ];
 
-    protected $casts = [
-        'visited_forum' => 'boolean',
-
-        // TODO: Enable these casts one at a time and verify casting will not break references
-        // 'email_verified' => 'boolean',
-        'active' => 'boolean',
-        // 'founder' => 'boolean',
-        // 'director' => 'boolean',
-        // 'trusted' => 'boolean',
-        // 'key_holder' => 'boolean',
-        // 'induction_completed' => 'boolean',
-        // 'profile_private' => 'boolean',
-        'banned' => 'boolean',
-        'subscription_expires' => 'datetime',
-        'banned_date' => 'datetime',
-        'rules_agreed' => 'datetime',
-        'seen_at' => 'datetime',
-        'suspended_at' => 'datetime',
-        'suppress_real_name' => 'boolean',
-        // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
-        'password' => 'hashed',
-    ];
-
-
-
-
-    public static function statuses()
+    protected function casts(): array
     {
         return [
-            'setting-up'        => 'Setting Up',
-            'active'            => 'Active',
-            'payment-warning'   => 'Payment Warning',
-            'suspended'         => 'Suspended',
-            'leaving'           => 'Leaving',
-            'on-hold'           => 'On Hold',
-            'left'              => 'Left',
-            'honorary'          => 'Honorary'
+            'visited_forum' => 'boolean',
+
+            // TODO: Enable these casts one at a time and verify casting will not break references
+            // 'email_verified' => 'boolean',
+            'active' => 'boolean',
+            // 'founder' => 'boolean',
+            // 'trusted' => 'boolean',
+            // 'key_holder' => 'boolean',
+            // 'induction_completed' => 'boolean',
+            // 'profile_private' => 'boolean',
+            'banned' => 'boolean',
+            'subscription_expires' => 'datetime',
+            'banned_date' => 'datetime',
+            'rules_agreed' => 'datetime',
+            'seen_at' => 'datetime',
+            'suspended_at' => 'datetime',
+            'suppress_real_name' => 'boolean',
+            // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
+            'password' => 'hashed',
         ];
     }
+
 
 
 
@@ -264,27 +256,29 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |
     */
 
-    public function getNameAttribute()
+    /**
+     * @return Attribute<string|null, never>
+     */
+    protected function name(): Attribute
     {
-        return $this->attributes['display_name'];
+        return Attribute::get(fn ($value, array $attributes) => $attributes['display_name']);
     }
 
-    public function setPaymentDayAttribute($value)
+    /**
+     * Days after the 28th become the 1st, so the payment day exists in every month.
+     *
+     * @return Attribute<int, int>
+     */
+    protected function paymentDay(): Attribute
     {
-        //Ensure the payment date will always exist on any month payment_date
-        if ($value > 28) {
-            $value = 1;
-        }
-        $this->attributes['payment_day'] = $value;
+        return Attribute::set(fn ($value) => $value > 28 ? 1 : $value);
     }
 
     /**
      * Can the user see protected member photos?
      * Only available to active members
-     *
-     * @return bool
      */
-    public function shouldMemberSeeProtectedPhoto()
+    public function shouldMemberSeeProtectedPhoto(): bool
     {
         switch ($this->attributes['status']) {
             case 'active':
@@ -298,10 +292,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Is the user on a payment method that allows their subscription amount to be changed
-     *
-     * @return bool
      */
-    public function canMemberChangeSubAmount()
+    public function canMemberChangeSubAmount(): bool
     {
         // TODO: Invert and pull from payment domain? Or drop it? Do we need to handle different payment methods?
         return in_array($this->attributes['payment_method'], ['gocardless-variable']);
@@ -309,10 +301,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Is the user part of the admin group
-     *
-     * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->hasRole('admin');
     }
@@ -338,41 +328,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $alerts;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBanned()
+    public function isBanned(): bool
     {
         return !!$this->banned;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasPaymentWarning()
+    public function hasPaymentWarning(): bool
     {
         return ($this->status == 'payment-warning');
     }
     
-    /**
-     * @return bool
-     */
-    public function isSuspended()
+    public function isSuspended(): bool
     {
         return ($this->status == 'suspended');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isInducted()
-    {
-        return $this->induction_completed && $this->inducted_by;
-    }
-
-    public function inductedBy()
-    {
-        return User::findOrFail($this->inducted_by);
     }
 
 
@@ -382,44 +350,51 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |--------------------------------------------------------------------------
     */
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active(Builder $query): void
     {
-        return $query->where(['active' => true, 'banned' => false]);
+        $query->where(['active' => true, 'banned' => false]);
     }
 
-    public function scopeNotSpecialCase($query)
+    #[Scope]
+    protected function notSpecialCase(Builder $query): void
     {
-        return $query->where('status', '!=', 'honorary')
+        $query->where('status', '!=', 'honorary')
             ->where(function ($subquery) {
                 $subquery->whereNull('gift_expires')->orWhere('gift_expires', '<=', Carbon::today());
             });
     }
 
-    public function scopeLeaving($query)
+    #[Scope]
+    protected function leaving(Builder $query): void
     {
-        return $query->where('status', '=', 'leaving');
+        $query->where('status', '=', 'leaving');
     }
 
-    public function scopePaymentWarning($query)
+    #[Scope]
+    protected function paymentWarning(Builder $query): void
     {
-        return $query->where('status', '=', 'payment-warning');
+        $query->where('status', '=', 'payment-warning');
     }
 
-    public function scopeSuspended($query)
+    #[Scope]
+    protected function suspended(Builder $query): void
     {
-        return $query->where('status', '=', 'suspended');
+        $query->where('status', '=', 'suspended');
     }
 
-    public function scopeRecentlyLapsed($query)
+    #[Scope]
+    protected function recentlyLapsed(Builder $query): void
     {
-        return $query->whereActive(false)
+        $query->whereActive(false)
             ->where('banned', false)
             ->where('subscription_expires', '>=', Carbon::today()->subMonths(6));
     }
 
-    public function scopeNewsletterOptIns($query)
+    #[Scope]
+    protected function newsletterOptIns(Builder $query): void
     {
-        return $query->where('newsletter', '=', true);
+        $query->where('newsletter', '=', true);
     }
 
 
@@ -428,23 +403,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     | Methods
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * @param $paymentMethod
-     * @param $paymentDay
-     * @deprecated
-     */
-    public function updateSubscription($paymentMethod, $paymentDay)
-    {
-        if ($paymentDay > 28) {
-            $paymentDay = 1;
-        }
-
-        $this->attributes['payment_method'] = $paymentMethod;
-        $this->attributes['payment_day']    = $paymentDay;
-
-        $this->save();
-    }
 
     /**
      * @param $amount
@@ -575,7 +533,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->auditFields;
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active && !$this->banned;
     }

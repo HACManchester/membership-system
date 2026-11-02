@@ -15,7 +15,7 @@ or `GoCardlessWebhookController`.
 | Field | Meaning |
 | --- | --- |
 | `payment_method` | `gocardless-variable` (current), `gocardless` (legacy fixed subscription), `standing-order`, `cash`, … |
-| `payment_day` | Day of month to bill (values > 28 are clamped to 1 — `User::setPaymentDayAttribute`) |
+| `payment_day` | Day of month to bill (values > 28 are clamped to 1 — the `User::paymentDay()` mutator) |
 | `monthly_subscription` | Chosen amount **in pounds** (e.g. 22) — multiplied by 100 at the GoCardless boundary |
 | `mandate_id` | GoCardless mandate (variable DD — the current system) |
 | `subscription_id` | GoCardless subscription (legacy fixed DD only) |

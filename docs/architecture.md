@@ -11,7 +11,7 @@ belongs to tells you how much to trust it and how to extend it.
 | --- | --- | --- |
 | Standalone validator classes | `app/Validators/` (e.g. `FormValidator`, `ProfileValidator`, `RoleValidator`) | Superseded by FormRequests; still used by older controllers |
 | Command/event handlers | `app/Handlers/` (`PaymentEventHandler`, `SubChargeEventHandler`) | Still load-bearing for billing! Wired via string events (`payment.paid`, `payment.cancelled`, `sub-charge.payment-failed`) in `EventServiceProvider` |
-| Presenters | `app/Presenters/` + `laracasts/presenter` | View formatting; replace with accessors |
+| Presenters | `app/Presenters/` + `laracasts/presenter` | ✅ Removed (November 2026); see "Display formatting" below |
 | Facade-heavy controllers | `\Request::`, `\Auth::`, `\View::make()` throughout older controllers | Cosmetic but dates the code |
 | String-based events | `\Event::fire('payment.paid', ...)`-style listeners | Modern equivalent is event classes |
 | Repositories as the data layer | `app/Repo/` (~15 classes) | Mixed: some genuinely abstract queries, some are pass-through noise |
@@ -32,6 +32,11 @@ belongs to tells you how much to trust it and how to extend it.
 - **Queued jobs** (`DiscourseSync`)
 - **Service objects** (`app/Services/MemberSubscriptionCharges`, `Credit`)
 - **Inertia + React + TypeScript** pages (see frontend.md)
+- **Current Eloquent idioms** in `app/Entities/` (all models converted, November 2026): casts in
+  a `casts()` method, local scopes as `#[Scope] protected function active(Builder $query): void`,
+  accessors and mutators as `Attribute` methods, observers via `#[ObservedBy]` and global scopes
+  via `#[ScopedBy]` rather than service providers or `boot()`, native return types on relations
+  and predicates, and `@property` blocks that match the migrated columns
 - Feature tests asserting state + events (see testing.md)
 
 The course/equipment-training subsystem is the reference implementation of generation 3 — when in
@@ -53,6 +58,14 @@ Keep it boring and native — this is a small-team community project, not a DDD 
   `UserObserver` into listeners over time so the observer only *detects* transitions and fires
   events.
 - **Money**: integer pence everywhere (see project-health.md).
+- **Display formatting** (labels, formatted dates and amounts) goes in the narrowest home:
+  - used by one Blade view → inline in that view;
+  - used by one Inertia page → its Resource;
+  - formats the model's own data and is used in several places → an accessor
+    (`protected function statusLabel(): Attribute`) on the model, e.g. `Payment::statusLabel()`;
+  - on `User`, or another model big enough to be split, those accessors go in a presenter trait
+    in `app/Entities/Presenters/` (e.g. `BB\Entities\Presenters\UserPresenter`, used by `User`)
+    instead of the model itself.
 
 ## Migration plan
 
@@ -103,8 +116,9 @@ In order of value:
 3. **Repositories**: split into (a) genuinely useful query objects — keep (e.g.
    `SubscriptionChargeRepository` has real logic), and (b) pass-throughs — inline into
    controllers/services and delete.
-4. **Presenters**: replace with Eloquent accessors/casts when the relevant views are converted to
-   Inertia — Inertia resources make presenters redundant anyway.
+4. **Presenters** ✅ done (November 2026): each method became an accessor, a Resource field or
+   inline view code, following the display-formatting rule above, and `laracasts/presenter` was
+   removed.
 
 ### Step 3 — shrink the god classes
 
@@ -122,11 +136,20 @@ In order of value:
 - PHPStan 2 (Larastan 3) runs at level 8, with level 6's missing-type checks (`missingType.*`)
   switched off: those are ~870 findings across most files, best turned on a file at a time.
   Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
-  needs to know their models. `phpstan-baseline.neon` holds 30 entries, all checked and found
-  safe: mostly guarantees PHPStan can't see, such as a member always having a profile row, or a
-  charge's member having been checked before billing. The 30th came with Carbon 3, which types
-  `Carbon::create()` as possibly null: `PaymentController::index()` builds its date range from a
-  fixed `Carbon::create(2009, 7, 1)`, a valid date that never returns null. New errors must be baselined
+  needs to know their models. Casts live in `casts()` methods, so `phpstan.neon` sets
+  Larastan's `parseModelCastsMethod` (without it Larastan sees only the method's `array` return
+  type and loses every cast). `phpstan-baseline.neon` holds 31 entries. Most are guarantees
+  PHPStan can't see, such as a member always having a profile row, or a charge's member having
+  been checked before billing. One came with Carbon 3, which types `Carbon::create()` as possibly
+  null: `PaymentController::index()` builds its date range from a fixed
+  `Carbon::create(2009, 7, 1)`, a valid date that never returns null. Five came in November 2026
+  when the model `@property` blocks were rewritten to match the migrations, which made some
+  `users` columns nullable that had been typed as always set: `monthly_subscription` (passed to
+  `SubscriptionChargeRepository::createCharge()`/`createChargeAndBillDD()` and
+  `PaymentRepository::recordSubscriptionPayment()`), `hash` (`MemberPhoto::url()`) and
+  `display_name`, behind `User::$name` (`AuditSubscriptionCharges::memberName()`). Members being
+  billed or shown do have these set, but the columns allow null; each is worth a guard or a
+  NOT NULL migration rather than staying baselined. New errors must be baselined
   *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
   visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.

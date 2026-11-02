@@ -2,19 +2,39 @@
 
 namespace BB\Entities;
 
-
+use Carbon\Carbon;
 use Database\Factories\PaymentFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laracasts\Presenter\PresentableTrait;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $reason
+ * @property string|null $reference
+ * @property string $source
+ * @property string|null $source_id
+ * @property float $amount in pounds
+ * @property float $fee in pounds
+ * @property float $amount_minus_fee in pounds
+ * @property string $status
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read string $reason_label
+ * @property-read string $status_label
+ * @property-read string $method_label
+ */
 #[UseFactory(PaymentFactory::class)]
 class Payment extends Model
 {
     /** @use HasFactory<PaymentFactory> */
-    use HasFactory, PresentableTrait;
+    use HasFactory;
 
     const STATUS_PENDING = 'pending';
     const STATUS_PENDING_SUBMISSION = 'pending_submission';
@@ -22,25 +42,6 @@ class Payment extends Model
     const STATUS_PAID = 'paid';
     const STATUS_WITHDRAWN = 'withdrawn';
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'payments';
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
-    protected $hidden = array();
-
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'source',
         'source_id',
@@ -61,12 +62,12 @@ class Payment extends Model
         'fee' => 0,
     ];
 
-    protected $casts = [
-        'paid_at' => 'datetime',
-    ];
-
-
-    protected $presenter = 'BB\Presenters\PaymentPresenter';
+    protected function casts(): array
+    {
+        return [
+            'paid_at' => 'datetime',
+        ];
+    }
 
 
     /**
@@ -77,19 +78,63 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeSubscription($query)
+    #[Scope]
+    protected function subscription(Builder $query): void
     {
-        return $query->whereReason('subscription');
+        $query->whereReason('subscription');
     }
 
     /**
-     * Allow the ref property to be used instead of reference.
-     *
-     * @return string
+     * @return Attribute<string, never>
      */
-    public function getRefAttribute()
+    protected function reasonLabel(): Attribute
     {
-        return $this->attributes['reference'];
+        return Attribute::get(fn () => match ($this->reason) {
+            'subscription' => 'Subscription',
+            'unknown' => 'Unknown',
+            'induction' => 'Equipment Access Fee',
+            'door-key' => 'Key Deposit',
+            'storage-box' => 'Storage Box Deposit',
+            'balance' => 'Balance Top Up',
+            'equipment-fee' => 'Equipment Costs',
+            'withdrawal' => 'Withdrawal',
+            'consumables' => 'Consumables (' . $this->reference . ')',
+            'donation' => 'Donation',
+            default => $this->reason,
+        });
+    }
+
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function statusLabel(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->status) {
+            self::STATUS_PENDING => 'Pending confirmation',
+            self::STATUS_PENDING_SUBMISSION => 'Pending submission to members bank',
+            self::STATUS_CANCELLED => 'Cancelled',
+            self::STATUS_PAID, self::STATUS_WITHDRAWN => 'Paid',
+            default => $this->status,
+        });
+    }
+
+    /**
+     * How the payment was made, e.g. "Direct Debit".
+     *
+     * @return Attribute<string, never>
+     */
+    protected function methodLabel(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->source) {
+            'gocardless', 'gocardless-variable' => 'Direct Debit',
+            'standing-order' => 'Standing Order',
+            'manual' => 'Manual',
+            'cash' => 'Cash' . ($this->source_id ? ' (' . $this->source_id . ')' : ''),
+            'other' => 'Other',
+            'balance' => 'BB Balance',
+            'reimbursement' => 'Reimbursement',
+            default => $this->source,
+        });
     }
 
     public static function getPaymentReasons()

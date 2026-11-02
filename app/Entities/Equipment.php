@@ -2,45 +2,70 @@
 
 namespace BB\Entities;
 
-use BB\Entities\Course;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Database\Factories\EquipmentFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracasts\Presenter\PresentableTrait;
 
 /**
- * Class Equipment
+ * Ordered by name by default (OrderScope). TODO: Would be nice to support multiple
+ * orderings, i.e. order by "Working: yes/no" primarily, name secondarily
  *
- * @property array   $photos
- * @property string  $slug
- * @property array   $ppe
- * @property Carbon  $obtained_at
- * @property Carbon  $removed_at
- * @property integer $usageCost
- * @property string  $induction_category
- * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Course> $courses
- * @package BB\Entities
+ * @property int $id
+ * @property string $name
+ * @property string|null $slug
+ * @property string|null $manufacturer
+ * @property string|null $model_number
+ * @property string|null $serial_number
+ * @property string|null $colour
+ * @property string|null $room legacy free-text room, superseded by room_id
+ * @property int|null $room_id
+ * @property string|null $detail
+ * @property string|null $description
+ * @property string|null $help_text
+ * @property string|null $admin_notes
+ * @property array $ppe
+ * @property array $photos
+ * @property string|null $docs
+ * @property int|null $managing_role_id
+ * @property int|null $maintainer_group_id
+ * @property bool $requires_induction
+ * @property bool|null $accepting_inductions
+ * @property string|null $induction_category
+ * @property string|null $induction_instructions
+ * @property string|null $trainer_instructions
+ * @property string|null $trained_instructions
+ * @property bool $working
+ * @property bool $permaloan
+ * @property int|null $permaloan_user_id
+ * @property bool|null $dangerous
+ * @property bool $lone_working
+ * @property int $access_fee
+ * @property float|int $usage_cost in pounds; stored in pence
+ * @property-read float|int $usageCost
+ * @property string|null $usage_cost_per
+ * @property bool $archive
+ * @property string|null $asset_tag_id
+ * @property string|null $access_code
+ * @property Carbon|null $obtained_at
+ * @property Carbon|null $removed_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
+#[ScopedBy(OrderScope::class)]
 #[UseFactory(EquipmentFactory::class)]
 class Equipment extends Model
 {
     /** @use HasFactory<EquipmentFactory> */
-    use HasFactory, PresentableTrait, SoftDeletes;
-
-    protected $presenter = 'BB\Presenters\EquipmentPresenter';
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'equipment';
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -79,42 +104,27 @@ class Equipment extends Model
         'lone_working'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'working' => 'boolean',
-        'permaloan' => 'boolean',
-        'dangerous' => 'boolean',
-        'lone_working' => 'boolean',
-        'archive' => 'boolean',
-        'requires_induction' => 'boolean',
-        'accepting_inductions' => 'boolean',
-        'obtained_at' => 'datetime',
-        'removed_at' => 'datetime',
-
-        // Swap these over later
-        // 'photos' => 'array',
-        // 'ppe' => 'array',
-        // 'docs' => 'array',
-    ];
-
-    protected static function boot()
+    protected function casts(): array
     {
-        parent::boot();
+        return [
+            'working' => 'boolean',
+            'permaloan' => 'boolean',
+            'dangerous' => 'boolean',
+            'lone_working' => 'boolean',
+            'archive' => 'boolean',
+            'requires_induction' => 'boolean',
+            'accepting_inductions' => 'boolean',
+            'obtained_at' => 'datetime',
+            'removed_at' => 'datetime',
 
-        // TODO: Would be nice to support multiple orderings, i.e. order by "Working: yes/no" primarily, name secondarily
-        static::addGlobalScope(new OrderScope('name', 'asc'));
+            // Swap these over later
+            // 'photos' => 'array',
+            // 'ppe' => 'array',
+            // 'docs' => 'array',
+        ];
     }
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
@@ -159,51 +169,20 @@ class Equipment extends Model
 
     /**
      * Does the equipment need an induction to use it
-     *
-     * @return bool
      */
-    public function requiresInduction()
+    public function requiresInduction(): bool
     {
         return (bool)$this->requires_induction;
     }
 
-    public function hasUsageCharge()
+    public function hasUsageCharge(): bool
     {
         return (bool)$this->usageCost;
     }
 
-    /**
-     * @return bool
-     */
-    public function isWorking()
-    {
-        return (bool)$this->working;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasPhoto()
+    public function hasPhoto(): bool
     {
         return (bool)count($this->photos);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPermaloan()
-    {
-        return (bool)$this->permaloan;
-    }
-
-    public function isDangerous()
-    {
-        return (bool)$this->dangerous;
-    }
-
-    public function isManagedByGroup()
-    {
-        return (bool)$this->managing_role_id;
     }
 
     /**
@@ -264,66 +243,72 @@ class Equipment extends Model
         return count($this->photos);
     }
 
-    public function setPhotosAttribute(array $value)
+    /**
+     * @return Attribute<array, array>
+     */
+    protected function photos(): Attribute
     {
-        if (empty($value)) {
-            $value = [];
-        }
-        $this->attributes['photos'] = json_encode($value);
+        return Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return [];
+                }
+                $photos = json_decode($value, true);
+                if ($photos === null) {
+                    return [];
+                }
+                return $photos;
+            },
+            set: function (array $value) {
+                if (empty($value)) {
+                    $value = [];
+                }
+                return json_encode($value);
+            },
+        );
     }
 
     /**
-     * @return array
+     * @return Attribute<string|null, string>
      */
-    public function getPhotosAttribute()
+    protected function slug(): Attribute
     {
-        if (empty($this->attributes['photos'])) {
-            return [];
-        }
-        $photos = json_decode($this->attributes['photos'], true);
-        if ($photos === null) {
-            return [];
-        }
-        return $photos;
-    }
-
-    public function setSlugAttribute($value)
-    {
-        $this->attributes['slug'] = strtolower($value);
-    }
-
-    public function getUsageCostAttribute()
-    {
-        return $this->attributes['usage_cost'] / 100;
-    }
-
-    public function setUsageCostAttribute($value)
-    {
-        $this->attributes['usage_cost'] = floatval($value) * 100;
+        return Attribute::set(fn ($value) => strtolower($value));
     }
 
     /**
-     * @return array
+     * Read and written in pounds, stored in pence. Also readable as `usageCost`,
+     * hence reading from $attributes rather than the value for the key asked for.
+     *
+     * @return Attribute<float|int, mixed>
      */
-    public function getPpeAttribute()
+    protected function usageCost(): Attribute
     {
-        $items = json_decode($this->attributes['ppe'] ?? '', true);
-        if (is_array($items)) {
-            // Filter out empty strings and trim whitespace
-            return array_values(array_filter($items, function($item) {
-                return !empty(trim($item));
-            }));
-        } else {
-            return [];
-        }
+        return Attribute::make(
+            get: fn ($value, array $attributes) => $attributes['usage_cost'] / 100,
+            set: fn ($value) => floatval($value) * 100,
+        );
     }
 
     /**
-     * @param string $value
+     * @return Attribute<array, mixed>
      */
-    public function setPpeAttribute($value)
+    protected function ppe(): Attribute
     {
-        $this->attributes['ppe'] = json_encode($value);
+        return Attribute::make(
+            get: function ($value) {
+                $items = json_decode($value ?? '', true);
+                if (is_array($items)) {
+                    // Filter out empty strings and trim whitespace
+                    return array_values(array_filter($items, function($item) {
+                        return !empty(trim($item));
+                    }));
+                } else {
+                    return [];
+                }
+            },
+            set: fn ($value) => json_encode($value),
+        );
     }
 
     /**

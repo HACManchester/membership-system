@@ -53,9 +53,9 @@ class EquipmentShowResource extends JsonResource
                 'name' => $this->maintainerGroup->name,
                 'url' => route('maintainer_groups.show', $this->maintainerGroup->slug, false),
             ] : null,
-            'manufacturer_model' => $this->present()->manufacturerModel ?: null,
-            'purchase_date' => $this->present()->purchaseDate,
-            'usage_cost' => $this->hasUsageCharge() ? $this->present()->usageCost : null,
+            'manufacturer_model' => $this->manufacturerAndModel(),
+            'purchase_date' => $this->obtained_at?->toFormattedDateString(),
+            'usage_cost' => $this->hasUsageCharge() ? '£' . number_format($this->usage_cost, 2) . ' per ' . $this->usage_cost_per : null,
             'ppe' => collect($this->ppe)->map(function ($key) {
                 return [
                     'key' => $key,
@@ -76,5 +76,15 @@ class EquipmentShowResource extends JsonResource
             // (the same people who can see them on the edit form).
             'admin_notes' => $this->when($canEdit, $this->admin_notes),
         ];
+    }
+
+    private function manufacturerAndModel(): ?string
+    {
+        $manufacturerModel = $this->manufacturer;
+        if ($this->model_number) {
+            $manufacturerModel .= ' (' . $this->model_number . ')';
+        }
+
+        return $manufacturerModel ?: null;
     }
 }

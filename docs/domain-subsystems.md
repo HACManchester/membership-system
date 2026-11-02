@@ -232,8 +232,9 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
   chat; gracefully no-ops when unconfigured. Exception notifications are rate-limited
   (`app/Exceptions/Handler.php`).
 - **FlashNotification** — session-flash facade used consistently across controllers.
-- **Presenters** (`laracasts/presenter`) — legacy view-formatting layer; migrate to accessors as
-  models are touched.
+- **Display formatting** — labels and formatted values are accessors on the model (in
+  `app/Entities/Presenters/UserPresenter` for `User`), Resource fields or inline view code; see
+  the rule in architecture.md. (`laracasts/presenter` was removed in November 2026.)
 
 ## Adjacent dead/vestigial areas
 

@@ -16,11 +16,11 @@
         <tbody>
         @foreach ($payments as $payment)
         <tr>
-            <td>{{ $payment->present()->reason }}</td>
-            <td>{{ $payment->present()->method }}</td>
-            <td>{{ $payment->present()->date }}</td>
-            <td>{{ $payment->present()->amount }}</td>
-            <td>{{ $payment->present()->status }}</td>
+            <td>{{ $payment->reason_label }}</td>
+            <td>{{ $payment->method_label }}</td>
+            <td>{{ $payment->created_at->toFormattedDateString() }}</td>
+            <td>£{{ number_format($payment->amount, 2) }}</td>
+            <td>{{ $payment->status_label }}</td>
         </tr>
         @endforeach
         </tbody>

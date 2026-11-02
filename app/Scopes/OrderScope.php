@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope as ScopeInterface;
 
 /**
- * Scope class to add to models to set their default ordering. Undo it for a
- * query with ->withoutGlobalScope(OrderScope::class).
+ * Scope class to add to models to set their default ordering, by name unless
+ * constructed otherwise; #[ScopedBy(OrderScope::class)] gets the default. Undo
+ * it for a query with ->withoutGlobalScope(OrderScope::class).
  */
 class OrderScope implements ScopeInterface
 {
@@ -16,7 +17,7 @@ class OrderScope implements ScopeInterface
 
     protected $direction;
 
-    public function __construct($column, $direction = 'asc')
+    public function __construct($column = 'name', $direction = 'asc')
     {
         $this->column = $column;
         $this->direction = $direction;

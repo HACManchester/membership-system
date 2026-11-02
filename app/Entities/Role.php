@@ -13,11 +13,6 @@ class Role extends Model
     /** @use HasFactory<RoleFactory> */
     use HasFactory;
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = ['name', 'title', 'description', 'email_public', 'email_private', 'slack_channel'];
 
     /**

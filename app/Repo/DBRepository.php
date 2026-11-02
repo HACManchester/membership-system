@@ -43,21 +43,6 @@ abstract class DBRepository
         return $this->model->get();
     }
 
-    /**
-     * Create a new record
-     * @param $data
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function create($data)
-    {
-        // Can remove if we ever add the ConvertEmptyStringsToNull middleware
-        if (is_string($data['maintainer_group_id']) && $data['maintainer_group_id'] == '') {
-            $data['maintainer_group_id'] = null;
-        }
-        
-        return $this->model->create($data);
-    }
-
 
     /**
      * Delete a record

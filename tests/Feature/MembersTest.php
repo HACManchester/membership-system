@@ -46,6 +46,41 @@ class MembersTest extends TestCase
             });
     }
 
+    public function test_show_links_the_member_social_profiles()
+    {
+        $viewer = User::factory()->create();
+        $member = User::factory()->create();
+        ProfileData::factory()->create([
+            'user_id' => $member->id,
+            'github' => 'octocat',
+            'twitter' => 'hacman',
+            'google_plus' => 'hacman_tg',
+            'facebook' => 'a&b',
+        ]);
+
+        $this->actingAs($viewer)->get(route('members.show', $member->id))
+            ->assertInertia(function ($page) {
+                $page->where('profile.links.github', 'https://github.com/octocat')
+                    ->where('profile.links.twitter', 'https://twitter.com/hacman')
+                    ->where('profile.links.telegram', 'https://t.me/hacman_tg')
+                    ->where('profile.links.facebook', 'https://www.facebook.com/a&amp;b');
+            });
+    }
+
+    public function test_show_has_no_social_links_for_a_member_without_handles()
+    {
+        $viewer = User::factory()->create();
+        $member = $this->memberWithProfile();
+
+        $this->actingAs($viewer)->get(route('members.show', $member->id))
+            ->assertInertia(function ($page) {
+                $page->where('profile.links.github', null)
+                    ->where('profile.links.twitter', null)
+                    ->where('profile.links.telegram', null)
+                    ->where('profile.links.facebook', null);
+            });
+    }
+
     public function test_show_marks_can_edit_for_the_member_themselves()
     {
         $member = $this->memberWithProfile();

@@ -2,7 +2,6 @@
 
 namespace BB\Entities;
 
-use BB\Entities\MaintainerGroup;
 use Database\Factories\EquipmentAreaFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,12 +18,7 @@ class EquipmentArea extends Model
 
     protected $fillable = ['name', 'slug', 'description'];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }

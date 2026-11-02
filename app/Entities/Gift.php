@@ -6,28 +6,25 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string $code
+ * @property string|null $gifter_name
+ * @property string|null $giftee_name
+ * @property int $months
+ * @property float $credit
+ * @property string $expires Y-m-d
+ */
 #[UseFactory(GiftFactory::class)]
 class Gift extends Model
 {
     /** @use HasFactory<GiftFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'gifts';
-
     /** The gifts table has no created_at or updated_at columns. */
     public $timestamps = false;
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'code', 'gifter_name', 'giftee_name', 'months', 'credit', 'expires'
     ];

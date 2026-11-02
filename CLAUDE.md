@@ -39,8 +39,8 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
 - Scheduled billing/status jobs: `app/Console/Kernel.php` — these are revenue-critical; read
   `docs/billing.md` before touching billing code.
 - Legacy layers you'll encounter: `app/Repo/` (repositories), `app/Handlers/` (string-event
-  handlers — still load-bearing for payments), `app/Validators/`, `app/Presenters/`. These are
-  generation-1 patterns being retired — see `docs/architecture.md`.
+  handlers — still load-bearing for payments), `app/Validators/`. These are generation-1 patterns
+  being retired — see `docs/architecture.md`.
 
 ## Conventions
 
@@ -57,6 +57,10 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
 - Feature tests assert DB state / queued mail / fired events, not just status codes. Mock at the
   boundary (`GoCardlessHelper`), never internal services.
 - Use `$request->validated()`, never `$request->all()`, for writes.
+- **Display formatting goes in its narrowest home**: one Blade view → inline; one Inertia page →
+  its Resource; several places → an `Attribute` accessor on the model, or on `User` (or another
+  model due for splitting) a presenter trait in `app/Entities/Presenters/`. See
+  `docs/architecture.md`.
 - Get the signed-in member with `BB\Support\CurrentUser::get()` (or `find()` where guests can reach
   the code), not `Auth::user()` / `$request->user()`, which can return the door system's `ApiKey`.
 - **Docblocks only where they add information the signature can't express** — e.g. `@param` types

@@ -29,23 +29,34 @@ class MemberProfileResource extends JsonResource
 
     public function toArray($request)
     {
+        /** @var \BB\Entities\ProfileData $profile Set by the controller, see above. */
         $profile = $this->profile;
 
         return [
             'name' => $this->name,
             'pronouns' => trim((string) $this->pronouns) !== '' ? $this->pronouns : null,
             'photo_url' => MemberPhoto::url($profile->profile_photo, $profile->profile_photo_private, $this->hash),
-            'tagline' => $profile->present()->tagline,
+            'tagline' => $profile->tagline,
             'description' => $profile->description,
             'links' => [
-                'github' => $profile->present()->gitHubLink,
-                'twitter' => $profile->present()->twitterLink,
-                'telegram' => $profile->present()->googlePlusLink,
-                'facebook' => $profile->present()->facebookLink,
+                'github' => self::link('https://github.com/', $profile->github),
+                'twitter' => self::link('https://twitter.com/', $profile->twitter),
+                'telegram' => self::link('https://t.me/', $profile->google_plus),
+                'facebook' => self::link('https://www.facebook.com/', $profile->facebook),
                 'website' => ! empty($profile->website) ? $profile->website : null,
             ],
             'irc' => ! empty($profile->irc) ? $profile->irc : null,
             'skills' => $this->skills,
         ];
+    }
+
+    /**
+     * The handle is HTML-escaped into the URL. The page escapes it again when it
+     * renders the link, so a handle containing &, <, > or quotes comes out
+     * double-escaped.
+     */
+    private static function link(string $baseUrl, ?string $handle): ?string
+    {
+        return empty($handle) ? null : $baseUrl . e($handle);
     }
 }

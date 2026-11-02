@@ -3,10 +3,10 @@
 use Carbon\Carbon;
 use Database\Factories\SubscriptionChargeFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laracasts\Presenter\PresentableTrait;
 
 /**
  * Class SubscriptionCharge
@@ -18,6 +18,9 @@ use Laracasts\Presenter\PresentableTrait;
  * @property integer $amount
  * @property string  $status
  * @property-read User|null $user
+ * @property-read string $status_label
+ * @property-read string|null $payment_date_label
+ * @property-read string $amount_label
  * @package BB\Entities
  */
 #[UseFactory(SubscriptionChargeFactory::class)]
@@ -25,23 +28,11 @@ class SubscriptionCharge extends Model
 {
 
     /** @use HasFactory<SubscriptionChargeFactory> */
-    use HasFactory, PresentableTrait;
+    use HasFactory;
 
-    protected $presenter = 'BB\Presenters\SubscriptionChargePresenter';
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'subscription_charge';
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id', 'charge_date', 'amount', 'status'
     ];
@@ -50,10 +41,13 @@ class SubscriptionCharge extends Model
         'payment_date' => '0000-00-00 00:00:00'
     ];
 
-    protected $casts = [
-        'charge_date' => 'datetime',
-        'payment_date' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'charge_date' => 'datetime',
+            'payment_date' => 'datetime',
+        ];
+    }
 
 
 
@@ -78,4 +72,38 @@ class SubscriptionCharge extends Model
         return $this->belongsTo(User::class);
     }
 
-} 
+    /**
+     * @return Attribute<string, never>
+     */
+    protected function statusLabel(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->status) {
+            'pending' => 'Pending',
+            'due' => 'Due',
+            'processing' => 'Processing',
+            'paid' => 'Paid',
+            'cancelled' => 'Cancelled',
+            default => $this->status,
+        });
+    }
+
+    /**
+     * The date the charge was paid, or null until it has been.
+     *
+     * @return Attribute<string|null, never>
+     */
+    protected function paymentDateLabel(): Attribute
+    {
+        return Attribute::get(fn () => $this->status === 'paid' ? $this->payment_date?->toFormattedDateString() : null);
+    }
+
+    /**
+     * The amount once it is being collected, and blank before then.
+     *
+     * @return Attribute<string, never>
+     */
+    protected function amountLabel(): Attribute
+    {
+        return Attribute::get(fn () => in_array($this->status, ['processing', 'paid'], true) ? '£' . number_format($this->amount, 2) : '');
+    }
+}

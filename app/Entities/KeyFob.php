@@ -1,34 +1,31 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Database\Factories\KeyFobFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class KeyFob
+ * Uncast boolean columns read back from the database as 0/1, hence bool|int.
  *
- * @property integer $id
- * @property bool    $lost
- * @property bool    $active
- * @property User    $user
- * @package BB\Entities
+ * @property int $id
+ * @property int $user_id
+ * @property string $key_id
+ * @property bool|int $active
+ * @property bool|int $lost
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User $user
  */
 #[UseFactory(KeyFobFactory::class)]
 class KeyFob extends Model
 {
     /** @use HasFactory<KeyFobFactory> */
     use HasFactory;
-
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'key_fobs';
 
     protected $fillable = [
         'user_id',
@@ -55,8 +52,9 @@ class KeyFob extends Model
         $this->save();
     }
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active(Builder $query): void
     {
-        return $query->whereActive(true);
+        $query->whereActive(true);
     }
 } 

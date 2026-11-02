@@ -1,23 +1,23 @@
 <?php namespace BB\Traits;
 
+use BB\Entities\Role;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 trait UserRoleTrait
 {
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\BB\Entities\Role, $this>
+     * @return BelongsToMany<Role, $this>
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(\BB\Entities\Role::class)->withTimestamps();
+        return $this->belongsToMany(Role::class)->withTimestamps();
     }
 
     /**
      * Does the user have a particular role?
-     *
-     * @param $name
-     * @return bool
      */
-    public function hasRole($name)
+    public function hasRole($name): bool
     {
         foreach ($this->roles as $role) {
             if ($role->name == $name) {
@@ -38,27 +38,4 @@ trait UserRoleTrait
     {
         $this->roles()->attach($role);
     }
-
-    /**
-     * Remove a role from a user
-     *
-     * @param $role
-     * @return integer
-     */
-    public function removeRole($role)
-    {
-        return $this->roles()->detach($role);
-    }
-
-    /**
-     * Define a many-to-many relationship.
-     *
-     * @param  string  $related
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $otherKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    abstract public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null);
 } 

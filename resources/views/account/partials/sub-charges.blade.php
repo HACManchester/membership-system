@@ -14,11 +14,11 @@
         </thead>
         <tbody>
         @foreach ($subscriptionCharges as $charge)
-        <tr class="{{ $charge->present()->rowClass() }}">
-            <td>{{ $charge->present()->charge_date }}</td>
-            <td>{{ $charge->present()->amount }}</td>
-            <td>{{ $charge->present()->status }}</td>
-            <td>{{ $charge->present()->payment_date }}</td>
+        <tr class="{{ match ($charge->status) { 'pending' => '', 'due' => 'warning', 'processing' => 'info', 'paid' => 'success', 'cancelled' => 'text-muted', default => $charge->status } }}">
+            <td>{{ $charge->charge_date->toFormattedDateString() }}</td>
+            <td>{{ $charge->amount_label }}</td>
+            <td>{{ $charge->status_label }}</td>
+            <td>{{ $charge->payment_date_label }}</td>
         </tr>
         @endforeach
         </tbody>

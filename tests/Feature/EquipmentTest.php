@@ -189,6 +189,56 @@ class EquipmentTest extends TestCase
     }
 
     #[Test]
+    public function the_usage_cost_is_entered_in_pounds_and_stored_in_pence()
+    {
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Costed Tool',
+            'room_id' => $room->id,
+            'usage_cost' => '2.5',
+            'usage_cost_per' => 'hour',
+        ]);
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('equipment', ['slug' => 'costed-tool', 'usage_cost' => 250]);
+    }
+
+    #[Test]
+    public function a_usage_cost_stored_in_pence_is_shown_in_pounds()
+    {
+        Equipment::whereKey($this->equipment->id)->toBase()->update(['usage_cost' => 250, 'usage_cost_per' => 'hour']);
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(fn ($page) => $page->where('equipment.usage_cost', '£2.50 per hour'));
+    }
+
+    #[Test]
+    public function the_slug_is_stored_in_lower_case()
+    {
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Big Lathe',
+            'slug' => 'Big-Lathe',
+            'room_id' => $room->id,
+        ]);
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('equipment', ['name' => 'Big Lathe', 'slug' => 'big-lathe']);
+    }
+
+    #[Test]
+    public function ppe_is_stored_as_json_and_read_back_without_blank_entries()
+    {
+        $this->equipment->ppe = ['eye-protection', '', '  ', 'gloves'];
+        $this->equipment->save();
+
+        $this->assertDatabaseHas('equipment', ['id' => $this->equipment->id, 'ppe' => '["eye-protection","","  ","gloves"]']);
+        $this->assertSame(['eye-protection', 'gloves'], $this->equipment->fresh()->ppe);
+    }
+
+    #[Test]
     public function usage_cost_is_no_longer_required()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
@@ -311,6 +361,43 @@ class EquipmentTest extends TestCase
         $response->assertInertia(function ($page) {
             $page->component('Equipment/Show')->where('equipment.slug', $this->equipment->slug);
         });
+    }
+
+    #[Test]
+    public function show_formats_the_manufacturer_purchase_date_and_usage_cost()
+    {
+        $this->equipment->forceFill([
+            'manufacturer' => 'Trotec',
+            'model_number' => 'Speedy 400',
+            'obtained_at' => '2024-03-05',
+            'usage_cost' => 2.5,
+            'usage_cost_per' => 'hour',
+        ])->save();
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->where('equipment.manufacturer_model', 'Trotec (Speedy 400)')
+                    ->where('equipment.purchase_date', 'Mar 5, 2024')
+                    ->where('equipment.usage_cost', '£2.50 per hour');
+            });
+    }
+
+    #[Test]
+    public function show_leaves_out_an_unknown_manufacturer_purchase_date_and_usage_cost()
+    {
+        $this->equipment->forceFill([
+            'manufacturer' => null,
+            'model_number' => null,
+            'obtained_at' => null,
+            'usage_cost' => 0,
+        ])->save();
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(function ($page) {
+                $page->where('equipment.manufacturer_model', null)
+                    ->where('equipment.purchase_date', null)
+                    ->where('equipment.usage_cost', null);
+            });
     }
 
     #[Test]

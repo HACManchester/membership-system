@@ -2,23 +2,28 @@
 
 namespace BB\Entities;
 
-
+use Carbon\Carbon;
 use Database\Factories\TrainingRecordFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class TrainingRecord
- *
- * @property bool $trained
+ * @property int $id
+ * @property int $user_id
  * @property int|null $course_id
- * @property Course|null $course
- * @property User $user
- * @property User|null $trainerUser
- * @property \Carbon\Carbon|null $sign_off_requested_at
- * @package BB\Entities
+ * @property string $key legacy equipment key, superseded by course_id
+ * @property bool $active
+ * @property Carbon|null $trained
+ * @property bool $is_trainer
+ * @property int|null $trainer_user_id
+ * @property Carbon|null $sign_off_requested_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User $user
  */
 #[UseFactory(TrainingRecordFactory::class)]
 class TrainingRecord extends Model
@@ -26,25 +31,8 @@ class TrainingRecord extends Model
     /** @use HasFactory<TrainingRecordFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'inductions';
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
-    protected $hidden = array();
-
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'key',
         'user_id',
@@ -61,17 +49,21 @@ class TrainingRecord extends Model
         'is_trainer' => false,
     ];
 
-    protected $casts = [
-        'paid' => 'boolean',
-        'active' => 'boolean',
-        'is_trainer' => 'boolean',
-        'trained' => 'datetime',
-        'sign_off_requested_at' => 'datetime',
-    ];
-
-    public function scopeTrained($query)
+    protected function casts(): array
     {
-        return $query->whereNotNull('trained');
+        return [
+            'paid' => 'boolean',
+            'active' => 'boolean',
+            'is_trainer' => 'boolean',
+            'trained' => 'datetime',
+            'sign_off_requested_at' => 'datetime',
+        ];
+    }
+
+    #[Scope]
+    protected function trained(Builder $query): void
+    {
+        $query->whereNotNull('trained');
     }
 
 
@@ -89,11 +81,6 @@ class TrainingRecord extends Model
     public function trainerUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_user_id');
-    }
-
-    public static function trainersFor($key)
-    {
-        return self::where('key', $key)->where('is_trainer', true)->get();
     }
 
     /**

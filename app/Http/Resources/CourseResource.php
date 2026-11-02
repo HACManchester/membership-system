@@ -24,12 +24,12 @@ class CourseResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'format' => [
-                'label' => $this->present()->format,
+                'label' => $this->format_label,
                 'value' => $this->format,
             ],
             'format_description' => $this->format_description,
             'frequency' => [
-                'label' => $this->present()->frequency,
+                'label' => $this->frequency_label,
                 'value' => $this->frequency,
             ],
             'frequency_description' => $this->frequency_description,
