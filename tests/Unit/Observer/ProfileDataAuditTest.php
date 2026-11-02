@@ -26,7 +26,8 @@ class ProfileDataAuditTest extends TestCase
         $profile = ProfileData::factory()->create(['user_id' => $member->id, 'profile_photo_on_wall' => 0]);
         $this->assertNotEquals($member->id, $profile->id);
 
-        $profile->update(['profile_photo_on_wall' => 1]);
+        $profile->profile_photo_on_wall = 1;
+        $profile->save();
 
         $log = AuditLog::where('description', 'like', '%profile_photo_on_wall [is 1, was 0]%')->first();
         $this->assertNotNull($log, 'the profile change should be audited');

@@ -14,7 +14,7 @@ class KeyFobCsvTest extends TestCase
 {
     public function testKeyFobsCsvList()
     {
-        $token = \BB\Entities\ApiKey::create(['api_token' => Str::random(), 'description' => 'Test Key', 'active' => true]);
+        $token = \BB\Entities\ApiKey::create(['api_token' => Str::random(), 'description' => 'Test Key']);
 
         $user_1 = User::factory()->create(['active' => true, 'announce_name' => 'User One']);
         $user_2 = User::factory()->create(['active' => true, 'announce_name' => null]);

@@ -73,6 +73,19 @@ class MemberAdminActionsTest extends TestCase
     }
 
     #[Test]
+    public function an_admin_can_put_a_members_photo_on_the_wall()
+    {
+        $member = User::factory()->create();
+        ProfileData::factory()->create(['user_id' => $member->id, 'profile_photo_on_wall' => false]);
+
+        $this->actingAs($this->admin())
+            ->put(route('account.admin-update', $member->id), ['profile_photo_on_wall' => 1])
+            ->assertRedirect(route('account.show', $member->id));
+
+        $this->assertDatabaseHas('profile_data', ['user_id' => $member->id, 'profile_photo_on_wall' => true]);
+    }
+
+    #[Test]
     public function approving_a_photo_marks_it_approved()
     {
         $userImage = $this->createMock(\BB\Helpers\UserImage::class);

@@ -19,7 +19,7 @@ class CreateNewMemberRoles extends Migration
 
         Role::create(['name'=>'membership', 'title'=>'Membership', 'description' => 'Helping new members get started at Hackspace Manchester']);
         Role::create(['name'=>'comms', 'title'=>'Comms', 'description' => 'Letting the rest of the world know about Hackspace Manchester ']);
-        Role::create(['name'=>'metalworking', 'title'=>'Metalworking', 'The Machinists group']);
+        Role::create(['name'=>'metalworking', 'title'=>'Metalworking', 'description' => 'The Machinists group']);
         Role::create(['name'=>'woodworking', 'title'=>'Woodworking']);
         Role::create(['name'=>'safety', 'title'=>'Health and Safety']);
         Role::create(['name'=>'board', 'title'=>'board', 'description' => 'The members (directors) with legal responsibility for Hackspace Manchester']);

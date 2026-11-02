@@ -188,9 +188,14 @@ class Handler extends ExceptionHandler
         return $request->is('api/*') || parent::shouldReturnJson($request, $e);
     }
 
+    /**
+     * Blade forms show each field's error from the flashed details, as they did with
+     * the legacy validators. Inertia pages read the session's errors bag instead.
+     */
     protected function invalid($request, IlluminateValidationException $exception)
     {
-        \FlashNotification::error($exception->getMessage());
+        $details = $request->header('X-Inertia') ? null : $exception->validator->errors();
+        \FlashNotification::error($exception->getMessage(), $details);
 
         return parent::invalid($request, $exception);
     }

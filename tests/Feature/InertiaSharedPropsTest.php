@@ -58,6 +58,19 @@ class InertiaSharedPropsTest extends TestCase
     }
 
     #[Test]
+    public function an_inertia_validation_failure_uses_only_the_errors_bag()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->from(route('room.create'))
+            ->post(route('room.store'), ['name' => ''], ['X-Inertia' => 'true'])
+            ->assertRedirect(route('room.create'))
+            ->assertSessionHasErrors(['name' => 'The name field is required.'])
+            ->assertSessionMissing('flash_notification.details');
+    }
+
+    #[Test]
     public function a_flashed_message_reaches_the_page_after_a_submission()
     {
         $member = User::factory()->create(['status' => 'active', 'active' => true]);

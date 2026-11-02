@@ -210,9 +210,13 @@ class MembershipLifecycleIntegrationTest extends TestCase
     {
         // Bind the mock before resolving anything, so every path through the container -
         // including ensureMembershipActive's immediate billing - goes through it
-        $goCardless = $this->createStub(\BB\Helpers\GoCardlessHelper::class);
+        $goCardless = $this->createMock(\BB\Helpers\GoCardlessHelper::class);
         $goCardless->method('getNameFromReason')->willReturn('Monthly subscription');
-        $goCardless->method('newBill')->willReturn((object)['id' => 'PM_REJOIN', 'status' => 'pending_submission']);
+        // Exactly one bill, taken against the new mandate
+        $goCardless->expects($this->once())
+            ->method('newBill')
+            ->with('MD_REJOINED')
+            ->willReturn((object)['id' => 'PM_REJOIN', 'status' => 'pending_submission']);
         $this->app->instance(\BB\Helpers\GoCardlessHelper::class, $goCardless);
 
         $this->userRepository = app(UserRepository::class);
@@ -247,7 +251,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // They rejoin: new mandate, and ensureMembershipActive raises the first charge
         $this->userRepository->updateUserPaymentMethod($user->id, 'gocardless-variable', Carbon::now()->day);
-        $user->fresh()->update(['mandate_id' => 'MD_REJOINED']);
+        $this->userRepository->recordGoCardlessMandateDetails($user->id, 'MD_REJOINED');
         $this->userRepository->ensureMembershipActive($user->id);
 
         $billService->makeChargesDue();

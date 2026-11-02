@@ -130,7 +130,8 @@ class NotificationPreviewController extends Controller
 
     private function getDummyTrainingRecord(User $user)
     {
-        $trainingRecord = new TrainingRecord([
+        // Unsaved dummy data, so fill past the model's mass-assignment guard
+        $trainingRecord = (new TrainingRecord)->forceFill([
             'id' => 1,
             'user_id' => $user->id,
             'inducted_by' => null,
@@ -176,7 +177,8 @@ class NotificationPreviewController extends Controller
             'wait_time' => '1-2 weeks',
         ]);
 
-        $trainingRecord = new TrainingRecord([
+        // Unsaved dummy data, so fill past the model's mass-assignment guard
+        $trainingRecord = (new TrainingRecord)->forceFill([
             'id' => 1,
             'user_id' => $user->id,
             'course_id' => $course->id,

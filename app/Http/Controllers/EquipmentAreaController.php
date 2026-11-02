@@ -47,11 +47,9 @@ class EquipmentAreaController extends Controller
     public function store(StoreEquipmentAreaRequest $request)
     {
         return DB::transaction(function () use ($request) {
-            $validated = $request->validated();
-
             // The description column is NOT NULL; default it when omitted.
-            $equipmentArea = EquipmentArea::create(array_merge(['description' => ''], $validated));
-            $equipmentArea->areaCoordinators()->sync($validated['area_coordinators'] ?? []);
+            $equipmentArea = EquipmentArea::create(array_merge(['description' => ''], $request->safe()->except('area_coordinators')));
+            $equipmentArea->areaCoordinators()->sync($request->validated('area_coordinators') ?? []);
 
             FlashNotification::success("Equipment Area, {$equipmentArea->name}, created successfully.");
 
@@ -96,10 +94,8 @@ class EquipmentAreaController extends Controller
     public function update(UpdateEquipmentAreaRequest $request, EquipmentArea $equipmentArea)
     {
         return DB::transaction(function () use ($request, $equipmentArea) {
-            $validated = $request->validated();
-
-            $equipmentArea->update($validated);
-            $equipmentArea->areaCoordinators()->sync($validated['area_coordinators'] ?? []);
+            $equipmentArea->update($request->safe()->except('area_coordinators'));
+            $equipmentArea->areaCoordinators()->sync($request->validated('area_coordinators') ?? []);
 
             FlashNotification::success("Equipment Area, {$equipmentArea->name}, updated successfully.");
 

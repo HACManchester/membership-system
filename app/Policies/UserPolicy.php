@@ -36,4 +36,9 @@ class UserPolicy
         // Members pay against their own account; admins can act for anyone
         return $authedUser->id === $user->id || $authedUser->isAdmin();
     }
+
+    public function updateProfile(User $authedUser, User $user): bool
+    {
+        return $authedUser->id === $user->id || $authedUser->isAdmin();
+    }
 }

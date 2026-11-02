@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Http\Requests\Account\UpdateProfileRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\UploadedFile;
 
@@ -12,10 +13,6 @@ class ProfileController extends Controller
      */
     private $profileRepo;
     /**
-     * @var \BB\Validators\ProfileValidator
-     */
-    private $profileValidator;
-    /**
      * @var \BB\Repo\ProfileSkillsRepository
      */
     private $profileSkillsRepository;
@@ -24,19 +21,12 @@ class ProfileController extends Controller
      */
     private $userImage;
 
-    /**
-     * @param \BB\Repo\ProfileDataRepository   $profileRepo
-     * @param \BB\Validators\ProfileValidator  $profileValidator
-     * @param \BB\Repo\ProfileSkillsRepository $profileSkillsRepository
-     */
     function __construct(
         \BB\Repo\ProfileDataRepository $profileRepo,
-        \BB\Validators\ProfileValidator $profileValidator,
         \BB\Repo\ProfileSkillsRepository $profileSkillsRepository,
         \BB\Helpers\UserImage $userImage)
     {
         $this->profileRepo = $profileRepo;
-        $this->profileValidator = $profileValidator;
         $this->profileSkillsRepository = $profileSkillsRepository;
         $this->userImage = $userImage;
     }
@@ -55,32 +45,17 @@ class ProfileController extends Controller
             ->with('user', $user);
     }
 
-    public function update($userId)
+    public function update(UpdateProfileRequest $request, int $userId)
     {
-        //Verify the user can access this user record - we don't need the record just the auth check
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
 
-        $input = \Request::all();
-        //Clear the profile photo field as this is handled separately below.
-        unset($input['new_profile_photo']);
-
-        if (empty($input['profile_photo_private'])) {
-            $input['profile_photo_private'] = false;
-        }
-
-        //Trim all the data so some of the validation doesn't choke on spaces
-        foreach ($input as $key => $value) {
-            if (is_string($value)) {
-                $input[$key] = trim($value);
-            }
-        }
-
-        $this->profileValidator->validate($input, $userId);
+        $input = $request->validated();
+        $input['profile_photo_private'] = ! empty($input['profile_photo_private']);
 
         $this->profileRepo->update($userId, $input);
 
         // A single file only: new_profile_photo[] arrives as an array
-        $photo = \Request::file('new_profile_photo');
+        $photo = $request->file('new_profile_photo');
         if ($photo instanceof UploadedFile) {
             try {
                 $this->userImage->uploadPhoto($user->hash, $photo->getRealPath(), true);

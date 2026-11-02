@@ -7,6 +7,7 @@ use BB\Entities\User;
 use BB\Support\CurrentUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class UserRepository extends DBRepository
@@ -67,14 +68,17 @@ class UserRepository extends DBRepository
         $model = $this->model->with('roles')->with('profile');
 
         if ($params['filter']) {
+            // Grouped, so the online-only and left filters below apply to every match
             $model = $model
-                ->where('email', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhereHas('keyFobs', function (Builder $q) use ($params) {
-                    $q->where('key_id', 'like', $params['filter']);
+                ->where(function (Builder $query) use ($params) {
+                    $query->where('email', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhereHas('keyFobs', function (Builder $q) use ($params) {
+                            $q->where('key_id', 'like', $params['filter']);
+                        });
                 })
                 ->take($params['limit']);
         }
@@ -162,10 +166,10 @@ class UserRepository extends DBRepository
         return $this->model
             ->NewsletterOptIns()
             ->where(function ($query) {
-                $query->active();
-            })
-            ->orWhere(function ($query) {
-                $query->recentlyLapsed();
+                $query->active()
+                    ->orWhere(function ($query) {
+                        $query->recentlyLapsed();
+                    });
             })
             ->get();
     }
@@ -191,7 +195,8 @@ class UserRepository extends DBRepository
         // Sign up to newsletter by default (legitimate interest comms to members)
         $memberData['newsletter'] = true;
 
-        $user = $this->model->create($memberData);
+        // The address, photo and gift fields aren't user columns: they're saved below and by the controller
+        $user = $this->model->create(Arr::except($memberData, ['address', 'profile_photo_private', 'new_profile_photo', 'gift_code']));
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
@@ -209,8 +214,8 @@ class UserRepository extends DBRepository
                 $user->gift = $memberData['gift_code'];
                 $user->save();
 
-                // log cash payment
-                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, 5.00, 'paid', 0, $memberData['gift_code']);
+                // log cash payment (payments.amount is pounds, like the gift's credit)
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, (float) $gift_record->credit, 'paid', 0, $memberData['gift_code']);
 
                 $gift_record->delete();
             }

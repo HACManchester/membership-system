@@ -15,7 +15,7 @@
         @if ($user->online_only)
             <div class="label label-warning">Online Only</div>
         @endif
-        @if ($user->profile->new_profile_photo)
+        @if ($user->profile?->new_profile_photo)
             <br /><span class="label label-info">Photo to approve</span>
         @endif
     </td>
