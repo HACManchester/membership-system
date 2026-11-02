@@ -10,6 +10,8 @@ use BB\Notifications\Messages\MailMessage;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Tests\TestCase;
 
 /**
@@ -27,9 +29,7 @@ use Tests\TestCase;
  *    rather than a Mailable.
  *
  * Sent messages are read from the MessageSent event, whose message is a
- * Symfony Mime Email, through sentMessage*() helpers. They were written to
- * read SwiftMailer's messages too, so the same assertions held either side of
- * the swap; the SwiftMailer branches are no longer reached.
+ * Symfony Mime Email.
  */
 class MailRenderTest extends TestCase
 {
@@ -83,9 +83,9 @@ class MailRenderTest extends TestCase
 
         $this->assertCount(1, $sent);
         $this->assertSame(['ada@example.test'], $this->sentMessageRecipients($sent[0]));
-        $this->assertSame('You have been made a trusted member', $this->sentMessageSubject($sent[0]));
-        $this->assertStringContainsString('Hi Ada', $this->sentMessageBody($sent[0]));
-        $this->assertStringContainsString('You have been made a trusted member', $this->sentMessageBody($sent[0]));
+        $this->assertSame('You have been made a trusted member', $sent[0]->getSubject());
+        $this->assertStringContainsString('Hi Ada', $sent[0]->getHtmlBody());
+        $this->assertStringContainsString('You have been made a trusted member', $sent[0]->getHtmlBody());
     }
 
     #[Test]
@@ -98,9 +98,9 @@ class MailRenderTest extends TestCase
 
         $this->assertCount(1, $sent);
         $this->assertSame(['grace@example.test'], $this->sentMessageRecipients($sent[0]));
-        $this->assertSame('Your profile photo was rejected', $this->sentMessageSubject($sent[0]));
-        $this->assertStringContainsString('Hi Grace', $this->sentMessageBody($sent[0]));
-        $this->assertStringContainsString('profile photo has been rejected', $this->sentMessageBody($sent[0]));
+        $this->assertSame('Your profile photo was rejected', $sent[0]->getSubject());
+        $this->assertStringContainsString('Hi Grace', $sent[0]->getHtmlBody());
+        $this->assertStringContainsString('profile photo has been rejected', $sent[0]->getHtmlBody());
     }
 
     private function member($givenName, $email)
@@ -115,9 +115,9 @@ class MailRenderTest extends TestCase
      * Collects every message the real mailer sends. Mail::fake() can't be used:
      * it only records Mailables and silently drops raw view sends.
      *
-     * @return \ArrayObject<int,\Symfony\Component\Mime\Email>
+     * @return \ArrayObject<int, Email>
      */
-    private function captureSentMail()
+    private function captureSentMail(): \ArrayObject
     {
         $sent = new \ArrayObject();
 
@@ -129,30 +129,10 @@ class MailRenderTest extends TestCase
     }
 
     /**
-     * @param \Symfony\Component\Mime\Email $message
      * @return string[]
      */
-    private function sentMessageRecipients($message)
+    private function sentMessageRecipients(Email $message): array
     {
-        $to = $message->getTo();
-
-        // Symfony returns Address[]; the keyed ['email' => 'name'] form was SwiftMailer's
-        if (is_array($to) && ! isset($to[0])) {
-            return array_keys($to);
-        }
-
-        return array_map(function ($address) {
-            return $address->getAddress();
-        }, $to);
-    }
-
-    private function sentMessageSubject($message)
-    {
-        return $message->getSubject();
-    }
-
-    private function sentMessageBody($message)
-    {
-        return method_exists($message, 'getHtmlBody') ? $message->getHtmlBody() : $message->getBody();
+        return array_map(fn (Address $address) => $address->getAddress(), $message->getTo());
     }
 }
