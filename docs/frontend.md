@@ -5,7 +5,7 @@
 | | Legacy stack | Modern stack |
 | --- | --- | --- |
 | Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v3 + React (`resources/js/`) |
-| Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
+| Language | PHP templates + jQuery | TypeScript (6.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 9 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
 | Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (two legacy `.jsx` component suites); all run in CI |
@@ -79,9 +79,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 - **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
   suites; `resources/js` has no tests yet.)
-- **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs.
-- **Done**: Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` together.
-- **Next**: the MUI majors.
+- **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs; Inertia 3, upgrading
+  `@inertiajs/react` and `inertiajs/inertia-laravel` together; MUI 9.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 
