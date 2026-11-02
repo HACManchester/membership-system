@@ -2,8 +2,6 @@
 
 namespace BB\Entities;
 
-use BB\Entities\Equipment;
-use BB\Entities\TrainingRecord;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;

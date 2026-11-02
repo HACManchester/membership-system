@@ -28,25 +28,8 @@ class TrainingRecord extends Model
     /** @use HasFactory<TrainingRecordFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'inductions';
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
-    protected $hidden = array();
-
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'key',
         'user_id',
@@ -95,11 +78,6 @@ class TrainingRecord extends Model
     public function trainerUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_user_id');
-    }
-
-    public static function trainersFor($key)
-    {
-        return self::where('key', $key)->where('is_trainer', true)->get();
     }
 
     /**

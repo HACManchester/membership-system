@@ -29,25 +29,6 @@ class Payment extends Model
     const STATUS_PAID = 'paid';
     const STATUS_WITHDRAWN = 'withdrawn';
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'payments';
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
-    protected $hidden = array();
-
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'source',
         'source_id',
@@ -88,16 +69,6 @@ class Payment extends Model
     protected function subscription(Builder $query): void
     {
         $query->whereReason('subscription');
-    }
-
-    /**
-     * Allow the ref property to be used instead of reference.
-     *
-     * @return string
-     */
-    public function getRefAttribute()
-    {
-        return $this->attributes['reference'];
     }
 
     /**

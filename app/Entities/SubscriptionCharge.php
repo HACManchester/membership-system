@@ -30,19 +30,9 @@ class SubscriptionCharge extends Model
     /** @use HasFactory<SubscriptionChargeFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'subscription_charge';
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id', 'charge_date', 'amount', 'status'
     ];

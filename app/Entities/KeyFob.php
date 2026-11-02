@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -23,14 +22,6 @@ class KeyFob extends Model
 {
     /** @use HasFactory<KeyFobFactory> */
     use HasFactory;
-
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'key_fobs';
 
     protected $fillable = [
         'user_id',

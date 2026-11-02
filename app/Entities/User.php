@@ -11,8 +11,6 @@ use DateTime;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use BB\Entities\MaintainerGroup;
-use Hash;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -72,28 +70,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /** @use HasFactory<UserFactory> */
     use HasFactory, UserRoleTrait, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var list<string>
-     */
     protected $hidden = array('password', 'remember_token');
 
     protected $auditFields = array('induction_completed', 'trusted', 'key_holder');
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'given_name',
         'family_name',
@@ -151,7 +132,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             // 'email_verified' => 'boolean',
             'active' => 'boolean',
             // 'founder' => 'boolean',
-            // 'director' => 'boolean',
             // 'trusted' => 'boolean',
             // 'key_holder' => 'boolean',
             // 'induction_completed' => 'boolean',
@@ -168,22 +148,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         ];
     }
 
-
-
-
-    public static function statuses()
-    {
-        return [
-            'setting-up'        => 'Setting Up',
-            'active'            => 'Active',
-            'payment-warning'   => 'Payment Warning',
-            'suspended'         => 'Suspended',
-            'leaving'           => 'Leaving',
-            'on-hold'           => 'On Hold',
-            'left'              => 'Left',
-            'honorary'          => 'Honorary'
-        ];
-    }
 
 
 
@@ -365,19 +329,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return ($this->status == 'suspended');
     }
 
-    /**
-     * @return bool
-     */
-    public function isInducted()
-    {
-        return $this->induction_completed && $this->inducted_by;
-    }
-
-    public function inductedBy()
-    {
-        return User::findOrFail($this->inducted_by);
-    }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -438,23 +389,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     | Methods
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * @param $paymentMethod
-     * @param $paymentDay
-     * @deprecated
-     */
-    public function updateSubscription($paymentMethod, $paymentDay)
-    {
-        if ($paymentDay > 28) {
-            $paymentDay = 1;
-        }
-
-        $this->attributes['payment_method'] = $paymentMethod;
-        $this->attributes['payment_day']    = $paymentDay;
-
-        $this->save();
-    }
 
     /**
      * @param $amount

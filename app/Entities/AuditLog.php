@@ -12,19 +12,9 @@ class AuditLog extends Model
     /** @use HasFactory<AuditLogFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'audit_log';
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id', 'admin_id', 'action', 'description'
     ];

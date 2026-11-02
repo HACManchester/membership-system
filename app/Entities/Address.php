@@ -25,19 +25,9 @@ class Address extends Model
     /** @use HasFactory<AddressFactory> */
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'user_address';
 
 
-    /**
-     * Fillable fields
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id', 'line_1', 'line_2', 'line_3', 'line_4', 'postcode', 'hash'
     ];

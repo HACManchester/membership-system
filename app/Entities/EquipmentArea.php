@@ -2,7 +2,6 @@
 
 namespace BB\Entities;
 
-use BB\Entities\MaintainerGroup;
 use Database\Factories\EquipmentAreaFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

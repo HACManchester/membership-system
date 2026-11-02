@@ -38,27 +38,4 @@ trait UserRoleTrait
     {
         $this->roles()->attach($role);
     }
-
-    /**
-     * Remove a role from a user
-     *
-     * @param $role
-     * @return integer
-     */
-    public function removeRole($role)
-    {
-        return $this->roles()->detach($role);
-    }
-
-    /**
-     * Define a many-to-many relationship.
-     *
-     * @param  string  $related
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $otherKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    abstract public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null);
 } 

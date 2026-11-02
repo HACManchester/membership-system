@@ -131,11 +131,6 @@ class UserRepository extends DBRepository
         }
     }
 
-    public function getTrustedMissingPhotos()
-    {
-        return \DB::table('users')->join('profile_data', 'users.id', '=', 'profile_data.user_id')->where('key_holder', true)->where('active', true)->where('profile_data.profile_photo', 0)->get();
-    }
-
     /**
      * Get a list of active members suitable for use in a dropdown
      * @return array
@@ -365,14 +360,5 @@ class UserRepository extends DBRepository
         $user->rules_agreed = $user->rules_agreed ? $user->rules_agreed : Carbon::now();
 
         $user->save();
-    }
-
-    public function getPendingInductionConfirmation()
-    {
-        return $this->model
-            ->where('status', '!=', 'left')
-            ->where('induction_completed', true)
-            ->where('inducted_by', null)
-            ->get();
     }
 }

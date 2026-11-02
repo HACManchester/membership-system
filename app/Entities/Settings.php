@@ -26,8 +26,6 @@ class Settings extends Model
     /** @use HasFactory<SettingsFactory> */
     use HasFactory;
 
-    protected $table = 'settings';
-
     protected $primaryKey = 'key';
 
     protected $keyType = 'string';

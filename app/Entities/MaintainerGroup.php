@@ -2,8 +2,6 @@
 
 namespace BB\Entities;
 
-use BB\Entities\EquipmentArea;
-use BB\Entities\User;
 use Database\Factories\MaintainerGroupFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

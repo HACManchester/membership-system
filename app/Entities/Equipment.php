@@ -2,7 +2,6 @@
 
 namespace BB\Entities;
 
-use BB\Entities\Course;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Database\Factories\EquipmentFactory;
@@ -31,13 +30,6 @@ class Equipment extends Model
 {
     /** @use HasFactory<EquipmentFactory> */
     use HasFactory, SoftDeletes;
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'equipment';
 
     protected $fillable = [
         'name',
@@ -170,35 +162,9 @@ class Equipment extends Model
     /**
      * @return bool
      */
-    public function isWorking()
-    {
-        return (bool)$this->working;
-    }
-
-    /**
-     * @return bool
-     */
     public function hasPhoto()
     {
         return (bool)count($this->photos);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPermaloan()
-    {
-        return (bool)$this->permaloan;
-    }
-
-    public function isDangerous()
-    {
-        return (bool)$this->dangerous;
-    }
-
-    public function isManagedByGroup()
-    {
-        return (bool)$this->managing_role_id;
     }
 
     /**
