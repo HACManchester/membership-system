@@ -6,6 +6,8 @@ use BB\Entities\Gift;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -34,7 +36,7 @@ class SignupTest extends TestCase
             'suppress_real_name'   => '0',
             'password'             => $this->faker->password(10),
             'phone'                => '07700900123',
-            'address'              => ['line_1' => $this->faker->streetAddress(), 'postcode' => 'M4 7HR'],
+            'address'              => ['line_1' => '1 Test Street', 'postcode' => 'm4 7hr'],
             'emergency_contact'    => $this->faker->name(),
             'monthly_subscription' => config('membership.prices.minimum'),
             'rules_agreed'         => '1',
@@ -44,6 +46,49 @@ class SignupTest extends TestCase
             'email'      => $email,
             'given_name' => $given,
             'status'     => 'setting-up',
+        ]);
+        $member = User::where('email', $email)->firstOrFail();
+        $this->assertDatabaseHas('user_address', [
+            'user_id'  => $member->id,
+            'line_1'   => '1 Test Street',
+            'postcode' => 'M4 7HR',
+        ]);
+        $this->assertDatabaseHas('profile_data', [
+            'user_id'               => $member->id,
+            'new_profile_photo'     => false,
+            'profile_photo_private' => false,
+        ]);
+    }
+
+    #[Test]
+    public function a_photo_given_at_signup_is_held_for_approval_with_its_privacy_choice()
+    {
+        Storage::fake('public');
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'            => $this->faker->firstName(),
+            'family_name'           => $this->faker->lastName(),
+            'email'                 => $email,
+            'display_name'          => $this->faker->userName(),
+            'online_only'           => '0',
+            'suppress_real_name'    => '0',
+            'password'              => $this->faker->password(10),
+            'phone'                 => '07700900123',
+            'address'               => ['line_1' => '1 Test Street', 'postcode' => 'M4 7HR'],
+            'emergency_contact'     => $this->faker->name(),
+            'monthly_subscription'  => config('membership.prices.minimum'),
+            'rules_agreed'          => '1',
+            'new_profile_photo'     => UploadedFile::fake()->image('me.jpg', 800, 800),
+            'profile_photo_private' => '1',
+        ])->assertRedirect();
+
+        $member = User::where('email', $email)->firstOrFail();
+        $this->assertDatabaseHas('profile_data', [
+            'user_id'               => $member->id,
+            'new_profile_photo'     => true,
+            'profile_photo_private' => true,
+            'profile_photo'         => false,
         ]);
     }
 

@@ -7,6 +7,7 @@ use BB\Entities\User;
 use BB\Support\CurrentUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class UserRepository extends DBRepository
@@ -194,7 +195,8 @@ class UserRepository extends DBRepository
         // Sign up to newsletter by default (legitimate interest comms to members)
         $memberData['newsletter'] = true;
 
-        $user = $this->model->create($memberData);
+        // The address, photo and gift fields aren't user columns: they're saved below and by the controller
+        $user = $this->model->create(Arr::except($memberData, ['address', 'profile_photo_private', 'new_profile_photo', 'gift_code']));
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
