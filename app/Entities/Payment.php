@@ -2,7 +2,7 @@
 
 namespace BB\Entities;
 
-
+use Carbon\Carbon;
 use Database\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -13,6 +13,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
+ * @property int $user_id
+ * @property string $reason
+ * @property string|null $reference
+ * @property string $source
+ * @property string|null $source_id
+ * @property float $amount in pounds
+ * @property float $fee in pounds
+ * @property float $amount_minus_fee in pounds
+ * @property string $status
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read string $reason_label
  * @property-read string $status_label
  * @property-read string $method_label

@@ -13,17 +13,47 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Equipment
- *
- * @property array   $photos
- * @property string  $slug
- * @property array   $ppe
+ * @property int $id
+ * @property string $name
+ * @property string|null $slug
+ * @property string|null $manufacturer
+ * @property string|null $model_number
+ * @property string|null $serial_number
+ * @property string|null $colour
+ * @property string|null $room legacy free-text room, superseded by room_id
+ * @property int|null $room_id
+ * @property string|null $detail
+ * @property string|null $description
+ * @property string|null $help_text
+ * @property string|null $admin_notes
+ * @property array $ppe
+ * @property array $photos
+ * @property string|null $docs
+ * @property int|null $managing_role_id
+ * @property int|null $maintainer_group_id
+ * @property bool $requires_induction
+ * @property bool|null $accepting_inductions
+ * @property string|null $induction_category
+ * @property string|null $induction_instructions
+ * @property string|null $trainer_instructions
+ * @property string|null $trained_instructions
+ * @property bool $working
+ * @property bool $permaloan
+ * @property int|null $permaloan_user_id
+ * @property bool|null $dangerous
+ * @property bool $lone_working
+ * @property int $access_fee
+ * @property float|int $usage_cost in pounds; stored in pence
+ * @property-read float|int $usageCost
+ * @property string|null $usage_cost_per
+ * @property bool $archive
+ * @property string|null $asset_tag_id
+ * @property string|null $access_code
  * @property Carbon|null $obtained_at
- * @property Carbon  $removed_at
- * @property integer $usageCost
- * @property string  $induction_category
- * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Course> $courses
- * @package BB\Entities
+ * @property Carbon|null $removed_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 #[UseFactory(EquipmentFactory::class)]
 class Equipment extends Model

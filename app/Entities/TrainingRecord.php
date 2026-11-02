@@ -2,7 +2,7 @@
 
 namespace BB\Entities;
 
-
+use Carbon\Carbon;
 use Database\Factories\TrainingRecordFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -12,15 +12,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class TrainingRecord
- *
- * @property bool $trained
+ * @property int $id
+ * @property int $user_id
  * @property int|null $course_id
- * @property Course|null $course
- * @property User $user
- * @property User|null $trainerUser
- * @property \Carbon\Carbon|null $sign_off_requested_at
- * @package BB\Entities
+ * @property string $key legacy equipment key, superseded by course_id
+ * @property bool $active
+ * @property Carbon|null $trained
+ * @property bool $is_trainer
+ * @property int|null $trainer_user_id
+ * @property Carbon|null $sign_off_requested_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User $user
  */
 #[UseFactory(TrainingRecordFactory::class)]
 class TrainingRecord extends Model

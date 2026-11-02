@@ -43,6 +43,12 @@ parameters:
 			path: app/Http/Controllers/PaymentController.php
 
 		-
+			message: '#^Parameter \#3 \$hash of static method BB\\Support\\MemberPhoto\:\:url\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Resources/MemberProfileResource.php
+
+		-
 			message: '#^Cannot access property \$hash on BB\\Entities\\User\|null\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -115,6 +121,18 @@ parameters:
 			path: app/Repo/TrainingRecordRepository.php
 
 		-
+			message: '#^Parameter \#3 \$amount of method BB\\Repo\\SubscriptionChargeRepository\:\:createCharge\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
+			message: '#^Parameter \#3 \$amount of method BB\\Repo\\SubscriptionChargeRepository\:\:createChargeAndBillDD\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repo/UserRepository.php
+
+		-
 			message: '#^Cannot access property \$id on BB\\Entities\\User\|null\.$#'
 			identifier: property.nonObject
 			count: 2
@@ -146,6 +164,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$reference of method BB\\Repo\\PaymentRepository\:\:getPaymentsByReference\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/MemberSubscriptionCharges.php
+
+		-
+			message: '#^Parameter \#4 \$amount of method BB\\Repo\\PaymentRepository\:\:recordSubscriptionPayment\(\) expects float, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Services/MemberSubscriptionCharges.php

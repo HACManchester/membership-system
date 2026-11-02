@@ -26,42 +26,62 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class User
+ * Uncast boolean columns read back from the database as 0/1, hence bool|int.
  *
- * @property integer $id
- * @property string $email
- * @property string $display_name
- * @property string $name
+ * @property int $id
+ * @property string|null $hash
  * @property string $given_name
- * @property string $announce_name
- * @property string $online_only
  * @property string $family_name
- * @property string $hash
- * @property bool $active
- * @property bool $key_holder
- * @property bool $trusted
- * @property bool $banned
- * @property bool $email_verified
- * @property bool $induction_completed
- * @property integer $inducted_by
- * @property integer $payment_day
- * @property string $status
- * @property string $payment_method
- * @property string $subscription_id
- * @property Carbon|null $subscription_expires
- * @property Carbon|null $banned_date
+ * @property string|null $display_name
+ * @property string|null $announce_name
+ * @property string|null $pronouns
+ * @property bool $suppress_real_name
+ * @property string|null $import_match_string
+ * @property string $email
+ * @property bool|int $email_verified
+ * @property string|null $secondary_email
+ * @property string|null $password
+ * @property string|null $remember_token
  * @property string $phone
- * @property integer $storage_box_payment_id
- * @property ProfileData|null $profile
+ * @property string|null $emergency_contact
+ * @property string|null $notes
+ * @property bool $active
+ * @property bool|int $founder
+ * @property string $status
+ * @property bool|int $trusted
+ * @property bool|int $key_holder
+ * @property int|null $key_deposit_payment_id
+ * @property int|null $storage_box_payment_id
+ * @property bool|int $induction_completed
+ * @property int|null $inducted_by
+ * @property string|null $payment_method
  * @property string|null $secondary_payment_method
+ * @property int $payment_day
+ * @property int|null $monthly_subscription in pounds
+ * @property string|null $subscription_id
  * @property string|null $mandate_id
- * @property int $monthly_subscription
  * @property string|null $gocardless_setup_id
- * @property bool $postFob (false=collect, true=post)
- * @property \Carbon\Carbon|null $seen_at
- * @property-read \BB\Entities\Address|null $address
- * 
- * @package BB\Entities
+ * @property string|null $last_subscription_payment Y-m-d
+ * @property Carbon|null $subscription_expires
+ * @property Carbon|null $suspended_at
+ * @property int $cash_balance in pence
+ * @property bool|int $profile_private
+ * @property bool $banned
+ * @property string|null $banned_reason
+ * @property Carbon|null $banned_date
+ * @property Carbon|null $rules_agreed
+ * @property Carbon|null $seen_at
+ * @property string|null $find_us
+ * @property bool|int|null $online_only
+ * @property bool|int|null $postFob false to collect the fob, true to have it posted
+ * @property string|null $gift
+ * @property string|null $gift_expires Y-m-d
+ * @property bool|int $newsletter
+ * @property bool $visited_forum
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read string|null $name the display name
  */
 #[UseFactory(UserFactory::class)]
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract

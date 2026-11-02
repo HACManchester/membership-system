@@ -1,10 +1,20 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Database\Factories\GiftFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string $code
+ * @property string|null $gifter_name
+ * @property string|null $giftee_name
+ * @property int $months
+ * @property float $credit
+ * @property string $expires Y-m-d
+ */
 #[UseFactory(GiftFactory::class)]
 class Gift extends Model
 {

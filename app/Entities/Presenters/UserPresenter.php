@@ -16,7 +16,7 @@ trait UserPresenter
      * How the member pays their subscription, e.g. "Direct Debit", or "-" when
      * no method is set.
      *
-     * @return Attribute<string, never>
+     * @return Attribute<non-empty-string, never>
      */
     protected function paymentMethodLabel(): Attribute
     {
@@ -24,7 +24,7 @@ trait UserPresenter
             'gocardless', 'gocardless-variable' => 'Direct Debit',
             'standing-order' => 'Standing Order',
             '' => '-',
-            default => $this->payment_method,
+            default => (string) $this->payment_method,
         });
     }
 }

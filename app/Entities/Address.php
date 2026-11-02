@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use Carbon\Carbon;
 use Database\Factories\AddressFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -7,17 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class Address
- *
- * @property integer $user_id
- * @property string $line_1
- * @property string $line_2
- * @property string $line_3
- * @property string $line_4
- * @property string $postcode
- * @property string $hash
- * @property bool $approved
- * @package BB\Address
+ * @property int $id
+ * @property int $user_id
+ * @property string|null $line_1
+ * @property string|null $line_2
+ * @property string|null $line_3
+ * @property string|null $line_4
+ * @property string|null $postcode
+ * @property string|null $hash
+ * @property bool|int|null $approved read back from the database as 0/1
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 #[UseFactory(AddressFactory::class)]
 class Address extends Model
