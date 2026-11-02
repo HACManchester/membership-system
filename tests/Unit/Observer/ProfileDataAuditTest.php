@@ -10,10 +10,10 @@ use Tests\TestCase;
 
 /**
  * UserAuditObserver watches both User and ProfileData. ProfileData's
- * registration moved to ObserverServiceProvider for Laravel 13 (observe()
- * instantiates the model, which its own boot() can no longer do), and the
- * observer used to file profile changes under the profile row's id instead of
- * the member's.
+ * registration moved out of its boot() for Laravel 13 (observe() instantiates
+ * the model, which its own boot() can no longer do) and is now #[ObservedBy],
+ * and the observer used to file profile changes under the profile row's id
+ * instead of the member's.
  */
 class ProfileDataAuditTest extends TestCase
 {

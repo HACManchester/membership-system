@@ -1,7 +1,9 @@
 <?php namespace BB\Entities;
 
+use BB\Observer\UserAuditObserver;
 use Carbon\Carbon;
 use Database\Factories\ProfileDataFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[ObservedBy(UserAuditObserver::class)]
 #[UseFactory(ProfileDataFactory::class)]
 class ProfileData extends Model
 {

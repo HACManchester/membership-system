@@ -4,6 +4,8 @@ namespace BB\Entities;
 
 use BB\Entities\Presenters\UserPresenter;
 use BB\Exceptions\AuthenticationException;
+use BB\Observer\UserAuditObserver;
+use BB\Observer\UserObserver;
 use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,6 +87,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $deleted_at
  * @property-read string|null $name the display name
  */
+#[ObservedBy([UserObserver::class, UserAuditObserver::class])]
 #[UseFactory(UserFactory::class)]
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
