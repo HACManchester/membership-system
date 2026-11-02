@@ -189,6 +189,31 @@ class EquipmentTest extends TestCase
     }
 
     #[Test]
+    public function the_usage_cost_is_entered_in_pounds_and_stored_in_pence()
+    {
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Costed Tool',
+            'room_id' => $room->id,
+            'usage_cost' => '2.5',
+            'usage_cost_per' => 'hour',
+        ]);
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('equipment', ['slug' => 'costed-tool', 'usage_cost' => 250]);
+    }
+
+    #[Test]
+    public function a_usage_cost_stored_in_pence_is_shown_in_pounds()
+    {
+        Equipment::whereKey($this->equipment->id)->toBase()->update(['usage_cost' => 250, 'usage_cost_per' => 'hour']);
+
+        $this->actingAs($this->regularUser)->get(route('equipment.show', $this->equipment))
+            ->assertInertia(fn ($page) => $page->where('equipment.usage_cost', '£2.50 per hour'));
+    }
+
+    #[Test]
     public function usage_cost_is_no_longer_required()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
