@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v3 + React (`resources/js/`) |
 | Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
-| Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 7 |
+| Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 9 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
 | Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (two legacy `.jsx` component suites); all run in CI |
 

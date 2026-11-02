@@ -55,7 +55,7 @@ const Show = ({ profile, can, urls }: Props) => {
   const socialLinks = SOCIAL_LABELS.filter(({ key }) => profile.links[key]);
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.edit && (
         <Link href={urls.editProfile} underline="none">
           <Button variant="outlined" startIcon={<EditIcon />}>
@@ -80,7 +80,7 @@ const Show = ({ profile, can, urls }: Props) => {
         actionButtons={actionButtons}
       />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Members
           </Link>{' '}
@@ -146,7 +146,7 @@ const Show = ({ profile, can, urls }: Props) => {
                   <Grid container spacing={2}>
                     {profile.skills.map((skill) => (
                       <Grid key={skill.name} size={{ xs: 6, sm: 4, md: 3 }}>
-                        <Stack alignItems="center" spacing={1}>
+                        <Stack spacing={1} sx={{ alignItems: 'center' }}>
                           <Box
                             component="img"
                             src={`/img/skills/${skill.icon}`}

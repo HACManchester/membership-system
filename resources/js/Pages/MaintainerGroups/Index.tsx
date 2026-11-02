@@ -25,7 +25,7 @@ type Props = {
 
 const Index = ({ maintainerGroups, can = { create: false }, urls }: Props) => {
   const actionButtons = (
-    <Stack direction="row" justifyContent="flex-end">
+    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
       {can.create && (
         <Link href={urls.create} underline="none">
           <Button variant="contained" color="primary">
@@ -75,7 +75,7 @@ const Index = ({ maintainerGroups, can = { create: false }, urls }: Props) => {
                   />
                 </Box>
                 {group.description && (
-                  <Typography color="text.secondary" sx={{ mb: 1 }}>
+                  <Typography sx={{ color: 'text.secondary', mb: 1 }}>
                     {group.description}
                   </Typography>
                 )}
@@ -99,7 +99,7 @@ const Index = ({ maintainerGroups, can = { create: false }, urls }: Props) => {
 
           {maintainerGroups.length === 0 && (
             <Paper sx={{ p: 3 }}>
-              <Typography color="text.secondary">No maintainer groups yet.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>No maintainer groups yet.</Typography>
             </Paper>
           )}
         </Stack>

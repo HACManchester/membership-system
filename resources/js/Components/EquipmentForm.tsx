@@ -299,14 +299,17 @@ const EquipmentForm = ({
                   label="Permaloan holder"
                   error={!!errors.permaloan_user_id}
                   helperText={errors.permaloan_user_id}
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {searchingMembers ? <CircularProgress size={18} /> : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
+                  slotProps={{
+                    ...params.slotProps,
+                    input: {
+                      ...params.slotProps.input,
+                      endAdornment: (
+                        <>
+                          {searchingMembers ? <CircularProgress size={18} /> : null}
+                          {params.slotProps.input.endAdornment}
+                        </>
+                      ),
+                    },
                   }}
                 />
               )}

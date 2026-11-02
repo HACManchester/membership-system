@@ -76,7 +76,7 @@ const Edit = ({ course, equipment, formatOptions, frequencyOptions, urls }: Prop
     <>
       <PageTitle title="Edit induction" />
       <Container sx={{ mt: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Inductions
           </Link>{' '}
@@ -94,7 +94,7 @@ const Edit = ({ course, equipment, formatOptions, frequencyOptions, urls }: Prop
                 <Typography variant="h5" component="h1" gutterBottom>
                   Edit {course.data.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
                   Update the induction details below.
                 </Typography>
 

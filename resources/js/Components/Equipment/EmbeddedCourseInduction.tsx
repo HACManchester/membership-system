@@ -46,7 +46,7 @@ const EmbeddedCourseInduction: React.FC<Props> = ({
             {isUserTrained && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'success.main' }}>
                 <CheckCircleIcon />
-                <Typography variant="body2" color="success.main" fontWeight="medium">
+                <Typography variant="body2" sx={{ color: 'success.main', fontWeight: 'medium' }}>
                   Completed
                 </Typography>
               </Box>
@@ -72,7 +72,7 @@ const EmbeddedCourseInduction: React.FC<Props> = ({
           <Grid container spacing={3}>
             {course.format_description && (
               <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="subtitle2" color="text.secondary">
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                   About the Format
                 </Typography>
                 <MarkdownRenderer content={course.format_description} variant="body2" />
@@ -80,7 +80,7 @@ const EmbeddedCourseInduction: React.FC<Props> = ({
             )}
             {course.frequency_description && (
               <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="subtitle2" color="text.secondary">
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                   About the Schedule
                 </Typography>
                 <MarkdownRenderer content={course.frequency_description} variant="body2" />

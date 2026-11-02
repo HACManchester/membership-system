@@ -53,7 +53,7 @@ export default function SideNav({
         }}
       />
       <Stack divider={<Divider />}>
-        <Stack p={4} component={Link} href="/" underline="none">
+        <Stack component={Link} href="/" underline="none" sx={{ p: 4 }}>
           <img
             src="/img/logo-new.png"
             alt="Hackspace Manchester"

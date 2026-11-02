@@ -40,7 +40,7 @@ const MarkdownTextField: React.FC<MarkdownTextFieldProps> = ({
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
           {label}
         </Typography>
         <ToggleButtonGroup value={mode} exclusive onChange={handleModeChange} size="small">
@@ -75,7 +75,7 @@ const MarkdownTextField: React.FC<MarkdownTextFieldProps> = ({
           {value ? (
             <MarkdownRenderer content={value} variant="body1" />
           ) : (
-            <Typography variant="body1" color="text.secondary" fontStyle="italic">
+            <Typography variant="body1" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
               No content to preview
             </Typography>
           )}

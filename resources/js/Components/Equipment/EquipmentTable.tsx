@@ -37,7 +37,7 @@ const EquipmentTable = ({ equipment }: Props) => {
                 <Link href={item.urls.show}>{item.name}</Link>
               </TableCell>
               <TableCell>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
                   {item.requires_induction && (
                     <Chip label="Induction required" color="info" size="small" />
                   )}

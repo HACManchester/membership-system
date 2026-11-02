@@ -75,7 +75,7 @@ const BulkCreate = ({
     <>
       <PageTitle title="Bulk add equipment" />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Tools &amp; Equipment
           </Link>{' '}
@@ -88,7 +88,7 @@ const BulkCreate = ({
               <Typography variant="h6" component="h2" gutterBottom>
                 Shared details
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
                 These apply to every item created below. You can fine-tune each item afterwards.
               </Typography>
 
@@ -184,7 +184,12 @@ const BulkCreate = ({
                   const nameError =
                     rowErrors[`items.${index}.name`] || rowErrors[`items.${index}.slug`];
                   return (
-                    <Stack key={index} direction="row" spacing={2} alignItems="flex-start">
+                    <Stack
+                      key={index}
+                      direction="row"
+                      spacing={2}
+                      sx={{ alignItems: 'flex-start' }}
+                    >
                       <TextField
                         label="Name"
                         value={item.name}

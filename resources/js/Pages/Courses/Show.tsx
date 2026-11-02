@@ -88,7 +88,7 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
     <>
       <PageTitle title={course.name} actionButtons={actionButtons} />
       <Container sx={{ mt: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Inductions
           </Link>{' '}
@@ -118,7 +118,7 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
                   }}
                 >
                   <CheckCircleIcon />
-                  <Typography variant="body2" color="success.main" fontWeight="medium">
+                  <Typography variant="body2" sx={{ color: 'success.main', fontWeight: 'medium' }}>
                     Completed
                   </Typography>
                 </Box>
@@ -160,7 +160,7 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
             <Grid container spacing={3}>
               {course.format_description && (
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="subtitle2" color="text.secondary">
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                     About the Format
                   </Typography>
                   <MarkdownRenderer content={course.format_description} variant="body2" />
@@ -168,7 +168,7 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
               )}
               {course.frequency_description && (
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="subtitle2" color="text.secondary">
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                     About the Schedule
                   </Typography>
                   <MarkdownRenderer content={course.frequency_description} variant="body2" />

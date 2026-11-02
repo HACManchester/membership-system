@@ -31,7 +31,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
   };
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.update && (
         <Link href={urls.edit} underline="none">
           <Button variant="contained" color="primary">
@@ -51,7 +51,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
     <>
       <PageTitle title={maintainerGroup.name} actionButtons={actionButtons} />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Maintainer Groups
           </Link>{' '}
@@ -65,7 +65,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                 <Stack spacing={3}>
                   {maintainerGroup.equipment_area && (
                     <div>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Area
                       </Typography>
                       <div>
@@ -81,7 +81,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
 
                   {maintainerGroup.description && (
                     <div>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Description
                       </Typography>
                       <Typography>{maintainerGroup.description}</Typography>
@@ -89,7 +89,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                   )}
 
                   <div>
-                    <Typography variant="overline" color="text.secondary">
+                    <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                       Maintainers
                     </Typography>
                     {maintainerGroup.maintainers.length > 0 ? (
@@ -119,12 +119,14 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                         ))}
                       </Grid>
                     ) : (
-                      <Typography color="text.secondary">No maintainers assigned.</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>
+                        No maintainers assigned.
+                      </Typography>
                     )}
                   </div>
 
                   <div>
-                    <Typography variant="overline" color="text.secondary">
+                    <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                       Equipment
                     </Typography>
                     {maintainerGroup.equipment && maintainerGroup.equipment.length > 0 ? (
@@ -136,7 +138,7 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                         ))}
                       </Grid>
                     ) : (
-                      <Typography color="text.secondary">
+                      <Typography sx={{ color: 'text.secondary' }}>
                         No equipment assigned to this group.
                       </Typography>
                     )}

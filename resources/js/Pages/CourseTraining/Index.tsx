@@ -43,7 +43,7 @@ const TrainingIndex = ({
     <>
       <PageTitle title={`Training Management - ${course.name}`} actionButtons={actionButtons} />
       <Container sx={{ mt: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href="/courses" color="inherit" underline="hover">
             Inductions
           </Link>{' '}

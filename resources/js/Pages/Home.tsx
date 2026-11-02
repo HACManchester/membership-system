@@ -18,7 +18,7 @@ const Home = ({ urls }: Props) => {
           <Typography variant="h3" component="h1" gutterBottom>
             Hackspace Manchester
           </Typography>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: 'text.secondary' }}>
             Welcome to the Hackspace Manchester membership system.
           </Typography>
 

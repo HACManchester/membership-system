@@ -30,7 +30,7 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
           <HourglassEmptyIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Interested Members
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           These members have registered interest in training, longest-waiting first. Some trainers
           use this list when organising training sessions to give long-waiting members priority
           (bear in mind that not all interested members may have an active need or be proactive in
@@ -43,7 +43,7 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
                 trainingRecord={trainingRecord}
                 caption={
                   <Tooltip title={new Date(trainingRecord.created_at).toLocaleString()}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       Interested {formatDateRelative(trainingRecord.created_at)}
                     </Typography>
                   </Tooltip>

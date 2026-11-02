@@ -60,7 +60,7 @@ const Index = ({ roles }: Props) => {
                 {roles.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={3}>
-                      <Typography color="text.secondary">No roles.</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>No roles.</Typography>
                     </TableCell>
                   </TableRow>
                 )}

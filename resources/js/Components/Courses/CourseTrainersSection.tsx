@@ -19,7 +19,7 @@ const CourseTrainersSection: React.FC<Props> = ({ trainers }) => {
           <SchoolIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Course Trainers
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           These members are authorized to provide training and sign-offs for this course.
         </Typography>
         <Grid container spacing={2}>
@@ -49,7 +49,7 @@ const CourseTrainersSection: React.FC<Props> = ({ trainers }) => {
                     <Box>
                       <Typography variant="subtitle2">{trainer.user.name}</Typography>
                       {trainer.user.pronouns && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           ({trainer.user.pronouns})
                         </Typography>
                       )}

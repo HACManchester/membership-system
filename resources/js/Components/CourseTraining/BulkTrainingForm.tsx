@@ -41,7 +41,7 @@ const BulkTrainingForm: React.FC<Props> = ({ memberSearchUrl, excludeIds = [], b
       <Typography variant="h6" gutterBottom>
         Bulk Add Trained Members
       </Typography>
-      <Box display="flex" gap={2} alignItems="flex-end">
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
         <Autocomplete
           multiple
           options={options}
@@ -61,14 +61,17 @@ const BulkTrainingForm: React.FC<Props> = ({ memberSearchUrl, excludeIds = [], b
               variant="outlined"
               label="Select members to mark as trained"
               placeholder="Search for members..."
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {searching ? <CircularProgress size={18} /> : null}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
+              slotProps={{
+                ...params.slotProps,
+                input: {
+                  ...params.slotProps.input,
+                  endAdornment: (
+                    <>
+                      {searching ? <CircularProgress size={18} /> : null}
+                      {params.slotProps.input.endAdornment}
+                    </>
+                  ),
+                },
               }}
             />
           )}

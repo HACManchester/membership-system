@@ -50,7 +50,7 @@ const Index = ({ members }: Props) => {
           ))}
           {members.length === 0 && (
             <Grid size={12}>
-              <Typography color="text.secondary">No members to show.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>No members to show.</Typography>
             </Grid>
           )}
         </Grid>

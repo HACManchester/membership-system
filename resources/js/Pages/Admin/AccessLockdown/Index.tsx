@@ -97,7 +97,7 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
               <Card>
                 <CardContent>
                   <Alert severity="error" sx={{ mb: 3 }}>
-                    <Typography variant="subtitle1" component="p" fontWeight="bold">
+                    <Typography variant="subtitle1" component="p" sx={{ fontWeight: 'bold' }}>
                       The space is locked down.
                     </Typography>
                     Only members holding one of the roles below can get in.
@@ -105,7 +105,7 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
 
                   <Stack spacing={2}>
                     <Box>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Started
                       </Typography>
                       <Typography>
@@ -115,17 +115,17 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
                     </Box>
 
                     <Box>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Reason
                       </Typography>
                       <Typography>{lockdown.reason || 'No reason recorded.'}</Typography>
                     </Box>
 
                     <Box>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Roles keeping access
                       </Typography>
-                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
                         {lockdown.roles.map((name) => (
                           <Chip key={name} label={roleLabel(roles, name)} size="small" />
                         ))}
@@ -151,7 +151,7 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
                   <Typography variant="h6" component="h2" gutterBottom>
                     Start a lockdown
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
                     Removes door access for everyone outside the selected roles. The door system
                     picks the change up on its next poll, and lifting the lockdown restores everyone
                     the same way.
@@ -222,7 +222,7 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
                   Previous lockdowns
                 </Typography>
                 {history.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     None yet.
                   </Typography>
                 ) : (

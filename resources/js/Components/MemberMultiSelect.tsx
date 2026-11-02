@@ -52,14 +52,17 @@ const MemberMultiSelect: React.FC<Props> = ({
           placeholder={placeholder}
           error={error}
           helperText={helperText}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                {searching ? <CircularProgress size={18} /> : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
+          slotProps={{
+            ...params.slotProps,
+            input: {
+              ...params.slotProps.input,
+              endAdornment: (
+                <>
+                  {searching ? <CircularProgress size={18} /> : null}
+                  {params.slotProps.input.endAdornment}
+                </>
+              ),
+            },
           }}
         />
       )}

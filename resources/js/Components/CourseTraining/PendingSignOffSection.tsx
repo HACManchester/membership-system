@@ -22,7 +22,7 @@ const PendingSignOffSection: React.FC<Props> = ({ usersPendingSignOff }) => {
           <NotificationsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Pending Sign-off Requests
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           These members have completed their training and are awaiting sign-off. Requests older than
           7 days are automatically hidden and must be re-submitted.
         </Typography>

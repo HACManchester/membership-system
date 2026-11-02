@@ -100,7 +100,7 @@ const Edit = ({
     <>
       <PageTitle title={`Edit ${equipment.name}`} />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Tools &amp; Equipment
           </Link>{' '}
@@ -172,13 +172,13 @@ const Edit = ({
                   ))}
                   {equipment.photos.length === 0 && (
                     <Grid size={12}>
-                      <Typography color="text.secondary">No photos yet.</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>No photos yet.</Typography>
                     </Grid>
                   )}
                 </Grid>
 
                 <form onSubmit={handlePhotoUpload}>
-                  <Stack direction="row" spacing={2} alignItems="center">
+                  <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                     <Button variant="outlined" component="label">
                       Choose image
                       <input

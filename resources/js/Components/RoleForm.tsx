@@ -37,11 +37,11 @@ const RoleForm = ({
     <form onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid size={12}>
-          <Typography variant="overline" color="text.secondary">
+          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
             Role key
           </Typography>
           <Typography>{roleName}</Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             The internal identifier this role is matched by. It can’t be changed.
           </Typography>
         </Grid>

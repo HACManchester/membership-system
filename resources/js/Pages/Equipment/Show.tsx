@@ -126,7 +126,7 @@ const Show = ({
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.update && (
         <Link href={urls.edit} underline="none">
           <Button variant="contained" color="primary">
@@ -204,7 +204,7 @@ const Show = ({
     <>
       <PageTitle title={equipment.name} actionButtons={actionButtons} />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Tools &amp; Equipment
           </Link>{' '}
@@ -212,7 +212,7 @@ const Show = ({
         </Typography>
 
         {/* Status chips */}
-        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 3 }}>
+        <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 3 }}>
           {equipment.requires_induction && !userStatus.hasRecord && (
             <Chip label="Training required" color="error" />
           )}
@@ -242,7 +242,7 @@ const Show = ({
                     <InfoRow label="Lives in">
                       {equipment.room_name && <Typography>🏠 {equipment.room_name}</Typography>}
                       {equipment.location_detail && (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                           {equipment.location_detail}
                         </Typography>
                       )}
@@ -303,9 +303,9 @@ const Show = ({
                     Personal protective equipment
                   </Typography>
                   {equipment.ppe.length > 0 ? (
-                    <Stack direction="row" spacing={2} useFlexGap flexWrap="wrap">
+                    <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
                       {equipment.ppe.map((item) => (
-                        <Stack key={item.key} alignItems="center" sx={{ width: 90 }}>
+                        <Stack key={item.key} sx={{ alignItems: 'center', width: 90 }}>
                           <Box
                             component="img"
                             src={item.image}
@@ -319,7 +319,7 @@ const Show = ({
                       ))}
                     </Stack>
                   ) : (
-                    <Typography color="text.secondary">
+                    <Typography sx={{ color: 'text.secondary' }}>
                       No specific PPE is required. You must still be aware of risks and use relevant
                       PPE to mitigate them.
                     </Typography>
@@ -333,7 +333,7 @@ const Show = ({
                     <Typography variant="h6" component="h3" gutterBottom>
                       Photos
                     </Typography>
-                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
                       {equipment.photos.map((photo) => (
                         <Box
                           key={photo}
@@ -393,7 +393,7 @@ const Show = ({
                   <Typography variant="h6" component="h3" gutterBottom>
                     Admin notes
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <Typography variant="body2" gutterBottom sx={{ color: 'text.secondary' }}>
                     Only visible to members who can edit this equipment.
                   </Typography>
                   <MarkdownRenderer content={equipment.admin_notes} />

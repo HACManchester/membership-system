@@ -40,7 +40,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
         <Typography variant="h5" component="h2" gutterBottom>
           Equipment Access
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body1" sx={{ color: 'text.secondary', mb: 3 }}>
           Completing this induction will grant you access to the following equipment:
         </Typography>
 
@@ -87,7 +87,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                   </TableCell>
                   <TableCell>
                     <Link href={equipmentItem.urls.show}>
-                      <Typography variant="body2" fontWeight="medium">
+                      <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
                         {equipmentItem.name}
                       </Typography>
                     </Link>
@@ -146,7 +146,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                     </Box>
                   </TableCell>
                   <TableCell align="center">
-                    <Stack spacing={1} alignItems="center">
+                    <Stack spacing={1} sx={{ alignItems: 'center' }}>
                       {!equipmentItem.dangerous && (
                         <Chip
                           label="Dangerous"
@@ -181,7 +181,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                           variant="filled"
                         />
                       ) : (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                           None
                         </Typography>
                       )}
@@ -198,7 +198,7 @@ const EquipmentAccessTable: React.FC<Props> = ({
                         }}
                       >
                         <CheckCircleIcon color="success" />
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           {new Date(userCourseTrainingRecord!.trained!).toLocaleDateString()}
                         </Typography>
                       </Box>

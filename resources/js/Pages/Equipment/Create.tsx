@@ -72,7 +72,7 @@ const Create = ({
     <>
       <PageTitle title="Record a new item" />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Tools &amp; Equipment
           </Link>{' '}

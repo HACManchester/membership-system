@@ -30,7 +30,7 @@ const Show = ({ area, can, urls }: Props) => {
   };
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.update && (
         <Link href={urls.edit} underline="none">
           <Button variant="contained" color="primary">
@@ -50,7 +50,7 @@ const Show = ({ area, can, urls }: Props) => {
     <>
       <PageTitle title={area.name} actionButtons={actionButtons} />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Area Coordinators
           </Link>{' '}
@@ -64,7 +64,7 @@ const Show = ({ area, can, urls }: Props) => {
                 <Stack spacing={3}>
                   {area.description && (
                     <div>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Description
                       </Typography>
                       <Typography>{area.description}</Typography>
@@ -72,7 +72,7 @@ const Show = ({ area, can, urls }: Props) => {
                   )}
 
                   <div>
-                    <Typography variant="overline" color="text.secondary">
+                    <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                       Area coordinators
                     </Typography>
                     {area.area_coordinators.length > 0 ? (
@@ -102,7 +102,9 @@ const Show = ({ area, can, urls }: Props) => {
                         ))}
                       </Grid>
                     ) : (
-                      <Typography color="text.secondary">No coordinators assigned.</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>
+                        No coordinators assigned.
+                      </Typography>
                     )}
                   </div>
                 </Stack>
