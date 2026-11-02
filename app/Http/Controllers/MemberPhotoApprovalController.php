@@ -30,7 +30,9 @@ class MemberPhotoApprovalController extends Controller
 
         if (\Request::input('photo_approved')) {
             $this->userImage->approveNewImage($user->hash);
-            $profile->update(['new_profile_photo' => false, 'profile_photo' => true]);
+            $profile->new_profile_photo = false;
+            $profile->profile_photo = true;
+            $profile->save();
         } else {
             $profile->update(['new_profile_photo' => false]);
             event(new MemberPhotoWasDeclined($user));
