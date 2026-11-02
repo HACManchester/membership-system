@@ -140,28 +140,31 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'cash_balance'          => 0,
     ];
 
-    protected $casts = [
-        'visited_forum' => 'boolean',
+    protected function casts(): array
+    {
+        return [
+            'visited_forum' => 'boolean',
 
-        // TODO: Enable these casts one at a time and verify casting will not break references
-        // 'email_verified' => 'boolean',
-        'active' => 'boolean',
-        // 'founder' => 'boolean',
-        // 'director' => 'boolean',
-        // 'trusted' => 'boolean',
-        // 'key_holder' => 'boolean',
-        // 'induction_completed' => 'boolean',
-        // 'profile_private' => 'boolean',
-        'banned' => 'boolean',
-        'subscription_expires' => 'datetime',
-        'banned_date' => 'datetime',
-        'rules_agreed' => 'datetime',
-        'seen_at' => 'datetime',
-        'suspended_at' => 'datetime',
-        'suppress_real_name' => 'boolean',
-        // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
-        'password' => 'hashed',
-    ];
+            // TODO: Enable these casts one at a time and verify casting will not break references
+            // 'email_verified' => 'boolean',
+            'active' => 'boolean',
+            // 'founder' => 'boolean',
+            // 'director' => 'boolean',
+            // 'trusted' => 'boolean',
+            // 'key_holder' => 'boolean',
+            // 'induction_completed' => 'boolean',
+            // 'profile_private' => 'boolean',
+            'banned' => 'boolean',
+            'subscription_expires' => 'datetime',
+            'banned_date' => 'datetime',
+            'rules_agreed' => 'datetime',
+            'seen_at' => 'datetime',
+            'suspended_at' => 'datetime',
+            'suppress_real_name' => 'boolean',
+            // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
+            'password' => 'hashed',
+        ];
+    }
 
 
 

@@ -6,6 +6,9 @@ parameters:
     paths:
         - app
     level: 8
+    # Models declare casts in a casts() method; without this Larastan only sees its
+    # native `array` return type and loses every cast.
+    parseModelCastsMethod: true
     ignoreErrors:
         # Level 6 also asks for a type on every parameter, return value and property,
         # and for the value types of every array. That's ~870 findings across most

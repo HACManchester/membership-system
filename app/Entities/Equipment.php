@@ -76,27 +76,25 @@ class Equipment extends Model
         'lone_working'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'working' => 'boolean',
-        'permaloan' => 'boolean',
-        'dangerous' => 'boolean',
-        'lone_working' => 'boolean',
-        'archive' => 'boolean',
-        'requires_induction' => 'boolean',
-        'accepting_inductions' => 'boolean',
-        'obtained_at' => 'datetime',
-        'removed_at' => 'datetime',
+    protected function casts(): array
+    {
+        return [
+            'working' => 'boolean',
+            'permaloan' => 'boolean',
+            'dangerous' => 'boolean',
+            'lone_working' => 'boolean',
+            'archive' => 'boolean',
+            'requires_induction' => 'boolean',
+            'accepting_inductions' => 'boolean',
+            'obtained_at' => 'datetime',
+            'removed_at' => 'datetime',
 
-        // Swap these over later
-        // 'photos' => 'array',
-        // 'ppe' => 'array',
-        // 'docs' => 'array',
-    ];
+            // Swap these over later
+            // 'photos' => 'array',
+            // 'ppe' => 'array',
+            // 'docs' => 'array',
+        ];
+    }
 
     protected static function boot()
     {

@@ -61,13 +61,16 @@ class TrainingRecord extends Model
         'is_trainer' => false,
     ];
 
-    protected $casts = [
-        'paid' => 'boolean',
-        'active' => 'boolean',
-        'is_trainer' => 'boolean',
-        'trained' => 'datetime',
-        'sign_off_requested_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'paid' => 'boolean',
+            'active' => 'boolean',
+            'is_trainer' => 'boolean',
+            'trained' => 'datetime',
+            'sign_off_requested_at' => 'datetime',
+        ];
+    }
 
     public function scopeTrained($query)
     {

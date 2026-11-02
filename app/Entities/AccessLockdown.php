@@ -37,10 +37,13 @@ class AccessLockdown extends Model
 
     protected $fillable = ['started_by', 'reason', 'roles', 'lifted_by', 'lifted_at'];
 
-    protected $casts = [
-        'roles' => 'array',
-        'lifted_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'roles' => 'array',
+            'lifted_at' => 'datetime',
+        ];
+    }
 
     /**
      * @return BelongsTo<User, $this>

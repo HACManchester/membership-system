@@ -51,10 +51,13 @@ class SubscriptionCharge extends Model
         'payment_date' => '0000-00-00 00:00:00'
     ];
 
-    protected $casts = [
-        'charge_date' => 'datetime',
-        'payment_date' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'charge_date' => 'datetime',
+            'payment_date' => 'datetime',
+        ];
+    }
 
 
 

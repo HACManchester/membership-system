@@ -44,14 +44,12 @@ class Course extends Model
         'live',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'live' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'live' => 'boolean',
+        ];
+    }
 
     public function getRouteKeyName()
     {

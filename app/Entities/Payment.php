@@ -66,9 +66,12 @@ class Payment extends Model
         'fee' => 0,
     ];
 
-    protected $casts = [
-        'paid_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'paid_at' => 'datetime',
+        ];
+    }
 
 
     /**
