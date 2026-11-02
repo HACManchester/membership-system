@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Container, Card, CardContent, Grid2, Link } from '@mui/material';
+import { Typography, Container, Card, CardContent, Grid, Link } from '@mui/material';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
 import CourseForm from '../../Components/CourseForm';
@@ -52,8 +52,8 @@ const Create = ({ formatOptions, frequencyOptions, equipment, urls }: Props) => 
           / Create New
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Typography variant="h5" component="h1" gutterBottom>
@@ -76,9 +76,9 @@ const Create = ({ formatOptions, frequencyOptions, equipment, urls }: Props) => 
                 />
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={{ xs: 12, lg: 4 }}>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <Card>
               <CardContent>
                 <CourseSummary
@@ -100,8 +100,8 @@ const Create = ({ formatOptions, frequencyOptions, equipment, urls }: Props) => 
                 />
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

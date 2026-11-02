@@ -5,7 +5,7 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Grid2,
+  Grid,
   InputLabel,
   Select,
   MenuItem,
@@ -80,14 +80,14 @@ const generateSlug = (text: string) =>
     .replace(/\s+/g, '-');
 
 const SectionHeading = ({ children }: { children: React.ReactNode }) => (
-  <Grid2 size={12} sx={{ mt: 2 }}>
+  <Grid size={12} sx={{ mt: 2 }}>
     <Divider />
     <Box sx={{ mt: 2 }}>
       <Typography variant="h6" component="h3" gutterBottom>
         {children}
       </Typography>
     </Box>
-  </Grid2>
+  </Grid>
 );
 
 const EquipmentForm = ({
@@ -123,9 +123,9 @@ const EquipmentForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
+      <Grid container spacing={3}>
         {/* Core */}
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Name"
             value={data.name}
@@ -135,9 +135,9 @@ const EquipmentForm = ({
             error={!!errors.name}
             helperText={errors.name}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
             label="Slug"
             value={data.slug}
@@ -147,12 +147,12 @@ const EquipmentForm = ({
             error={!!errors.slug}
             helperText={errors.slug || 'URL-friendly identifier, auto-generated from the name'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth required error={!!errors.room_id}>
             <InputLabel id="room-label">Room</InputLabel>
-            <Select
+            <Select<number | ''>
               labelId="room-label"
               label="Room"
               value={data.room_id}
@@ -168,9 +168,9 @@ const EquipmentForm = ({
             </Select>
             <FormHelperText>{errors.room_id || 'Which room the equipment lives in'}</FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
             label="Location detail"
             value={data.detail}
@@ -179,12 +179,12 @@ const EquipmentForm = ({
             error={!!errors.detail}
             helperText={errors.detail || 'Where in the room is it kept?'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControl fullWidth required={!canManageGlobally} error={!!errors.maintainer_group_id}>
             <InputLabel id="maintainer-group-label">Maintainer group</InputLabel>
-            <Select
+            <Select<number | ''>
               labelId="maintainer-group-label"
               label="Maintainer group"
               value={data.maintainer_group_id}
@@ -205,9 +205,9 @@ const EquipmentForm = ({
               {errors.maintainer_group_id || 'The group responsible for maintaining this equipment'}
             </FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Description"
             value={data.description}
@@ -216,12 +216,12 @@ const EquipmentForm = ({
             helperText={errors.description || 'Supports markdown formatting.'}
             rows={3}
           />
-        </Grid2>
+        </Grid>
 
         {/* Status & safety */}
         <SectionHeading>Status &amp; safety</SectionHeading>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -231,9 +231,9 @@ const EquipmentForm = ({
             }
             label="Working / in service"
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -243,9 +243,9 @@ const EquipmentForm = ({
             }
             label="Lone working allowed"
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -255,9 +255,9 @@ const EquipmentForm = ({
             }
             label="Especially dangerous"
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -276,10 +276,10 @@ const EquipmentForm = ({
             }
             label="On permaloan"
           />
-        </Grid2>
+        </Grid>
 
         {data.permaloan && (
-          <Grid2 size={12}>
+          <Grid size={12}>
             <Autocomplete
               options={memberOptions}
               getOptionLabel={(option) => option.name}
@@ -311,10 +311,10 @@ const EquipmentForm = ({
                 />
               )}
             />
-          </Grid2>
+          </Grid>
         )}
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControl fullWidth error={!!errors.ppe}>
             <InputLabel id="ppe-label">PPE required</InputLabel>
             <Select
@@ -332,15 +332,15 @@ const EquipmentForm = ({
             </Select>
             <FormHelperText>{errors.ppe || 'Personal protective equipment needed'}</FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
         {/* Training & inductions */}
         <SectionHeading>Training &amp; inductions</SectionHeading>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControl fullWidth error={!!errors.course_id}>
             <InputLabel id="course-label">Induction course</InputLabel>
-            <Select
+            <Select<number | ''>
               labelId="course-label"
               label="Induction course"
               value={data.course_id}
@@ -363,17 +363,17 @@ const EquipmentForm = ({
                 'Associate an induction course. This marks the equipment as requiring induction; training is managed on the course page.'}
             </FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <Alert severity="info">
             <strong>Legacy induction</strong> — prefer attaching an induction course above. These
             fields only apply to equipment not yet migrated to a course, and are superseded once a
             live course manages its training.
           </Alert>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -383,9 +383,9 @@ const EquipmentForm = ({
             }
             label="Requires an induction (legacy)"
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControlLabel
             control={
               <Switch
@@ -395,9 +395,9 @@ const EquipmentForm = ({
             }
             label="Currently accepting inductions (legacy)"
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Induction category (legacy)"
             value={data.induction_category}
@@ -408,9 +408,9 @@ const EquipmentForm = ({
               errors.induction_category || 'Equipment sharing a category shares training records'
             }
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Induction instructions (legacy)"
             value={data.induction_instructions}
@@ -419,9 +419,9 @@ const EquipmentForm = ({
             helperText={errors.induction_instructions || 'Shown to members requesting induction.'}
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Trained instructions (legacy)"
             value={data.trained_instructions}
@@ -430,9 +430,9 @@ const EquipmentForm = ({
             helperText={errors.trained_instructions || 'Shown to members once trained.'}
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Trainer instructions (legacy)"
             value={data.trainer_instructions}
@@ -441,12 +441,12 @@ const EquipmentForm = ({
             helperText={errors.trainer_instructions || 'Shown to trainers.'}
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
         {/* Additional details */}
         <SectionHeading>Additional details (optional)</SectionHeading>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
             label="Manufacturer"
             value={data.manufacturer}
@@ -455,9 +455,9 @@ const EquipmentForm = ({
             error={!!errors.manufacturer}
             helperText={errors.manufacturer}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
             label="Model number"
             value={data.model_number}
@@ -466,9 +466,9 @@ const EquipmentForm = ({
             error={!!errors.model_number}
             helperText={errors.model_number}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Help text"
             value={data.help_text}
@@ -477,9 +477,9 @@ const EquipmentForm = ({
             helperText={errors.help_text || 'Extra usage guidance. Supports markdown.'}
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Documentation URL"
             value={data.docs}
@@ -489,9 +489,9 @@ const EquipmentForm = ({
             error={!!errors.docs}
             helperText={errors.docs || 'Link to a manual or documentation'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <TextField
             label="Access fee (£)"
             type="number"
@@ -501,9 +501,9 @@ const EquipmentForm = ({
             error={!!errors.access_fee}
             helperText={errors.access_fee}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <TextField
             label="Usage cost (£)"
             type="number"
@@ -513,9 +513,9 @@ const EquipmentForm = ({
             error={!!errors.usage_cost}
             helperText={errors.usage_cost}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth error={!!errors.usage_cost_per}>
             <InputLabel id="usage-cost-per-label">Usage cost per</InputLabel>
             <Select
@@ -531,9 +531,9 @@ const EquipmentForm = ({
               ))}
             </Select>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Access code"
             value={data.access_code}
@@ -544,9 +544,9 @@ const EquipmentForm = ({
               errors.access_code || 'Padlock/keypad code, revealed only to trained members'
             }
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Admin notes"
             value={data.admin_notes}
@@ -557,9 +557,9 @@ const EquipmentForm = ({
             error={!!errors.admin_notes}
             helperText={errors.admin_notes || 'Internal notes — not shown to members.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 2 }}>
+        <Grid size={12} sx={{ mt: 2 }}>
           <Stack direction="row" spacing={2}>
             <Button
               type="submit"
@@ -571,8 +571,8 @@ const EquipmentForm = ({
               {submitLabel}
             </Button>
           </Stack>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

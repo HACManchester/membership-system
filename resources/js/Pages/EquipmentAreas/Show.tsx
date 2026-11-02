@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -57,8 +57,8 @@ const Show = ({ area, can, urls }: Props) => {
           / {area.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Stack spacing={3}>
@@ -76,9 +76,9 @@ const Show = ({ area, can, urls }: Props) => {
                       Area coordinators
                     </Typography>
                     {area.area_coordinators.length > 0 ? (
-                      <Grid2 container spacing={2} sx={{ mt: 0.5 }}>
+                      <Grid container spacing={2} sx={{ mt: 0.5 }}>
                         {area.area_coordinators.map((member) => (
-                          <Grid2 key={member.id} size={{ xs: 12, sm: 6 }}>
+                          <Grid key={member.id} size={{ xs: 12, sm: 6 }}>
                             <Box
                               component={Link}
                               href={member.url}
@@ -98,9 +98,9 @@ const Show = ({ area, can, urls }: Props) => {
                               </Avatar>
                               <Typography>{member.name}</Typography>
                             </Box>
-                          </Grid2>
+                          </Grid>
                         ))}
-                      </Grid2>
+                      </Grid>
                     ) : (
                       <Typography color="text.secondary">No coordinators assigned.</Typography>
                     )}
@@ -108,8 +108,8 @@ const Show = ({ area, can, urls }: Props) => {
                 </Stack>
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

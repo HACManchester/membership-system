@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Card, CardContent, Typography, Button, Grid2, Link, Box } from '@mui/material';
+import { Container, Card, CardContent, Typography, Button, Grid, Link, Box } from '@mui/material';
 import MainLayout from '../Layouts/MainLayout';
 
 type Props = {
@@ -39,8 +39,8 @@ const Home = ({ urls }: Props) => {
             .
           </Typography>
 
-          <Grid2 container spacing={3}>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Card variant="outlined" sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -54,8 +54,8 @@ const Home = ({ urls }: Props) => {
                   </div>
                 </CardContent>
               </Card>
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Card variant="outlined" sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
@@ -66,8 +66,8 @@ const Home = ({ urls }: Props) => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </Container>

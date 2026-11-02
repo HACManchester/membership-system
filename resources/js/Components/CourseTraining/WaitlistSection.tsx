@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Grid, IconButton, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CheckIcon from '@mui/icons-material/Check';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -36,9 +36,9 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
           (bear in mind that not all interested members may have an active need or be proactive in
           attending training).
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {waitlist.map((trainingRecord) => (
-            <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
                 trainingRecord={trainingRecord}
                 caption={
@@ -73,9 +73,9 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
                   )
                 }
               />
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Grid, IconButton, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolIcon from '@mui/icons-material/School';
@@ -21,9 +21,9 @@ const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           These members are permitted to induct other members on this course.
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {trainers.map((trainer) => (
-            <Grid2 key={trainer.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={trainer.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
                 trainingRecord={trainer}
                 actions={
@@ -40,9 +40,9 @@ const TrainersManagementSection: React.FC<Props> = ({ trainers }) => {
                   )
                 }
               />
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );

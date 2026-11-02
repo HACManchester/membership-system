@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -92,11 +92,11 @@ const BulkCreate = ({
                 These apply to every item created below. You can fine-tune each item afterwards.
               </Typography>
 
-              <Grid2 container spacing={3}>
-                <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <FormControl fullWidth required error={!!errors.room_id}>
                     <InputLabel id="room-label">Room</InputLabel>
-                    <Select
+                    <Select<number | ''>
                       labelId="room-label"
                       label="Room"
                       value={data.room_id}
@@ -112,16 +112,16 @@ const BulkCreate = ({
                     </Select>
                     <FormHelperText>{errors.room_id}</FormHelperText>
                   </FormControl>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <FormControl
                     fullWidth
                     required={!canManageGlobally}
                     error={!!errors.maintainer_group_id}
                   >
                     <InputLabel id="mg-label">Maintainer group</InputLabel>
-                    <Select
+                    <Select<number | ''>
                       labelId="mg-label"
                       label="Maintainer group"
                       value={data.maintainer_group_id}
@@ -143,12 +143,12 @@ const BulkCreate = ({
                     </Select>
                     <FormHelperText>{errors.maintainer_group_id}</FormHelperText>
                   </FormControl>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <FormControl fullWidth error={!!errors.course_id}>
                     <InputLabel id="course-label">Induction course</InputLabel>
-                    <Select
+                    <Select<number | ''>
                       labelId="course-label"
                       label="Induction course"
                       value={data.course_id}
@@ -170,8 +170,8 @@ const BulkCreate = ({
                       {errors.course_id || 'Optional — marks every item as requiring induction'}
                     </FormHelperText>
                   </FormControl>
-                </Grid2>
-              </Grid2>
+                </Grid>
+              </Grid>
 
               <Divider sx={{ my: 3 }} />
 

@@ -8,7 +8,7 @@ import {
   Stack,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Avatar,
   Box,
 } from '@mui/material';
@@ -64,9 +64,9 @@ const Index = ({ areas, can = { create: false }, urls }: Props) => {
                   Area coordinators
                 </Typography>
                 {area.area_coordinators.length > 0 ? (
-                  <Grid2 container spacing={2} sx={{ mt: 0.5 }}>
+                  <Grid container spacing={2} sx={{ mt: 0.5 }}>
                     {area.area_coordinators.map((member) => (
-                      <Grid2 key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Grid key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
                         <Box
                           component={Link}
                           href={member.url}
@@ -86,9 +86,9 @@ const Index = ({ areas, can = { create: false }, urls }: Props) => {
                           </Avatar>
                           <Typography variant="body2">{member.name}</Typography>
                         </Box>
-                      </Grid2>
+                      </Grid>
                     ))}
-                  </Grid2>
+                  </Grid>
                 ) : (
                   <Typography color="text.secondary" variant="body2" sx={{ mt: 0.5 }}>
                     No coordinators assigned.

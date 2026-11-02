@@ -3,7 +3,7 @@ import {
   Card,
   Typography,
   IconButton,
-  Grid2,
+  Grid,
   Box,
   Button,
   Collapse,
@@ -64,9 +64,9 @@ const TrainedMembersSection: React.FC<Props> = ({
           )}
           <Collapse in={expanded} timeout="auto">
             <Box>
-              <Grid2 container spacing={2}>
+              <Grid container spacing={2}>
                 {nonTrainerTrainedUsers.map((trainingRecord) => (
-                  <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Grid key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <UserCard
                       trainingRecord={trainingRecord}
                       actions={
@@ -94,9 +94,9 @@ const TrainedMembersSection: React.FC<Props> = ({
                         )
                       }
                     />
-                  </Grid2>
+                  </Grid>
                 ))}
-              </Grid2>
+              </Grid>
             </Box>
           </Collapse>
         </Box>

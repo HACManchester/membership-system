@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -113,8 +113,8 @@ const Edit = ({
 
         <FormErrorSummary errors={errors} />
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={12}>
+        <Grid container spacing={4}>
+          <Grid size={12}>
             <Card>
               <CardContent>
                 <EquipmentForm
@@ -135,18 +135,18 @@ const Edit = ({
                 />
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={12}>
+          <Grid size={12}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>
                   Photos
                 </Typography>
 
-                <Grid2 container spacing={2} sx={{ mb: 2 }}>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
                   {equipment.photos.map((photo) => (
-                    <Grid2 key={photo.index} size={{ xs: 6, sm: 4, md: 3 }}>
+                    <Grid key={photo.index} size={{ xs: 6, sm: 4, md: 3 }}>
                       <Box sx={{ position: 'relative' }}>
                         <Box
                           component="img"
@@ -168,14 +168,14 @@ const Edit = ({
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Box>
-                    </Grid2>
+                    </Grid>
                   ))}
                   {equipment.photos.length === 0 && (
-                    <Grid2 size={12}>
+                    <Grid size={12}>
                       <Typography color="text.secondary">No photos yet.</Typography>
-                    </Grid2>
+                    </Grid>
                   )}
-                </Grid2>
+                </Grid>
 
                 <form onSubmit={handlePhotoUpload}>
                   <Stack direction="row" spacing={2} alignItems="center">
@@ -207,8 +207,8 @@ const Edit = ({
                 </form>
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

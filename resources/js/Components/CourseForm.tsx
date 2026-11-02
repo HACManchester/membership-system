@@ -4,7 +4,7 @@ import {
   Button,
   FormControl,
   FormHelperText,
-  Grid2,
+  Grid,
   InputLabel,
   Select,
   MenuItem,
@@ -92,15 +92,15 @@ const CourseForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
+      <Grid container spacing={3}>
         {/* Basic Information Section */}
-        <Grid2 size={12}>
+        <Grid size={12}>
           <Typography variant="h6" component="h3" gutterBottom>
             Basic Information
           </Typography>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Name"
             value={data.name}
@@ -110,9 +110,9 @@ const CourseForm = ({
             error={!!errors.name}
             helperText={errors.name}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Slug"
             value={data.slug}
@@ -122,9 +122,9 @@ const CourseForm = ({
             error={!!errors.slug}
             helperText={errors.slug || 'URL-friendly identifier, auto-generated from name'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Description"
             value={data.description}
@@ -137,19 +137,19 @@ const CourseForm = ({
             }
             rows={3}
           />
-        </Grid2>
+        </Grid>
 
         {/* Training Format & Schedule Section */}
-        <Grid2 size={12} sx={{ mt: 3 }}>
+        <Grid size={12} sx={{ mt: 3 }}>
           <Divider />
           <Box sx={{ mt: 2 }}>
             <Typography variant="h6" component="h3" gutterBottom>
               Training Format & Schedule
             </Typography>
           </Box>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.format}>
             <InputLabel>Format</InputLabel>
             <Select
@@ -165,9 +165,9 @@ const CourseForm = ({
             </Select>
             {errors.format && <FormHelperText>{errors.format}</FormHelperText>}
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.frequency}>
             <InputLabel>Frequency</InputLabel>
             <Select
@@ -183,9 +183,9 @@ const CourseForm = ({
             </Select>
             {errors.frequency && <FormHelperText>{errors.frequency}</FormHelperText>}
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Format Description"
             value={data.format_description}
@@ -197,9 +197,9 @@ const CourseForm = ({
             }
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="Frequency Description"
             value={data.frequency_description}
@@ -211,9 +211,9 @@ const CourseForm = ({
             }
             rows={2}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Wait Time"
             value={data.wait_time}
@@ -223,19 +223,19 @@ const CourseForm = ({
             error={!!errors.wait_time}
             helperText={errors.wait_time || 'e.g. "1-2 weeks"'}
           />
-        </Grid2>
+        </Grid>
 
         {/* Training Organization Section */}
-        <Grid2 size={12} sx={{ mt: 3 }}>
+        <Grid size={12} sx={{ mt: 3 }}>
           <Divider />
           <Box sx={{ mt: 2 }}>
             <Typography variant="h6" component="h3" gutterBottom>
               How to Get Trained
             </Typography>
           </Box>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MarkdownTextField
             label="How to Organise Training"
             value={data.training_organisation_description}
@@ -247,9 +247,9 @@ const CourseForm = ({
             }
             rows={3}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Schedule URL"
             value={data.schedule_url}
@@ -262,9 +262,9 @@ const CourseForm = ({
               'Link to forum thread, category, or google sheet where training slots are announced (optional)'
             }
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Quiz URL"
             value={data.quiz_url}
@@ -274,9 +274,9 @@ const CourseForm = ({
             error={!!errors.quiz_url}
             helperText={errors.quiz_url || 'Link to online quiz if applicable (optional)'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Request Training URL"
             value={data.request_induction_url}
@@ -289,19 +289,19 @@ const CourseForm = ({
               'Link to forum thread for members to request training sessions. We prefer the forum over Telegram, as not every member has or is comfortable using Telegram. (optional)'
             }
           />
-        </Grid2>
+        </Grid>
 
         {/* Equipment & Status Section */}
-        <Grid2 size={12} sx={{ mt: 3 }}>
+        <Grid size={12} sx={{ mt: 3 }}>
           <Divider />
           <Box sx={{ mt: 2 }}>
             <Typography variant="h6" component="h3" gutterBottom>
               Equipment & Status
             </Typography>
           </Box>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControl fullWidth error={!!errors.equipment}>
             <InputLabel id="equipment-label">Equipment</InputLabel>
             <Select
@@ -323,9 +323,9 @@ const CourseForm = ({
             {errors.equipment && <FormHelperText>{errors.equipment}</FormHelperText>}
             <FormHelperText>Select equipment that requires this induction</FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControlLabel
             control={
               <Switch checked={data.paused} onChange={(e) => setData('paused', e.target.checked)} />
@@ -333,9 +333,9 @@ const CourseForm = ({
             label="Pause this course"
           />
           {errors.paused && <FormHelperText error>{errors.paused}</FormHelperText>}
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControlLabel
             control={
               <Switch checked={data.live} onChange={(e) => setData('live', e.target.checked)} />
@@ -348,9 +348,9 @@ const CourseForm = ({
             equipment pages will no longer be used.
           </FormHelperText>
           {errors.live && <FormHelperText error>{errors.live}</FormHelperText>}
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 4 }}>
+        <Grid size={12} sx={{ mt: 4 }}>
           <Button
             type="submit"
             variant="contained"
@@ -360,8 +360,8 @@ const CourseForm = ({
           >
             {submitLabel}
           </Button>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   TextField,
   Button,
-  Grid2,
+  Grid,
   FormControl,
   InputLabel,
   Select,
@@ -62,8 +62,8 @@ const MaintainerGroupForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
-        <Grid2 size={12}>
+      <Grid container spacing={3}>
+        <Grid size={12}>
           <TextField
             label="Name"
             value={data.name}
@@ -73,9 +73,9 @@ const MaintainerGroupForm = ({
             error={!!errors.name}
             helperText={errors.name || 'e.g. "Woodwork", "Sewing Machines"'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Slug"
             value={data.slug}
@@ -85,9 +85,9 @@ const MaintainerGroupForm = ({
             error={!!errors.slug}
             helperText={errors.slug || 'URL-friendly identifier, auto-generated from the name'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <FormControl fullWidth required error={!!errors.equipment_area_id}>
             <InputLabel id="equipment-area-label">Represented by area</InputLabel>
             <Select
@@ -106,9 +106,9 @@ const MaintainerGroupForm = ({
               {errors.equipment_area_id || 'The equipment area this group looks after.'}
             </FormHelperText>
           </FormControl>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Description"
             value={data.description}
@@ -119,9 +119,9 @@ const MaintainerGroupForm = ({
             error={!!errors.description}
             helperText={errors.description || 'Optional. What this group maintains.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MemberMultiSelect
             value={data.maintainers}
             onChange={(members) => setData('maintainers', members)}
@@ -130,9 +130,9 @@ const MaintainerGroupForm = ({
             error={!!errors.maintainers}
             helperText={errors.maintainers || 'Members who maintain this group’s equipment.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 2 }}>
+        <Grid size={12} sx={{ mt: 2 }}>
           <Button
             type="submit"
             variant="contained"
@@ -142,8 +142,8 @@ const MaintainerGroupForm = ({
           >
             {submitLabel}
           </Button>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

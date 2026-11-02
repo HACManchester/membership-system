@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Chip,
-  Grid2,
-  Button,
-  Link,
-  Alert,
-} from '@mui/material';
+import { Card, CardContent, Typography, Box, Chip, Grid, Button, Link, Alert } from '@mui/material';
 import PauseIcon from '@mui/icons-material/Pause';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -79,24 +69,24 @@ const EmbeddedCourseInduction: React.FC<Props> = ({
             <Chip label={`Wait: ${course.wait_time}`} size="medium" variant="outlined" />
           </Box>
 
-          <Grid2 container spacing={3}>
+          <Grid container spacing={3}>
             {course.format_description && (
-              <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="text.secondary">
                   About the Format
                 </Typography>
                 <MarkdownRenderer content={course.format_description} variant="body2" />
-              </Grid2>
+              </Grid>
             )}
             {course.frequency_description && (
-              <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="subtitle2" color="text.secondary">
                   About the Schedule
                 </Typography>
                 <MarkdownRenderer content={course.frequency_description} variant="body2" />
-              </Grid2>
+              </Grid>
             )}
-          </Grid2>
+          </Grid>
 
           <Box sx={{ mt: 3 }}>
             <Button href={urls.courseShow} variant="outlined" endIcon={<LaunchIcon />}>

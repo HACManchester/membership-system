@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -67,8 +67,8 @@ const Show = ({ room, can, urls }: Props) => {
           / {room.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Stack spacing={2}>
@@ -97,8 +97,8 @@ const Show = ({ room, can, urls }: Props) => {
                 </Stack>
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Container, Card, CardContent, Grid2, Link } from '@mui/material';
+import { Typography, Container, Card, CardContent, Grid, Link } from '@mui/material';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
 import MaintainerGroupForm from '../../Components/MaintainerGroupForm';
@@ -38,8 +38,8 @@ const Create = ({ equipmentAreaOptions, urls, searchUrl }: Props) => {
           / Add
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <MaintainerGroupForm
@@ -54,8 +54,8 @@ const Create = ({ equipmentAreaOptions, urls, searchUrl }: Props) => {
                 />
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

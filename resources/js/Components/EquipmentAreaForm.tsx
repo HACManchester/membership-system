@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Button, Grid2 } from '@mui/material';
+import { TextField, Button, Grid } from '@mui/material';
 import MemberMultiSelect from './MemberMultiSelect';
 import { Member } from '../types/resources';
 
@@ -45,8 +45,8 @@ const EquipmentAreaForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
-        <Grid2 size={12}>
+      <Grid container spacing={3}>
+        <Grid size={12}>
           <TextField
             label="Name"
             value={data.name}
@@ -56,9 +56,9 @@ const EquipmentAreaForm = ({
             error={!!errors.name}
             helperText={errors.name || 'e.g. "Visual Arts", "3D Printing"'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Slug"
             value={data.slug}
@@ -68,9 +68,9 @@ const EquipmentAreaForm = ({
             error={!!errors.slug}
             helperText={errors.slug || 'URL-friendly identifier, auto-generated from the name'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Description"
             value={data.description}
@@ -81,9 +81,9 @@ const EquipmentAreaForm = ({
             error={!!errors.description}
             helperText={errors.description || 'Optional. What this area covers.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MemberMultiSelect
             value={data.area_coordinators}
             onChange={(members) => setData('area_coordinators', members)}
@@ -92,9 +92,9 @@ const EquipmentAreaForm = ({
             error={!!errors.area_coordinators}
             helperText={errors.area_coordinators || 'Members who coordinate this area.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 2 }}>
+        <Grid size={12} sx={{ mt: 2 }}>
           <Button
             type="submit"
             variant="contained"
@@ -104,8 +104,8 @@ const EquipmentAreaForm = ({
           >
             {submitLabel}
           </Button>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

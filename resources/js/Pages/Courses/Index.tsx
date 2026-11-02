@@ -6,7 +6,7 @@ import {
   Button,
   Link,
   Alert,
-  Grid2,
+  Grid,
   Stack,
   Collapse,
 } from '@mui/material';
@@ -35,19 +35,19 @@ const CourseGroup = ({
       <Typography variant="h5" gutterBottom>
         {title}
       </Typography>
-      <Grid2 container spacing={3}>
+      <Grid container spacing={3}>
         {courses.map((course) => {
           return (
-            <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
+            <Grid key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
               <CourseSummary
                 course={course}
                 height="100%"
                 canSeeNonLiveCourses={canSeeNonLiveCourses}
               />
-            </Grid2>
+            </Grid>
           );
         })}
-      </Grid2>
+      </Grid>
     </Stack>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Container, Card, CardContent, Grid2, Link } from '@mui/material';
+import { Typography, Container, Card, CardContent, Grid, Link } from '@mui/material';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
 import EquipmentForm, { EquipmentFormData } from '../../Components/EquipmentForm';
@@ -81,8 +81,8 @@ const Create = ({
 
         <FormErrorSummary errors={errors} />
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={12}>
+        <Grid container spacing={4}>
+          <Grid size={12}>
             <Card>
               <CardContent>
                 <EquipmentForm
@@ -103,8 +103,8 @@ const Create = ({
                 />
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

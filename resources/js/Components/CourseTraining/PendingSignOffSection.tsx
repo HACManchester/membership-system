@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, Button, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Button, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CheckIcon from '@mui/icons-material/Check';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -26,9 +26,9 @@ const PendingSignOffSection: React.FC<Props> = ({ usersPendingSignOff }) => {
           These members have completed their training and are awaiting sign-off. Requests older than
           7 days are automatically hidden and must be re-submitted.
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {usersPendingSignOff.map((trainingRecord) => (
-            <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
                 trainingRecord={trainingRecord}
                 actions={
@@ -47,9 +47,9 @@ const PendingSignOffSection: React.FC<Props> = ({ usersPendingSignOff }) => {
                   )
                 }
               />
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );

@@ -3,7 +3,7 @@ import {
   Typography,
   Container,
   Box,
-  Grid2,
+  Grid,
   Button,
   Dialog,
   DialogActions,
@@ -157,24 +157,24 @@ const Show = ({ course, canSeeNonLiveCourses, can, urls }: Props) => {
               <Chip label={`Wait: ${course.wait_time}`} size="medium" variant="outlined" />
             </Box>
 
-            <Grid2 container spacing={3}>
+            <Grid container spacing={3}>
               {course.format_description && (
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="subtitle2" color="text.secondary">
                     About the Format
                   </Typography>
                   <MarkdownRenderer content={course.format_description} variant="body2" />
-                </Grid2>
+                </Grid>
               )}
               {course.frequency_description && (
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="subtitle2" color="text.secondary">
                     About the Schedule
                   </Typography>
                   <MarkdownRenderer content={course.frequency_description} variant="body2" />
-                </Grid2>
+                </Grid>
               )}
-            </Grid2>
+            </Grid>
           </CardContent>
         </Card>
 

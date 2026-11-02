@@ -12,7 +12,7 @@ import {
   FormControlLabel,
   FormGroup,
   FormHelperText,
-  Grid2,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -91,8 +91,8 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
     <>
       <PageTitle title="Space Access Lockdown" />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             {lockdown ? (
               <Card>
                 <CardContent>
@@ -213,9 +213,9 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
                 </CardContent>
               </Card>
             )}
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={{ xs: 12, lg: 4 }}>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h2" gutterBottom>
@@ -241,8 +241,8 @@ const Index = ({ lockdown, history, roles, defaultRoles, urls }: Props) => {
                 )}
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

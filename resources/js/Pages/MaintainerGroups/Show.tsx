@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -58,8 +58,8 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
           / {maintainerGroup.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Stack spacing={3}>
@@ -93,9 +93,9 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                       Maintainers
                     </Typography>
                     {maintainerGroup.maintainers.length > 0 ? (
-                      <Grid2 container spacing={2} sx={{ mt: 0.5 }}>
+                      <Grid container spacing={2} sx={{ mt: 0.5 }}>
                         {maintainerGroup.maintainers.map((member) => (
-                          <Grid2 key={member.id} size={{ xs: 12, sm: 6 }}>
+                          <Grid key={member.id} size={{ xs: 12, sm: 6 }}>
                             <Box
                               component={Link}
                               href={member.url}
@@ -115,9 +115,9 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                               </Avatar>
                               <Typography>{member.name}</Typography>
                             </Box>
-                          </Grid2>
+                          </Grid>
                         ))}
-                      </Grid2>
+                      </Grid>
                     ) : (
                       <Typography color="text.secondary">No maintainers assigned.</Typography>
                     )}
@@ -128,13 +128,13 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                       Equipment
                     </Typography>
                     {maintainerGroup.equipment && maintainerGroup.equipment.length > 0 ? (
-                      <Grid2 container spacing={1} sx={{ mt: 0.5 }}>
+                      <Grid container spacing={1} sx={{ mt: 0.5 }}>
                         {maintainerGroup.equipment.map((item) => (
-                          <Grid2 key={item.url} size={{ xs: 12, sm: 6 }}>
+                          <Grid key={item.url} size={{ xs: 12, sm: 6 }}>
                             <Link href={item.url}>{item.name}</Link>
-                          </Grid2>
+                          </Grid>
                         ))}
-                      </Grid2>
+                      </Grid>
                     ) : (
                       <Typography color="text.secondary">
                         No equipment assigned to this group.
@@ -144,8 +144,8 @@ const Show = ({ maintainerGroup, can, urls }: Props) => {
                 </Stack>
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

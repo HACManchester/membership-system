@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -233,8 +233,8 @@ const Show = ({
         </Stack>
 
         {/* Main equipment information */}
-        <Grid2 container spacing={3}>
-          <Grid2 size={{ xs: 12, md: 7 }}>
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <TableContainer component={Card}>
               <Table size="small">
                 <TableBody>
@@ -277,9 +277,9 @@ const Show = ({
                 </TableBody>
               </Table>
             </TableContainer>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={{ xs: 12, md: 5 }}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Stack spacing={2}>
               {equipment.dangerous && (
                 <Box
@@ -349,10 +349,10 @@ const Show = ({
                 </Card>
               )}
             </Stack>
-          </Grid2>
+          </Grid>
 
           {/* Description / help / docs */}
-          <Grid2 size={12}>
+          <Grid size={12}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>
@@ -384,10 +384,10 @@ const Show = ({
                 )}
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
 
           {equipment.admin_notes && (
-            <Grid2 size={12}>
+            <Grid size={12}>
               <Card variant="outlined" sx={{ borderColor: 'warning.main' }}>
                 <CardContent>
                   <Typography variant="h6" component="h3" gutterBottom>
@@ -399,9 +399,9 @@ const Show = ({
                   <MarkdownRenderer content={equipment.admin_notes} />
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           )}
-        </Grid2>
+        </Grid>
 
         {/* Induction & training — below the main information, deliberately secondary.
             A live course supersedes the legacy induction blocks with its embedded interface. */}
