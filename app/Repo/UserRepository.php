@@ -162,10 +162,10 @@ class UserRepository extends DBRepository
         return $this->model
             ->NewsletterOptIns()
             ->where(function ($query) {
-                $query->active();
-            })
-            ->orWhere(function ($query) {
-                $query->recentlyLapsed();
+                $query->active()
+                    ->orWhere(function ($query) {
+                        $query->recentlyLapsed();
+                    });
             })
             ->get();
     }
