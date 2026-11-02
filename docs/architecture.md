@@ -11,7 +11,7 @@ belongs to tells you how much to trust it and how to extend it.
 | --- | --- | --- |
 | Standalone validator classes | `app/Validators/` (e.g. `FormValidator`, `ProfileValidator`, `RoleValidator`) | Superseded by FormRequests; still used by older controllers |
 | Command/event handlers | `app/Handlers/` (`PaymentEventHandler`, `SubChargeEventHandler`) | Still load-bearing for billing! Wired via string events (`payment.paid`, `payment.cancelled`, `sub-charge.payment-failed`) in `EventServiceProvider` |
-| Presenters | `app/Presenters/` + `laracasts/presenter` | View formatting; replace with accessors |
+| Presenters | `app/Presenters/` + `laracasts/presenter` | ✅ Removed (November 2026); see "Display formatting" below |
 | Facade-heavy controllers | `\Request::`, `\Auth::`, `\View::make()` throughout older controllers | Cosmetic but dates the code |
 | String-based events | `\Event::fire('payment.paid', ...)`-style listeners | Modern equivalent is event classes |
 | Repositories as the data layer | `app/Repo/` (~15 classes) | Mixed: some genuinely abstract queries, some are pass-through noise |
@@ -53,6 +53,14 @@ Keep it boring and native — this is a small-team community project, not a DDD 
   `UserObserver` into listeners over time so the observer only *detects* transitions and fires
   events.
 - **Money**: integer pence everywhere (see project-health.md).
+- **Display formatting** (labels, formatted dates and amounts) goes in the narrowest home:
+  - used by one Blade view → inline in that view;
+  - used by one Inertia page → its Resource;
+  - formats the model's own data and is used in several places → an accessor
+    (`protected function statusLabel(): Attribute`) on the model, e.g. `Payment::statusLabel()`;
+  - on `User`, or another model big enough to be split, those accessors go in a presenter trait
+    in `app/Entities/Presenters/` (e.g. `BB\Entities\Presenters\UserPresenter`, used by `User`)
+    instead of the model itself.
 
 ## Migration plan
 
@@ -103,8 +111,9 @@ In order of value:
 3. **Repositories**: split into (a) genuinely useful query objects — keep (e.g.
    `SubscriptionChargeRepository` has real logic), and (b) pass-throughs — inline into
    controllers/services and delete.
-4. **Presenters**: replace with Eloquent accessors/casts when the relevant views are converted to
-   Inertia — Inertia resources make presenters redundant anyway.
+4. **Presenters** ✅ done (November 2026): each method became an accessor, a Resource field or
+   inline view code, following the display-formatting rule above, and `laracasts/presenter` was
+   removed.
 
 ### Step 3 — shrink the god classes
 

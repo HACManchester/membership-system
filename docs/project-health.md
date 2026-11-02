@@ -22,7 +22,6 @@ app/
   Jobs/               Queued jobs (DiscourseSync)
   Observer/           UserObserver (lifecycle events), UserAuditObserver
   Policies/           11 authorization policies (newer code)
-  Presenters/         LEGACY laracasts/presenter view-formatting layer
   Repo/               LEGACY-ish repository layer (~15 repositories) — still the main data access path
   Services/           Modern service objects (MemberSubscriptionCharges, Credit)
   Validators/         LEGACY standalone validator classes (pre-FormRequest era)
@@ -42,7 +41,7 @@ tests/                Feature/, Integration/, Unit/, Mailer/; shared helpers in 
 | Framework & dependencies | 4/5 | Laravel 13 on PHP 8.4, Vite 8 on Node 20.19+, Dependabot proposing updates weekly. Still behind: Inertia 2, MUI 6, and the legacy Bootstrap 3 / jQuery / select2 stack. |
 | Tests | 4/5 | 92 files, 649 tests. Excellent payment-lifecycle integration tests; every GET route smoke-tested; the GoCardless webhook endpoint and authorization middleware covered; any deprecation fails the suite. The JS frontend is barely tested. See testing.md. |
 | Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 30 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
-| Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators/Presenters vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
+| Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
 | Frontend | 3/5 | Healthy direction (Inertia + React + TS + MUI, ESLint flat config, Prettier) but the legacy Blade/jQuery/Bootstrap-3 stack still serves most pages. See frontend.md. |
 | Docs & dev experience | 4/5 | Strong README, complete `.env.example`, documented Docker setup, this docs folder. |
 | Observability | 4/5 | Sentry (server + browser), rate-limited Telegram exception alerts (`app/Exceptions/Handler.php`), structured scheduled-job logging. |
@@ -57,11 +56,11 @@ Laravel 13 on PHP 8.4 (`composer.json` requires `^8.4` and pins Composer's platf
 Upgraded or removed in October 2026: `fideloper/proxy` and `fruitcake/laravel-cors` (built into
 Laravel), `fzaninotto/faker` (now `fakerphp/faker`), `laravel/legacy-factories`,
 `michelf/php-markdown`, the GoCardless SDK (4.x → 8.x), Guzzle (7 → 8) and PHPUnit (13).
-`itsgoingd/clockwork` and `laravel/browser-kit-testing` went in June 2026.
+`itsgoingd/clockwork` and `laravel/browser-kit-testing` went in June 2026, and
+`laracasts/presenter` in November 2026.
 
 Still needing attention:
 
-- `laracasts/presenter` — unmaintained pattern; replace with Eloquent accessors during refactors.
 - `inertiajs/inertia-laravel` 2 — Inertia 3 has to move the PHP and JS sides together.
 
 Frontend: Vite 8 on Yarn 4 (moved off Laravel Mix 6 in October 2026), Bootstrap 3 (2014) shipping
