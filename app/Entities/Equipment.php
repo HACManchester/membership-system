@@ -5,6 +5,7 @@ namespace BB\Entities;
 use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Database\Factories\EquipmentFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * Ordered by name by default (OrderScope). TODO: Would be nice to support multiple
+ * orderings, i.e. order by "Working: yes/no" primarily, name secondarily
+ *
  * @property int $id
  * @property string $name
  * @property string|null $slug
@@ -56,6 +60,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
+#[ScopedBy(OrderScope::class)]
 #[UseFactory(EquipmentFactory::class)]
 class Equipment extends Model
 {
@@ -117,14 +122,6 @@ class Equipment extends Model
             // 'ppe' => 'array',
             // 'docs' => 'array',
         ];
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        // TODO: Would be nice to support multiple orderings, i.e. order by "Working: yes/no" primarily, name secondarily
-        static::addGlobalScope(new OrderScope('name', 'asc'));
     }
 
     public function getRouteKeyName(): string
