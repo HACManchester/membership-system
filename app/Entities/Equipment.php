@@ -6,6 +6,7 @@ use BB\Scopes\OrderScope;
 use Carbon\Carbon;
 use Database\Factories\EquipmentFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -245,66 +246,72 @@ class Equipment extends Model
         return count($this->photos);
     }
 
-    public function setPhotosAttribute(array $value)
+    /**
+     * @return Attribute<array, array>
+     */
+    protected function photos(): Attribute
     {
-        if (empty($value)) {
-            $value = [];
-        }
-        $this->attributes['photos'] = json_encode($value);
+        return Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return [];
+                }
+                $photos = json_decode($value, true);
+                if ($photos === null) {
+                    return [];
+                }
+                return $photos;
+            },
+            set: function (array $value) {
+                if (empty($value)) {
+                    $value = [];
+                }
+                return json_encode($value);
+            },
+        );
     }
 
     /**
-     * @return array
+     * @return Attribute<string|null, string>
      */
-    public function getPhotosAttribute()
+    protected function slug(): Attribute
     {
-        if (empty($this->attributes['photos'])) {
-            return [];
-        }
-        $photos = json_decode($this->attributes['photos'], true);
-        if ($photos === null) {
-            return [];
-        }
-        return $photos;
-    }
-
-    public function setSlugAttribute($value)
-    {
-        $this->attributes['slug'] = strtolower($value);
-    }
-
-    public function getUsageCostAttribute()
-    {
-        return $this->attributes['usage_cost'] / 100;
-    }
-
-    public function setUsageCostAttribute($value)
-    {
-        $this->attributes['usage_cost'] = floatval($value) * 100;
+        return Attribute::set(fn ($value) => strtolower($value));
     }
 
     /**
-     * @return array
+     * Read and written in pounds, stored in pence. Also readable as `usageCost`,
+     * hence reading from $attributes rather than the value for the key asked for.
+     *
+     * @return Attribute<float|int, mixed>
      */
-    public function getPpeAttribute()
+    protected function usageCost(): Attribute
     {
-        $items = json_decode($this->attributes['ppe'] ?? '', true);
-        if (is_array($items)) {
-            // Filter out empty strings and trim whitespace
-            return array_values(array_filter($items, function($item) {
-                return !empty(trim($item));
-            }));
-        } else {
-            return [];
-        }
+        return Attribute::make(
+            get: fn ($value, array $attributes) => $attributes['usage_cost'] / 100,
+            set: fn ($value) => floatval($value) * 100,
+        );
     }
 
     /**
-     * @param string $value
+     * @return Attribute<array, mixed>
      */
-    public function setPpeAttribute($value)
+    protected function ppe(): Attribute
     {
-        $this->attributes['ppe'] = json_encode($value);
+        return Attribute::make(
+            get: function ($value) {
+                $items = json_decode($value ?? '', true);
+                if (is_array($items)) {
+                    // Filter out empty strings and trim whitespace
+                    return array_values(array_filter($items, function($item) {
+                        return !empty(trim($item));
+                    }));
+                } else {
+                    return [];
+                }
+            },
+            set: fn ($value) => json_encode($value),
+        );
     }
 
     /**

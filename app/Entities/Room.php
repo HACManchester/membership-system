@@ -4,6 +4,7 @@ namespace BB\Entities;
 
 use Database\Factories\RoomFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,10 +30,12 @@ class Room extends Model
 
     /**
      * Fall back to a slug derived from the name when one isn't supplied.
+     *
+     * @return Attribute<string, string|null>
      */
-    public function setSlugAttribute($value)
+    protected function slug(): Attribute
     {
-        $this->attributes['slug'] = Str::slug($value ?: ($this->attributes['name'] ?? ''));
+        return Attribute::set(fn ($value, array $attributes) => Str::slug($value ?: ($attributes['name'] ?? '')));
     }
 
     /**

@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Method BB\\Console\\Commands\\Payments\\AuditSubscriptionCharges\:\:memberName\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Console/Commands/Payments/AuditSubscriptionCharges.php
+
+		-
 			message: '#^Unable to resolve the template type TGroupKey in call to method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:groupBy\(\)$#'
 			identifier: argument.templateType
 			count: 1

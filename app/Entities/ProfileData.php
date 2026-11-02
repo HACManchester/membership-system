@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Database\Factories\ProfileDataFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,19 +56,17 @@ class ProfileData extends Model
         'profile_photo_on_wall' => 0,
     ];
 
-    public function setSkillsAttribute($skills)
+    /**
+     * Stored as JSON in the skills_array column.
+     *
+     * @return Attribute<array, mixed>
+     */
+    protected function skills(): Attribute
     {
-        if (is_array($skills)) {
-            $this->attributes['skills_array'] = json_encode($skills);
-        } else {
-            $this->attributes['skills_array'] = json_encode([$skills]);
-        }
-    }
-
-
-    public function getSkillsAttribute()
-    {
-        return (array)json_decode($this->skills_array ?? '[]');
+        return Attribute::make(
+            get: fn () => (array)json_decode($this->skills_array ?? '[]'),
+            set: fn ($skills) => ['skills_array' => json_encode(is_array($skills) ? $skills : [$skills])],
+        );
     }
 
     /**
