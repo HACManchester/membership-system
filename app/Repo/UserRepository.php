@@ -67,14 +67,17 @@ class UserRepository extends DBRepository
         $model = $this->model->with('roles')->with('profile');
 
         if ($params['filter']) {
+            // Grouped, so the online-only and left filters below apply to every match
             $model = $model
-                ->where('email', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
-                ->orWhereHas('keyFobs', function (Builder $q) use ($params) {
-                    $q->where('key_id', 'like', $params['filter']);
+                ->where(function (Builder $query) use ($params) {
+                    $query->where('email', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('given_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('family_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('display_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhere('announce_name', 'like', '%' . $params['filter'] . '%')
+                        ->orWhereHas('keyFobs', function (Builder $q) use ($params) {
+                            $q->where('key_id', 'like', $params['filter']);
+                        });
                 })
                 ->take($params['limit']);
         }
