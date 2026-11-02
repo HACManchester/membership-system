@@ -15,7 +15,6 @@
         "guzzlehttp/guzzle": "^8.3",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^4.4",
-        "laracasts/presenter": "^0.2.9",
         "laravel-notification-channels/telegram": "^8.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
