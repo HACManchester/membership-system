@@ -4,7 +4,7 @@
 
 | | Legacy stack | Modern stack |
 | --- | --- | --- |
-| Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v2 + React (`resources/js/`) |
+| Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v3 + React (`resources/js/`) |
 | Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 6 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
@@ -43,6 +43,8 @@ Note: yarn/node commands run directly on the host; PHP commands run inside the D
 `resources/views/app.blade.php` loads `react-app.tsx` through `@vite`, sets up browser-side Sentry,
 and renders the `@inertia` root. Controllers return `Inertia::render('Page', [...props])`; props
 are serialized via `app/Http/Resources/*` (e.g. `TrainingRecordResource`, `CourseResource`).
+`config/inertia.php` tells inertia-laravel the pages are in `resources/js/Pages` (its default is
+`js/pages`), which `assertInertia()` relies on to check that a page exists.
 
 **Important convention:** Inertia sends *all* props to the browser as JSON whether or not the
 component renders them — so over-fetching in a resource ships data to the client unnecessarily.
@@ -78,8 +80,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 - **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
   suites; `resources/js` has no tests yet.)
 - **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs.
-- **Next**: Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` in one
-  change. Then the MUI majors.
+- **Done**: Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` together.
+- **Next**: the MUI majors.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 

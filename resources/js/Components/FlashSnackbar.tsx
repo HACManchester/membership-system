@@ -15,16 +15,19 @@ type FlashPageProps = {
  * Blade layout's flash-message partial.
  */
 const FlashSnackbar: React.FC = () => {
-  const { flash } = usePage<FlashPageProps>().props;
-  const [dismissedFlash, setDismissedFlash] = useState<FlashPageProps['flash']>();
+  const page = usePage<FlashPageProps>();
+  const { flash } = page.props;
+  const [dismissedOn, setDismissedOn] = useState<typeof page>();
 
   const message = flash?.error || flash?.success || null;
   const severity = flash?.error ? 'error' : 'success';
 
-  // flash is a fresh object on every Inertia response, so the snackbar re-opens
-  // even when the same message is flashed twice in a row
-  const open = flash !== dismissedFlash;
-  const close = () => setDismissedFlash(flash);
+  // Dismissal is tracked per Inertia response, not per flash object: when a visit
+  // returns the same component, Inertia keeps the previous object for any prop
+  // that hasn't changed. Each response is a fresh page object, so the snackbar
+  // re-opens even when the same message is flashed twice in a row.
+  const open = page !== dismissedOn;
+  const close = () => setDismissedOn(page);
 
   if (!message) {
     return null;

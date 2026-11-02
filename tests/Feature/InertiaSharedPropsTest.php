@@ -13,7 +13,7 @@ use Tests\TestCase;
  * The props every Inertia page gets from HandleInertiaRequests: what a form
  * shows after a failed or successful submission.
  *
- * inertia-laravel 2 reads validation errors when the middleware runs, not when
+ * inertia-laravel reads validation errors when the middleware runs, not when
  * the page renders, so the middleware has to come after the session starts.
  * Registered globally, it saw no session and every form silently lost its
  * validation messages, while assertSessionHasErrors() still passed.
