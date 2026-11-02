@@ -4,6 +4,7 @@ namespace BB\Entities;
 
 use Carbon\Carbon;
 use Database\Factories\AccessLockdownFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,9 +62,10 @@ class AccessLockdown extends Model
         return $this->belongsTo(User::class, 'lifted_by');
     }
 
-    public function scopeActive(Builder $query): Builder
+    #[Scope]
+    protected function active(Builder $query): void
     {
-        return $query->whereNull('lifted_at');
+        $query->whereNull('lifted_at');
     }
 
     /**
@@ -75,6 +77,6 @@ class AccessLockdown extends Model
      */
     public static function current(): ?self
     {
-        return static::active()->latest('id')->first();
+        return static::query()->active()->latest('id')->first();
     }
 }

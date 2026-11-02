@@ -4,7 +4,9 @@ namespace BB\Entities;
 
 
 use Database\Factories\PaymentFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -82,9 +84,10 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeSubscription($query)
+    #[Scope]
+    protected function subscription(Builder $query): void
     {
-        return $query->whereReason('subscription');
+        $query->whereReason('subscription');
     }
 
     /**

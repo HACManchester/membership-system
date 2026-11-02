@@ -4,7 +4,9 @@ namespace BB\Entities;
 
 
 use Database\Factories\TrainingRecordFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -72,9 +74,10 @@ class TrainingRecord extends Model
         ];
     }
 
-    public function scopeTrained($query)
+    #[Scope]
+    protected function trained(Builder $query): void
     {
-        return $query->whereNotNull('trained');
+        $query->whereNotNull('trained');
     }
 
 

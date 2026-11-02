@@ -1,7 +1,9 @@
 <?php namespace BB\Entities;
 
 use Database\Factories\KeyFobFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -55,8 +57,9 @@ class KeyFob extends Model
         $this->save();
     }
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active(Builder $query): void
     {
-        return $query->whereActive(true);
+        $query->whereActive(true);
     }
 } 

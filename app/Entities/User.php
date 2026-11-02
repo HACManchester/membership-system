@@ -8,6 +8,8 @@ use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use BB\Entities\MaintainerGroup;
 use Hash;
@@ -383,44 +385,51 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |--------------------------------------------------------------------------
     */
 
-    public function scopeActive($query)
+    #[Scope]
+    protected function active(Builder $query): void
     {
-        return $query->where(['active' => true, 'banned' => false]);
+        $query->where(['active' => true, 'banned' => false]);
     }
 
-    public function scopeNotSpecialCase($query)
+    #[Scope]
+    protected function notSpecialCase(Builder $query): void
     {
-        return $query->where('status', '!=', 'honorary')
+        $query->where('status', '!=', 'honorary')
             ->where(function ($subquery) {
                 $subquery->whereNull('gift_expires')->orWhere('gift_expires', '<=', Carbon::today());
             });
     }
 
-    public function scopeLeaving($query)
+    #[Scope]
+    protected function leaving(Builder $query): void
     {
-        return $query->where('status', '=', 'leaving');
+        $query->where('status', '=', 'leaving');
     }
 
-    public function scopePaymentWarning($query)
+    #[Scope]
+    protected function paymentWarning(Builder $query): void
     {
-        return $query->where('status', '=', 'payment-warning');
+        $query->where('status', '=', 'payment-warning');
     }
 
-    public function scopeSuspended($query)
+    #[Scope]
+    protected function suspended(Builder $query): void
     {
-        return $query->where('status', '=', 'suspended');
+        $query->where('status', '=', 'suspended');
     }
 
-    public function scopeRecentlyLapsed($query)
+    #[Scope]
+    protected function recentlyLapsed(Builder $query): void
     {
-        return $query->whereActive(false)
+        $query->whereActive(false)
             ->where('banned', false)
             ->where('subscription_expires', '>=', Carbon::today()->subMonths(6));
     }
 
-    public function scopeNewsletterOptIns($query)
+    #[Scope]
+    protected function newsletterOptIns(Builder $query): void
     {
-        return $query->where('newsletter', '=', true);
+        $query->where('newsletter', '=', true);
     }
 
 
