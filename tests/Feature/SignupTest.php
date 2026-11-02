@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\Gift;
+use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -43,5 +45,40 @@ class SignupTest extends TestCase
             'given_name' => $given,
             'status'     => 'setting-up',
         ]);
+    }
+
+    #[Test]
+    public function redeeming_a_gift_credits_the_member_with_the_gifts_value()
+    {
+        $gift = Gift::factory()->create(['code' => 'GIFT1250', 'months' => 3, 'credit' => 12.50]);
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'           => $this->faker->firstName(),
+            'family_name'          => $this->faker->lastName(),
+            'email'                => $email,
+            'display_name'         => $this->faker->userName(),
+            'online_only'          => '0',
+            'suppress_real_name'   => '0',
+            'password'             => $this->faker->password(10),
+            'phone'                => '07700900123',
+            'address'              => ['line_1' => $this->faker->streetAddress(), 'postcode' => 'M4 7HR'],
+            'emergency_contact'    => $this->faker->name(),
+            'monthly_subscription' => config('membership.prices.minimum'),
+            'rules_agreed'         => '1',
+            'gift_code'            => 'GIFT1250',
+        ])->assertRedirect();
+
+        $member = User::where('email', $email)->firstOrFail();
+        $this->assertSame(1250, (int) $member->cash_balance);
+        $this->assertDatabaseHas('payments', [
+            'user_id'   => $member->id,
+            'reason'    => 'balance',
+            'source'    => 'Gift Certificate',
+            'amount'    => 12.50,
+            'status'    => 'paid',
+            'reference' => 'GIFT1250',
+        ]);
+        $this->assertModelMissing($gift);
     }
 }

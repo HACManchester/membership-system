@@ -212,8 +212,8 @@ class UserRepository extends DBRepository
                 $user->gift = $memberData['gift_code'];
                 $user->save();
 
-                // log cash payment
-                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, 5.00, 'paid', 0, $memberData['gift_code']);
+                // log cash payment (payments.amount is pounds, like the gift's credit)
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, (float) $gift_record->credit, 'paid', 0, $memberData['gift_code']);
 
                 $gift_record->delete();
             }
