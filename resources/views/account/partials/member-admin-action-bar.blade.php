@@ -130,7 +130,7 @@
                         </form>
                     </div>
 
-                    @if ($user->profile->new_profile_photo)
+                    @if ($user->profile?->new_profile_photo)
                         <div class="infobox__grid-item infobox__grid-item--main">
                             <h4>New photo to approve</h4>
                             <p>If rejected they will be emailed explaining the photo wasn't suitable.</p>
