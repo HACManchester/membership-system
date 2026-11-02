@@ -86,4 +86,17 @@ class ProfileUpdateTest extends TestCase
 
         $this->assertDatabaseMissing('profile_data', ['tagline' => 'Unsaved']);
     }
+
+    #[Test]
+    public function a_rejected_website_shows_its_error_under_the_website_field()
+    {
+        $member = $this->memberWithProfile();
+
+        $this->actingAs($member)
+            ->from(route('account.profile.edit', $member->id))
+            ->followingRedirects()
+            ->put(route('account.profile.update', $member->id), ['website' => 'not a url'])
+            ->assertOk()
+            ->assertSee('<span class="help-block">The website must be a valid URL.</span>', false);
+    }
 }
