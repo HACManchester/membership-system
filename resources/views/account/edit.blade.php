@@ -128,7 +128,7 @@ Edit your details
             <div class="col-xs-12 col-md-8">
                 <div class="form-group {{ FlashNotification::hasErrorDetail('phone', 'has-error has-feedback') }}">
                     <label for="phone" class="control-label">Phone</label>
-                    <input type="tel" name="phone" id="phone" class="form-control" x-autocompletetype="tel" value="{{ old('phone', $user->present()->phone) }}">
+                    <input type="tel" name="phone" id="phone" class="form-control" x-autocompletetype="tel" value="{{ old('phone', $user->phone) }}">
                     {!! FlashNotification::getErrorDetail('phone') !!}
                 </div>
             </div>

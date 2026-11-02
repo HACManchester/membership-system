@@ -12,7 +12,7 @@
     <td>{{ $charge->present()->amount }}</td>
     <td>
         @if ($charge->user)
-        {{ $charge->user->present()->paymentMethod() }}
+        {{ $charge->user->payment_method_label }}
         @endif
     </td>
 </tr>

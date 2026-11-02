@@ -2,13 +2,13 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Presenters\UserPresenter;
 use BB\Exceptions\AuthenticationException;
 use BB\Support\CurrentUser;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
 use BB\Entities\MaintainerGroup;
 use Hash;
 use Illuminate\Auth\Authenticatable;
@@ -68,7 +68,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, UserRoleTrait, PresentableTrait, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use HasFactory, UserRoleTrait, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * The database table used by the model.
@@ -85,8 +85,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = array('password', 'remember_token');
 
     protected $auditFields = array('induction_completed', 'trusted', 'key_holder');
-
-    protected $presenter = 'BB\Presenters\UserPresenter';
 
 
     /**

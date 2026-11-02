@@ -35,8 +35,8 @@
         @endif
     </td>
     <td class="hidden-xs">
-        {{ $user->present()->paymentMethod }}<br />
-        <span style="color:red;">Expires: {{ $user->present()->subscriptionExpiryDate }}</span><br />
+        {{ $user->payment_method_label }}<br />
+        <span style="color:red;">Expires: {{ $user->subscription_expires && $user->subscription_expires->year > 0 ? $user->subscription_expires->toFormattedDateString() : '-' }}</span><br />
         <span style="color:green">Created: {{ $user->created_at }}</span><br/>
         <span style="color:blue">Seen: {{ $user->seen_at }}</span>
     </td>
