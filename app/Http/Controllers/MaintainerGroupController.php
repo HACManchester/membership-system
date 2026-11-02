@@ -52,11 +52,9 @@ class MaintainerGroupController extends Controller
     public function store(StoreMaintainerGroupRequest $request)
     {
         return DB::transaction(function () use ($request) {
-            $validated = $request->validated();
-
             // The description column is NOT NULL; default it when omitted.
-            $maintainerGroup = MaintainerGroup::create(array_merge(['description' => ''], $validated));
-            $maintainerGroup->maintainers()->sync($validated['maintainers'] ?? []);
+            $maintainerGroup = MaintainerGroup::create(array_merge(['description' => ''], $request->safe()->except('maintainers')));
+            $maintainerGroup->maintainers()->sync($request->validated('maintainers') ?? []);
 
             FlashNotification::success("Maintainer Group, {$maintainerGroup->name}, created successfully.");
 
@@ -102,10 +100,8 @@ class MaintainerGroupController extends Controller
     public function update(UpdateMaintainerGroupRequest $request, MaintainerGroup $maintainerGroup)
     {
         return DB::transaction(function () use ($request, $maintainerGroup) {
-            $validated = $request->validated();
-
-            $maintainerGroup->update($validated);
-            $maintainerGroup->maintainers()->sync($validated['maintainers'] ?? []);
+            $maintainerGroup->update($request->safe()->except('maintainers'));
+            $maintainerGroup->maintainers()->sync($request->validated('maintainers') ?? []);
 
             FlashNotification::success("Maintainer Group, {$maintainerGroup->name}, updated successfully.");
 
