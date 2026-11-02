@@ -69,4 +69,22 @@ class LoginTest extends TestCase
         $this->assertNotSame($oldHash, $newHash);
         $this->assertSame((int) config('hashing.bcrypt.rounds'), password_get_info($newHash)['options']['cost']);
     }
+
+    #[Test]
+    public function a_member_can_log_in_again_after_their_password_is_rehashed()
+    {
+        $password = Str::random(10);
+        $user = User::factory()->create();
+        DB::table('users')->where('id', $user->id)->update([
+            'password' => password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]),
+        ]);
+        $credentials = ['email' => $user->email, 'password' => $password];
+
+        $this->post(route('session.store'), $credentials);
+        $this->assertAuthenticatedAs($user);
+        auth()->logout();
+
+        $this->post(route('session.store'), $credentials)->assertRedirect("account/{$user->id}");
+        $this->assertAuthenticatedAs($user);
+    }
 }
