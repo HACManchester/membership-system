@@ -214,6 +214,31 @@ class EquipmentTest extends TestCase
     }
 
     #[Test]
+    public function the_slug_is_stored_in_lower_case()
+    {
+        $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);
+
+        $response = $this->actingAs($this->admin)->post(route('equipment.store'), [
+            'name' => 'Big Lathe',
+            'slug' => 'Big-Lathe',
+            'room_id' => $room->id,
+        ]);
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('equipment', ['name' => 'Big Lathe', 'slug' => 'big-lathe']);
+    }
+
+    #[Test]
+    public function ppe_is_stored_as_json_and_read_back_without_blank_entries()
+    {
+        $this->equipment->ppe = ['eye-protection', '', '  ', 'gloves'];
+        $this->equipment->save();
+
+        $this->assertDatabaseHas('equipment', ['id' => $this->equipment->id, 'ppe' => '["eye-protection","","  ","gloves"]']);
+        $this->assertSame(['eye-protection', 'gloves'], $this->equipment->fresh()->ppe);
+    }
+
+    #[Test]
     public function usage_cost_is_no_longer_required()
     {
         $room = Room::factory()->create(['name' => 'Workshop', 'slug' => 'workshop']);

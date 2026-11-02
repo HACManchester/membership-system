@@ -76,4 +76,17 @@ class UserPaymentStatusTest extends TestCase
         $this->assertTrue($user->suspended_at->isToday());
         $this->assertNotEquals($oldSuspendedAt->toDateTimeString(), $user->suspended_at->toDateTimeString());
     }
+
+    public function testAPaymentDayAfterThe28thBecomesThe1st()
+    {
+        $user = User::factory()->create(['status' => 'active']);
+
+        $user->payment_day = 29;
+        $user->save();
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'payment_day' => 1]);
+
+        $user->payment_day = 28;
+        $user->save();
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'payment_day' => 28]);
+    }
 }
