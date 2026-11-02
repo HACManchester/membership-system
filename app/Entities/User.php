@@ -248,10 +248,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Can the user see protected member photos?
      * Only available to active members
-     *
-     * @return bool
      */
-    public function shouldMemberSeeProtectedPhoto()
+    public function shouldMemberSeeProtectedPhoto(): bool
     {
         switch ($this->attributes['status']) {
             case 'active':
@@ -265,10 +263,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Is the user on a payment method that allows their subscription amount to be changed
-     *
-     * @return bool
      */
-    public function canMemberChangeSubAmount()
+    public function canMemberChangeSubAmount(): bool
     {
         // TODO: Invert and pull from payment domain? Or drop it? Do we need to handle different payment methods?
         return in_array($this->attributes['payment_method'], ['gocardless-variable']);
@@ -276,10 +272,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Is the user part of the admin group
-     *
-     * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->hasRole('admin');
     }
@@ -305,26 +299,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $alerts;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBanned()
+    public function isBanned(): bool
     {
         return !!$this->banned;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasPaymentWarning()
+    public function hasPaymentWarning(): bool
     {
         return ($this->status == 'payment-warning');
     }
     
-    /**
-     * @return bool
-     */
-    public function isSuspended()
+    public function isSuspended(): bool
     {
         return ($this->status == 'suspended');
     }
@@ -519,7 +504,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->auditFields;
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active && !$this->banned;
     }

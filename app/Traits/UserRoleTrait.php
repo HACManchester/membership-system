@@ -1,23 +1,23 @@
 <?php namespace BB\Traits;
 
+use BB\Entities\Role;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 trait UserRoleTrait
 {
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\BB\Entities\Role, $this>
+     * @return BelongsToMany<Role, $this>
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(\BB\Entities\Role::class)->withTimestamps();
+        return $this->belongsToMany(Role::class)->withTimestamps();
     }
 
     /**
      * Does the user have a particular role?
-     *
-     * @param $name
-     * @return bool
      */
-    public function hasRole($name)
+    public function hasRole($name): bool
     {
         foreach ($this->roles as $role) {
             if ($role->name == $name) {

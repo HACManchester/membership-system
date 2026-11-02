@@ -96,12 +96,7 @@ class Equipment extends Model
         static::addGlobalScope(new OrderScope('name', 'asc'));
     }
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
@@ -146,23 +141,18 @@ class Equipment extends Model
 
     /**
      * Does the equipment need an induction to use it
-     *
-     * @return bool
      */
-    public function requiresInduction()
+    public function requiresInduction(): bool
     {
         return (bool)$this->requires_induction;
     }
 
-    public function hasUsageCharge()
+    public function hasUsageCharge(): bool
     {
         return (bool)$this->usageCost;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasPhoto()
+    public function hasPhoto(): bool
     {
         return (bool)count($this->photos);
     }

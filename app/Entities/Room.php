@@ -22,7 +22,7 @@ class Room extends Model
 
     protected $fillable = ['name', 'slug', 'description'];
 
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }

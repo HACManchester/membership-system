@@ -49,7 +49,7 @@ class Course extends Model
         ];
     }
 
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
@@ -120,10 +120,8 @@ class Course extends Model
 
     /**
      * Check if the course is currently paused
-     *
-     * @return bool
      */
-    public function isPaused()
+    public function isPaused(): bool
     {
         return !is_null($this->paused_at);
     }

@@ -19,12 +19,7 @@ class MaintainerGroup extends Model
 
     protected $fillable = ['name', 'slug', 'description', 'equipment_area_id'];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
