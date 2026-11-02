@@ -115,7 +115,6 @@ class KeyFobCsvContractTest extends TestCase
         $token = ApiKey::create([
             'api_token' => Str::random(),
             'description' => 'Contract test key',
-            'active' => true,
         ]);
 
         return $this->get('/api/keyfobs/csv?api_token=' . $token->api_token);
