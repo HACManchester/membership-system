@@ -2,6 +2,7 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Concerns\Audited;
 use BB\Entities\Concerns\HasMembershipStatus;
 use BB\Entities\Concerns\HasRoles;
 use BB\Entities\Concerns\HasSubscription;
@@ -91,11 +92,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasMembershipStatus, HasRoles, HasSubscription, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use Audited, HasFactory, HasMembershipStatus, HasRoles, HasSubscription, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $hidden = array('password', 'remember_token');
 
-    protected $auditFields = array('induction_completed', 'trusted', 'key_holder');
+    /** @var list<string> */
+    protected $auditFields = ['induction_completed', 'trusted', 'key_holder'];
 
 
     protected $fillable = [
@@ -315,13 +317,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->seen_at = Carbon::now();
         $this->save();
-    }
-
-    /**
-     * @return array
-     */
-    public function getAuditFields()
-    {
-        return $this->auditFields;
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use BB\Entities\Concerns\Audited;
 use BB\Observer\UserAuditObserver;
 use Carbon\Carbon;
 use Database\Factories\ProfileDataFactory;
@@ -36,7 +37,7 @@ class ProfileData extends Model
 {
 
     /** @use HasFactory<ProfileDataFactory> */
-    use HasFactory;
+    use Audited, HasFactory;
 
     /**
      * profile_photo (the approval flag) and profile_photo_on_wall are admin-only,
@@ -48,7 +49,8 @@ class ProfileData extends Model
 
     protected $table = 'profile_data';
 
-    protected $auditFields = array('profile_photo', 'profile_photo_on_wall');
+    /** @var list<string> */
+    protected $auditFields = ['profile_photo', 'profile_photo_on_wall'];
 
     protected $attributes = [
         'profile_photo'         => 0,
@@ -86,13 +88,5 @@ class ProfileData extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAuditFields()
-    {
-        return $this->auditFields;
     }
 } 
