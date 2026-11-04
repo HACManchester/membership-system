@@ -231,7 +231,8 @@ the tracked-fields list in `UserObserver` must be manually kept in sync with
 - **TelegramHelper** — leveled notifications (job/log/render/error/warning) to an operational
   chat; gracefully no-ops when unconfigured. Exception notifications are rate-limited
   (`app/Exceptions/Handler.php`).
-- **FlashNotification** — session-flash facade used consistently across controllers.
+- **FlashNotification** — session-flash facade used consistently across controllers. Blade pages
+  read it directly; Inertia pages get its message as Inertia flash data (frontend.md).
 - **Display formatting** — labels and formatted values are accessors on the model (in
   `app/Entities/Presenters/UserPresenter` for `User`), Resource fields or inline view code; see
   the rule in architecture.md. (`laracasts/presenter` was removed in November 2026.)
