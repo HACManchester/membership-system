@@ -2,11 +2,11 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Concerns\HasRoles;
 use BB\Entities\Presenters\UserPresenter;
 use BB\Observer\UserAuditObserver;
 use BB\Observer\UserObserver;
 use BB\Support\MemberStatus;
-use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -89,7 +89,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, UserRoleTrait, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use HasFactory, HasRoles, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $hidden = array('password', 'remember_token');
 
@@ -276,14 +276,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         // TODO: Invert and pull from payment domain? Or drop it? Do we need to handle different payment methods?
         return in_array($this->attributes['payment_method'], ['gocardless-variable']);
-    }
-
-    /**
-     * Is the user part of the admin group
-     */
-    public function isAdmin(): bool
-    {
-        return $this->hasRole('admin');
     }
 
     /**
