@@ -1,7 +1,6 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\Equipment;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 class EquipmentRepository extends DBRepository
@@ -15,39 +14,6 @@ class EquipmentRepository extends DBRepository
     public function __construct(Equipment $model)
     {
         $this->model = $model;
-    }
-
-    public function all()
-    {
-        return $this->model->all();
-    }
-
-    public function getRequiresInduction()
-    {
-        return $this->model->where('requires_induction', true)->get();
-    }
-
-    /**
-     * Return a device by its slug
-     * @param $slug
-     * @return Equipment
-     */
-    public function findBySlug($slug)
-    {
-        $record = $this->model->where('slug', $slug)->first();
-        if ($record) {
-            return $record;
-        }
-        throw new ModelNotFoundException();
-    }
-
-    /**
-     * @param $induction_category
-     * @return Collection
-     */
-    public function findByInductionCategory($induction_category)
-    {
-        return $this->model->where('induction_category', $induction_category)->get();
     }
 
     /**

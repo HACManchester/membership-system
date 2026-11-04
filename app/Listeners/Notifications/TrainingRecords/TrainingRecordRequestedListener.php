@@ -2,11 +2,11 @@
 
 namespace BB\Listeners\Notifications\TrainingRecords;
 
+use BB\Entities\Equipment;
 use BB\Entities\TrainingRecord;
 use BB\Events\TrainingRecords\TrainingRecordRequestedEvent;
 use BB\Notifications\TrainingRecords\Inductees\TrainingRecordRequestedNotification as InducteesInductionRequestedNotification;
 use BB\Notifications\TrainingRecords\Trainers\TrainingRecordRequestedNotification as TrainersInductionRequestedNotification;
-use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,20 +14,11 @@ use Illuminate\Support\Collection;
 
 class TrainingRecordRequestedListener
 {
-    /** @var EquipmentRepository */
-    protected $equipmentRepository;
-
     /** @var TrainingRecordRepository */
     protected $trainingRecordRepository;
 
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct(EquipmentRepository $equipmentRepository, TrainingRecordRepository $trainingRecordRepository)
+    public function __construct(TrainingRecordRepository $trainingRecordRepository)
     {
-        $this->equipmentRepository = $equipmentRepository;
         $this->trainingRecordRepository = $trainingRecordRepository;
     }
 
@@ -43,7 +34,7 @@ class TrainingRecordRequestedListener
         $event->trainingRecord->load('course');
         
         $key = $event->trainingRecord->key;
-        $equipment = $this->equipmentRepository->findByInductionCategory($key);
+        $equipment = Equipment::where('induction_category', $key)->get();
 
         $this->notifyInductee($event, $equipment);
         $this->notifyTrainers($event, $equipment);

@@ -24,11 +24,6 @@ parameters:
 			count: 1
 			path: app/Console/Commands/PopulateCourseIdInTrainingRecords.php
 
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(BB\\Entities\\Equipment\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/EquipmentController.php
 
 		-
 			message: '#^Called ''count'' on Laravel collection, but could have been retrieved as a query\.$#'

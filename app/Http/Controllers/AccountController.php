@@ -13,10 +13,6 @@ class AccountController extends Controller
     protected $userForm;
 
     /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
-    /**
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
@@ -34,14 +30,12 @@ class AccountController extends Controller
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
-        \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Repo\AddressRepository $addressRepository,
         \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
         \BB\Services\Credit $bbCredit
     ) {
         $this->userForm = $userForm;
-        $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->addressRepository = $addressRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
@@ -62,7 +56,7 @@ class AccountController extends Controller
     {
         $user = User::findWithPermission($id);
 
-        $equipmentRequiringInduction = $this->equipmentRepository->getRequiresInduction();
+        $equipmentRequiringInduction = \BB\Entities\Equipment::where('requires_induction', true)->get();
         $equipmentRequiringInduction->load('courses');
 
         // Attach the member's training record (if any) for each piece of equipment.
@@ -71,10 +65,10 @@ class AccountController extends Controller
         $userTrainingRecords = $user->trainingRecords()->get();
         foreach ($equipmentRequiringInduction as $equipment) {
             $courseIds = $equipment->courses->pluck('id');
-            $equipment->userTrainingRecord = $userTrainingRecords->first(function ($record) use ($equipment, $courseIds) {
+            $equipment->setAttribute('userTrainingRecord', $userTrainingRecords->first(function ($record) use ($equipment, $courseIds) {
                 return ($record->course_id !== null && $courseIds->contains($record->course_id))
                     || (! empty($equipment->induction_category) && $record->key === $equipment->induction_category);
-            }) ?? false;
+            }) ?? false);
         }
 
         //get pending address if any

@@ -1,12 +1,12 @@
 <?php namespace BB\Http\Controllers;
 
+use BB\Entities\Equipment;
 use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\NotImplementedException;
 use BB\Http\Requests\StoreNotificationEmailRequest;
 use BB\Mailer\UserMailer;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
-use BB\Repo\EquipmentRepository;
 use BB\Support\CurrentUser;
 
 class NotificationEmailController extends Controller
@@ -21,11 +21,6 @@ class NotificationEmailController extends Controller
      */
 
     private $trainingRecordRepository;
-    /**
-     * 
-     * @var EquipmentRepository
-     */
-    private $equipmentRepository;
 
     /**
      * @param UserRepository               $userRepository
@@ -34,11 +29,9 @@ class NotificationEmailController extends Controller
      */
     public function __construct(
         UserRepository $userRepository,
-        EquipmentRepository $equipmentRepository,
         TrainingRecordRepository $trainingRecordRepository
     ) {
         $this->userRepository             = $userRepository;
-        $this->equipmentRepository        = $equipmentRepository;
         $this->trainingRecordRepository        = $trainingRecordRepository;
     }
 
@@ -55,7 +48,7 @@ class NotificationEmailController extends Controller
 
     public function tool($tool_id, $status)
     {
-        $equipment = $this->equipmentRepository->findBySlug($tool_id);
+        $equipment = Equipment::where('slug', $tool_id)->firstOrFail();
 
         if(!$equipment->requiresInduction()){
             \FlashNotification::error("This tool doesn't require an induction.");
@@ -109,7 +102,7 @@ class NotificationEmailController extends Controller
             if($parts[0] == "tool"){
                 $tool_slug = $parts[1];
                 $status = $parts[2];
-                $equipment = $this->equipmentRepository->findBySlug($tool_slug);
+                $equipment = Equipment::where('slug', $tool_slug)->firstOrFail();
             }
         }
 

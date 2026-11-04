@@ -15,7 +15,6 @@ use BB\Http\Resources\EquipmentFormResource;
 use BB\Http\Resources\EquipmentListResource;
 use BB\Http\Resources\EquipmentShowResource;
 use BB\Http\Resources\TrainingRecordResource;
-use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Support\CurrentUser;
 use BB\Support\PpeOptions;
@@ -36,21 +35,14 @@ class EquipmentController extends Controller
      */
     private $trainingRecordRepository;
 
-    /**
-     * @var EquipmentRepository
-     */
-    private $equipmentRepository;
-
     /** @var \Illuminate\Filesystem\FilesystemAdapter */
     protected $disk;
 
 
     function __construct(
-        TrainingRecordRepository $trainingRecordRepository,
-        EquipmentRepository $equipmentRepository
+        TrainingRecordRepository $trainingRecordRepository
     ) {
         $this->trainingRecordRepository    = $trainingRecordRepository;
-        $this->equipmentRepository    = $equipmentRepository;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
@@ -59,7 +51,7 @@ class EquipmentController extends Controller
     public function index()
     {
         $user = CurrentUser::get();
-        $equipment = $this->equipmentRepository->getAll();
+        $equipment = Equipment::all();
         $equipment->load(['courses', 'roomModel']);
 
         // Resolve the viewer's training status for the whole catalogue up front,
