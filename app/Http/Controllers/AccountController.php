@@ -50,12 +50,11 @@ class AccountController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         $equipmentRequiringInduction = \BB\Entities\Equipment::where('requires_induction', true)->get();
         $equipmentRequiringInduction->load('courses');
@@ -73,10 +72,10 @@ class AccountController extends Controller
         }
 
         //get pending address if any
-        $newAddress = $this->addressRepository->getNewUserAddress($id);
+        $newAddress = $this->addressRepository->getNewUserAddress($user->id);
 
         //Get the member subscription payments
-        $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
+        $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($user->id);
 
         //Get the members balance
         $this->bbCredit->setUserId($user->id);
@@ -96,12 +95,11 @@ class AccountController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
      */
-    public function edit($id)
+    public function edit(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         // Make the address available in the view
         $user->load('address');
@@ -112,13 +110,12 @@ class AccountController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($id)
+    public function update(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
         $input = \Request::only(
             'given_name',
             'family_name',
@@ -148,7 +145,7 @@ class AccountController extends Controller
 
         $this->userForm->validate($input, $user->id);
 
-        $this->userRepository->updateMember($id, $input, CurrentUser::get()->hasRole('admin'));
+        $this->userRepository->updateMember($user->id, $input, CurrentUser::get()->hasRole('admin'));
 
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
@@ -156,9 +153,10 @@ class AccountController extends Controller
 
 
 
-    public function destroy($id, MembershipStatus $membershipStatus)
+    public function destroy(string $id, MembershipStatus $membershipStatus)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         // If they never became a member just delete the record
         if ($user->status == \BB\Support\MemberStatus::SettingUp) {
