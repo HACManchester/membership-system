@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $line_4
  * @property string|null $postcode
  * @property string|null $hash
- * @property bool|int|null $approved read back from the database as 0/1
+ * @property bool|null $approved
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -36,6 +36,13 @@ class Address extends Model
     protected $attributes = [
         'approved' => 0,
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'approved' => 'boolean',
+        ];
+    }
 
     /**
      * @return BelongsTo<User, $this>
