@@ -3,6 +3,7 @@
 use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
+use BB\Services\MembershipStatus;
 use BB\Support\MemberStatus;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +14,7 @@ class RecoverMemberships
      */
     private $telegramHelper;
 
-    public function __construct()
+    public function __construct(private MembershipStatus $membershipStatus)
     {
         $this->telegramHelper = new TelegramHelper("RecoverMemberships");
     }
@@ -37,7 +38,7 @@ class RecoverMemberships
             if ($paidUntil && ($user->subscription_expires === null || $user->subscription_expires->lt($paidUntil))) {
                 // They have a valid payment that extends beyond their current expiry
                 $previousStatus = $user->status->value;
-                $user->extendMembership($user->payment_method, $paidUntil);
+                $this->membershipStatus->extend($user, $user->payment_method, $paidUntil);
                 
                 Log::info($user->name . ' recovered from ' . $previousStatus . ' - membership extended to ' . $paidUntil->format('Y-m-d'));
                 array_push($recoveredMembers, $user->name . ' (' . $previousStatus . ')');

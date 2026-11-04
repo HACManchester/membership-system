@@ -4,6 +4,7 @@ namespace BB\Handlers;
 
 use BB\Helpers\MembershipPayments;
 use BB\Repo\UserRepository;
+use BB\Services\MembershipStatus;
 use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class SubChargeEventHandler
     /**
      * @param UserRepository               $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, private MembershipStatus $membershipStatus)
     {
         $this->userRepository = $userRepository;
     }
@@ -37,7 +38,7 @@ class SubChargeEventHandler
     {
         $user = $this->userRepository->getById($userId);
         
-        $user->extendMembership(null, $paymentDate->addMonth());
+        $this->membershipStatus->extend($user, null, $paymentDate->addMonth());
     }
 
     /**
@@ -52,7 +53,7 @@ class SubChargeEventHandler
     {
         $user = $this->userRepository->getById($userId);
 
-        $user->extendMembership(null, $paymentDate->addMonth());
+        $this->membershipStatus->extend($user, null, $paymentDate->addMonth());
     }
 
     /**
@@ -73,7 +74,7 @@ class SubChargeEventHandler
         }
 
         if ($user->status === MemberStatus::Active) {
-            $user->setPaymentWarning();
+            $this->membershipStatus->setPaymentWarning($user);
         }
     }
 

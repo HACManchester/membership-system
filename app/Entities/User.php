@@ -10,7 +10,6 @@ use BB\Support\CurrentUser;
 use BB\Support\MemberStatus;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -396,49 +395,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->save();
     }
 
-    /**
-     * @deprecated
-     */
-    public function cancelSubscription()
-    {
-        $this->payment_method = '';
-        $this->subscription_id = '';
-        $this->mandate_id = '';
-        $this->status = MemberStatus::Leaving;
-        $this->save();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setLeaving()
-    {
-        $this->status = MemberStatus::Leaving;
-        $this->save();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setSuspended()
-    {
-        $this->status = MemberStatus::Suspended;
-        $this->active = false;
-        $this->suspended_at = Carbon::now();
-        $this->save();
-    }
-
-    public function setPaymentWarning($gracePeriodDays = 10)
-    {
-        $this->status = MemberStatus::PaymentWarning;
-        $this->active = true; // Keep space access during warning period
-        
-        // Set subscription_expires to failure date + grace period for fair timing
-        // TODO: Articles of association say 2 weeks from payment falling due
-        $this->subscription_expires = Carbon::now()->addDays($gracePeriodDays);
-        $this->save();
-    }
-
     public function emailConfirmed()
     {
         $this->email_verified = true;
@@ -485,26 +441,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         }
 
         throw new AuthenticationException();
-    }
-
-    public function extendMembership($paymentMethod = null, ?DateTime $expiry = null)
-    {
-        if ($this->banned) {
-            return;
-        }
-
-        if (empty($expiry)) {
-            $expiry = Carbon::now()->addMonth();
-        }
-        $this->status = MemberStatus::Active;
-        $this->active = true;
-        if ($paymentMethod) {
-            $this->payment_method = $paymentMethod;
-        }
-        $this->gift = '';
-        $this->subscription_expires = Carbon::instance($expiry);
-        $this->suspended_at = null;
-        $this->save();
     }
 
     /**

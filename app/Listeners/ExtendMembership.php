@@ -4,6 +4,7 @@ namespace BB\Listeners;
 
 use BB\Events\SubscriptionChargePaid;
 use BB\Repo\UserRepository;
+use BB\Services\MembershipStatus;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -19,7 +20,7 @@ class ExtendMembership
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, private MembershipStatus $membershipStatus)
     {
         $this->userRepository = $userRepository;
     }
@@ -34,6 +35,6 @@ class ExtendMembership
         /** @var \BB\Entities\User */
         $user = $this->userRepository->getById($event->subscriptionCharge->user_id);
 
-        $user->extendMembership(null, $event->subscriptionCharge->payment_date->addMonth());
+        $this->membershipStatus->extend($user, null, $event->subscriptionCharge->payment_date->addMonth());
     }
 }

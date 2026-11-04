@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Services\MembershipStatus;
 use BB\Support\CurrentUser;
 
 class AccountController extends Controller
@@ -155,7 +156,7 @@ class AccountController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy($id, MembershipStatus $membershipStatus)
     {
         $user = User::findWithPermission($id);
 
@@ -168,7 +169,7 @@ class AccountController extends Controller
         }
 
         //No one will ever leaves the system but we can at least update their status to left.
-        $user->setLeaving();
+        $membershipStatus->markLeaving($user);
 
         \FlashNotification::success('Updated status to leaving');
 

@@ -125,13 +125,13 @@ parameters:
 			message: '#^Parameter \#3 \$amount of method BB\\Repo\\SubscriptionChargeRepository\:\:createCharge\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Repo/UserRepository.php
+			path: app/Services/MembershipStatus.php
 
 		-
 			message: '#^Parameter \#3 \$amount of method BB\\Repo\\SubscriptionChargeRepository\:\:createChargeAndBillDD\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Repo/UserRepository.php
+			path: app/Services/MembershipStatus.php
 
 		-
 			message: '#^Cannot access property \$id on BB\\Entities\\User\|null\.$#'

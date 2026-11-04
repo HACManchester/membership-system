@@ -7,7 +7,6 @@ use BB\Entities\User;
 use BB\Support\CurrentUser;
 use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
-use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -29,21 +28,16 @@ class UserRepository extends DBRepository
      */
     private $profileDataRepository;
     /**
-     * @var SubscriptionChargeRepository
-     */
-    private $subscriptionChargeRepository;
-    /**
      * @var \BB\Repo\PaymentRepository
      */
     private $paymentRepository;
 
-    public function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository, SubscriptionChargeRepository $subscriptionChargeRepository)
+    public function __construct(User $model, AddressRepository $addressRepository, ProfileDataRepository $profileDataRepository)
     {
         $this->model = $model;
         $this->perPage = 150;
         $this->addressRepository = $addressRepository;
         $this->profileDataRepository = $profileDataRepository;
-        $this->subscriptionChargeRepository = $subscriptionChargeRepository;
         $this->paymentRepository = \App::make('\BB\Repo\PaymentRepository');
     }
 
@@ -223,46 +217,6 @@ class UserRepository extends DBRepository
     }
 
     /**
-     * The user has setup a payment method of some kind so they are now considered active
-     * This will kick off the automated member checking processes
-     *
-     * @param integer $userId
-     */
-    public function ensureMembershipActive($userId)
-    {
-        /** @var User $user */
-        $user = $this->getById($userId);
-
-        //user needs to have a recent sub charge and one that was paid or is due
-
-        $user->active = true;
-        $user->status = MemberStatus::Active;
-        $user->suspended_at = null;
-        $user->save();
-
-        $outstandingCharges = $this->subscriptionChargeRepository->hasOutstandingCharges($userId);
-
-        //If the user doesn't have any charges currently processing or they dont have an expiry date or are past their expiry data create a charge
-        if (!$outstandingCharges && (!$user->subscription_expires || $user->subscription_expires->lt(Carbon::now()))) {
-            //create a charge
-
-            $chargeDate = Carbon::now();
-
-            //If we are passed the end of month cutoff push the charge date forward to their actual charge date
-            if ((Carbon::now()->day > 28) && $user->payment_day === 1) {
-                $chargeDate = $chargeDate->day(1)->addMonth();
-            }
-
-            if ($user->payment_method == 'gocardless-variable') {
-                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, SubscriptionChargeStatus::Due, $user->mandate_id);
-            } else {
-                // This will create the monthly sub charge but not take any money, that will happen tomorrow during the normal run
-                $this->subscriptionChargeRepository->createCharge($userId, $chargeDate, $user->monthly_subscription, SubscriptionChargeStatus::Due);
-            }
-        }
-    }
-
-    /**
      * @param integer $userId           The ID of the user to be updated
      * @param boolean $isAdminUpdating  Is the user making the change an admin
      */
@@ -280,41 +234,6 @@ class UserRepository extends DBRepository
         if (isset($recordData['address']) && is_array($recordData['address'])) {
             $this->addressRepository->updateUserAddress($userId, $recordData['address'], $isAdminUpdating);
         }
-    }
-
-    /**
-     * The member's payment method has gone away - either they cancelled it here or
-     * their bank cancelled the mandate and GoCardless told us about it.
-     *
-     * Outstanding charges have to go with it. They can never be collected while the
-     * member has no payment method, so they sit at 'due' accumulating one a month,
-     * invisible, until the member sets up a new mandate - at which point the whole
-     * backlog is billed against it in a single run.
-     *
-     * @param $userId
-     */
-    public function subscriptionCancelled($userId)
-    {
-        /** @var User $user */
-        $user = $this->getById($userId);
-        $user->cancelSubscription();
-
-        $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
-    }
-
-    /**
-     * The member has left, disable their account and cancel any out stand sub charge records
-     *
-     * @param $userId
-     */
-    public function memberLeft($userId)
-    {
-        $user = $this->getById($userId);
-        $user->active       = false;
-        $user->status       = MemberStatus::Left;
-        $user->save();
-
-        $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);
     }
 
     public function recordGoCardlessMandateDetails($userId, $subscriptionId)

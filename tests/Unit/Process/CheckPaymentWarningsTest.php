@@ -20,7 +20,7 @@ class CheckPaymentWarningsTest extends TestCase
     {
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
-        $this->process = new CheckPaymentWarnings($this->userRepository);
+        $this->process = app(CheckPaymentWarnings::class);
     }
 
     public function testRunSuspendsUserWhenGracePeriodExpired()

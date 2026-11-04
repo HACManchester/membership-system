@@ -8,6 +8,7 @@ use BB\Process\CheckSuspendedUsers;
 use BB\Process\CheckLeavingUsers;
 use BB\Process\RecoverMemberships;
 use BB\Services\MemberSubscriptionCharges;
+use BB\Services\MembershipStatus;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Handlers\SubChargeEventHandler;
@@ -30,11 +31,11 @@ class MembershipLifecycleIntegrationTest extends TestCase
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->subChargeEventHandler = new SubChargeEventHandler($this->userRepository);
-        $this->checkPaymentWarnings = new CheckPaymentWarnings();
-        $this->checkSuspendedUsers = new CheckSuspendedUsers($this->userRepository);
-        $this->checkLeavingUsers = new CheckLeavingUsers($this->userRepository);
-        $this->recoverMemberships = new RecoverMemberships();
+        $this->subChargeEventHandler = app(SubChargeEventHandler::class);
+        $this->checkPaymentWarnings = app(CheckPaymentWarnings::class);
+        $this->checkSuspendedUsers = app(CheckSuspendedUsers::class);
+        $this->checkLeavingUsers = app(CheckLeavingUsers::class);
+        $this->recoverMemberships = app(RecoverMemberships::class);
     }
 
     public function testCompleteNewMemberJourney()
@@ -79,7 +80,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
             $charge->save();
 
             // Extend membership
-            $user->extendMembership($user->payment_method, $paymentDate->copy()->addMonth());
+            app(MembershipStatus::class)->extend($user, $user->payment_method, $paymentDate->copy()->addMonth());
         }
 
         $user->refresh();
@@ -222,7 +223,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->checkLeavingUsers = new CheckLeavingUsers($this->userRepository);
+        $this->checkLeavingUsers = app(CheckLeavingUsers::class);
         $billService = app(MemberSubscriptionCharges::class);
 
         $user = User::factory()->create([
@@ -238,7 +239,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->subscriptionChargeRepository->createCharge($user->id, Carbon::now()->subMonths(13), 22, 'due');
 
         // Their bank cancels the direct debit
-        $this->userRepository->subscriptionCancelled($user->id);
+        app(MembershipStatus::class)->cancelSubscription($user);
 
         $this->assertEquals(
             0,
@@ -250,10 +251,10 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->checkLeavingUsers->run();
         $this->assertSame(MemberStatus::Left, $user->fresh()->status);
 
-        // They rejoin: new mandate, and ensureMembershipActive raises the first charge
+        // They rejoin: new mandate, and activating them raises the first charge
         $this->userRepository->updateUserPaymentMethod($user->id, 'gocardless-variable', Carbon::now()->day);
         $this->userRepository->recordGoCardlessMandateDetails($user->id, 'MD_REJOINED');
-        $this->userRepository->ensureMembershipActive($user->id);
+        app(MembershipStatus::class)->activate($user);
 
         $billService->makeChargesDue();
         $billService->billMembers();

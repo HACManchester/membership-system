@@ -4,7 +4,6 @@ namespace Tests\Unit\Process;
 
 use BB\Entities\User;
 use BB\Process\CheckSuspendedUsers;
-use BB\Repo\UserRepository;
 use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -16,7 +15,7 @@ class CheckSuspendedUsersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->process = new CheckSuspendedUsers(app(UserRepository::class));
+        $this->process = app(CheckSuspendedUsers::class);
     }
 
     public function testMarksUserAsLeftAfterThirtyDaysSuspended()

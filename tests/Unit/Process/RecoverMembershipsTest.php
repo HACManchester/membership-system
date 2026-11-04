@@ -16,7 +16,7 @@ class RecoverMembershipsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->process = new RecoverMemberships();
+        $this->process = app(RecoverMemberships::class);
     }
 
     /**

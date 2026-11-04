@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Services\MembershipStatus;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Support\Facades\Log;
 use BB\Support\DirectDebitSetup;
@@ -26,7 +27,7 @@ class SubscriptionController extends Controller
      */
     protected $userRepository;
 
-    function __construct(GoCardlessHelper $goCardless, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository)
+    function __construct(GoCardlessHelper $goCardless, SubscriptionChargeRepository $subscriptionChargeRepository, \BB\Repo\UserRepository $userRepository, private MembershipStatus $membershipStatus)
     {
         $this->goCardless = $goCardless;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
@@ -94,7 +95,7 @@ class SubscriptionController extends Controller
 
         // All we need for a valid member is an active DD so make sure the user account is active
         // If paying by variable DD take the first payment now
-        $this->userRepository->ensureMembershipActive($user->id);
+        $this->membershipStatus->activate($user);
 
         return \Redirect::route('account.show', [$user->id]);
     }
@@ -122,7 +123,7 @@ class SubscriptionController extends Controller
             }
 
             if ($cancelled) {
-                $this->userRepository->subscriptionCancelled($userId);
+                $this->membershipStatus->cancelSubscription($user);
 
                 \FlashNotification::success('Your subscription has been cancelled');
                 return \Redirect::back();
@@ -130,7 +131,7 @@ class SubscriptionController extends Controller
         } elseif ($user->payment_method == 'gocardless-variable') {
             $status = $this->goCardless->cancelPreAuth($user->mandate_id);
             if ($status) {
-                $this->userRepository->subscriptionCancelled($userId);
+                $this->membershipStatus->cancelSubscription($user);
 
                 \FlashNotification::success('Your direct debit has been cancelled');
                 return \Redirect::back();

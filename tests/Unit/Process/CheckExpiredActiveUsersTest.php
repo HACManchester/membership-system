@@ -15,7 +15,7 @@ class CheckExpiredActiveUsersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->process = new CheckExpiredActiveUsers();
+        $this->process = app(CheckExpiredActiveUsers::class);
     }
 
     public function testRunFlagsActiveUserWithLongLapsedExpiry()

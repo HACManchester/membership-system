@@ -5,7 +5,6 @@ namespace Tests\Unit\Process;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Process\CheckLeavingUsers;
-use BB\Repo\UserRepository;
 use BB\Support\MemberStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
@@ -18,7 +17,7 @@ class CheckLeavingUsersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->process = new CheckLeavingUsers(app(UserRepository::class));
+        $this->process = app(CheckLeavingUsers::class);
     }
 
     public function testMarksLeavingUserAsLeftOnceTheirMembershipExpires()

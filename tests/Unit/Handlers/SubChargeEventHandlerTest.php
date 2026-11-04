@@ -22,7 +22,7 @@ class SubChargeEventHandlerTest extends TestCase
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->handler = new SubChargeEventHandler($this->userRepository);
+        $this->handler = app(SubChargeEventHandler::class);
     }
 
     public function testOnPaymentFailureSetsPaymentWarning()

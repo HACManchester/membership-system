@@ -29,10 +29,10 @@ class PaymentFlowIntegrationTest extends TestCase
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->subChargeEventHandler = new SubChargeEventHandler($this->userRepository);
-        $this->checkPaymentWarnings = new CheckPaymentWarnings();
-        $this->checkSuspendedUsers = new CheckSuspendedUsers($this->userRepository);
-        $this->recoverMemberships = new RecoverMemberships();
+        $this->subChargeEventHandler = app(SubChargeEventHandler::class);
+        $this->checkPaymentWarnings = app(CheckPaymentWarnings::class);
+        $this->checkSuspendedUsers = app(CheckSuspendedUsers::class);
+        $this->recoverMemberships = app(RecoverMemberships::class);
     }
 
     public function testCompletePaymentFailureToSuspensionFlow()

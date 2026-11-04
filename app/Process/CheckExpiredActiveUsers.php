@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Helpers\TelegramHelper;
+use BB\Services\MembershipStatus;
 use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +24,7 @@ class CheckExpiredActiveUsers
 
     private $telegramHelper;
 
-    public function __construct()
+    public function __construct(private MembershipStatus $membershipStatus)
     {
         $this->telegramHelper = new TelegramHelper("CheckExpiredActiveUsers");
     }
@@ -51,7 +52,7 @@ class CheckExpiredActiveUsers
 
             if ($expired) {
                 $lapsedDate = $user->subscription_expires ? $user->subscription_expires->format('Y-m-d') : 'never set';
-                $user->setPaymentWarning();
+                $this->membershipStatus->setPaymentWarning($user);
                 Log::info($user->name . ' was active with a lapsed membership (expired: ' . $lapsedDate . ') - moved to payment warning');
                 array_push($flaggedMembers, $user->name);
             }

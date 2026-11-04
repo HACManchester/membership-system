@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
+use BB\Services\MembershipStatus;
 use BB\Support\CurrentUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -35,7 +36,8 @@ class PaymentController extends Controller
     function __construct(
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Repo\PaymentRepository $paymentRepository,
-        \BB\Repo\UserRepository $userRepository
+        \BB\Repo\UserRepository $userRepository,
+        private MembershipStatus $membershipStatus
     ) {
         $this->goCardless        = $goCardless;
         $this->paymentRepository = $paymentRepository;
@@ -119,7 +121,7 @@ class PaymentController extends Controller
             ]);
             $user->payments()->save($payment);
 
-            $user->extendMembership(\Request::input('source'), \Carbon\Carbon::now()->addMonth());
+            $this->membershipStatus->extend($user, \Request::input('source'), \Carbon\Carbon::now()->addMonth());
         } elseif ($reason == 'door-key') {
             $payment = new Payment([
                 'reason'           => $reason,
