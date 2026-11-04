@@ -93,14 +93,13 @@ class PaymentController extends Controller
     /**
      * Store a manual payment
      *
-     * @param $userId
-     * @return \Illuminate\Http\RedirectResponse
      * @deprecated
      */
-    public function store($userId, Request $request)
+    public function store(string $userId, Request $request)
     {
         // TODO: Review this method. Should have no active use?
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         if (!CurrentUser::get()->hasRole('admin') &&  !CurrentUser::get()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
