@@ -30,8 +30,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Uncast boolean columns read back from the database as 0/1, hence bool|int.
- *
  * @property int $id
  * @property string|null $hash
  * @property string $given_name
@@ -139,8 +137,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [
             'visited_forum' => 'boolean',
-
-            // TODO: Enable these casts one at a time and verify casting will not break references
             'email_verified' => 'boolean',
             'active' => 'boolean',
             'founder' => 'boolean',
@@ -155,6 +151,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'seen_at' => 'datetime',
             'suspended_at' => 'datetime',
             'gift_expires' => 'date',
+            'cash_balance' => 'integer',
             'suppress_real_name' => 'boolean',
             'newsletter' => 'boolean',
             'online_only' => 'boolean',

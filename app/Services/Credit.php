@@ -56,7 +56,8 @@ class Credit
         foreach ($negativePayments as $payment) {
             $runningTotal = $runningTotal - ($payment->amount * 100);
         }
-        $this->user->cash_balance = $runningTotal;
+        // The pounds amounts are floats, so their pence can land a hair under the whole number
+        $this->user->cash_balance = (int) round($runningTotal);
         $this->user->save();
     }
 
