@@ -20,12 +20,11 @@ class MemberPhotoApprovalController extends Controller
 
     /**
      * Approve or decline a member's pending profile photo.
-     *
-     * @param  int  $id
      */
-    public function update($id)
+    public function update(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
         $profile = $user->profile()->firstOrFail();
 
         if (\Request::input('photo_approved')) {
