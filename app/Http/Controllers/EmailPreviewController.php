@@ -12,6 +12,7 @@ use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mail\NotificationEmail;
 use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\ConfirmationEmail;
+use BB\Support\MemberStatus;
 
 class EmailPreviewController extends Controller
 {
@@ -52,7 +53,7 @@ class EmailPreviewController extends Controller
     {
         $user = User::factory()->make([
             'id' => 999,
-            'status' => 'suspended',
+            'status' => MemberStatus::Suspended,
             'active' => false,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
@@ -64,7 +65,7 @@ class EmailPreviewController extends Controller
     {
         $user = User::factory()->make([
             'id' => 999,
-            'status' => 'leaving',
+            'status' => MemberStatus::Leaving,
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
@@ -76,7 +77,7 @@ class EmailPreviewController extends Controller
     {
         $user = User::factory()->make([
             'id' => 999,
-            'status' => 'left',
+            'status' => MemberStatus::Left,
             'active' => false,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
@@ -123,7 +124,7 @@ class EmailPreviewController extends Controller
     {
         return User::factory()->make([
             'id' => 999,
-            'status' => 'active',
+            'status' => MemberStatus::Active,
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);

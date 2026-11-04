@@ -11,6 +11,7 @@ use BB\Process\RecoverMemberships;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Services\MemberSubscriptionCharges;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -62,7 +63,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: User should be in payment-warning status with 10-day grace period
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active); // Should still have space access
         $this->assertNotNull($user->subscription_expires);
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->addDays(10)));
@@ -75,7 +76,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: User should now be suspended
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active); // Should lose space access
         $this->assertNotNull($user->suspended_at);
         $this->assertTrue($user->suspended_at->isToday());
@@ -88,7 +89,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: User should now be marked as left
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
 
         // Cleanup
@@ -122,7 +123,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: User in payment-warning
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
 
         // Step 2: Simulate successful payment a few days later
         $recoveryDate = Carbon::now()->addDays(3);
@@ -146,7 +147,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: User should be recovered to active status
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
         $this->assertNotNull($user->subscription_expires);
         
@@ -225,7 +226,7 @@ class PaymentFlowIntegrationTest extends TestCase
 
         // Verify: Should get 10-day grace period
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         
         $expectedExpiry = Carbon::now()->addDays(10);
         $this->assertTrue(
@@ -250,7 +251,7 @@ class PaymentFlowIntegrationTest extends TestCase
         $user->subscription_expires = Carbon::now()->addMonth();
         $user->save();
 
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Step 2: First payment failure
@@ -269,7 +270,7 @@ class PaymentFlowIntegrationTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
 
         // Step 3: Member makes successful payment within grace period
@@ -290,7 +291,7 @@ class PaymentFlowIntegrationTest extends TestCase
         $this->checkPaymentWarnings->run();
         
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Step 4: Later payment failure with no recovery
@@ -312,14 +313,14 @@ class PaymentFlowIntegrationTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
 
         // Step 5: Grace period expires
         Carbon::setTestNow(Carbon::now()->addDays(11));
         $this->checkPaymentWarnings->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
 
         // Step 6: 30 days after suspension
@@ -327,7 +328,7 @@ class PaymentFlowIntegrationTest extends TestCase
         $this->checkSuspendedUsers->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
 
         // Cleanup
@@ -381,7 +382,7 @@ class PaymentFlowIntegrationTest extends TestCase
         // Verify: All users should be in payment-warning
         foreach ($users as $user) {
             $user->refresh();
-            $this->assertEquals('payment-warning', $user->status);
+            $this->assertSame(MemberStatus::PaymentWarning, $user->status);
             $this->assertTrue($user->active);
         }
 
@@ -408,13 +409,13 @@ class PaymentFlowIntegrationTest extends TestCase
         $users[1]->refresh(); // User 2 - should be recovered
         $users[2]->refresh(); // User 3 - should be suspended
 
-        $this->assertEquals('suspended', $users[0]->status);
+        $this->assertSame(MemberStatus::Suspended, $users[0]->status);
         $this->assertFalse($users[0]->active);
 
-        $this->assertEquals('active', $users[1]->status);
+        $this->assertSame(MemberStatus::Active, $users[1]->status);
         $this->assertTrue($users[1]->active);
 
-        $this->assertEquals('suspended', $users[2]->status);
+        $this->assertSame(MemberStatus::Suspended, $users[2]->status);
         $this->assertFalse($users[2]->active);
 
         // Cleanup
@@ -449,7 +450,7 @@ class PaymentFlowIntegrationTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         
         // Grace period should be 10 days from end of month
         $expectedExpiry = $endOfMonth->copy()->addDays(10);
@@ -460,7 +461,7 @@ class PaymentFlowIntegrationTest extends TestCase
         $this->checkPaymentWarnings->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
 
         // Cleanup
         Carbon::setTestNow();

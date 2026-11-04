@@ -5,6 +5,7 @@ namespace BB\Repo;
 use BB\Entities\Gift;
 use BB\Entities\User;
 use BB\Support\CurrentUser;
+use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
@@ -97,9 +98,9 @@ class UserRepository extends DBRepository
         }
 
         if ($params['showLeft']) {
-            $model = $model->where('status', 'left');
+            $model = $model->where('status', MemberStatus::Left);
         } else {
-            $model = $model->where('status', '!=', 'left');
+            $model = $model->where('status', '!=', MemberStatus::Left);
         }
 
         if ($this->isSortable($params)) {
@@ -118,14 +119,14 @@ class UserRepository extends DBRepository
         if ($showPrivateMembers) {
             return \DB::table('users')
                 ->join('profile_data', 'users.id', '=', 'profile_data.user_id')
-                ->where('status', '=', 'active')
+                ->where('status', MemberStatus::Active)
                 ->orderBy('profile_photo', 'desc')
                 ->orderBy('display_name')
                 ->get();
         } else {
             return \DB::table('users')
                 ->join('profile_data', 'users.id', '=', 'profile_data.user_id')
-                ->where('status', '=', 'active')
+                ->where('status', MemberStatus::Active)
                 ->where('profile_private', 0)
                 ->orderBy('profile_photo', 'desc')
                 ->orderBy('display_name')
@@ -206,7 +207,7 @@ class UserRepository extends DBRepository
                 $user->gift_expires = $giftExpiry;
                 // credit is stored in pounds (as a float); cash_balance is integer pence
                 $user->cash_balance = (int) round($gift_record->credit * 100);
-                $user->status = 'active';
+                $user->status = MemberStatus::Active;
                 $user->active = true;
                 $user->gift = $memberData['gift_code'];
                 $user->save();
@@ -235,7 +236,7 @@ class UserRepository extends DBRepository
         //user needs to have a recent sub charge and one that was paid or is due
 
         $user->active = true;
-        $user->status = 'active';
+        $user->status = MemberStatus::Active;
         $user->suspended_at = null;
         $user->save();
 
@@ -310,7 +311,7 @@ class UserRepository extends DBRepository
     {
         $user = $this->getById($userId);
         $user->active       = false;
-        $user->status       = 'left';
+        $user->status       = MemberStatus::Left;
         $user->save();
 
         $this->subscriptionChargeRepository->cancelOutstandingCharges($userId);

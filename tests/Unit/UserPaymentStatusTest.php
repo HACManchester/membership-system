@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use BB\Entities\User;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -18,7 +19,7 @@ class UserPaymentStatusTest extends TestCase
 
         $user->setPaymentWarning();
 
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
         $this->assertNotNull($user->subscription_expires);
         
@@ -35,7 +36,7 @@ class UserPaymentStatusTest extends TestCase
 
         $user->setPaymentWarning(100);
 
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
         
         $expectedExpiry = Carbon::now()->addDays(100);
@@ -52,7 +53,7 @@ class UserPaymentStatusTest extends TestCase
 
         $user->setSuspended();
 
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
         $this->assertNotNull($user->suspended_at);
         
@@ -70,7 +71,7 @@ class UserPaymentStatusTest extends TestCase
 
         $user->setSuspended();
 
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
 
         $this->assertTrue($user->suspended_at->isToday());

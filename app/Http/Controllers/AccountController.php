@@ -160,7 +160,7 @@ class AccountController extends Controller
         $user = User::findWithPermission($id);
 
         // If they never became a member just delete the record
-        if ($user->status == 'setting-up') {
+        if ($user->status == \BB\Support\MemberStatus::SettingUp) {
             $user->delete();
 
             \FlashNotification::success('Member deleted');

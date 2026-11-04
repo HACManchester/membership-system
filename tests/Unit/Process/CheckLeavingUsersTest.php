@@ -6,6 +6,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Process\CheckLeavingUsers;
 use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -31,7 +32,7 @@ class CheckLeavingUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse((bool) $user->active);
     }
 
@@ -46,7 +47,7 @@ class CheckLeavingUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('leaving', $user->status);
+        $this->assertSame(MemberStatus::Leaving, $user->status);
         $this->assertTrue((bool) $user->active);
     }
 
@@ -64,7 +65,7 @@ class CheckLeavingUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse((bool) $user->active);
     }
 

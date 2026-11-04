@@ -8,6 +8,7 @@ use BB\Entities\User;
 use BB\Events\MemberGivenTrustedStatus;
 use BB\Events\MemberPhotoWasDeclined;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\MemberStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\Test;
@@ -58,7 +59,31 @@ class MemberAdminActionsTest extends TestCase
             ->put(route('account.admin-update', $member->id), ['status' => 'active', 'active' => 1])
             ->assertRedirect(route('account.show', $member->id));
 
-        $this->assertEquals('active', $member->fresh()->status);
+        $this->assertSame(MemberStatus::Active, $member->fresh()->status);
+    }
+
+    #[Test]
+    public function an_unknown_membership_status_is_rejected()
+    {
+        $member = User::factory()->create(['status' => 'active']);
+
+        $this->actingAs($this->admin())
+            ->put(route('account.admin-update', $member->id), ['status' => 'resting'])
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame(MemberStatus::Active, $member->fresh()->status);
+    }
+
+    #[Test]
+    public function an_empty_membership_status_is_rejected()
+    {
+        $member = User::factory()->create(['status' => 'active']);
+
+        $this->actingAs($this->admin())
+            ->put(route('account.admin-update', $member->id), ['status' => ''])
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame(MemberStatus::Active, $member->fresh()->status);
     }
 
     #[Test]

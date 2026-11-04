@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Helpers\TelegramHelper;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -38,7 +39,7 @@ class CheckExpiredActiveUsers
         $today = new Carbon();
         $flaggedMembers = [];
 
-        $users = User::where('status', 'active')->notSpecialCase()->get();
+        $users = User::where('status', MemberStatus::Active)->notSpecialCase()->get();
         foreach ($users as $user) {
             /** @var \BB\Entities\User $user */
 

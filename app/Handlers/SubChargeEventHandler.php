@@ -4,6 +4,7 @@ namespace BB\Handlers;
 
 use BB\Helpers\MembershipPayments;
 use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 
@@ -71,7 +72,7 @@ class SubChargeEventHandler
             return; // Don't set payment warning if other payments exist for this charge
         }
 
-        if ($user->status === "active") {
+        if ($user->status === MemberStatus::Active) {
             $user->setPaymentWarning();
         }
     }

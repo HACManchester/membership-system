@@ -1,4 +1,5 @@
-@if (($user->status != 'setting-up' || $user->online_only) && count($user->getAlerts()) > 0)
+@use('BB\Support\MemberStatus')
+@if (($user->status != MemberStatus::SettingUp || $user->online_only) && count($user->getAlerts()) > 0)
     <div class="alert alert-warning" role="alert">
         <ul>
             @foreach ($user->getAlerts() as $alert)

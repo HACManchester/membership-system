@@ -3,6 +3,7 @@
 use BB\Entities\User;
 use BB\Helpers\MembershipPayments;
 use BB\Helpers\TelegramHelper;
+use BB\Support\MemberStatus;
 use Illuminate\Support\Facades\Log;
 
 class RecoverMemberships
@@ -23,7 +24,7 @@ class RecoverMemberships
         
         // Check all users for payment recovery opportunities
         // This includes active, payment-warning, and suspended users
-        $users = User::whereIn('status', ['active', 'payment-warning', 'suspended'])
+        $users = User::whereIn('status', [MemberStatus::Active, MemberStatus::PaymentWarning, MemberStatus::Suspended])
             ->notSpecialCase()
             ->get();
             
@@ -35,7 +36,7 @@ class RecoverMemberships
             
             if ($paidUntil && ($user->subscription_expires === null || $user->subscription_expires->lt($paidUntil))) {
                 // They have a valid payment that extends beyond their current expiry
-                $previousStatus = $user->status;
+                $previousStatus = $user->status->value;
                 $user->extendMembership($user->payment_method, $paidUntil);
                 
                 Log::info($user->name . ' recovered from ' . $previousStatus . ' - membership extended to ' . $paidUntil->format('Y-m-d'));

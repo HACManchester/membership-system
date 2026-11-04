@@ -7,6 +7,7 @@ use BB\Exceptions\AuthenticationException;
 use BB\Observer\UserAuditObserver;
 use BB\Observer\UserObserver;
 use BB\Support\CurrentUser;
+use BB\Support\MemberStatus;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
 use DateTime;
@@ -49,7 +50,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $notes
  * @property bool $active
  * @property bool $founder
- * @property string $status
+ * @property MemberStatus $status
  * @property bool $trusted
  * @property bool $key_holder
  * @property int|null $key_deposit_payment_id
@@ -120,7 +121,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
 
     protected $attributes = [
-        'status'                => 'setting-up',
+        'status'                => MemberStatus::SettingUp->value,
         'active'                => 0,
         'key_holder'            => 0,
         'trusted'               => 0,
@@ -145,6 +146,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'induction_completed' => 'boolean',
             'profile_private' => 'boolean',
             'banned' => 'boolean',
+            'status' => MemberStatus::class,
             'subscription_expires' => 'datetime',
             'banned_date' => 'datetime',
             'rules_agreed' => 'datetime',
@@ -263,14 +265,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function shouldMemberSeeProtectedPhoto(): bool
     {
-        switch ($this->attributes['status']) {
-            case 'active':
-            case 'payment-warning':
-            case 'honorary':
-                return true;
-            default:
-                return false;
-        }
+        return in_array($this->status, [
+            MemberStatus::Active,
+            MemberStatus::PaymentWarning,
+            MemberStatus::Honorary,
+        ], true);
     }
 
     /**
@@ -318,12 +317,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function hasPaymentWarning(): bool
     {
-        return ($this->status == 'payment-warning');
+        return $this->status == MemberStatus::PaymentWarning;
     }
     
     public function isSuspended(): bool
     {
-        return ($this->status == 'suspended');
+        return $this->status == MemberStatus::Suspended;
     }
 
 
@@ -342,7 +341,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     #[Scope]
     protected function notSpecialCase(Builder $query): void
     {
-        $query->where('status', '!=', 'honorary')
+        $query->where('status', '!=', MemberStatus::Honorary)
             ->where(function ($subquery) {
                 $subquery->whereNull('gift_expires')->orWhere('gift_expires', '<=', Carbon::today());
             });
@@ -351,19 +350,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     #[Scope]
     protected function leaving(Builder $query): void
     {
-        $query->where('status', '=', 'leaving');
+        $query->where('status', MemberStatus::Leaving);
     }
 
     #[Scope]
     protected function paymentWarning(Builder $query): void
     {
-        $query->where('status', '=', 'payment-warning');
+        $query->where('status', MemberStatus::PaymentWarning);
     }
 
     #[Scope]
     protected function suspended(Builder $query): void
     {
-        $query->where('status', '=', 'suspended');
+        $query->where('status', MemberStatus::Suspended);
     }
 
     #[Scope]
@@ -405,7 +404,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->payment_method = '';
         $this->subscription_id = '';
         $this->mandate_id = '';
-        $this->status = 'leaving';
+        $this->status = MemberStatus::Leaving;
         $this->save();
     }
 
@@ -414,7 +413,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function setLeaving()
     {
-        $this->status = 'leaving';
+        $this->status = MemberStatus::Leaving;
         $this->save();
     }
 
@@ -423,7 +422,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function setSuspended()
     {
-        $this->status = 'suspended';
+        $this->status = MemberStatus::Suspended;
         $this->active = false;
         $this->suspended_at = Carbon::now();
         $this->save();
@@ -431,7 +430,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function setPaymentWarning($gracePeriodDays = 10)
     {
-        $this->status = 'payment-warning';
+        $this->status = MemberStatus::PaymentWarning;
         $this->active = true; // Keep space access during warning period
         
         // Set subscription_expires to failure date + grace period for fair timing
@@ -497,7 +496,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         if (empty($expiry)) {
             $expiry = Carbon::now()->addMonth();
         }
-        $this->status = 'active';
+        $this->status = MemberStatus::Active;
         $this->active = true;
         if ($paymentMethod) {
             $this->payment_method = $paymentMethod;

@@ -10,6 +10,7 @@ use BB\Notifications\TrainingRecords\Inductees\TrainingRecordCompletedNotificati
 use BB\Notifications\TrainingRecords\Inductees\TrainingRecordMarkedAsTrainerNotification;
 use BB\Notifications\TrainingRecords\Inductees\TrainingRecordRequestedNotification as InducteeInductionRequestedNotification;
 use BB\Notifications\TrainingRecords\Trainers\TrainingRecordRequestedNotification as TrainerInductionRequestedNotification;
+use BB\Support\MemberStatus;
 
 class NotificationPreviewController extends Controller
 {
@@ -53,7 +54,7 @@ class NotificationPreviewController extends Controller
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
-            'status' => 'active',
+            'status' => MemberStatus::Active,
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
@@ -106,7 +107,7 @@ class NotificationPreviewController extends Controller
             'id' => 998,
             'given_name' => 'Jane',
             'family_name' => 'Smith',
-            'status' => 'active',
+            'status' => MemberStatus::Active,
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);
@@ -122,7 +123,7 @@ class NotificationPreviewController extends Controller
     {
         return User::factory()->make([
             'id' => 999,
-            'status' => 'active',
+            'status' => MemberStatus::Active,
             'active' => true,
             'hash' => \Illuminate\Support\Str::random(32),
         ]);

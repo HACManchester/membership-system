@@ -11,6 +11,7 @@ use BB\Services\MemberSubscriptionCharges;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Handlers\SubChargeEventHandler;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -47,7 +48,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
             'monthly_subscription' => 2200,
         ]);
 
-        $this->assertEquals('setting-up', $user->status);
+        $this->assertSame(MemberStatus::SettingUp, $user->status);
         $this->assertFalse($user->active);
 
         // Step 2: Member sets up payment method and becomes active
@@ -58,7 +59,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $user->payment_day = 15;
         $user->save();
 
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Step 3: Simulate 6 months of successful payments
@@ -82,7 +83,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         }
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Step 4: First payment failure
@@ -104,7 +105,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active); // Should still have access
 
         // Step 5: Member recovers by using payment retry (simulates PaymentModule flow)
@@ -125,7 +126,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->recoverMemberships->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Step 6: Second payment failure - no recovery this time
@@ -147,14 +148,14 @@ class MembershipLifecycleIntegrationTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
 
         // Step 7: Grace period expires - member suspended
         Carbon::setTestNow($secondFailureDate->copy()->addDays(11));
         $this->checkPaymentWarnings->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
         $this->assertNotNull($user->suspended_at);
 
@@ -163,7 +164,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->checkSuspendedUsers->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
 
         // Cleanup
@@ -185,7 +186,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $user->payment_method = null;
         $user->save();
 
-        $this->assertEquals('leaving', $user->status);
+        $this->assertSame(MemberStatus::Leaving, $user->status);
         $this->assertTrue($user->active); // Should still have access until expiry
 
         // Step 3: Subscription expires
@@ -193,7 +194,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->checkLeavingUsers->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
 
         // Cleanup
@@ -247,7 +248,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // A year passes. Nothing can bill them, and the leaving check retires them
         $this->checkLeavingUsers->run();
-        $this->assertEquals('left', $user->fresh()->status);
+        $this->assertSame(MemberStatus::Left, $user->fresh()->status);
 
         // They rejoin: new mandate, and ensureMembershipActive raises the first charge
         $this->userRepository->updateUserPaymentMethod($user->id, 'gocardless-variable', Carbon::now()->day);
@@ -297,7 +298,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->recoverMemberships->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
         $this->assertNull($user->suspended_at);
     }
@@ -319,7 +320,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // Verify: Honorary member should be unaffected
         $user->refresh();
-        $this->assertEquals('honorary', $user->status);
+        $this->assertSame(MemberStatus::Honorary, $user->status);
         $this->assertTrue($user->active);
     }
 
@@ -351,7 +352,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         // Verify: Online-only member should follow same payment warning flow
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue((bool)$user->active);
         $this->assertTrue((bool)$user->online_only);
 
@@ -360,7 +361,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $this->checkPaymentWarnings->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse((bool)$user->active);
         $this->assertTrue((bool)$user->online_only); // Should preserve online_only flag
 
@@ -398,7 +399,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
             // Verify: All subscription amounts should get same treatment
             $user->refresh();
-            $this->assertEquals('payment-warning', $user->status);
+            $this->assertSame(MemberStatus::PaymentWarning, $user->status);
             $this->assertTrue($user->active);
             $this->assertEquals($amount, $user->monthly_subscription);
         }
@@ -442,14 +443,14 @@ class MembershipLifecycleIntegrationTest extends TestCase
         $users[2]->refresh();
 
         // Member 1: Should remain active (recovery might have happened)
-        $this->assertContains($users[0]->status, ['active', 'suspended']);
+        $this->assertContains($users[0]->status, [MemberStatus::Active, MemberStatus::Suspended]);
 
         // Member 2: Should be suspended
-        $this->assertEquals('suspended', $users[1]->status);
+        $this->assertSame(MemberStatus::Suspended, $users[1]->status);
         $this->assertFalse($users[1]->active);
 
         // Member 3: Should be marked as left
-        $this->assertEquals('left', $users[2]->status);
+        $this->assertSame(MemberStatus::Left, $users[2]->status);
         $this->assertFalse($users[2]->active);
     }
 

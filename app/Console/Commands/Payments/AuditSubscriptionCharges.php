@@ -107,7 +107,7 @@ class AuditSubscriptionCharges extends Command
                 return [
                     $charge->id,
                     $this->memberName($charge),
-                    $charge->user ? $charge->user->status : '-',
+                    $charge->user ? $charge->user->status->value : '-',
                     $charge->user && $charge->user->payment_method ? $charge->user->payment_method : 'none',
                     $charge->charge_date->format('Y-m-d'),
                     $charge->status->value,

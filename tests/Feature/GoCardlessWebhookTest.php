@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
@@ -177,7 +178,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertTrue($charge->payment_date->isSameDay(Carbon::now()));
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->addMonth()));
     }
 
@@ -198,7 +199,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         // Members keep access during the grace period
         $this->assertTrue((bool) $user->active);
         $this->assertTrue($user->subscription_expires->isAfter(Carbon::now()));
@@ -221,7 +222,7 @@ class GoCardlessWebhookTest extends TestCase
         ]])->assertStatus(200);
 
         $user->refresh();
-        $this->assertEquals('leaving', $user->status);
+        $this->assertSame(MemberStatus::Leaving, $user->status);
         $this->assertEmpty($user->mandate_id);
         $this->assertEmpty($user->payment_method);
     }
@@ -376,7 +377,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertSame(SubscriptionChargeStatus::Paid, $charge->fresh()->status);
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->addMonth()));
     }
 
@@ -395,7 +396,7 @@ class GoCardlessWebhookTest extends TestCase
 
         $this->assertSame(PaymentStatus::Failed, Payment::where('source_id', 'PM_SUB_1')->first()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
-        $this->assertEquals('payment-warning', $user->fresh()->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->fresh()->status);
     }
 
     #[Test]
@@ -438,7 +439,7 @@ class GoCardlessWebhookTest extends TestCase
             ->assertStatus(200);
 
         $user->refresh();
-        $this->assertEquals('leaving', $user->status);
+        $this->assertSame(MemberStatus::Leaving, $user->status);
         $this->assertEmpty($user->payment_method);
         $this->assertEmpty($user->subscription_id);
         $this->assertEmpty($user->mandate_id);
@@ -461,7 +462,7 @@ class GoCardlessWebhookTest extends TestCase
             ->assertStatus(200);
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertEquals('gocardless-variable', $user->payment_method);
         $this->assertEquals('MD_TEST_123', $user->mandate_id);
         $this->assertEmpty($user->subscription_id);
@@ -484,7 +485,7 @@ class GoCardlessWebhookTest extends TestCase
 
         $this->assertSame(PaymentStatus::Cancelled, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
-        $this->assertEquals('payment-warning', $user->fresh()->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->fresh()->status);
     }
 
     // ---------------------------------------------------------------------
@@ -514,7 +515,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertSame(PaymentStatus::Paid, $confirmed->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Paid, $confirmedCharge->fresh()->status);
         $this->assertTrue($confirmedUser->fresh()->subscription_expires->isSameDay(Carbon::now()->addMonth()));
-        $this->assertEquals('leaving', $leaving->fresh()->status);
+        $this->assertSame(MemberStatus::Leaving, $leaving->fresh()->status);
     }
 
     #[Test]
@@ -547,7 +548,7 @@ class GoCardlessWebhookTest extends TestCase
         $user->refresh();
         $this->assertSame(PaymentStatus::Failed, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->subscription_expires->equalTo($afterFirst->subscription_expires));
     }
 
@@ -592,6 +593,6 @@ class GoCardlessWebhookTest extends TestCase
 
         $this->assertSame(PaymentStatus::Failed, $failed->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $failedCharge->fresh()->status);
-        $this->assertEquals('payment-warning', $failedUser->fresh()->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $failedUser->fresh()->status);
     }
 }

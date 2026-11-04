@@ -4,6 +4,7 @@ namespace Tests\Unit\Process;
 
 use BB\Entities\User;
 use BB\Process\CheckExpiredActiveUsers;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -28,7 +29,7 @@ class CheckExpiredActiveUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active); // Keeps access during the grace period
         $this->assertTrue($user->subscription_expires->isFuture()); // Grace period set
     }
@@ -44,7 +45,7 @@ class CheckExpiredActiveUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
     }
 
     public function testRunLeavesPaidUpUserAlone()
@@ -58,7 +59,7 @@ class CheckExpiredActiveUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
     }
 
     public function testRunFlagsEstablishedActiveUserWithNoExpiryDate()
@@ -74,7 +75,7 @@ class CheckExpiredActiveUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
     }
 
     public function testRunLeavesNewUserWithNoExpiryDateAlone()
@@ -89,7 +90,7 @@ class CheckExpiredActiveUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
     }
 
     public function testRunIgnoresSpecialCaseAndNonActiveUsers()
@@ -115,8 +116,8 @@ class CheckExpiredActiveUsersTest extends TestCase
 
         $this->process->run();
 
-        $this->assertEquals('honorary', $honoraryUser->refresh()->status);
-        $this->assertEquals('active', $giftedUser->refresh()->status);
-        $this->assertEquals('suspended', $suspendedUser->refresh()->status);
+        $this->assertSame(MemberStatus::Honorary, $honoraryUser->refresh()->status);
+        $this->assertSame(MemberStatus::Active, $giftedUser->refresh()->status);
+        $this->assertSame(MemberStatus::Suspended, $suspendedUser->refresh()->status);
     }
 }

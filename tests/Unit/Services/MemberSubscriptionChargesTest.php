@@ -10,6 +10,7 @@ use BB\Services\MemberSubscriptionCharges;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
 use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
@@ -605,7 +606,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
     }
 
@@ -815,7 +816,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
     }
 
     /**

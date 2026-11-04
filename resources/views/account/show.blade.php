@@ -1,3 +1,4 @@
+@use('BB\Support\MemberStatus')
 @extends('layouts.main')
 
 @section('meta-title')
@@ -32,11 +33,11 @@
 @include('account.partials.get-started')
 @include('account.partials.online-only-upsell')
 
-@if ($user->status == 'left')
+@if ($user->status == MemberStatus::Left)
     @include('account.partials.rejoin')
 @endif
     
-@if ($user->status == 'leaving')
+@if ($user->status == MemberStatus::Leaving)
     @include('account.partials.leaving-warning')
 @endif
 
@@ -45,7 +46,7 @@
 @endif
 
 
-@if ($user->status != 'setting-up')
+@if ($user->status != MemberStatus::SettingUp)
     {{-- Call to action / signposting section --}}
     @include('account.partials.signposts.list')
 
@@ -57,7 +58,7 @@
         </div>
     @endif
 
-    @if ($user->status != 'honorary')
+    @if ($user->status != MemberStatus::Honorary)
         <div class="row">
             <div class="col-xs-12 col-lg-12 pull-left">
                 @include('account.partials.sub-charges')
@@ -70,7 +71,7 @@
             </div>
         </div>
 
-        @if (($user->status != 'left') && ($user->status != 'leaving'))
+        @if (($user->status != MemberStatus::Left) && ($user->status != MemberStatus::Leaving))
         <div class="row">
             <div class="col-xs-12 col-lg-4">
                 @include('account.partials.cancel-panel')

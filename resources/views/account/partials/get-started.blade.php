@@ -1,3 +1,4 @@
+@use('BB\Support\MemberStatus')
 <?php
 $conditions = [
     $user->email_verified,
@@ -14,7 +15,7 @@ $countOfCompletedConditions = count(array_filter($conditions));
 $pctComplete = 100 / $countOfConditions * $countOfCompletedConditions;
 $fmtMonthlySubscription = number_format((float) $user->monthly_subscription, 2);
 ?>
-@if(!$user->online_only && !in_array($user->status, ['leaving', 'left', 'suspended']) && $countOfConditions !== $countOfCompletedConditions)
+@if(!$user->online_only && !in_array($user->status, [MemberStatus::Leaving, MemberStatus::Left, MemberStatus::Suspended]) && $countOfConditions !== $countOfCompletedConditions)
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             <div class="panel panel-default">

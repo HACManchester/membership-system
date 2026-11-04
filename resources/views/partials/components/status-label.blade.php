@@ -1,17 +1,18 @@
-@if ($status == 'setting-up')
+@use('BB\Support\MemberStatus')
+@if ($status == MemberStatus::SettingUp)
     <span class="label label-warning" data-toggle="tooltip" data-placement="top" title="We are waiting for a subscription to be setup">Setting Up</span>
-@elseif ($status == 'active')
+@elseif ($status == MemberStatus::Active)
     <span class="label label-success">Active</span>
-@elseif ($status == 'payment-warning')
+@elseif ($status == MemberStatus::PaymentWarning)
     <span class="label label-danger" data-toggle="tooltip" data-placement="top" title="There is something wrong with your subscription">Payment Warning</span>
-@elseif ($status == 'leaving')
+@elseif ($status == MemberStatus::Leaving)
     <span class="label label-default" data-toggle="tooltip" data-placement="top" title="Your leaving and will loose access when your payment expires">Leaving</span>
-@elseif ($status == 'on-hold')
+@elseif ($status == MemberStatus::OnHold)
     <span class="label label-default">On Hold</span>
-@elseif ($status == 'left')
+@elseif ($status == MemberStatus::Left)
     <span class="label label-default">Left</span>
-@elseif ($status == 'honorary')
+@elseif ($status == MemberStatus::Honorary)
     <span class="label label-default">Honorary</span>
-@elseif ($status == 'suspended')
+@elseif ($status == MemberStatus::Suspended)
     <span class="label label-default" data-toggle="tooltip" data-placement="top" title="Your payment has failed, please make a manual payment to reactivate your account.">Suspended</span>
 @endif

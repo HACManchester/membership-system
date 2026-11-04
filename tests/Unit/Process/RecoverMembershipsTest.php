@@ -5,6 +5,7 @@ namespace Tests\Unit\Process;
 use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
 use BB\Process\RecoverMemberships;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -41,7 +42,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
 
         // Should be extended from payment date + 1 month
@@ -69,7 +70,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->subDay()->addMonth()));
     }
 
@@ -96,7 +97,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
         $this->assertNotNull($user->subscription_expires);
     }
@@ -126,7 +127,7 @@ class RecoverMembershipsTest extends TestCase
 
         $user->refresh();
 
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
         $this->assertNull($user->suspended_at);
     }
@@ -152,7 +153,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -175,7 +176,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('leaving', $user->status);
+        $this->assertSame(MemberStatus::Leaving, $user->status);
     }
 
     public function testIgnoresLeftUsers()
@@ -197,7 +198,7 @@ class RecoverMembershipsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -217,7 +218,7 @@ class RecoverMembershipsTest extends TestCase
         $user->refresh();
 
         // Should remain unchanged
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->subscription_expires->isSameDay(Carbon::now()->subDays(5)));
     }
 
@@ -250,7 +251,7 @@ class RecoverMembershipsTest extends TestCase
         $user->refresh();
 
         // Should not recover with unpaid charges
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -275,7 +276,7 @@ class RecoverMembershipsTest extends TestCase
         $user->refresh();
 
         // Should still recover regardless of payment method
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
     }
 }
