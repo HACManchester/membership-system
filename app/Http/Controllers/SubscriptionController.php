@@ -41,9 +41,10 @@ class SubscriptionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create($userId)
+    public function create(string $userId)
     {
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         if(!$user->monthly_subscription) {
             \FlashNotification::error("Attempt to set up invalid direct debit, blocked.");
@@ -58,7 +59,7 @@ class SubscriptionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store($userId)
+    public function store(string $userId)
     {
         $confirm_params = array(
             'resource_id'    => \Request::get('resource_id'),
@@ -72,7 +73,8 @@ class SubscriptionController extends Controller
             $confirm_params['state'] = \Request::get('state');
         }
 
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         try {
             $confirmed_resource = $this->goCardless->confirmResource($user, $confirm_params);
@@ -106,9 +108,10 @@ class SubscriptionController extends Controller
      *
      * @param  int  $id
      */
-    public function destroy($userId, $id = null)
+    public function destroy(string $userId, $id = null)
     {
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
         if ($user->payment_method == 'gocardless') {
             try {
                 $subscription = $this->goCardless->cancelSubscription($user->subscription_id);
@@ -151,12 +154,11 @@ class SubscriptionController extends Controller
     /**
      * Set up the experimental fixed GoCardless DD subscription for a member
      * (admin-only testing tool, separate from the normal monthly payment).
-     *
-     * @param  int  $userId
      */
-    public function experimentalSubscriptionStore($userId)
+    public function experimentalSubscriptionStore(string $userId)
     {
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
 
@@ -168,12 +170,11 @@ class SubscriptionController extends Controller
 
     /**
      * Cancel the experimental fixed GoCardless DD subscription for a member.
-     *
-     * @param  int  $userId
      */
-    public function experimentalSubscriptionDestroy($userId)
+    public function experimentalSubscriptionDestroy(string $userId)
     {
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         $this->goCardless->cancelSubscription($user->subscription_id);
 
