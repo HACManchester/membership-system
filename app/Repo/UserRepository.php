@@ -65,7 +65,7 @@ class UserRepository extends DBRepository
 
     public function getPaginated(array $params)
     {
-        $model = $this->model->with('roles')->with('profile');
+        $model = $this->model->with('roles')->with('profile')->withCount('keyFobs');
 
         if ($params['filter']) {
             // Grouped, so the online-only and left filters below apply to every match

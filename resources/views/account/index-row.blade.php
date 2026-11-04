@@ -23,10 +23,10 @@
         @if($user->key_holder)
             <i class="material-icons" title="Key Holder">vpn_key</i>
         @endif
-        @if($user->keyFobs()->count() < 1) 
+        @if($user->key_fobs_count < 1) 
             💁‍♂️ Fob being collected
         @else
-            🔑 ({{ $user->keyFobs()->count() }})
+            🔑 ({{ $user->key_fobs_count }})
         @endif
     </td>
     <td class="hidden-xs">
