@@ -211,6 +211,19 @@ class CourseTest extends TestCase
             });
     }
 
+    public function test_course_show_page_sends_when_the_course_was_paused()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create(['paused_at' => '2026-07-01 10:30:00']);
+
+        $this->actingAs($user)
+            ->get(route('courses.show', $course))
+            ->assertInertia(function ($page) {
+                $page->where('course.paused_at', '2026-07-01 10:30:00')
+                    ->where('course.is_paused', true);
+            });
+    }
+
     public function test_course_show_page_shows_an_unrecognised_format_and_frequency_as_stored()
     {
         $user = User::factory()->create();

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
+ * @property \Carbon\Carbon|null $paused_at
  * @property-read string $format_label
  * @property-read string $frequency_label
  */
@@ -46,6 +47,7 @@ class Course extends Model
     {
         return [
             'live' => 'boolean',
+            'paused_at' => 'datetime',
         ];
     }
 
