@@ -250,27 +250,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return Attribute::get(fn ($value, array $attributes) => $attributes['display_name']);
     }
 
-    /**
-     * Get an array of alerts for the user
-     *
-     * @return array
-     */
-    public function getAlerts()
-    {
-        $alerts = [];
-        if (!$this->email_verified) {
-            $alerts[] = 'email-not-verified';
-        }
-        $profile = $this->profile;
-        if (!$profile || (!$profile->profile_photo && !$profile->new_profile_photo)) {
-            $alerts[] = 'missing-profile-photo';
-        }
-        if (empty($this->phone)) {
-            $alerts[] = 'missing-phone';
-        }
-        return $alerts;
-    }
-
 
 
     /*

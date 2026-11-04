@@ -5,6 +5,7 @@ namespace BB\Services;
 use BB\Entities\User;
 use BB\Entities\Course;
 use BB\Support\CurrentUser;
+use BB\Support\MemberAlerts;
 
 class SidebarItems
 {
@@ -53,7 +54,7 @@ class SidebarItems
                 'label' => '🙂 Your Membership',
                 'href' => route('account.show', $user->id),
                 'active' => self::isActive('account.show', [$user->id]),
-                'badge' => count($user->getAlerts()),
+                'badge' => count(MemberAlerts::for($user)),
             ],
             [
                 'label' => '💳 Manage Your Balance',
