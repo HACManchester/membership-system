@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
-use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 

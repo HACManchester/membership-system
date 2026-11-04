@@ -3,10 +3,8 @@
 namespace BB\Entities;
 
 use BB\Entities\Presenters\UserPresenter;
-use BB\Exceptions\AuthenticationException;
 use BB\Observer\UserAuditObserver;
 use BB\Observer\UserObserver;
-use BB\Support\CurrentUser;
 use BB\Support\MemberStatus;
 use BB\Traits\UserRoleTrait;
 use Carbon\Carbon;
@@ -410,37 +408,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->seen_at = Carbon::now();
         $this->save();
-    }
-
-    /**
-     * Fetch a user record, performs a permission check
-     *
-     * @param integer|null $id
-     * @param string       $role
-     *
-     * @return User
-     * @throws AuthenticationException
-     */
-    public static function findWithPermission($id = null, $role = 'admin')
-    {
-        //Return the logged in user
-        if (empty($id)) {
-            return CurrentUser::get();
-        }
-
-        $requestedUser = self::findOrFail($id);
-        if (CurrentUser::get()->getAuthIdentifier() == $requestedUser->id) {
-            //The user they are after is themselves
-            return $requestedUser;
-        }
-
-        //They are requesting a user that isn't them
-        if (CurrentUser::get()->hasRole($role)) {
-            //They are an admin so that's alright
-            return $requestedUser;
-        }
-
-        throw new AuthenticationException();
     }
 
     /**
