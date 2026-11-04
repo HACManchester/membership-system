@@ -16,10 +16,8 @@ class AccountSubscriptionController extends Controller
 
     /**
      * Update a member's monthly subscription amount.
-     *
-     * @param  int  $id
      */
-    public function update($id)
+    public function update(string $id)
     {
         $amount = \Request::input('monthly_subscription');
 
@@ -39,7 +37,8 @@ class AccountSubscriptionController extends Controller
             throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
         }
 
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
         $user->updateSubAmount($amount);
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
