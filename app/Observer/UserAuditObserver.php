@@ -15,7 +15,8 @@ class UserAuditObserver
     public function saved($user)
     {
         $changed  = $user->getDirty();
-        $original = $user->getOriginal();
+        // The stored values, so a boolean cast still logs "was 0" rather than "was "
+        $original = $user->getRawOriginal();
 
 
         $changedData = [];

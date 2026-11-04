@@ -52,11 +52,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $active
  * @property bool $founder
  * @property string $status
- * @property bool|int $trusted
- * @property bool|int $key_holder
+ * @property bool $trusted
+ * @property bool $key_holder
  * @property int|null $key_deposit_payment_id
  * @property int|null $storage_box_payment_id
- * @property bool|int $induction_completed
+ * @property bool $induction_completed
  * @property int|null $inducted_by
  * @property string|null $payment_method
  * @property string|null $secondary_payment_method
@@ -144,9 +144,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'email_verified' => 'boolean',
             'active' => 'boolean',
             'founder' => 'boolean',
-            // 'trusted' => 'boolean',
-            // 'key_holder' => 'boolean',
-            // 'induction_completed' => 'boolean',
+            'trusted' => 'boolean',
+            'key_holder' => 'boolean',
+            'induction_completed' => 'boolean',
             'profile_private' => 'boolean',
             'banned' => 'boolean',
             'subscription_expires' => 'datetime',
