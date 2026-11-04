@@ -79,7 +79,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool|null $online_only
  * @property bool|null $postFob false to collect the fob, true to have it posted
  * @property string|null $gift
- * @property string|null $gift_expires Y-m-d
+ * @property Carbon|null $gift_expires
  * @property bool $newsletter
  * @property bool $visited_forum
  * @property Carbon|null $created_at
@@ -154,6 +154,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'rules_agreed' => 'datetime',
             'seen_at' => 'datetime',
             'suspended_at' => 'datetime',
+            'gift_expires' => 'date',
             'suppress_real_name' => 'boolean',
             'newsletter' => 'boolean',
             'online_only' => 'boolean',
