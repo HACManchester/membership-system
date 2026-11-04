@@ -132,6 +132,10 @@ class Handler extends ExceptionHandler
             if ($request->wantsJson()) {
                 return \Response::json($e->getErrors(), 422);
             }
+            if ($request->header('X-Inertia')) {
+                // Inertia forms show field errors from the session's errors bag.
+                return $this->invalid($request, IlluminateValidationException::withMessages($e->getErrors()->getMessages()));
+            }
             \FlashNotification::error("Something wasn't right, please check the form for errors", $e->getErrors());
             return redirect()->back()->withInput();
         }
