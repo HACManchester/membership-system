@@ -52,7 +52,6 @@ class TrainingRecord extends Model
     protected function casts(): array
     {
         return [
-            'paid' => 'boolean',
             'active' => 'boolean',
             'is_trainer' => 'boolean',
             'trained' => 'datetime',
