@@ -11,6 +11,8 @@ use BB\Http\Resources\EquipmentResource;
 use BB\Repo\CourseRepository;
 use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
+use BB\Support\CourseFormat;
+use BB\Support\CourseFrequency;
 use BB\Support\CurrentUser;
 use FlashNotification;
 use Illuminate\Support\Facades\DB;
@@ -67,8 +69,8 @@ class CourseController extends Controller
         $equipment = $this->equipmentRepository->getEquipmentForCourseCreation();
 
         return Inertia::render('Courses/Create', [
-            'formatOptions' => Course::formatOptions(),
-            'frequencyOptions' => Course::frequencyOptions(),
+            'formatOptions' => CourseFormat::options(),
+            'frequencyOptions' => CourseFrequency::options(),
             'equipment' => EquipmentResource::collection($equipment),
             'urls' => [
                 'index' => route('courses.index', [], false),
@@ -155,8 +157,8 @@ class CourseController extends Controller
             'course' => (new CourseResource($course))->additional([
                 'equipment' => $course->equipment()->pluck('equipment.id'),
             ]),
-            'formatOptions' => Course::formatOptions(),
-            'frequencyOptions' => Course::frequencyOptions(),
+            'formatOptions' => CourseFormat::options(),
+            'frequencyOptions' => CourseFrequency::options(),
             'equipment' => EquipmentResource::collection($equipment),
             'urls' => [
                 'update' => route('courses.update', $course, false),

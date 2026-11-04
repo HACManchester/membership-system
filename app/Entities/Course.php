@@ -2,6 +2,8 @@
 
 namespace BB\Entities;
 
+use BB\Support\CourseFormat;
+use BB\Support\CourseFrequency;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -73,37 +75,13 @@ class Course extends Model
         return $this->hasMany(TrainingRecord::class);
     }
 
-    public static function formatOptions()
-    {
-        return collect([
-            'group' => 'Group class',
-            'quiz' => 'Online Quiz',
-            'one-on-one' => 'One-on-one',
-        ]);
-    }
-
-    public static function frequencyOptions()
-    {
-        return collect([
-            'self-serve' => 'Self-serve',
-            'regular' => 'Regular',
-            'ad-hoc' => 'On-demand',
-        ]);
-    }
-
-
     /**
      * @return Attribute<string, never>
      */
     protected function formatLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->format) {
-            'group' => 'Group class',
-            'quiz' => 'Online Quiz',
-            'one-on-one' => 'One-on-one',
-            'unknown' => 'Unknown',
-            default => $this->format,
-        });
+        return Attribute::get(fn () => CourseFormat::tryFrom((string) $this->format)?->label()
+            ?? ($this->format === 'unknown' ? 'Unknown' : $this->format));
     }
 
     /**
@@ -111,13 +89,8 @@ class Course extends Model
      */
     protected function frequencyLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->frequency) {
-            'self-serve' => 'Self-serve',
-            'regular' => 'Regular',
-            'ad-hoc' => 'On-demand',
-            'unknown' => 'Unknown',
-            default => $this->frequency,
-        });
+        return Attribute::get(fn () => CourseFrequency::tryFrom((string) $this->frequency)?->label()
+            ?? ($this->frequency === 'unknown' ? 'Unknown' : $this->frequency));
     }
 
     /**

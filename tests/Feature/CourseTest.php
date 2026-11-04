@@ -102,6 +102,38 @@ class CourseTest extends TestCase
         $this->assertEquals(3, $course->equipment()->count());
     }
 
+    public function test_create_page_offers_the_course_formats_and_frequencies()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('courses.create'))
+            ->assertInertia(function ($page) {
+                $page->where('formatOptions', ['group' => 'Group class', 'quiz' => 'Online Quiz', 'one-on-one' => 'One-on-one'])
+                    ->where('frequencyOptions', ['self-serve' => 'Self-serve', 'regular' => 'Regular', 'ad-hoc' => 'On-demand']);
+            });
+    }
+
+    public function test_creating_a_course_rejects_a_format_or_frequency_that_isnt_offered()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->post(route('courses.store'), [
+                'name' => 'Test Course',
+                'slug' => 'test-course',
+                'description' => 'Test description',
+                'format' => 'workshop',
+                'format_description' => '',
+                'frequency' => 'monthly',
+                'frequency_description' => '',
+                'wait_time' => '1-2 weeks',
+            ])
+            ->assertSessionHasErrors(['format', 'frequency']);
+
+        $this->assertDatabaseMissing('courses', ['slug' => 'test-course']);
+    }
+
     public function test_non_admin_cannot_create_course()
     {
         $user = User::factory()->create();
