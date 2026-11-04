@@ -193,6 +193,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Active fobs and access codes only; lost and revoked ones are left out.
+     *
      * @return HasMany<KeyFob, $this>
      */
     public function keyFobs(): HasMany
@@ -209,6 +211,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * The pending (unapproved) address when the member has asked to change it,
+     * otherwise the approved one: approved addresses sort last.
+     *
      * @return HasOne<Address, $this>
      */
     public function address(): HasOne
