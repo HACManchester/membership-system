@@ -42,7 +42,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $suppress_real_name
  * @property string|null $import_match_string
  * @property string $email
- * @property bool|int $email_verified
+ * @property bool $email_verified
  * @property string|null $secondary_email
  * @property string|null $password
  * @property string|null $remember_token
@@ -50,7 +50,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $emergency_contact
  * @property string|null $notes
  * @property bool $active
- * @property bool|int $founder
+ * @property bool $founder
  * @property string $status
  * @property bool|int $trusted
  * @property bool|int $key_holder
@@ -69,7 +69,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon|null $subscription_expires
  * @property Carbon|null $suspended_at
  * @property int $cash_balance in pence
- * @property bool|int $profile_private
+ * @property bool $profile_private
  * @property bool $banned
  * @property string|null $banned_reason
  * @property Carbon|null $banned_date
@@ -141,13 +141,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'visited_forum' => 'boolean',
 
             // TODO: Enable these casts one at a time and verify casting will not break references
-            // 'email_verified' => 'boolean',
+            'email_verified' => 'boolean',
             'active' => 'boolean',
-            // 'founder' => 'boolean',
+            'founder' => 'boolean',
             // 'trusted' => 'boolean',
             // 'key_holder' => 'boolean',
             // 'induction_completed' => 'boolean',
-            // 'profile_private' => 'boolean',
+            'profile_private' => 'boolean',
             'banned' => 'boolean',
             'subscription_expires' => 'datetime',
             'banned_date' => 'datetime',
