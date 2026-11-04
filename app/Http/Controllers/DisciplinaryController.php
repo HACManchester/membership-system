@@ -16,13 +16,12 @@ class DisciplinaryController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
-        $user->update([
-            'active' => false,
-            'status' => 'left',
-            'banned' => true,
-            'banned_reason' => $request->get('reason'),
-            'banned_date' => \Carbon\Carbon::now(),
-        ]);
+        $user->active = false;
+        $user->status = 'left';
+        $user->banned = true;
+        $user->banned_reason = $request->get('reason');
+        $user->banned_date = \Carbon\Carbon::now();
+        $user->save();
 
         return redirect()->back();
     }
@@ -31,11 +30,10 @@ class DisciplinaryController extends Controller
     {
         $this->authorize('unban', $user);
 
-        $user->update([
-            'banned' => false,
-            'banned_reason' => null,
-            'banned_date' => null,
-        ]);
+        $user->banned = false;
+        $user->banned_reason = null;
+        $user->banned_date = null;
+        $user->save();
 
         return redirect()->back();
     }
