@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Session\Session;
 use Inertia\Inertia;
 use Inertia\Middleware;
+use Inertia\Support\Header;
 use Inertia\Support\SessionKey;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class HandleInertiaRequests extends Middleware
@@ -32,6 +34,50 @@ class HandleInertiaRequests extends Middleware
     public function version(Request $request): ?string
     {
         return parent::version($request);
+    }
+
+    /**
+     * An Inertia visit is an XHR, which can't follow a redirect to another site
+     * (GoCardless's payment pages, say): turn one into Inertia::location(), which
+     * makes the browser go there itself. Other requests, prefetches (as Inertia
+     * does for redirects with a fragment), and redirects within the app are left
+     * alone, so a controller can just `redirect()->away()`.
+     *
+     * @return Response
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $this->flashNotificationToPage($request);
+
+        $response = parent::handle($request, $next);
+
+        if ($request->header(Header::INERTIA)
+            && ! $request->prefetch()
+            && $response instanceof RedirectResponse
+            && $this->isExternal($request, $response->getTargetUrl())) {
+            return Inertia::location($response->getTargetUrl());
+        }
+
+        return $response;
+    }
+
+    /**
+     * Another host, or the same host on another port. The scheme isn't compared:
+     * behind the TLS-terminating proxy the app may see http for its own https URLs.
+     */
+    private function isExternal(Request $request, string $url): bool
+    {
+        $target = parse_url($url);
+
+        if (! isset($target['host'])) {
+            return false;
+        }
+
+        if (strcasecmp($target['host'], $request->getHost()) !== 0) {
+            return true;
+        }
+
+        return isset($target['port']) && $target['port'] !== $request->getPort();
     }
 
     /**
@@ -63,16 +109,6 @@ class HandleInertiaRequests extends Middleware
                 return (new SidebarItems)->getItems();
             },
         ]);
-    }
-
-    /**
-     * @return Response
-     */
-    public function handle(Request $request, Closure $next)
-    {
-        $this->flashNotificationToPage($request);
-
-        return parent::handle($request, $next);
     }
 
     /**
