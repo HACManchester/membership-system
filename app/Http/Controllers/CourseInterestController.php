@@ -59,8 +59,8 @@ class CourseInterestController extends Controller
         $user = CurrentUser::get();
 
         $result = DB::transaction(function () use ($user, $course) {
-            $trainingRecord = TrainingRecord::where('user_id', $user->id)
-                ->where('course_id', $course->id)
+            $trainingRecord = TrainingRecord::whereBelongsTo($user)
+                ->whereBelongsTo($course)
                 ->lockForUpdate()
                 ->first();
 

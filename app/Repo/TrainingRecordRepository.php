@@ -86,7 +86,7 @@ class TrainingRecordRepository extends DBRepository
     public function isTrainerForEquipment(User $user, Equipment $equipment): bool
     {
         return $this->recordsForEquipmentQuery($equipment)
-            ->where('user_id', $user->id)
+            ->whereBelongsTo($user)
             ->trainers()
             ->exists();
     }
@@ -96,7 +96,7 @@ class TrainingRecordRepository extends DBRepository
      */
     public function isTrainerForKey(User $user, $key): bool
     {
-        return $this->model->where('user_id', $user->id)
+        return $this->model->whereBelongsTo($user)
             ->where('key', $key)
             ->trainers()
             ->exists();
@@ -177,17 +177,12 @@ class TrainingRecordRepository extends DBRepository
         });
     }
     
-    /**
-     * @param $user
-     * @param int $courseId
-     * @return bool
-     */
-    public function isTrainerForCourse($user, $courseId)
+    public function isTrainerForCourse(User $user, int $courseId): bool
     {
-        return $this->model->where('user_id', $user->id)
+        return $this->model->whereBelongsTo($user)
             ->forCourse($courseId)
             ->trainers()
-            ->count() > 0;
+            ->exists();
     }
     
     /**
