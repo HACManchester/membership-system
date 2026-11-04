@@ -17,4 +17,6 @@ class ApiKey extends Model implements AuthenticatableContract
     use HasFactory, SoftDeletes, Authenticatable;
 
     protected $fillable = ['api_token', 'description'];
+
+    protected $hidden = ['api_token'];
 }
