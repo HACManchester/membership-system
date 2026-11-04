@@ -42,9 +42,21 @@ import {
   Badge,
   Tooltip,
   SelectChangeEvent,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from '@mui/material';
+import { usePage } from '@inertiajs/react';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
+import StatusChip, { MemberStatus } from '../../Components/StatusChip';
+import SpaceAccessChip from '../../Components/SpaceAccessChip';
+import TabBar from '../../Components/TabBar';
+import SortableHeader, { SortLink } from '../../Components/SortableHeader';
+import Paginator from '../../Components/Paginator';
+import { LengthAwarePaginated, SimplePaginated } from '../../types/pagination';
 
 // Icons
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -81,7 +93,47 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+const memberStatuses: MemberStatus[] = [
+  'setting-up',
+  'active',
+  'payment-warning',
+  'leaving',
+  'on-hold',
+  'left',
+  'honorary',
+  'suspended',
+];
+
+/** Sample paginators that follow this page's `?page=`, so the links can be tried. */
+function samplePaginators(currentPage: number) {
+  const lastPage = 12;
+  const page = Math.min(Math.max(currentPage, 1), lastPage);
+  const simple: SimplePaginated<never> = {
+    data: [],
+    current_page: page,
+    per_page: 10,
+    from: null,
+    to: null,
+    path: '/component-zoo',
+    first_page_url: '/component-zoo?page=1',
+    prev_page_url: page > 1 ? `/component-zoo?page=${page - 1}` : null,
+    next_page_url: page < lastPage ? `/component-zoo?page=${page + 1}` : null,
+  };
+  const lengthAware: LengthAwarePaginated<never> = {
+    ...simple,
+    last_page: lastPage,
+    last_page_url: `/component-zoo?page=${lastPage}`,
+    total: lastPage * 10,
+    links: [],
+  };
+
+  return { simple, lengthAware };
+}
+
 const ComponentZoo = () => {
+  const { url } = usePage();
+  const query = new URL(url, 'http://localhost').searchParams;
+  const paginators = samplePaginators(Number(query.get('page') ?? 1));
   // State for interactive components
   const [checked, setChecked] = useState(true);
   const [radioValue, setRadioValue] = useState('female');
@@ -132,6 +184,82 @@ const ComponentZoo = () => {
         </Typography>
 
         <Grid container spacing={4}>
+          {/* MEMBERSHIP SYSTEM COMPONENTS */}
+          <Grid size={12}>
+            <Paper sx={{ p: 3, mb: 4 }}>
+              <Typography variant="h4" gutterBottom>
+                Membership system components
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+
+              <Typography variant="h6" gutterBottom>
+                StatusChip and SpaceAccessChip
+              </Typography>
+              <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 1 }}>
+                {memberStatuses.map((status) => (
+                  <StatusChip key={status} status={status} />
+                ))}
+              </Stack>
+              <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
+                <SpaceAccessChip active />
+                <SpaceAccessChip active={false} />
+              </Stack>
+
+              <Typography variant="h6" gutterBottom>
+                TabBar (in PageTitle)
+              </Typography>
+              <Box sx={{ mb: 3 }}>
+                <PageTitle title="Payments">
+                  <TabBar
+                    aria-label="Payment pages"
+                    tabs={[
+                      { label: 'All Payments', href: '/component-zoo', active: true },
+                      { label: 'Overview', href: '/component-zoo?tab=overview' },
+                      { label: 'Subscription Charges', href: '/component-zoo?tab=charges' },
+                    ]}
+                  />
+                </PageTitle>
+              </Box>
+
+              <Typography variant="h6" gutterBottom>
+                SortableHeader
+              </Typography>
+              <Table size="small" sx={{ mb: 3 }}>
+                <TableHead>
+                  <TableRow>
+                    <SortableHeader column="name">Name</SortableHeader>
+                    <SortableHeader column="status">Status</SortableHeader>
+                    <TableCell>
+                      <SortLink column="created_at">Created</SortLink> /{' '}
+                      <SortLink column="seen_at">Seen</SortLink>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Ada Lovelace</TableCell>
+                    <TableCell>
+                      <StatusChip status="active" />
+                    </TableCell>
+                    <TableCell>2 weeks ago / today</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+
+              <Typography variant="h6" gutterBottom>
+                Paginator
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                paginate():
+              </Typography>
+              <Paginator paginator={paginators.lengthAware} />
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                simplePaginate():
+              </Typography>
+              <Paginator paginator={paginators.simple} />
+            </Paper>
+          </Grid>
+
           {/* TYPOGRAPHY */}
           <Grid size={12}>
             <Paper sx={{ p: 3, mb: 4 }}>
