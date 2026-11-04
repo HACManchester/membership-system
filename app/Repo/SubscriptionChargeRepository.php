@@ -123,7 +123,7 @@ class SubscriptionChargeRepository extends DBRepository
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
 
-        return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'asc')->first();
+        return $this->model->where('user_id', $userId)->outstanding()->orderBy('charge_date', 'asc')->first();
     }
 
     /**
@@ -235,7 +235,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getDue()
     {
-        return $this->model->where('status', 'due')->get();
+        return $this->model->due()->get();
     }
 
     /**
@@ -245,7 +245,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getPending()
     {
-        return $this->model->where('status', 'pending')->get();
+        return $this->model->pending()->get();
     }
 
     /**
@@ -286,7 +286,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function cancelOutstandingCharges($userId)
     {
-        $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->update(['status'=>'cancelled']);
+        $this->model->where('user_id', $userId)->outstanding()->update(['status'=>'cancelled']);
     }
 
     /**
@@ -297,7 +297,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function hasOutstandingCharges($userId)
     {
-        return ($this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due', 'processing'])->count() > 0);
+        return $this->model->where('user_id', $userId)->inFlight()->exists();
     }
 
     /**

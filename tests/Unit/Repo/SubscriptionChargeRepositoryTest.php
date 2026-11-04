@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Repo;
 
+use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
@@ -49,5 +50,41 @@ class SubscriptionChargeRepositoryTest extends TestCase
         $charge = app(SubscriptionChargeRepository::class)->createCharge($user->id, Carbon::parse('2026-10-01'), 22);
 
         $this->assertNull($charge->refresh()->payment_date);
+    }
+
+    #[Test]
+    public function cancelling_outstanding_charges_leaves_charges_already_being_collected()
+    {
+        $user = User::factory()->create();
+        $charges = SubscriptionCharge::factory()->for($user)->count(4)
+            ->sequence(['status' => 'pending'], ['status' => 'due'], ['status' => 'processing'], ['status' => 'paid'])
+            ->create();
+
+        app(SubscriptionChargeRepository::class)->cancelOutstandingCharges($user->id);
+
+        $this->assertSame(
+            ['cancelled', 'cancelled', 'processing', 'paid'],
+            $charges->map(fn (SubscriptionCharge $charge) => $charge->fresh()->status)->all()
+        );
+    }
+
+    #[Test]
+    public function a_charge_being_collected_counts_as_outstanding()
+    {
+        $user = User::factory()->create();
+        SubscriptionCharge::factory()->for($user)->create(['status' => 'processing']);
+
+        $this->assertTrue(app(SubscriptionChargeRepository::class)->hasOutstandingCharges($user->id));
+    }
+
+    #[Test]
+    public function paid_and_cancelled_charges_are_not_outstanding()
+    {
+        $user = User::factory()->create();
+        SubscriptionCharge::factory()->for($user)->count(2)
+            ->sequence(['status' => 'paid'], ['status' => 'cancelled'])
+            ->create();
+
+        $this->assertFalse(app(SubscriptionChargeRepository::class)->hasOutstandingCharges($user->id));
     }
 }

@@ -2,7 +2,9 @@
 
 use Carbon\Carbon;
 use Database\Factories\SubscriptionChargeFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -66,6 +68,36 @@ class SubscriptionCharge extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Not yet sent for collection: what a member still owes.
+     */
+    #[Scope]
+    protected function outstanding(Builder $query): void
+    {
+        $query->whereIn('status', ['pending', 'due']);
+    }
+
+    /**
+     * Not yet paid or cancelled, including charges whose payment is on its way.
+     */
+    #[Scope]
+    protected function inFlight(Builder $query): void
+    {
+        $query->whereIn('status', ['pending', 'due', 'processing']);
+    }
+
+    #[Scope]
+    protected function pending(Builder $query): void
+    {
+        $query->where('status', 'pending');
+    }
+
+    #[Scope]
+    protected function due(Builder $query): void
+    {
+        $query->where('status', 'due');
     }
 
     /**

@@ -82,7 +82,7 @@ class AuditSubscriptionCharges extends Command
     private function reportUncollectableCharges()
     {
         $charges = SubscriptionCharge::with('user')
-            ->whereIn('status', ['pending', 'due'])
+            ->outstanding()
             ->orderBy('user_id')
             ->orderBy('charge_date')
             ->get()
