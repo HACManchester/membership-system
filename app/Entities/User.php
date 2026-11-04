@@ -76,11 +76,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon|null $rules_agreed
  * @property Carbon|null $seen_at
  * @property string|null $find_us
- * @property bool|int|null $online_only
- * @property bool|int|null $postFob false to collect the fob, true to have it posted
+ * @property bool|null $online_only
+ * @property bool|null $postFob false to collect the fob, true to have it posted
  * @property string|null $gift
  * @property string|null $gift_expires Y-m-d
- * @property bool|int $newsletter
+ * @property bool $newsletter
  * @property bool $visited_forum
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -155,6 +155,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'seen_at' => 'datetime',
             'suspended_at' => 'datetime',
             'suppress_real_name' => 'boolean',
+            'newsletter' => 'boolean',
+            'online_only' => 'boolean',
+            'postFob' => 'boolean',
             // Hashes plain text but keeps an existing hash, so Laravel's rehash on login isn't hashed twice
             'password' => 'hashed',
         ];
