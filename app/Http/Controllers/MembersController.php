@@ -9,10 +9,6 @@ use Inertia\Inertia;
 class MembersController extends Controller
 {
     /**
-     * @var \BB\Repo\ProfileDataRepository
-     */
-    private $profileRepo;
-    /**
      * @var \BB\Repo\ProfileSkillsRepository
      */
     private $profileSkillsRepository;
@@ -21,9 +17,8 @@ class MembersController extends Controller
      */
     private $userRepository;
 
-    function __construct(\BB\Repo\ProfileDataRepository $profileRepo, \BB\Repo\ProfileSkillsRepository $profileSkillsRepository, \BB\Repo\UserRepository $userRepository)
+    function __construct(\BB\Repo\ProfileSkillsRepository $profileSkillsRepository, \BB\Repo\UserRepository $userRepository)
     {
-        $this->profileRepo = $profileRepo;
         $this->profileSkillsRepository = $profileSkillsRepository;
         $this->userRepository = $userRepository;
     }
@@ -81,7 +76,7 @@ class MembersController extends Controller
             return \Redirect::route('members.index');
         }
 
-        $profileData = $this->profileRepo->getUserProfile($id);
+        $profileData = $user->profile()->firstOrFail();
         $user->setRelation('profile', $profileData);
         $userSkills = array_intersect_ukey($this->profileSkillsRepository->getAll(), array_flip($profileData->skills), [$this, 'key_compare_func']);
 
