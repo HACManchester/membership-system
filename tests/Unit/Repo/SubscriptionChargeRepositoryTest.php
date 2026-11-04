@@ -40,4 +40,14 @@ class SubscriptionChargeRepositoryTest extends TestCase
 
         $this->assertSame("subscription-charge-{$charge->id}-user-{$user->id}-2026-10-01-MD123456789", $sentKey);
     }
+
+    #[Test]
+    public function a_new_charge_has_no_payment_date()
+    {
+        $user = User::factory()->create();
+
+        $charge = app(SubscriptionChargeRepository::class)->createCharge($user->id, Carbon::parse('2026-10-01'), 22);
+
+        $this->assertNull($charge->refresh()->payment_date);
+    }
 }

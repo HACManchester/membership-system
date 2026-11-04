@@ -37,10 +37,6 @@ class SubscriptionCharge extends Model
         'user_id', 'charge_date', 'amount', 'status'
     ];
 
-    protected $attributes = [
-        'payment_date' => '0000-00-00 00:00:00'
-    ];
-
     protected function casts(): array
     {
         return [
