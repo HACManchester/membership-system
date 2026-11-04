@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use BB\Entities\Course;
 use BB\Entities\Equipment;
+use BB\Entities\EquipmentArea;
+use BB\Entities\MaintainerGroup;
 use BB\Entities\Settings;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,6 +29,49 @@ class CourseTest extends TestCase
             $page->component('Courses/Index')
                 ->has('courses', 1);
         });
+    }
+
+    public function test_courses_index_hides_courses_that_are_not_live_from_members()
+    {
+        $user = User::factory()->create();
+        Course::factory()->create(['live' => true]);
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 1)
+                    ->where('canSeeNonLiveCourses', false);
+            });
+    }
+
+    public function test_maintainers_see_courses_that_are_not_live()
+    {
+        $user = User::factory()->create();
+        $user->maintainerGroups()->attach(MaintainerGroup::factory()->create());
+        Course::factory()->create(['live' => true]);
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 2)
+                    ->where('canSeeNonLiveCourses', true);
+            });
+    }
+
+    public function test_area_coordinators_see_courses_that_are_not_live()
+    {
+        $user = User::factory()->create();
+        $user->equipmentAreas()->attach(EquipmentArea::factory()->create());
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 1)
+                    ->where('canSeeNonLiveCourses', true);
+            });
     }
 
     public function test_admin_can_create_course()

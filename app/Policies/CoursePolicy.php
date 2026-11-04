@@ -47,6 +47,15 @@ class CoursePolicy
     }
 
     /**
+     * Courses that aren't live yet are visible to the area coordinators and
+     * maintainers who prepare them (and to admins, via before()).
+     */
+    public function viewNonLive(User $user): bool
+    {
+        return $user->equipmentAreas()->exists() || $user->maintainerGroups()->exists();
+    }
+
+    /**
      * Determine whether the user can create induction courses.
      *
      * @param  \BB\Entities\User  $user

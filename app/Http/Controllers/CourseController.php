@@ -47,7 +47,7 @@ class CourseController extends Controller
         return Inertia::render('Courses/Index', [
             'courses' => CourseResource::collection($courses),
             'equipmentWithoutLiveCourse' => EquipmentResource::collection($equipmentWithoutLiveCourse),
-            'canSeeNonLiveCourses' => $this->courseRepository->canUserSeeNonLiveCourses($user),
+            'canSeeNonLiveCourses' => $user->can('viewNonLive', Course::class),
             'can' => [
                 'create' => $user->can('create', Course::class),
             ],
@@ -122,7 +122,7 @@ class CourseController extends Controller
 
         return Inertia::render('Courses/Show', [
             'course' => new CourseResource($course),
-            'canSeeNonLiveCourses' => $this->courseRepository->canUserSeeNonLiveCourses($user),
+            'canSeeNonLiveCourses' => $user->can('viewNonLive', Course::class),
             'can' => [
                 'update' => $user->can('update', $course),
                 'delete' => $user->can('delete', $course),

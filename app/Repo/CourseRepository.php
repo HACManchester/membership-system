@@ -29,23 +29,10 @@ class CourseRepository extends DBRepository
         $query = $this->model->with('equipment.courses')->orderBy('name', 'asc');
         
         // Only show live courses to regular users
-        if (!$this->canUserSeeNonLiveCourses($user)) {
+        if (! $user->can('viewNonLive', Course::class)) {
             $query->where('live', true);
         }
         
         return $query->get();
-    }
-
-    /**
-     * Check if user can see non-live courses (admins, area coordinators, maintainers)
-     *
-     * @param User $user
-     * @return bool
-     */
-    public function canUserSeeNonLiveCourses(User $user): bool
-    {
-        return $user->isAdmin() || 
-               $user->equipmentAreas()->count() > 0 || 
-               $user->maintainerGroups()->count() > 0;
     }
 }
