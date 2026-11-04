@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Http\Requests\StoreGoCardlessPaymentRequest;
+use BB\Support\PaymentStatus;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use GoCardlessPro\Core\Exception\ValidationFailedException;
@@ -78,9 +79,9 @@ class GoCardlessPaymentController extends Controller
             $fee = 0;
             $paymentSourceId = $bill->id;
             $amount = $bill->amount / 100;
-            $status = $bill->status;
-            if ($status == 'pending_submission') {
-                $status = 'pending';
+            $status = PaymentStatus::fromGoCardless($bill->status, PaymentStatus::Pending);
+            if ($status === PaymentStatus::PendingSubmission) {
+                $status = PaymentStatus::Pending;
             }
 
             //The record payment process will make the necessary record updates
@@ -88,7 +89,7 @@ class GoCardlessPaymentController extends Controller
 
             return \Response::json(['message' => 'The payment was submitted successfully']);
         } catch (InvalidStateException | ValidationFailedException $e) {
-            $status = 'failed';
+            $status = PaymentStatus::Failed;
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
             return \Response::json(['error' => 'We were unable to take payment from your account. Please try again.'], 400);
@@ -96,7 +97,7 @@ class GoCardlessPaymentController extends Controller
             // Genuine app exception... needs investigation
             Log::info($e);
 
-            $status = 'error';
+            $status = PaymentStatus::Error;
             $this->paymentRepository->recordPayment($reason, $user->id, 'gocardless-variable', null, $amount, $status, 0, $ref);
 
             return \Response::json(['error' => 'We encountered an error taking your payment.'], 500);
@@ -105,7 +106,7 @@ class GoCardlessPaymentController extends Controller
 
     public function cancel(Payment $payment)
     {
-        if ($payment->status != 'pending') {
+        if ($payment->status != PaymentStatus::Pending) {
             \FlashNotification::error("The payment could not be cancelled");
             return \Redirect::back();
         }

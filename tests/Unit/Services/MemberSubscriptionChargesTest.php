@@ -10,6 +10,7 @@ use BB\Services\MemberSubscriptionCharges;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -327,7 +328,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->first();
         $this->assertNotNull($payment1);
         $this->assertEquals(22, $payment1->amount);
-        $this->assertEquals('pending', $payment1->status);
+        $this->assertSame(PaymentStatus::Pending, $payment1->status);
         $this->assertEquals('PM123456789', $payment1->source_id);
 
         $payment2 = Payment::where('user_id', $user2->id)
@@ -335,7 +336,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->first();
         $this->assertNotNull($payment2);
         $this->assertEquals(17, $payment2->amount);
-        $this->assertEquals('pending', $payment2->status);
+        $this->assertSame(PaymentStatus::Pending, $payment2->status);
         $this->assertEquals('PM987654321', $payment2->source_id);
     }
 
@@ -594,7 +595,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('failed', $payment->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->status);
         $this->assertNull($payment->source_id);
         $this->assertEquals(22, $payment->amount);
 
@@ -658,14 +659,14 @@ class MemberSubscriptionChargesTest extends TestCase
         // The failed payment must not pick up the previous member's GoCardless payment ID
         $failedPayment = Payment::where('user_id', $failingUser->id)->first();
         $this->assertNotNull($failedPayment);
-        $this->assertEquals('failed', $failedPayment->status);
+        $this->assertSame(PaymentStatus::Failed, $failedPayment->status);
         $this->assertNull($failedPayment->source_id);
 
         // Members after the failure still get billed
         $payment2 = Payment::where('user_id', $goodUser2->id)->first();
         $this->assertNotNull($payment2);
         $this->assertEquals('PM333', $payment2->source_id);
-        $this->assertEquals('pending', $payment2->status);
+        $this->assertSame(PaymentStatus::Pending, $payment2->status);
     }
 
     public function testBillMembersSurvivesFailureForMemberWithOlderOutstandingCharge()
@@ -808,7 +809,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('failed', $payment->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->status);
 
         $charge->refresh();
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);

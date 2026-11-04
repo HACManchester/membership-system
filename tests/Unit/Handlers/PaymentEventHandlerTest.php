@@ -8,6 +8,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Handlers\PaymentEventHandler;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -62,7 +63,7 @@ class PaymentEventHandlerTest extends TestCase
             'balance',
             '',
             $payment->id,
-            'paid'
+            PaymentStatus::Paid
         );
 
         $this->assertEquals(1500, $user->refresh()->cash_balance);
@@ -95,7 +96,7 @@ class PaymentEventHandlerTest extends TestCase
             'subscription',
             '',
             $payment->id,
-            'pending'
+            PaymentStatus::Pending
         );
 
         $payment->refresh();
@@ -134,7 +135,7 @@ class PaymentEventHandlerTest extends TestCase
             'subscription',
             '',
             $payment->id,
-            'paid'
+            PaymentStatus::Paid
         );
 
         $charge->refresh();
@@ -169,7 +170,7 @@ class PaymentEventHandlerTest extends TestCase
             'subscription',
             '',
             $payment->id,
-            'pending'
+            PaymentStatus::Pending
         );
 
         $charge->refresh();
@@ -211,7 +212,7 @@ class PaymentEventHandlerTest extends TestCase
             'subscription',
             '',
             $payment->id,
-            'pending'
+            PaymentStatus::Pending
         );
 
         $laterCharge->refresh();
@@ -243,12 +244,12 @@ class PaymentEventHandlerTest extends TestCase
             'subscription',
             '',
             $payment->id,
-            'pending'
+            PaymentStatus::Pending
         );
 
         $payment->refresh();
         $this->assertEquals('999999', $payment->reference);
-        $this->assertEquals('pending', $payment->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->status);
     }
 
     public function testOnCancelMarksSubscriptionChargeAsCancelled()
@@ -305,7 +306,7 @@ class PaymentEventHandlerTest extends TestCase
 
         // Verify no exception was thrown and payment remains unchanged
         $payment->refresh();
-        $this->assertEquals('cancelled', $payment->status);
+        $this->assertSame(PaymentStatus::Cancelled, $payment->status);
         $this->assertEmpty($payment->reference);
     }
 

@@ -3,6 +3,7 @@
 use BB\Entities\SubscriptionCharge;
 use BB\Events\SubscriptionChargePaid;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Exception;
@@ -66,15 +67,15 @@ class SubscriptionChargeRepository extends DBRepository
                 $this->goCardless->getNameFromReason('subscription'),
                 idempotencyKey: $charge->goCardlessIdempotencyKey($DDAuthId)
             );
-            $status = $bill->status;
-            if ($status == 'pending_submission') {
-                $status = 'pending';
+            $status = PaymentStatus::fromGoCardless($bill->status, PaymentStatus::Pending);
+            if ($status === PaymentStatus::PendingSubmission) {
+                $status = PaymentStatus::Pending;
             }
         }
         catch (InvalidStateException | ValidationFailedException $e) {
-            $status = 'failed';
+            $status = PaymentStatus::Failed;
         } catch (Exception $e) {
-            $status = 'error';
+            $status = PaymentStatus::Error;
         }
 
         $paymentId = $this->paymentRepository->recordSubscriptionPayment(
@@ -87,11 +88,11 @@ class SubscriptionChargeRepository extends DBRepository
             (string) $charge->id
         );
 
-        if ($status == 'failed') {
+        if ($status === PaymentStatus::Failed) {
             // GoCardless rejected the payment outright, so no failure webhook will
             // ever arrive; run the same path one would trigger (cancel the charge
             // and put the member into payment-warning)
-            $this->paymentRepository->recordPaymentFailure($paymentId, 'failed');
+            $this->paymentRepository->recordPaymentFailure($paymentId, PaymentStatus::Failed);
         }
 
         return $charge;

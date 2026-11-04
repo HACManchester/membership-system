@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -70,7 +71,7 @@ class GoCardlessPaymentTest extends TestCase
 
         $payment = Payment::where('user_id', $member->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('pending', $payment->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->status);
         $this->assertEquals('PM123', $payment->source_id);
         $this->assertEquals($charge->id, $payment->reference);
 
@@ -158,7 +159,7 @@ class GoCardlessPaymentTest extends TestCase
         // would make the nightly biller skip the charge forever
         $failedPayment = Payment::where('user_id', $member->id)->first();
         $this->assertNotNull($failedPayment);
-        $this->assertEquals('failed', $failedPayment->status);
+        $this->assertSame(PaymentStatus::Failed, $failedPayment->status);
         $this->assertEmpty($failedPayment->reference);
 
         $charge->refresh();

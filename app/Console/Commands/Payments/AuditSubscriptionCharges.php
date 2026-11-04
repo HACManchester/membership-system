@@ -4,6 +4,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Services\MemberSubscriptionCharges;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -134,7 +135,7 @@ class AuditSubscriptionCharges extends Command
         Payment::where('reason', 'subscription')
             ->whereNotNull('reference')
             ->where('reference', '!=', '')
-            ->whereIn('status', ['paid', 'pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::PendingSubmission, PaymentStatus::Processing])
             ->orderBy('id')
             ->chunk(500, function ($payments) use (&$collections, $days) {
                 $charges = SubscriptionCharge::with('user')

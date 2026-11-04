@@ -91,7 +91,7 @@ class CashPaymentController extends Controller
         $ref = $request->get('ref');
         $returnPath = $request->get('return_path');
         
-        $this->paymentRepository->recordPayment('withdrawal', $userId, 'balance', '', $amount, 'paid', 0, $ref);
+        $this->paymentRepository->recordPayment('withdrawal', $userId, 'balance', '', $amount, \BB\Support\PaymentStatus::Paid, 0, $ref);
 
         $this->bbCredit->recalculate();
 

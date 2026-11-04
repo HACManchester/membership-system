@@ -2,6 +2,7 @@
 
 namespace BB\Entities;
 
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 use Database\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $amount in pounds
  * @property float $fee in pounds
  * @property float $amount_minus_fee in pounds
- * @property string $status
+ * @property PaymentStatus $status
  * @property Carbon|null $paid_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -35,12 +36,6 @@ class Payment extends Model
 {
     /** @use HasFactory<PaymentFactory> */
     use HasFactory;
-
-    const STATUS_PENDING = 'pending';
-    const STATUS_PENDING_SUBMISSION = 'pending_submission';
-    const STATUS_CANCELLED = 'cancelled';
-    const STATUS_PAID = 'paid';
-    const STATUS_WITHDRAWN = 'withdrawn';
 
     protected $fillable = [
         'source',
@@ -58,7 +53,7 @@ class Payment extends Model
 
 
     protected $attributes = [
-        'status' => 'pending',
+        'status' => PaymentStatus::Pending->value,
         'fee' => 0,
     ];
 
@@ -66,6 +61,7 @@ class Payment extends Model
     {
         return [
             'paid_at' => 'datetime',
+            'status' => PaymentStatus::class,
         ];
     }
 
@@ -109,13 +105,7 @@ class Payment extends Model
      */
     protected function statusLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->status) {
-            self::STATUS_PENDING => 'Pending confirmation',
-            self::STATUS_PENDING_SUBMISSION => 'Pending submission to members bank',
-            self::STATUS_CANCELLED => 'Cancelled',
-            self::STATUS_PAID, self::STATUS_WITHDRAWN => 'Paid',
-            default => $this->status,
-        });
+        return Attribute::get(fn () => $this->status->label());
     }
 
     /**

@@ -115,7 +115,7 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => $user->monthly_subscription,
                 'amount_minus_fee' => $user->monthly_subscription,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 
@@ -127,7 +127,7 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => 10,
                 'amount_minus_fee' => 10,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 
@@ -140,7 +140,7 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => 5,
                 'amount_minus_fee' => 5,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 

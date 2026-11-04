@@ -8,7 +8,9 @@ use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Exceptions;
 use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use Tests\TestCase;
 
 class SubscriptionChargeRepositoryTest extends TestCase
@@ -87,5 +89,22 @@ class SubscriptionChargeRepositoryTest extends TestCase
             ->create();
 
         $this->assertFalse(app(SubscriptionChargeRepository::class)->hasOutstandingCharges($user->id));
+    }
+
+    #[Test]
+    public function a_bill_in_a_status_gocardless_has_since_added_is_still_recorded()
+    {
+        Exceptions::fake();
+        $user = User::factory()->create(['mandate_id' => 'MD123456789']);
+        $goCardless = $this->createStub(GoCardlessHelper::class);
+        $goCardless->method('getNameFromReason')->willReturn('Monthly subscription');
+        $goCardless->method('newBill')->willReturn((object) ['id' => 'PM123456789', 'status' => 'awaiting_something_new']);
+        $this->app->instance(GoCardlessHelper::class, $goCardless);
+
+        $charge = app(SubscriptionChargeRepository::class)
+            ->createChargeAndBillDD($user->id, Carbon::parse('2026-10-01'), 22, 'due', 'MD123456789');
+
+        $this->assertDatabaseHas('payments', ['source_id' => 'PM123456789', 'reference' => (string) $charge->id, 'status' => 'pending']);
+        Exceptions::assertReported(RuntimeException::class);
     }
 }

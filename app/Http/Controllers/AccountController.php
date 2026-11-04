@@ -183,7 +183,7 @@ class AccountController extends Controller
 
         $outstandingPayments = $user->payments()
             ->subscription()
-            ->whereIn('status', ['pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [\BB\Support\PaymentStatus::Pending, \BB\Support\PaymentStatus::PendingSubmission, \BB\Support\PaymentStatus::Processing])
             ->orderBy('created_at', 'desc')
             ->get();
 

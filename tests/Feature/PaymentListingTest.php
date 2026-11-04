@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\Payment;
 use BB\Entities\Role;
 use BB\Entities\User;
+use BB\Support\PaymentStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -26,7 +27,7 @@ class PaymentListingTest extends TestCase
             'reason' => 'consumables',
             'reference' => 'laser-ply',
             'amount' => 12.5,
-            'status' => Payment::STATUS_WITHDRAWN,
+            'status' => PaymentStatus::Withdrawn,
             'created_at' => '2024-03-05 10:00:00',
         ]);
 
@@ -51,7 +52,7 @@ class PaymentListingTest extends TestCase
             'source' => 'balance',
             'reason' => 'equipment-fee',
             'amount' => 3.5,
-            'status' => Payment::STATUS_PAID,
+            'status' => PaymentStatus::Paid,
             'created_at' => '2024-03-06 10:00:00',
         ]);
         Payment::factory()->create([
@@ -59,7 +60,7 @@ class PaymentListingTest extends TestCase
             'source' => 'gocardless-variable',
             'reason' => 'balance',
             'amount' => 10,
-            'status' => Payment::STATUS_PENDING,
+            'status' => PaymentStatus::Pending,
             'created_at' => '2024-03-05 10:00:00',
         ]);
 

@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use GoCardlessPro\Resources\Payment as GoCardlessPayment;
@@ -131,7 +132,7 @@ class GoCardlessWebhookTest extends TestCase
         );
 
         $response->assertStatus(403);
-        $this->assertEquals('pending', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Processing, $charge->fresh()->status);
     }
 
@@ -156,7 +157,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('submitted', 'PM_TEST_123')])
             ->assertStatus(200);
 
-        $this->assertEquals('pending', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->fresh()->status);
     }
 
     #[Test]
@@ -168,7 +169,7 @@ class GoCardlessWebhookTest extends TestCase
             ->assertStatus(200);
 
         $payment->refresh();
-        $this->assertEquals('paid', $payment->status);
+        $this->assertSame(PaymentStatus::Paid, $payment->status);
         $this->assertNotNull($payment->paid_at);
 
         $charge->refresh();
@@ -191,7 +192,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('failed', 'PM_TEST_123')])
             ->assertStatus(200);
 
-        $this->assertEquals('failed', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->fresh()->status);
 
         $charge->refresh();
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
@@ -271,7 +272,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('confirmed', 'PM_TEST_123')])
             ->assertStatus(200);
 
-        $this->assertEquals('paid', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Paid, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Paid, $charge->fresh()->status);
         $this->assertTrue($user->fresh()->subscription_expires->isSameDay($expiryAfterFirst));
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
@@ -335,7 +336,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('subscription', $payment->reason);
         $this->assertEquals('gocardless', $payment->source);
         $this->assertEquals(22.0, (float) $payment->amount, 'the API reports pence; payments.amount is pounds');
-        $this->assertEquals('pending_submission', $payment->status);
+        $this->assertSame(PaymentStatus::PendingSubmission, $payment->status);
         $this->assertEquals((string) $charge->id, $payment->reference);
 
         // Not collected yet, so the charge and membership are untouched
@@ -367,11 +368,11 @@ class GoCardlessWebhookTest extends TestCase
 
         $this->postWebhook([$this->subscriptionEvent('payment_created', 'SB_LEGACY_1', 'PM_SUB_1')])->assertStatus(200);
         $this->postWebhook([$this->paymentEvent('submitted', 'PM_SUB_1')])->assertStatus(200);
-        $this->assertEquals('pending', Payment::where('source_id', 'PM_SUB_1')->first()->status);
+        $this->assertSame(PaymentStatus::Pending, Payment::where('source_id', 'PM_SUB_1')->first()->status);
 
         $this->postWebhook([$this->paymentEvent('confirmed', 'PM_SUB_1')])->assertStatus(200);
 
-        $this->assertEquals('paid', Payment::where('source_id', 'PM_SUB_1')->first()->status);
+        $this->assertSame(PaymentStatus::Paid, Payment::where('source_id', 'PM_SUB_1')->first()->status);
         $this->assertSame(SubscriptionChargeStatus::Paid, $charge->fresh()->status);
 
         $user->refresh();
@@ -392,7 +393,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->subscriptionEvent('payment_created', 'SB_LEGACY_1', 'PM_SUB_1')])->assertStatus(200);
         $this->postWebhook([$this->paymentEvent('failed', 'PM_SUB_1')])->assertStatus(200);
 
-        $this->assertEquals('failed', Payment::where('source_id', 'PM_SUB_1')->first()->status);
+        $this->assertSame(PaymentStatus::Failed, Payment::where('source_id', 'PM_SUB_1')->first()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->fresh()->status);
     }
@@ -481,7 +482,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('cancelled', 'PM_TEST_123')])
             ->assertStatus(200);
 
-        $this->assertEquals('cancelled', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Cancelled, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->fresh()->status);
     }
@@ -509,8 +510,8 @@ class GoCardlessWebhookTest extends TestCase
             ['resource_type' => 'mandates', 'action' => 'cancelled', 'links' => ['mandate' => 'MD_LEAVING']],
         ])->assertStatus(200);
 
-        $this->assertEquals('pending', $submitted->fresh()->status);
-        $this->assertEquals('paid', $confirmed->fresh()->status);
+        $this->assertSame(PaymentStatus::Pending, $submitted->fresh()->status);
+        $this->assertSame(PaymentStatus::Paid, $confirmed->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Paid, $confirmedCharge->fresh()->status);
         $this->assertTrue($confirmedUser->fresh()->subscription_expires->isSameDay(Carbon::now()->addMonth()));
         $this->assertEquals('leaving', $leaving->fresh()->status);
@@ -525,7 +526,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('submitted', 'PM_TEST_123')])->assertStatus(200);
         $this->postWebhook([$this->paymentEvent('submitted', 'PM_TEST_123')])->assertStatus(200);
 
-        $this->assertEquals('pending', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Processing, $charge->fresh()->status);
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
     }
@@ -544,7 +545,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('failed', 'PM_TEST_123')])->assertStatus(200);
 
         $user->refresh();
-        $this->assertEquals('failed', $payment->fresh()->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->status);
         $this->assertTrue($user->subscription_expires->equalTo($afterFirst->subscription_expires));
@@ -576,20 +577,20 @@ class GoCardlessWebhookTest extends TestCase
         // First attempt: the API call for the second event fails
         $first = $this->postWebhook($delivery);
         $this->assertGreaterThanOrEqual(500, $first->getStatusCode(), 'GoCardless must see a failure so it redelivers');
-        $this->assertEquals('paid', $paid->fresh()->status, 'events before the failure are already applied');
-        $this->assertEquals('pending', $failed->fresh()->status);
+        $this->assertSame(PaymentStatus::Paid, $paid->fresh()->status, 'events before the failure are already applied');
+        $this->assertSame(PaymentStatus::Pending, $failed->fresh()->status);
 
         // GoCardless redelivers the whole batch
         $this->postWebhook($delivery)->assertStatus(200);
 
-        $this->assertEquals('paid', $paid->fresh()->status);
+        $this->assertSame(PaymentStatus::Paid, $paid->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Paid, $paidCharge->fresh()->status);
         $this->assertTrue(
             $paidUser->fresh()->subscription_expires->isSameDay(Carbon::now()->addMonth()),
             'membership must be extended once, not once per delivery'
         );
 
-        $this->assertEquals('failed', $failed->fresh()->status);
+        $this->assertSame(PaymentStatus::Failed, $failed->fresh()->status);
         $this->assertSame(SubscriptionChargeStatus::Cancelled, $failedCharge->fresh()->status);
         $this->assertEquals('payment-warning', $failedUser->fresh()->status);
     }

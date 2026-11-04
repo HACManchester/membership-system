@@ -5,6 +5,7 @@ use BB\Helpers\TelegramHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
@@ -142,16 +143,16 @@ class MemberSubscriptionCharges
                         $this->goCardless->getNameFromReason('subscription'),
                         idempotencyKey: $charge->goCardlessIdempotencyKey($mandateId)
                     );
-                    $status = $bill->status;
-                    if ($status == 'pending_submission') {
-                        $status = 'pending';
+                    $status = PaymentStatus::fromGoCardless($bill->status, PaymentStatus::Pending);
+                    if ($status === PaymentStatus::PendingSubmission) {
+                        $status = PaymentStatus::Pending;
                     }
                 }
                 catch (InvalidStateException | ValidationFailedException $e) {
-                    $status = 'failed';
+                    $status = PaymentStatus::Failed;
                 }
                 catch (Exception $e) {
-                    $status = 'error';
+                    $status = PaymentStatus::Error;
                 }
 
                 $paymentId = $this->paymentRepository->recordSubscriptionPayment($charge->user->id, 'gocardless-variable', $bill->id ?? null, $amount, $status, 0, $charge->id);
@@ -162,11 +163,11 @@ class MemberSubscriptionCharges
                     $membersWeCouldntBill[] = $charge->user->name;
                 }
 
-                if ($status == 'failed') {
+                if ($status === PaymentStatus::Failed) {
                     // GoCardless rejected the payment outright, so no failure webhook will
                     // ever arrive; run the same path one would trigger (cancel the charge
                     // and put the member into payment-warning)
-                    $this->paymentRepository->recordPaymentFailure($paymentId, 'failed');
+                    $this->paymentRepository->recordPaymentFailure($paymentId, PaymentStatus::Failed);
                 }
             }
             catch (Exception $e) {

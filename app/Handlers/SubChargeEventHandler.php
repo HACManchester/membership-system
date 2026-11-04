@@ -4,6 +4,7 @@ namespace BB\Handlers;
 
 use BB\Helpers\MembershipPayments;
 use BB\Repo\UserRepository;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 
 class SubChargeEventHandler
@@ -81,7 +82,7 @@ class SubChargeEventHandler
         
         // Check for any other payments linked to this subscription charge
         $otherPayments = $paymentRepository->getPaymentsByReference($chargeId)
-            ->whereIn('status', ['paid', 'pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::PendingSubmission, PaymentStatus::Processing])
             ->count();
             
         return $otherPayments > 0;

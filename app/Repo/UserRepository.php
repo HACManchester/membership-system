@@ -5,6 +5,7 @@ namespace BB\Repo;
 use BB\Entities\Gift;
 use BB\Entities\User;
 use BB\Support\CurrentUser;
+use BB\Support\PaymentStatus;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -211,7 +212,7 @@ class UserRepository extends DBRepository
                 $user->save();
 
                 // log cash payment (payments.amount is pounds, like the gift's credit)
-                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, (float) $gift_record->credit, 'paid', 0, $memberData['gift_code']);
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, (float) $gift_record->credit, PaymentStatus::Paid, 0, $memberData['gift_code']);
 
                 $gift_record->delete();
             }

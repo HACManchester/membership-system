@@ -5,6 +5,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Support\PaymentStatus;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
@@ -37,9 +38,8 @@ class PaymentEventHandler
      * @param $reason
      * @param $ref
      * @param $paymentId
-     * @param $status
      */
-    public function onCreate($userId, $reason, $ref, $paymentId, $status)
+    public function onCreate($userId, $reason, $ref, $paymentId, PaymentStatus $status)
     {
         if ($reason == 'balance') {
             // Still in use by admin topups/withdrawals.
@@ -117,7 +117,7 @@ class PaymentEventHandler
         $memberCreditService->recalculate();
     }
 
-    private function updateSubPayment($paymentId, $userId, $status)
+    private function updateSubPayment($paymentId, $userId, PaymentStatus $status)
     {
         /** @var Payment */
         $payment = $this->paymentRepository->getById($paymentId);
@@ -134,7 +134,7 @@ class PaymentEventHandler
                 return;
             }
         } else {
-            if (in_array($status, ['failed', 'error', 'cancelled'])) {
+            if (in_array($status, [PaymentStatus::Failed, PaymentStatus::Error, PaymentStatus::Cancelled], true)) {
                 // A dead payment must not attach itself to a live charge: the nightly
                 // biller skips any charge that has a payment against it, so linking
                 // here would permanently block the charge from being collected
@@ -153,9 +153,9 @@ class PaymentEventHandler
             $payment->save();
         }
 
-        if ($status == 'paid') {
+        if ($status === PaymentStatus::Paid) {
             $this->subscriptionChargeRepository->markChargeAsPaid($subCharge->id);
-        } else if ($status == 'pending') {
+        } else if ($status === PaymentStatus::Pending) {
             $this->subscriptionChargeRepository->markChargeAsProcessing($subCharge->id);
         }
 
