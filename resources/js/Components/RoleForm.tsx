@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Button, Grid2, Typography } from '@mui/material';
+import { TextField, Button, Grid, Typography } from '@mui/material';
 import MemberMultiSelect from './MemberMultiSelect';
 import { Member } from '../types/resources';
 
@@ -35,18 +35,18 @@ const RoleForm = ({
 }: Props) => {
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
-        <Grid2 size={12}>
-          <Typography variant="overline" color="text.secondary">
+      <Grid container spacing={3}>
+        <Grid size={12}>
+          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
             Role key
           </Typography>
           <Typography>{roleName}</Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             The internal identifier this role is matched by. It can’t be changed.
           </Typography>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Title"
             value={data.title}
@@ -55,9 +55,9 @@ const RoleForm = ({
             error={!!errors.title}
             helperText={errors.title || 'The human-friendly name for this role.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Description"
             value={data.description}
@@ -68,9 +68,9 @@ const RoleForm = ({
             error={!!errors.description}
             helperText={errors.description || ''}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             label="Public email"
             value={data.email_public}
@@ -79,9 +79,9 @@ const RoleForm = ({
             error={!!errors.email_public}
             helperText={errors.email_public || ''}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             label="Private email"
             value={data.email_private}
@@ -90,9 +90,9 @@ const RoleForm = ({
             error={!!errors.email_private}
             helperText={errors.email_private || ''}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Telegram channel"
             value={data.slack_channel}
@@ -101,9 +101,9 @@ const RoleForm = ({
             error={!!errors.slack_channel}
             helperText={errors.slack_channel || ''}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <MemberMultiSelect
             value={data.members}
             onChange={(members) => setData('members', members)}
@@ -112,9 +112,9 @@ const RoleForm = ({
             error={!!errors.members}
             helperText={errors.members || 'Members who hold this role.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 2 }}>
+        <Grid size={12} sx={{ mt: 2 }}>
           <Button
             type="submit"
             variant="contained"
@@ -124,8 +124,8 @@ const RoleForm = ({
           >
             {submitLabel}
           </Button>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

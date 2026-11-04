@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid2, Link, Card, Box, Typography } from '@mui/material';
+import { Container, Grid, Link, Card, Box, Typography } from '@mui/material';
 import MainLayout from '../../Layouts/MainLayout';
 import PageTitle from '../../Components/PageTitle';
 
@@ -19,9 +19,9 @@ const Index = ({ members }: Props) => {
     <>
       <PageTitle title="Members" />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {members.map((member) => (
-            <Grid2 key={member.id} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
+            <Grid key={member.id} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
               <Card
                 component={Link}
                 href={member.url}
@@ -46,14 +46,14 @@ const Index = ({ members }: Props) => {
                   </Typography>
                 </Box>
               </Card>
-            </Grid2>
+            </Grid>
           ))}
           {members.length === 0 && (
-            <Grid2 size={12}>
-              <Typography color="text.secondary">No members to show.</Typography>
-            </Grid2>
+            <Grid size={12}>
+              <Typography sx={{ color: 'text.secondary' }}>No members to show.</Typography>
+            </Grid>
           )}
-        </Grid2>
+        </Grid>
       </Container>
     </>
   );

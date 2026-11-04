@@ -37,24 +37,24 @@ const UserCard: React.FC<Props> = ({ trainingRecord, actions, caption }) => {
         {trainingRecord.user.name?.charAt(0)}
       </Avatar>
 
-      <Box flexGrow={1} minWidth={0}>
-        <Stack direction="row" alignItems="baseline" spacing={1}>
-          <Typography variant="body2" fontWeight={500} noWrap>
+      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline' }}>
+          <Typography variant="body2" noWrap sx={{ fontWeight: 500 }}>
             {trainingRecord.user.name}
           </Typography>
           {trainingRecord.user.pronouns && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               ({trainingRecord.user.pronouns})
             </Typography>
           )}
         </Stack>
 
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {caption}
 
           {!caption && trainingRecord.sign_off_requested_at && (
             <Tooltip title={new Date(trainingRecord.sign_off_requested_at).toLocaleString()}>
-              <Typography variant="caption" color="warning.main">
+              <Typography variant="caption" sx={{ color: 'warning.main' }}>
                 Requested {formatDateRelative(trainingRecord.sign_off_requested_at)}
               </Typography>
             </Tooltip>
@@ -62,7 +62,7 @@ const UserCard: React.FC<Props> = ({ trainingRecord, actions, caption }) => {
 
           {!caption && trainingRecord.trained && (
             <Tooltip title={`Trained on ${new Date(trainingRecord.trained).toLocaleString()}`}>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                 Trained {formatDateRelative(trainingRecord.trained)}
                 {trainingRecord.trainer && ` by ${trainingRecord.trainer.name}`}
               </Typography>
@@ -70,18 +70,14 @@ const UserCard: React.FC<Props> = ({ trainingRecord, actions, caption }) => {
           )}
 
           {trainingRecord.is_trainer && (
-            <Typography variant="caption" color="primary.main" fontWeight={600}>
+            <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 600 }}>
               • Trainer
             </Typography>
           )}
         </Stack>
       </Box>
 
-      {actions && (
-        <Box display="flex" gap={0.5}>
-          {actions}
-        </Box>
-      )}
+      {actions && <Box sx={{ display: 'flex', gap: 0.5 }}>{actions}</Box>}
     </Paper>
   );
 };

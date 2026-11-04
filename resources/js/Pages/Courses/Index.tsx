@@ -6,7 +6,7 @@ import {
   Button,
   Link,
   Alert,
-  Grid2,
+  Grid,
   Stack,
   Collapse,
 } from '@mui/material';
@@ -35,19 +35,19 @@ const CourseGroup = ({
       <Typography variant="h5" gutterBottom>
         {title}
       </Typography>
-      <Grid2 container spacing={3}>
+      <Grid container spacing={3}>
         {courses.map((course) => {
           return (
-            <Grid2 key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
+            <Grid key={course.id} size={{ xs: 12, md: 6, lg: 4 }}>
               <CourseSummary
                 course={course}
-                height="100%"
+                sx={{ height: '100%' }}
                 canSeeNonLiveCourses={canSeeNonLiveCourses}
               />
-            </Grid2>
+            </Grid>
           );
         })}
-      </Grid2>
+      </Grid>
     </Stack>
   );
 };
@@ -79,7 +79,7 @@ const Index = ({
   const { groupedByRoom, ungroupedCourses } = useCourseGrouping(filteredCourses);
 
   const actionButtons = (
-    <Stack direction="row" justifyContent="flex-end">
+    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
       {can.create && (
         <Link href={urls.create} underline="none">
           <Button variant="contained" color="primary">
@@ -151,10 +151,7 @@ const Index = ({
                                 {equipment.room_display && (
                                   <Typography
                                     component="span"
-                                    color="text.secondary"
-                                    sx={{
-                                      ml: 1,
-                                    }}
+                                    sx={{ color: 'text.secondary', ml: 1 }}
                                   >
                                     ({equipment.room_display})
                                   </Typography>

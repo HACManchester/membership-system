@@ -43,9 +43,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   // Mui's Responsive Drawer pattern
   return (
-    <Stack direction="column" minHeight="100vh">
+    <Stack direction="column" sx={{ minHeight: '100vh' }}>
       <TopNav handleDrawerToggle={handleDrawerToggle} auth={auth} />
-      <Stack direction="row" minHeight="100vh" flexGrow={1}>
+      <Stack direction="row" sx={{ minHeight: '100vh', flexGrow: 1 }}>
         <SideNav
           drawerWidth={drawerWidth}
           mobileOpen={mobileOpen}
@@ -55,8 +55,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
         <Box
           component="main"
-          width="100%"
           sx={{
+            width: '100%',
             flexGrow: 1,
             backgroundImage: 'linear-gradient(to bottom, #eef2f3, #8e9eab)',
             backgroundAttachment: 'fixed',

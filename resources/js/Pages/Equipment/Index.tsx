@@ -21,7 +21,7 @@ const Index = ({ equipment, can = { create: false }, urls }: Props) => {
   const groups = useEquipmentGrouping(equipment);
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.create && (
         <>
           <Link href={urls.bulkCreate} underline="none">
@@ -48,7 +48,7 @@ const Index = ({ equipment, can = { create: false }, urls }: Props) => {
             <Typography variant="h6" component="h2" gutterBottom>
               View tools, manuals, and book inductions
             </Typography>
-            <Typography color="text.secondary">
+            <Typography sx={{ color: 'text.secondary' }}>
               If any information on our equipment pages is out-of-date or needs updating, please
               contact the relevant <Link href="/equipment_area">area coordinator</Link>.
             </Typography>
@@ -64,7 +64,7 @@ const Index = ({ equipment, can = { create: false }, urls }: Props) => {
           ))}
 
           {groups.length === 0 && (
-            <Typography color="text.secondary">No equipment recorded yet.</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>No equipment recorded yet.</Typography>
           )}
         </Stack>
       </Container>

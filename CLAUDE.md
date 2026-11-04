@@ -27,6 +27,7 @@ The local dev environment is Docker (Laravel Sail-style, `docker-compose.yml`).
   yarn dev        # unminified build with source maps; `yarn watch` rebuilds on change
   yarn hot        # Vite dev server with hot reloading
   yarn lint       # ESLint
+  yarn typecheck  # tsc --noEmit
   yarn test       # Jest (two legacy .jsx suites so far)
   ```
 
@@ -96,7 +97,7 @@ These override the generic Laravel Boost guidance above wherever they differ. Th
   `docker compose exec laravel php artisan route:list`, `docker compose exec laravel vendor/bin/phpunit`.
   Never run them with the host's `php`. Node and Yarn run on the host (`yarn dev`, `yarn build`).
 - **The frontend builds with Vite** (`vite.config.mjs`, Blade's `@vite`), not Laravel Mix. Rebuild
-  with `yarn build`, or run `yarn hot` for the dev server. It needs Node 20.19+.
+  with `yarn build`, or run `yarn hot` for the dev server. It needs Node 22 (`.mise.toml`).
 - **Models live in `app/Entities/` under the `BB\` namespace**, not `App\Models`.
 - **Test factories are class-based**, one per model in `database/factories/` (`Database\Factories\`).
   Entities opt in with `HasFactory` plus `#[UseFactory(XFactory::class)]`, since name guessing looks in
@@ -196,11 +197,19 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
 
-# Inertia v2
+# Inertia v3
 
-- Use all Inertia features from v1 and v2. Check the documentation before making changes to ensure the correct approach.
-- New features: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
+- Use all Inertia features from v1, v2, and v3. Check the documentation before making changes to ensure the correct approach.
+- New v3 features: standalone HTTP requests (`useHttp` hook), optimistic updates with automatic rollback, layout props (`useLayoutProps` hook), instant visits, simplified SSR via `@inertiajs/vite` plugin, custom exception handling for error pages.
+- Carried over from v2: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
 - When using deferred props, add an empty state with a pulsing or animated skeleton.
+- Axios has been removed. Use the built-in XHR client with interceptors, or install Axios separately if needed.
+- `Inertia::lazy()` / `LazyProp` has been removed. Use `Inertia::optional()` instead.
+- Prop types (`Inertia::optional()`, `Inertia::defer()`, `Inertia::merge()`) work inside nested arrays with dot-notation paths.
+- SSR works automatically in Vite dev mode with `@inertiajs/vite` - no separate Node.js server needed during development.
+- Event renames: `invalid` is now `httpException`, `exception` is now `networkError`.
+- `router.cancel()` replaced by `router.cancelAll()`.
+- The `future` configuration namespace has been removed - all v2 future options are now always enabled.
 
 === laravel/core rules ===
 

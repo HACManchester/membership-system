@@ -13,7 +13,7 @@
         "php": "^8.4",
         "gocardless/gocardless-pro": "^8.15",
         "guzzlehttp/guzzle": "^8.3",
-        "inertiajs/inertia-laravel": "^2.0",
+        "inertiajs/inertia-laravel": "^3.5",
         "intervention/image": "^4.4",
         "laravel-notification-channels/telegram": "^8.0",
         "laravel/framework": "^13.0",

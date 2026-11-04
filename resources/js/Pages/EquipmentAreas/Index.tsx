@@ -8,7 +8,7 @@ import {
   Stack,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Avatar,
   Box,
 } from '@mui/material';
@@ -24,7 +24,7 @@ type Props = {
 
 const Index = ({ areas, can = { create: false }, urls }: Props) => {
   const actionButtons = (
-    <Stack direction="row" justifyContent="flex-end">
+    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
       {can.create && (
         <Link href={urls.create} underline="none">
           <Button variant="contained" color="primary">
@@ -56,17 +56,17 @@ const Index = ({ areas, can = { create: false }, urls }: Props) => {
                   </Link>
                 </Typography>
                 {area.description && (
-                  <Typography color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography sx={{ color: 'text.secondary', mb: 2 }}>
                     {area.description}
                   </Typography>
                 )}
-                <Typography variant="overline" color="text.secondary">
+                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                   Area coordinators
                 </Typography>
                 {area.area_coordinators.length > 0 ? (
-                  <Grid2 container spacing={2} sx={{ mt: 0.5 }}>
+                  <Grid container spacing={2} sx={{ mt: 0.5 }}>
                     {area.area_coordinators.map((member) => (
-                      <Grid2 key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Grid key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
                         <Box
                           component={Link}
                           href={member.url}
@@ -86,11 +86,11 @@ const Index = ({ areas, can = { create: false }, urls }: Props) => {
                           </Avatar>
                           <Typography variant="body2">{member.name}</Typography>
                         </Box>
-                      </Grid2>
+                      </Grid>
                     ))}
-                  </Grid2>
+                  </Grid>
                 ) : (
-                  <Typography color="text.secondary" variant="body2" sx={{ mt: 0.5 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                     No coordinators assigned.
                   </Typography>
                 )}
@@ -100,7 +100,7 @@ const Index = ({ areas, can = { create: false }, urls }: Props) => {
 
           {areas.length === 0 && (
             <Paper sx={{ p: 3 }}>
-              <Typography color="text.secondary">No equipment areas yet.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>No equipment areas yet.</Typography>
             </Paper>
           )}
         </Stack>

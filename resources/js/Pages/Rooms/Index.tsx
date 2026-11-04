@@ -30,7 +30,7 @@ type Props = {
 
 const Index = ({ rooms, can = { create: false }, urls }: Props) => {
   const actionButtons = (
-    <Stack direction="row" justifyContent="flex-end">
+    <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
       {can.create && (
         <Link href={urls.create} underline="none">
           <Button variant="contained" color="primary">
@@ -69,7 +69,7 @@ const Index = ({ rooms, can = { create: false }, urls }: Props) => {
                       <Link href={room.urls.show}>{room.name}</Link>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                         {room.slug}
                       </Typography>
                     </TableCell>
@@ -81,7 +81,7 @@ const Index = ({ rooms, can = { create: false }, urls }: Props) => {
                 {rooms.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={3}>
-                      <Typography color="text.secondary">No rooms yet.</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>No rooms yet.</Typography>
                     </TableCell>
                   </TableRow>
                 )}

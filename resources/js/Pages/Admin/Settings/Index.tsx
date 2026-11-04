@@ -55,18 +55,18 @@ const SettingCard = ({ setting }: { setting: SettingResource }) => {
         <Typography variant="h6" component="h2" gutterBottom>
           {setting.label}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
           {setting.description}
         </Typography>
 
         <Box sx={{ mb: 2 }}>
-          <Typography variant="overline" color="text.secondary">
+          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
             Current value
           </Typography>
           {setting.value === null ? (
             <Typography color="error">Not set</Typography>
           ) : (
-            <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Typography sx={{ fontFamily: 'monospace', fontSize: '1.25rem' }}>
                 {revealed ? setting.value : '••••••••'}
               </Typography>
@@ -81,13 +81,17 @@ const SettingCard = ({ setting }: { setting: SettingResource }) => {
               </Tooltip>
             </Stack>
           )}
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             {lastChanged(setting)}
           </Typography>
         </Box>
 
         <form onSubmit={handleSubmit}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{ alignItems: 'flex-start' }}
+          >
             <TextField
               id={fieldId}
               label="New value"
@@ -118,7 +122,7 @@ const Index = ({ settings }: Props) => (
     <PageTitle title="Settings" />
     <Container sx={{ mt: 4, pb: 4 }}>
       <Stack spacing={3} sx={{ maxWidth: 720 }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           These values are secrets. Only admins can see this page, and changes are logged without
           the value.
         </Typography>

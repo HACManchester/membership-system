@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Container,
-  Grid2,
+  Grid,
   Card,
   CardContent,
   Typography,
@@ -55,7 +55,7 @@ const Show = ({ profile, can, urls }: Props) => {
   const socialLinks = SOCIAL_LABELS.filter(({ key }) => profile.links[key]);
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.edit && (
         <Link href={urls.editProfile} underline="none">
           <Button variant="outlined" startIcon={<EditIcon />}>
@@ -80,24 +80,24 @@ const Show = ({ profile, can, urls }: Props) => {
         actionButtons={actionButtons}
       />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Members
           </Link>{' '}
           / {profile.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, sm: 5, md: 4 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, sm: 5, md: 4 }}>
             <Box
               component="img"
               src={profile.photo_url}
               alt={profile.name}
               sx={{ width: '100%', borderRadius: 2, display: 'block' }}
             />
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={{ xs: 12, sm: 7, md: 8 }}>
+          <Grid size={{ xs: 12, sm: 7, md: 8 }}>
             <Card>
               <CardContent>
                 {profile.tagline && (
@@ -134,19 +134,19 @@ const Show = ({ profile, can, urls }: Props) => {
                 )}
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
 
           {profile.skills.length > 0 && (
-            <Grid2 size={12}>
+            <Grid size={12}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" component="h3" gutterBottom>
                     Skills
                   </Typography>
-                  <Grid2 container spacing={2}>
+                  <Grid container spacing={2}>
                     {profile.skills.map((skill) => (
-                      <Grid2 key={skill.name} size={{ xs: 6, sm: 4, md: 3 }}>
-                        <Stack alignItems="center" spacing={1}>
+                      <Grid key={skill.name} size={{ xs: 6, sm: 4, md: 3 }}>
+                        <Stack spacing={1} sx={{ alignItems: 'center' }}>
                           <Box
                             component="img"
                             src={`/img/skills/${skill.icon}`}
@@ -157,14 +157,14 @@ const Show = ({ profile, can, urls }: Props) => {
                             {skill.name}
                           </Typography>
                         </Stack>
-                      </Grid2>
+                      </Grid>
                     ))}
-                  </Grid2>
+                  </Grid>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           )}
-        </Grid2>
+        </Grid>
       </Container>
     </>
   );

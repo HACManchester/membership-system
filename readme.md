@@ -140,7 +140,7 @@ Node isn't in the container — yarn runs on the host.
 Prerequisites:
 
 - [Docker](https://www.docker.com/) with Docker Compose
-- [Node.js](https://nodejs.org/) 20.19 or newer on your host machine (frontend tooling runs on the host, not in the container). Run `corepack enable` once to get the Yarn version `package.json` pins.
+- [Node.js](https://nodejs.org/) 22 or newer on your host machine (frontend tooling runs on the host, not in the container; `.mise.toml` pins it for [mise](https://mise.jdx.dev/) users). Run `corepack enable` once to get the Yarn version `package.json` pins.
 
 For Apple Silicon Macs, [OrbStack](https://github.com/orbstack/orbstack) might be worth exploring as a more efficient alternative to Docker for Mac.
 

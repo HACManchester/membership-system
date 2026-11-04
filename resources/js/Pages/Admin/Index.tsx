@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   List,
   ListItem,
   Link,
@@ -63,9 +63,9 @@ const Index = ({ urls }: Props) => {
     <>
       <PageTitle title="Admin Area" />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Grid2 container spacing={3}>
+        <Grid container spacing={3}>
           {sections.map((section) => (
-            <Grid2 key={section.title} size={{ xs: 12, md: 6 }}>
+            <Grid key={section.title} size={{ xs: 12, md: 6 }}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography variant="h6" component="h2" gutterBottom>
@@ -80,9 +80,9 @@ const Index = ({ urls }: Props) => {
                   </List>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </Container>
     </>
   );

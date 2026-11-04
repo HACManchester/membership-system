@@ -95,9 +95,8 @@ Laravel 7 → 13 and PHP 7.2 → 8.4, one PR per hop, CI green at each rung. Alo
 
 Still to do, in this order:
 
-1. The frontend (frontend.md): Inertia 3, moving `inertiajs/inertia-laravel` and
-   `@inertiajs/react` together; the MUI majors; and type-checking with `tsc` in CI. jQuery,
-   Bootstrap 3 and select2 go as the last Blade pages using them move to Inertia.
+1. The frontend (frontend.md): jQuery, Bootstrap 3 and select2 go as the last Blade pages using
+   them move to Inertia. (Inertia 3, MUI 9 and type-checking in CI are done.)
 2. Infrastructure, last: production MySQL 5.7 → 8.x, production PHP 8.5 (CI already runs it),
    deployment hardening, and swapping the local mysql and mailhog images.
 

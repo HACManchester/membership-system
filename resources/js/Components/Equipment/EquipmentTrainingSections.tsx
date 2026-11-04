@@ -73,14 +73,14 @@ type Props = {
 };
 
 const MemberLine = ({ user }: { user: TrainingUser }) => (
-  <Stack direction="row" spacing={1} alignItems="center">
+  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
     <Avatar sx={{ width: 28, height: 28, fontSize: 14 }}>
       {user.name ? user.name.charAt(0) : '?'}
     </Avatar>
     <span>
       <Link href={user.url}>{user.name}</Link>
       {user.pronouns && (
-        <Typography component="span" color="text.secondary" sx={{ ml: 0.5 }}>
+        <Typography component="span" sx={{ color: 'text.secondary', ml: 0.5 }}>
           ({user.pronouns})
         </Typography>
       )}
@@ -126,7 +126,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
           <Typography variant="h6" component="h3" gutterBottom>
             🎓 Trainers
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 2 }}>
+          <Typography sx={{ color: 'text.secondary', mb: 2 }}>
             These members are permitted to induct other members on this tool.
           </Typography>
           <Stack spacing={1}>
@@ -134,8 +134,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               <Stack
                 key={trainer.id}
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
               >
                 <MemberLine user={trainer.user} />
                 {trainer.can.demote && (
@@ -148,7 +147,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               </Stack>
             ))}
             {training.trainers.length === 0 && (
-              <Typography color="text.secondary">No trainers yet.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>No trainers yet.</Typography>
             )}
           </Stack>
           {can.train && (
@@ -165,7 +164,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
           <Typography variant="h6" component="h3" gutterBottom>
             Trained members
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 2 }}>
+          <Typography sx={{ color: 'text.secondary', mb: 2 }}>
             {training.trained.length} member(s) are trained to use this tool.
           </Typography>
           <Stack spacing={1}>
@@ -173,14 +172,13 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               <Stack
                 key={member.id}
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <MemberLine user={member.user} />
                   {member.is_trainer && <Chip label="Trainer" size="small" color="info" />}
                   {member.trained_on && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       trained {member.trained_on}
                     </Typography>
                   )}
@@ -204,7 +202,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               </Stack>
             ))}
             {training.trained.length === 0 && (
-              <Typography color="text.secondary">No trained members yet.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>No trained members yet.</Typography>
             )}
           </Stack>
           {can.train && (
@@ -221,7 +219,7 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
           <Typography variant="h6" component="h3" gutterBottom>
             Awaiting training
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 2 }}>
+          <Typography sx={{ color: 'text.secondary', mb: 2 }}>
             {training.pending.length} member(s) are awaiting training for this tool.
           </Typography>
           <Stack spacing={1}>
@@ -229,13 +227,12 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               <Stack
                 key={member.id}
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <MemberLine user={member.user} />
                   {member.requested_on && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       requested {member.requested_on}
                     </Typography>
                   )}
@@ -266,12 +263,12 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
               </Stack>
             ))}
             {training.pending.length === 0 && (
-              <Typography color="text.secondary">Nobody is awaiting training.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Nobody is awaiting training.</Typography>
             )}
           </Stack>
 
           {can.train && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 3 }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 3 }}>
               <Autocomplete
                 options={memberOptions}
                 getOptionLabel={(option) => option.name}
@@ -288,14 +285,17 @@ const EquipmentTrainingSections = ({ training, can, authUserId, urls }: Props) =
                     {...params}
                     label="Add a member"
                     size="small"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {searching ? <CircularProgress size={18} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
+                    slotProps={{
+                      ...params.slotProps,
+                      input: {
+                        ...params.slotProps.input,
+                        endAdornment: (
+                          <>
+                            {searching ? <CircularProgress size={18} /> : null}
+                            {params.slotProps.input.endAdornment}
+                          </>
+                        ),
+                      },
                     }}
                   />
                 )}

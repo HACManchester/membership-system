@@ -41,7 +41,7 @@ const CourseFilters: React.FC<CourseFiltersProps> = ({
 }) => {
   return (
     <Paper sx={{ p: 2, mb: 4 }}>
-      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+      <Stack direction="row" spacing={2} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <FormControl size="small" sx={{ minWidth: 200 }}>
           <InputLabel>Filter by Room</InputLabel>
           <Select

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Grid, IconButton, Tooltip } from '@mui/material';
 import { router } from '@inertiajs/react';
 import CheckIcon from '@mui/icons-material/Check';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -30,20 +30,20 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
           <HourglassEmptyIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Interested Members
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           These members have registered interest in training, longest-waiting first. Some trainers
           use this list when organising training sessions to give long-waiting members priority
           (bear in mind that not all interested members may have an active need or be proactive in
           attending training).
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {waitlist.map((trainingRecord) => (
-            <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <UserCard
                 trainingRecord={trainingRecord}
                 caption={
                   <Tooltip title={new Date(trainingRecord.created_at).toLocaleString()}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       Interested {formatDateRelative(trainingRecord.created_at)}
                     </Typography>
                   </Tooltip>
@@ -73,9 +73,9 @@ const WaitlistSection: React.FC<Props> = ({ waitlist }) => {
                   )
                 }
               />
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );

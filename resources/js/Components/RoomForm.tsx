@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Button, Grid2 } from '@mui/material';
+import { TextField, Button, Grid } from '@mui/material';
 
 export type RoomFormData = {
   name: string;
@@ -34,8 +34,8 @@ const RoomForm = ({ data, setData, onSubmit, processing, errors, submitLabel = '
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid2 container spacing={3}>
-        <Grid2 size={12}>
+      <Grid container spacing={3}>
+        <Grid size={12}>
           <TextField
             label="Name"
             value={data.name}
@@ -45,9 +45,9 @@ const RoomForm = ({ data, setData, onSubmit, processing, errors, submitLabel = '
             error={!!errors.name}
             helperText={errors.name || 'e.g. "Woodwork", "The Stage"'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Slug"
             value={data.slug}
@@ -57,9 +57,9 @@ const RoomForm = ({ data, setData, onSubmit, processing, errors, submitLabel = '
             error={!!errors.slug}
             helperText={errors.slug || 'URL-friendly identifier, auto-generated from the name'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12}>
+        <Grid size={12}>
           <TextField
             label="Description"
             value={data.description}
@@ -70,9 +70,9 @@ const RoomForm = ({ data, setData, onSubmit, processing, errors, submitLabel = '
             error={!!errors.description}
             helperText={errors.description || 'Optional. A short note about this room.'}
           />
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={12} sx={{ mt: 2 }}>
+        <Grid size={12} sx={{ mt: 2 }}>
           <Button
             type="submit"
             variant="contained"
@@ -82,8 +82,8 @@ const RoomForm = ({ data, setData, onSubmit, processing, errors, submitLabel = '
           >
             {submitLabel}
           </Button>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </form>
   );
 };

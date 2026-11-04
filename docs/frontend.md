@@ -4,11 +4,11 @@
 
 | | Legacy stack | Modern stack |
 | --- | --- | --- |
-| Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v2 + React (`resources/js/`) |
-| Language | PHP templates + jQuery | TypeScript (5.x) + TSX |
-| Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 6 |
+| Rendering | ~94 Blade templates (`resources/views/`) | Inertia.js v3 + React (`resources/js/`) |
+| Language | PHP templates + jQuery | TypeScript (6.x) + TSX |
+| Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 9 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
-| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, Jest (two legacy `.jsx` component suites; runs in CI) |
+| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (two legacy `.jsx` component suites); all run in CI |
 
 Pages migrated to Inertia/React so far: the home page, courses, course training, equipment,
 equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, and the admin
@@ -24,7 +24,8 @@ screens, member admin, storage boxes, stats) is still Blade + jQuery + Bootstrap
 - Scripts: `yarn build` (or `yarn production`) for a production build; `yarn dev` / `yarn watch`
   for an unminified build with source maps (once / on every change); `yarn hot` runs the Vite dev
   server with hot reloading, and writes `public/hot` so `@vite` serves from it while it runs.
-- Vite 8 needs **Node 20.19+** (CI uses Node 24). Yarn 4 comes from Corepack (`corepack enable`),
+- Local development uses **Node 22** (`.mise.toml`), as production's build does; CI uses Node 24.
+  `engines` in `package.json` gives the minimum. Yarn 4 comes from Corepack (`corepack enable`),
   pinned by `packageManager` in `package.json`. Dependency install scripts are off (Yarn 4's
   default); allow one with `dependenciesMeta.<name>.built: true` only if a package truly needs it.
 - Legacy-bundle quirks: Bootstrap 3, select2 3 and inline Blade scripts expect a global jQuery, so
@@ -42,6 +43,8 @@ Note: yarn/node commands run directly on the host; PHP commands run inside the D
 `resources/views/app.blade.php` loads `react-app.tsx` through `@vite`, sets up browser-side Sentry,
 and renders the `@inertia` root. Controllers return `Inertia::render('Page', [...props])`; props
 are serialized via `app/Http/Resources/*` (e.g. `TrainingRecordResource`, `CourseResource`).
+`config/inertia.php` tells inertia-laravel the pages are in `resources/js/Pages` (its default is
+`js/pages`), which `assertInertia()` relies on to check that a page exists.
 
 **Important convention:** Inertia sends *all* props to the browser as JSON whether or not the
 component renders them — so over-fetching in a resource ships data to the client unnecessarily.
@@ -76,9 +79,8 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 
 - **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
   suites; `resources/js` has no tests yet.)
-- **Next**: type-check with `tsc` in CI (nothing runs it today; `tsconfig.json` is there).
-  Inertia 3, upgrading `@inertiajs/react` and `inertiajs/inertia-laravel` in one change. Then the
-  MUI majors.
+- **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs; Inertia 3, upgrading
+  `@inertiajs/react` and `inertiajs/inertia-laravel` together; MUI 9.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
   Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
 

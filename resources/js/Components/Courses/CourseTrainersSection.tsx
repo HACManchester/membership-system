@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Grid2, Box, Avatar } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Box, Avatar } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import { TrainingRecordResource } from '../../types/resources';
 
@@ -19,14 +19,14 @@ const CourseTrainersSection: React.FC<Props> = ({ trainers }) => {
           <SchoolIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Course Trainers
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           These members are authorized to provide training and sign-offs for this course.
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {trainers.map(
             (trainer) =>
               trainer.user && (
-                <Grid2 key={trainer.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={trainer.id} size={{ xs: 12, sm: 6, md: 4 }}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -49,16 +49,16 @@ const CourseTrainersSection: React.FC<Props> = ({ trainers }) => {
                     <Box>
                       <Typography variant="subtitle2">{trainer.user.name}</Typography>
                       {trainer.user.pronouns && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           ({trainer.user.pronouns})
                         </Typography>
                       )}
                     </Box>
                   </Box>
-                </Grid2>
+                </Grid>
               )
           )}
-        </Grid2>
+        </Grid>
       </CardContent>
     </Card>
   );

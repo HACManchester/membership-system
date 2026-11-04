@@ -4,7 +4,7 @@ import {
   Container,
   Card,
   CardContent,
-  Grid2,
+  Grid,
   Link,
   Button,
   Stack,
@@ -40,7 +40,7 @@ const Show = ({ room, can, urls }: Props) => {
   };
 
   const actionButtons = (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
       {can.update && (
         <Link href={urls.edit} underline="none">
           <Button variant="contained" color="primary">
@@ -60,34 +60,34 @@ const Show = ({ room, can, urls }: Props) => {
     <>
       <PageTitle title={room.name} actionButtons={actionButtons} />
       <Container sx={{ mt: 4, pb: 4 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
           <Link href={urls.index} color="inherit" underline="hover">
             Rooms
           </Link>{' '}
           / {room.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 size={{ xs: 12, lg: 8 }}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, lg: 8 }}>
             <Card>
               <CardContent>
                 <Stack spacing={2}>
                   <div>
-                    <Typography variant="overline" color="text.secondary">
+                    <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                       Slug
                     </Typography>
                     <Typography>{room.slug}</Typography>
                   </div>
                   {room.description && (
                     <div>
-                      <Typography variant="overline" color="text.secondary">
+                      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                         Description
                       </Typography>
                       <Typography>{room.description}</Typography>
                     </div>
                   )}
                   <div>
-                    <Typography variant="overline" color="text.secondary">
+                    <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                       Equipment in this room
                     </Typography>
                     <div>
@@ -97,8 +97,8 @@ const Show = ({ room, can, urls }: Props) => {
                 </Stack>
               </CardContent>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

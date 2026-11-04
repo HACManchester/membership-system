@@ -81,7 +81,7 @@ const Index = ({ activeMemberEmails, newsletterRecipientEmails }: Props) => {
     <>
       <PageTitle title="Newsletter recipients" />
 
-      <Stack spacing={4} p={4}>
+      <Stack spacing={4} sx={{ p: 4 }}>
         <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
           <Typography variant="h6" component="h2" gutterBottom>
             Choose separator

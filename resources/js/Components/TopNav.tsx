@@ -27,12 +27,15 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2} p={2}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ justifyContent: 'space-between', alignItems: 'center', p: 2 }}
+      >
         <Stack
           direction="row"
           spacing={isMobile ? 1 : 2}
-          alignItems="center"
-          sx={{ overflow: 'hidden' }}
+          sx={{ alignItems: 'center', overflow: 'hidden' }}
         >
           {isMobile && (
             <IconButton
@@ -93,15 +96,14 @@ export default function TopNav({ handleDrawerToggle, auth }: TopNavProps) {
         <Stack
           direction={isMobile ? 'column' : 'row'}
           spacing={isMobile ? 0 : 2}
-          alignItems="center"
-          justifyContent="center"
+          sx={{ alignItems: 'center', justifyContent: 'center' }}
         >
           {auth ? (
             <>
               <Link href={auth.user.account_path} underline="hover">
                 {auth.user.name}
               </Link>
-              <Link href="/logout" fontSize="small" underline="hover">
+              <Link href="/logout" underline="hover" sx={{ fontSize: 'small' }}>
                 Logout
               </Link>
             </>

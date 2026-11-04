@@ -137,8 +137,8 @@ const CourseSummary = ({
             )}
 
             <Typography
-              color="text.secondary"
               sx={{
+                color: 'text.secondary',
                 mb: 2,
                 display: '-webkit-box',
                 WebkitLineClamp: 3,
@@ -178,7 +178,7 @@ const CourseSummary = ({
             </Typography>
 
             <Stack spacing={1}>
-              <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Stack direction="row" spacing={1} sx={{ justifyContent: 'space-between' }}>
                 {formatLabel && (
                   <Chip
                     icon={<StickyNote2Icon />}
@@ -222,7 +222,7 @@ const CourseSummary = ({
             )}
 
             {!course.name && !course.description && isPreview && (
-              <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
                 Fill in the form above to see the preview
               </Typography>
             )}

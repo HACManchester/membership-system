@@ -3,7 +3,7 @@ import {
   Card,
   Typography,
   IconButton,
-  Grid2,
+  Grid,
   Box,
   Button,
   Collapse,
@@ -41,7 +41,11 @@ const TrainedMembersSection: React.FC<Props> = ({
   return (
     <Card>
       <Stack spacing={2} sx={{ p: 2 }}>
-        <Stack justifyContent="space-between" alignItems="center" spacing={2} direction="row">
+        <Stack
+          spacing={2}
+          direction="row"
+          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <Box>
             <Typography variant="h5" component="h2" gutterBottom>
               Trained Members
@@ -64,9 +68,9 @@ const TrainedMembersSection: React.FC<Props> = ({
           )}
           <Collapse in={expanded} timeout="auto">
             <Box>
-              <Grid2 container spacing={2}>
+              <Grid container spacing={2}>
                 {nonTrainerTrainedUsers.map((trainingRecord) => (
-                  <Grid2 key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Grid key={trainingRecord.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <UserCard
                       trainingRecord={trainingRecord}
                       actions={
@@ -94,9 +98,9 @@ const TrainedMembersSection: React.FC<Props> = ({
                         )
                       }
                     />
-                  </Grid2>
+                  </Grid>
                 ))}
-              </Grid2>
+              </Grid>
             </Box>
           </Collapse>
         </Box>

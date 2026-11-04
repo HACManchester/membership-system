@@ -9,7 +9,7 @@ import {
   IconButton,
   Stack,
   Divider,
-  Grid2 as Grid,
+  Grid,
   Card,
   CardContent,
   CardActions,
@@ -171,13 +171,13 @@ const ComponentZoo = () => {
                 body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
                 tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus.
               </Typography>
-              <Typography variant="button" display="block" gutterBottom>
+              <Typography variant="button" gutterBottom sx={{ display: 'block' }}>
                 button text
               </Typography>
-              <Typography variant="caption" display="block" gutterBottom>
+              <Typography variant="caption" gutterBottom sx={{ display: 'block' }}>
                 caption text
               </Typography>
-              <Typography variant="overline" display="block" gutterBottom>
+              <Typography variant="overline" gutterBottom sx={{ display: 'block' }}>
                 overline text
               </Typography>
             </Paper>
@@ -409,7 +409,7 @@ const ComponentZoo = () => {
                       subheader="September 14, 2023"
                     />
                     <CardContent>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                         This is a sample card with some content. Cards can be used for various UI
                         components like dashboard widgets, product displays, etc.
                       </Typography>
@@ -432,9 +432,7 @@ const ComponentZoo = () => {
                       <Typography variant="h5" component="div">
                         Simple Card
                       </Typography>
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        No header
-                      </Typography>
+                      <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>No header</Typography>
                       <Typography variant="body2">
                         A simpler card variation without a header.
                         <br />

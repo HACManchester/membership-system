@@ -1,4 +1,4 @@
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@mui/material/styles';
@@ -12,8 +12,14 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 createInertiaApp({
-  resolve: (name) =>
-    resolvePageComponent(`./Pages/${name}.tsx`, import.meta.glob('./Pages/**/*.tsx')),
+  resolve: async (name) => {
+    const page = await resolvePageComponent(
+      `./Pages/${name}.tsx`,
+      import.meta.glob<{ default: ResolvedComponent }>('./Pages/**/*.tsx')
+    );
+
+    return page.default;
+  },
   setup({ el, App, props }) {
     createRoot(el).render(
       <StrictMode>
