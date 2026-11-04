@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $giftee_name
  * @property int $months
  * @property float $credit
- * @property string $expires Y-m-d
+ * @property Carbon $expires
  */
 #[UseFactory(GiftFactory::class)]
 class Gift extends Model
@@ -28,5 +28,14 @@ class Gift extends Model
     protected $fillable = [
         'code', 'gifter_name', 'giftee_name', 'months', 'credit', 'expires'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'months' => 'integer',
+            'credit' => 'float',
+            'expires' => 'date',
+        ];
+    }
 
 } 
