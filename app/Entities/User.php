@@ -2,6 +2,7 @@
 
 namespace BB\Entities;
 
+use BB\Entities\Concerns\HasMembershipStatus;
 use BB\Entities\Concerns\HasRoles;
 use BB\Entities\Presenters\UserPresenter;
 use BB\Observer\UserAuditObserver;
@@ -89,7 +90,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use HasFactory, HasMembershipStatus, HasRoles, UserPresenter, Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $hidden = array('password', 'remember_token');
 
@@ -257,19 +258,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Can the user see protected member photos?
-     * Only available to active members
-     */
-    public function shouldMemberSeeProtectedPhoto(): bool
-    {
-        return in_array($this->status, [
-            MemberStatus::Active,
-            MemberStatus::PaymentWarning,
-            MemberStatus::Honorary,
-        ], true);
-    }
-
-    /**
      * Is the user on a payment method that allows their subscription amount to be changed
      */
     public function canMemberChangeSubAmount(): bool
@@ -299,20 +287,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $alerts;
     }
 
-    public function isBanned(): bool
-    {
-        return !!$this->banned;
-    }
-
-    public function hasPaymentWarning(): bool
-    {
-        return $this->status == MemberStatus::PaymentWarning;
-    }
-    
-    public function isSuspended(): bool
-    {
-        return $this->status == MemberStatus::Suspended;
-    }
 
 
     /*
@@ -320,47 +294,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     | Scopes
     |--------------------------------------------------------------------------
     */
-
-    #[Scope]
-    protected function active(Builder $query): void
-    {
-        $query->where(['active' => true, 'banned' => false]);
-    }
-
-    #[Scope]
-    protected function notSpecialCase(Builder $query): void
-    {
-        $query->where('status', '!=', MemberStatus::Honorary)
-            ->where(function ($subquery) {
-                $subquery->whereNull('gift_expires')->orWhere('gift_expires', '<=', Carbon::today());
-            });
-    }
-
-    #[Scope]
-    protected function leaving(Builder $query): void
-    {
-        $query->where('status', MemberStatus::Leaving);
-    }
-
-    #[Scope]
-    protected function paymentWarning(Builder $query): void
-    {
-        $query->where('status', MemberStatus::PaymentWarning);
-    }
-
-    #[Scope]
-    protected function suspended(Builder $query): void
-    {
-        $query->where('status', MemberStatus::Suspended);
-    }
-
-    #[Scope]
-    protected function recentlyLapsed(Builder $query): void
-    {
-        $query->whereActive(false)
-            ->where('banned', false)
-            ->where('subscription_expires', '>=', Carbon::today()->subMonths(6));
-    }
 
     #[Scope]
     protected function newsletterOptIns(Builder $query): void
@@ -408,10 +341,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getAuditFields()
     {
         return $this->auditFields;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active && !$this->banned;
     }
 }
