@@ -189,11 +189,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(TrainingRecord::class);
     }
 
-    public function keyFob()
-    {
-        return $this->hasMany(KeyFob::class)->where('active', true)->first();
-    }
-
     /**
      * @return HasMany<KeyFob, $this>
      */

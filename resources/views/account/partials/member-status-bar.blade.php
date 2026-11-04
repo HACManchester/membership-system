@@ -27,7 +27,7 @@
         @endif
     
         <div>
-            @if ($user->keyFob())
+            @if ($user->keyFobs()->exists())
                 
             <a href="{{ route('keyfobs.index', $user->id) }}">
                     🔑 {{ $user->keyFobs()->count() }} access {{ \Illuminate\Support\Str::plural('method', $user->keyFobs()->count() )}}

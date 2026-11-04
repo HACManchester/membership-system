@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\KeyFob;
 use BB\Entities\ProfileData;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,6 +31,31 @@ class AccountAccessTest extends TestCase
             ->assertStatus(200)
             ->assertSee($user->name)
             ->assertSee($user->email);
+    }
+
+    #[Test]
+    public function the_account_page_counts_the_members_active_access_methods()
+    {
+        $user = $this->memberWithProfile();
+        KeyFob::factory()->count(2)->for($user)->create();
+        KeyFob::factory()->for($user)->create(['active' => false]);
+
+        $this->actingAs($user)
+            ->get("/account/{$user->id}")
+            ->assertOk()
+            ->assertSee('2 access methods');
+    }
+
+    #[Test]
+    public function the_account_page_offers_to_set_up_an_access_method_when_none_is_active()
+    {
+        $user = $this->memberWithProfile();
+        KeyFob::factory()->for($user)->create(['active' => false]);
+
+        $this->actingAs($user)
+            ->get("/account/{$user->id}")
+            ->assertOk()
+            ->assertSee('Set up an access method');
     }
 
     #[Test]
