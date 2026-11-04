@@ -270,8 +270,8 @@ class UserRepository extends DBRepository
             unset($recordData['password']);
         }
 
-        //Update the main user record
-        $this->update($userId, $recordData);
+        //Update the main user record; the address has its own table
+        $this->update($userId, Arr::except($recordData, ['address']));
 
         //Update the user address
         if (isset($recordData['address']) && is_array($recordData['address'])) {

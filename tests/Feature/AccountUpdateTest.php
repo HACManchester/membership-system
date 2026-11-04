@@ -42,6 +42,24 @@ class AccountUpdateTest extends TestCase
      * Guards the controller's Request::only() list. UserMassAssignmentTest covers User::$fillable itself.
      */
     #[Test]
+    public function a_member_can_submit_a_new_address_for_approval()
+    {
+        $member = User::factory()->create();
+        $address = ['line_1' => '1 Example Street', 'line_2' => '', 'line_3' => 'Manchester', 'line_4' => '', 'postcode' => 'm1 1aa'];
+
+        $this->actingAs($member)
+            ->put(route('account.update', $member->id), $this->detailsFor($member, ['online_only' => '0', 'phone' => '07700900123', 'emergency_contact' => 'Ada, 07700900456', 'address' => $address]))
+            ->assertRedirect(route('account.show', $member->id));
+
+        $this->assertDatabaseHas('user_address', [
+            'user_id' => $member->id,
+            'line_1' => '1 Example Street',
+            'postcode' => 'M1 1AA',
+            'approved' => false,
+        ]);
+    }
+
+    #[Test]
     public function a_member_cannot_set_admin_managed_fields_on_their_own_account()
     {
         $member = User::factory()->create([
