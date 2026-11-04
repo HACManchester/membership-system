@@ -39,7 +39,7 @@ class ProfileDataAuditTest extends TestCase
     {
         $member = User::factory()->create(['trusted' => 0]);
 
-        $member->update(['trusted' => 1]);
+        $member->forceFill(['trusted' => 1])->save();
 
         $log = AuditLog::where('description', 'like', '%trusted [is 1, was 0]%')->first();
         $this->assertNotNull($log);
