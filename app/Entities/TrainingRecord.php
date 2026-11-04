@@ -65,6 +65,24 @@ class TrainingRecord extends Model
         $query->whereNotNull('trained');
     }
 
+    #[Scope]
+    protected function untrained(Builder $query): void
+    {
+        $query->whereNull('trained');
+    }
+
+    #[Scope]
+    protected function trainers(Builder $query): void
+    {
+        $query->where('is_trainer', true);
+    }
+
+    #[Scope]
+    protected function forCourse(Builder $query, int $courseId): void
+    {
+        $query->where('course_id', $courseId);
+    }
+
 
     /**
      * @return BelongsTo<User, $this>

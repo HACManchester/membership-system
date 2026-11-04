@@ -6,7 +6,6 @@ use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Room;
-use BB\Entities\TrainingRecord;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\BulkStoreEquipmentRequest;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
@@ -66,8 +65,8 @@ class EquipmentController extends Controller
         // Resolve the viewer's training status for the whole catalogue up front,
         // rather than one query per item, honouring both the course and legacy-key
         // linkage.
-        $trained = TrainingRecord::where('user_id', $user->id)
-            ->whereNotNull('trained')
+        $trained = $user->trainingRecords()
+            ->trained()
             ->get(['course_id', 'key']);
         $trainedCourseIds = $trained->pluck('course_id')->filter()->unique();
         $trainedKeys = $trained->pluck('key')->filter()->unique();
