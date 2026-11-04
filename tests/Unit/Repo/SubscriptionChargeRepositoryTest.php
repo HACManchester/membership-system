@@ -6,6 +6,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -63,7 +64,7 @@ class SubscriptionChargeRepositoryTest extends TestCase
         app(SubscriptionChargeRepository::class)->cancelOutstandingCharges($user->id);
 
         $this->assertSame(
-            ['cancelled', 'cancelled', 'processing', 'paid'],
+            [SubscriptionChargeStatus::Cancelled, SubscriptionChargeStatus::Cancelled, SubscriptionChargeStatus::Processing, SubscriptionChargeStatus::Paid],
             $charges->map(fn (SubscriptionCharge $charge) => $charge->fresh()->status)->all()
         );
     }

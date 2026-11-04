@@ -6,6 +6,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Process\CheckLeavingUsers;
 use BB\Repo\UserRepository;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -83,6 +84,6 @@ class CheckLeavingUsersTest extends TestCase
 
         $this->process->run();
 
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
     }
 }

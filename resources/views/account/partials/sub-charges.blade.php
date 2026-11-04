@@ -1,3 +1,4 @@
+@use('BB\Support\SubscriptionChargeStatus')
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -14,7 +15,7 @@
         </thead>
         <tbody>
         @foreach ($subscriptionCharges as $charge)
-        <tr class="{{ match ($charge->status) { 'pending' => '', 'due' => 'warning', 'processing' => 'info', 'paid' => 'success', 'cancelled' => 'text-muted', default => $charge->status } }}">
+        <tr class="{{ match ($charge->status) { SubscriptionChargeStatus::Pending => '', SubscriptionChargeStatus::Due => 'warning', SubscriptionChargeStatus::Processing => 'info', SubscriptionChargeStatus::Paid => 'success', SubscriptionChargeStatus::Cancelled => 'text-muted' } }}">
             <td>{{ $charge->charge_date->toFormattedDateString() }}</td>
             <td>{{ $charge->amount_label }}</td>
             <td>{{ $charge->status_label }}</td>

@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Database\Factories\SubscriptionChargeFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon  $charge_date
  * @property Carbon|null  $payment_date
  * @property integer $amount
- * @property string  $status
+ * @property SubscriptionChargeStatus $status
  * @property-read User|null $user
  * @property-read string $status_label
  * @property-read string|null $payment_date_label
@@ -44,6 +45,7 @@ class SubscriptionCharge extends Model
         return [
             'charge_date' => 'datetime',
             'payment_date' => 'datetime',
+            'status' => SubscriptionChargeStatus::class,
         ];
     }
 
@@ -76,7 +78,7 @@ class SubscriptionCharge extends Model
     #[Scope]
     protected function outstanding(Builder $query): void
     {
-        $query->whereIn('status', ['pending', 'due']);
+        $query->whereIn('status', [SubscriptionChargeStatus::Pending, SubscriptionChargeStatus::Due]);
     }
 
     /**
@@ -85,19 +87,19 @@ class SubscriptionCharge extends Model
     #[Scope]
     protected function inFlight(Builder $query): void
     {
-        $query->whereIn('status', ['pending', 'due', 'processing']);
+        $query->whereIn('status', [SubscriptionChargeStatus::Pending, SubscriptionChargeStatus::Due, SubscriptionChargeStatus::Processing]);
     }
 
     #[Scope]
     protected function pending(Builder $query): void
     {
-        $query->where('status', 'pending');
+        $query->where('status', SubscriptionChargeStatus::Pending);
     }
 
     #[Scope]
     protected function due(Builder $query): void
     {
-        $query->where('status', 'due');
+        $query->where('status', SubscriptionChargeStatus::Due);
     }
 
     /**
@@ -105,14 +107,7 @@ class SubscriptionCharge extends Model
      */
     protected function statusLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->status) {
-            'pending' => 'Pending',
-            'due' => 'Due',
-            'processing' => 'Processing',
-            'paid' => 'Paid',
-            'cancelled' => 'Cancelled',
-            default => $this->status,
-        });
+        return Attribute::get(fn () => $this->status->label());
     }
 
     /**
@@ -122,7 +117,7 @@ class SubscriptionCharge extends Model
      */
     protected function paymentDateLabel(): Attribute
     {
-        return Attribute::get(fn () => $this->status === 'paid' ? $this->payment_date?->toFormattedDateString() : null);
+        return Attribute::get(fn () => $this->status === SubscriptionChargeStatus::Paid ? $this->payment_date?->toFormattedDateString() : null);
     }
 
     /**
@@ -132,6 +127,6 @@ class SubscriptionCharge extends Model
      */
     protected function amountLabel(): Attribute
     {
-        return Attribute::get(fn () => in_array($this->status, ['processing', 'paid'], true) ? '£' . number_format($this->amount, 2) : '');
+        return Attribute::get(fn () => in_array($this->status, [SubscriptionChargeStatus::Processing, SubscriptionChargeStatus::Paid], true) ? '£' . number_format($this->amount, 2) : '');
     }
 }

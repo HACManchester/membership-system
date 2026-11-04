@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use BB\Entities\User;
 use BB\Events\SubscriptionChargePaid;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Event;
@@ -29,7 +30,7 @@ class SubscriptionChargeTest extends TestCase
         $repo->markChargeAsPaid($charge->id, $paymentDate);
 
         $charge->refresh();
-        $this->assertEquals('paid', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->status);
         $this->assertTrue($charge->payment_date->isSameDay($paymentDate));
 
         Event::assertDispatched(SubscriptionChargePaid::class, function ($event) use ($charge) {

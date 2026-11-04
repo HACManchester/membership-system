@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use GoCardlessPro\Resources\Payment as GoCardlessPayment;
 use GuzzleHttp\Exception\ConnectException;
@@ -131,7 +132,7 @@ class GoCardlessWebhookTest extends TestCase
 
         $response->assertStatus(403);
         $this->assertEquals('pending', $payment->fresh()->status);
-        $this->assertEquals('processing', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $charge->fresh()->status);
     }
 
     #[Test]
@@ -171,7 +172,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertNotNull($payment->paid_at);
 
         $charge->refresh();
-        $this->assertEquals('paid', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->status);
         $this->assertTrue($charge->payment_date->isSameDay(Carbon::now()));
 
         $user->refresh();
@@ -193,7 +194,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('failed', $payment->fresh()->status);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
         $this->assertEquals('payment-warning', $user->status);
@@ -254,8 +255,8 @@ class GoCardlessWebhookTest extends TestCase
 
         // Left outstanding these are uncollectable, and get billed in a batch against
         // whatever mandate the member sets up when they rejoin
-        $this->assertEquals('cancelled', $pending->fresh()->status);
-        $this->assertEquals('cancelled', $due->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $pending->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $due->fresh()->status);
     }
 
     #[Test]
@@ -271,7 +272,7 @@ class GoCardlessWebhookTest extends TestCase
             ->assertStatus(200);
 
         $this->assertEquals('paid', $payment->fresh()->status);
-        $this->assertEquals('paid', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->fresh()->status);
         $this->assertTrue($user->fresh()->subscription_expires->isSameDay($expiryAfterFirst));
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
     }
@@ -338,7 +339,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals((string) $charge->id, $payment->reference);
 
         // Not collected yet, so the charge and membership are untouched
-        $this->assertEquals('due', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->fresh()->status);
         $this->assertTrue($user->fresh()->subscription_expires->isSameDay(Carbon::now()));
     }
 
@@ -371,7 +372,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('confirmed', 'PM_SUB_1')])->assertStatus(200);
 
         $this->assertEquals('paid', Payment::where('source_id', 'PM_SUB_1')->first()->status);
-        $this->assertEquals('paid', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->fresh()->status);
 
         $user->refresh();
         $this->assertEquals('active', $user->status);
@@ -392,7 +393,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('failed', 'PM_SUB_1')])->assertStatus(200);
 
         $this->assertEquals('failed', Payment::where('source_id', 'PM_SUB_1')->first()->status);
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->fresh()->status);
     }
 
@@ -440,7 +441,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEmpty($user->payment_method);
         $this->assertEmpty($user->subscription_id);
         $this->assertEmpty($user->mandate_id);
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
     }
 
     /**
@@ -463,7 +464,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals('gocardless-variable', $user->payment_method);
         $this->assertEquals('MD_TEST_123', $user->mandate_id);
         $this->assertEmpty($user->subscription_id);
-        $this->assertEquals('due', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->fresh()->status);
     }
 
     // ---------------------------------------------------------------------
@@ -481,7 +482,7 @@ class GoCardlessWebhookTest extends TestCase
             ->assertStatus(200);
 
         $this->assertEquals('cancelled', $payment->fresh()->status);
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->fresh()->status);
     }
 
@@ -510,7 +511,7 @@ class GoCardlessWebhookTest extends TestCase
 
         $this->assertEquals('pending', $submitted->fresh()->status);
         $this->assertEquals('paid', $confirmed->fresh()->status);
-        $this->assertEquals('paid', $confirmedCharge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $confirmedCharge->fresh()->status);
         $this->assertTrue($confirmedUser->fresh()->subscription_expires->isSameDay(Carbon::now()->addMonth()));
         $this->assertEquals('leaving', $leaving->fresh()->status);
     }
@@ -525,7 +526,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->paymentEvent('submitted', 'PM_TEST_123')])->assertStatus(200);
 
         $this->assertEquals('pending', $payment->fresh()->status);
-        $this->assertEquals('processing', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $charge->fresh()->status);
         $this->assertEquals(1, Payment::where('source_id', 'PM_TEST_123')->count());
     }
 
@@ -544,7 +545,7 @@ class GoCardlessWebhookTest extends TestCase
 
         $user->refresh();
         $this->assertEquals('failed', $payment->fresh()->status);
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals('payment-warning', $user->status);
         $this->assertTrue($user->subscription_expires->equalTo($afterFirst->subscription_expires));
     }
@@ -582,14 +583,14 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook($delivery)->assertStatus(200);
 
         $this->assertEquals('paid', $paid->fresh()->status);
-        $this->assertEquals('paid', $paidCharge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $paidCharge->fresh()->status);
         $this->assertTrue(
             $paidUser->fresh()->subscription_expires->isSameDay(Carbon::now()->addMonth()),
             'membership must be extended once, not once per delivery'
         );
 
         $this->assertEquals('failed', $failed->fresh()->status);
-        $this->assertEquals('cancelled', $failedCharge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $failedCharge->fresh()->status);
         $this->assertEquals('payment-warning', $failedUser->fresh()->status);
     }
 }

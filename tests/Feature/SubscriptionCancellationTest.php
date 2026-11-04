@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,7 +59,7 @@ class SubscriptionCancellationTest extends TestCase
         $this->assertEmpty($member->payment_method);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
     }
 
     #[Test]
@@ -110,6 +111,6 @@ class SubscriptionCancellationTest extends TestCase
         $this->assertEmpty($member->subscription_id);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
     }
 }

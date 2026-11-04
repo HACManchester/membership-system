@@ -8,6 +8,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Handlers\PaymentEventHandler;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -101,7 +102,7 @@ class PaymentEventHandlerTest extends TestCase
         $charge->refresh();
 
         $this->assertEquals($charge->id, $payment->reference);
-        $this->assertEquals('processing', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $charge->status);
         $this->assertEquals(2200, $charge->amount);
     }
 
@@ -137,7 +138,7 @@ class PaymentEventHandlerTest extends TestCase
         );
 
         $charge->refresh();
-        $this->assertEquals('paid', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->status);
         $this->assertEquals(2200, $charge->amount);
     }
 
@@ -172,7 +173,7 @@ class PaymentEventHandlerTest extends TestCase
         );
 
         $charge->refresh();
-        $this->assertEquals('processing', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $charge->status);
     }
 
     public function testOnCreateWithExistingReferenceUsesTheReferencedCharge()
@@ -214,10 +215,10 @@ class PaymentEventHandlerTest extends TestCase
         );
 
         $laterCharge->refresh();
-        $this->assertEquals('processing', $laterCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $laterCharge->status);
 
         $olderCharge->refresh();
-        $this->assertEquals('due', $olderCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $olderCharge->status);
     }
 
     public function testOnCreateWithReferenceToMissingChargeIsIgnored()
@@ -277,7 +278,7 @@ class PaymentEventHandlerTest extends TestCase
         );
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
         $this->assertEquals(0, $charge->amount);
         $this->assertNull($charge->payment_date);
     }
@@ -362,7 +363,7 @@ class PaymentEventHandlerTest extends TestCase
         );
 
         $charge->refresh();
-        $this->assertEquals('paid', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Paid, $charge->status);
         $this->assertNotNull($charge->payment_date);
         $this->assertTrue($charge->payment_date->isSameDay($paymentDate));
     }

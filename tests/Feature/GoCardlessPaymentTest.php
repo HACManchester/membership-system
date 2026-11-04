@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -74,7 +75,7 @@ class GoCardlessPaymentTest extends TestCase
         $this->assertEquals($charge->id, $payment->reference);
 
         $charge->refresh();
-        $this->assertEquals('processing', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Processing, $charge->status);
     }
 
     #[Test]
@@ -93,7 +94,7 @@ class GoCardlessPaymentTest extends TestCase
             ->assertJsonValidationErrors('amount');
 
         $charge->refresh();
-        $this->assertEquals('due', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->status);
         $this->assertEquals(0, Payment::where('user_id', $member->id)->count());
     }
 
@@ -161,6 +162,6 @@ class GoCardlessPaymentTest extends TestCase
         $this->assertEmpty($failedPayment->reference);
 
         $charge->refresh();
-        $this->assertEquals('due', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->status);
     }
 }

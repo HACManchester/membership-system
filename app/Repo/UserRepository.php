@@ -5,6 +5,7 @@ namespace BB\Repo;
 use BB\Entities\Gift;
 use BB\Entities\User;
 use BB\Support\CurrentUser;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -251,10 +252,10 @@ class UserRepository extends DBRepository
             }
 
             if ($user->payment_method == 'gocardless-variable') {
-                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, 'due', $user->mandate_id);
+                $this->subscriptionChargeRepository->createChargeAndBillDD($userId, $chargeDate, $user->monthly_subscription, SubscriptionChargeStatus::Due, $user->mandate_id);
             } else {
                 // This will create the monthly sub charge but not take any money, that will happen tomorrow during the normal run
-                $this->subscriptionChargeRepository->createCharge($userId, $chargeDate, $user->monthly_subscription, 'due');
+                $this->subscriptionChargeRepository->createCharge($userId, $chargeDate, $user->monthly_subscription, SubscriptionChargeStatus::Due);
             }
         }
     }

@@ -109,7 +109,7 @@ class AuditSubscriptionCharges extends Command
                     $charge->user ? $charge->user->status : '-',
                     $charge->user && $charge->user->payment_method ? $charge->user->payment_method : 'none',
                     $charge->charge_date->format('Y-m-d'),
-                    $charge->status,
+                    $charge->status->value,
                     $charge->amount,
                 ];
             })->all()

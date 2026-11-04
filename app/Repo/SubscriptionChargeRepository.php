@@ -3,6 +3,7 @@
 use BB\Entities\SubscriptionCharge;
 use BB\Events\SubscriptionChargePaid;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
@@ -36,10 +37,10 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
-     * @param string    $status
+     * @param SubscriptionChargeStatus|string $status
      * @return SubscriptionCharge
      */
-    public function createCharge($userId, \DateTime $date, $amount = 0, $status = 'pending')
+    public function createCharge($userId, \DateTime $date, $amount = 0, $status = SubscriptionChargeStatus::Pending)
     {
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
     }
@@ -50,7 +51,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
-     * @param string    $status
+     * @param SubscriptionChargeStatus|string $status
      * @param string|null $DDAuthId
      * @return SubscriptionCharge
      */
@@ -139,7 +140,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
-        $subCharge->status = 'paid';
+        $subCharge->status = SubscriptionChargeStatus::Paid;
         if ($amount) {
             $subCharge->amount = $amount;
         }
@@ -156,7 +157,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         
-        $subCharge->status = 'processing';
+        $subCharge->status = SubscriptionChargeStatus::Processing;
         $subCharge->save();
 
         \Event::dispatch('sub-charge.processing', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
@@ -173,9 +174,9 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         
         //If the charge has already been cancelled dont touch it
-        if ($subCharge->status != 'cancelled') {
+        if ($subCharge->status !== SubscriptionChargeStatus::Cancelled) {
             $subCharge->payment_date = null;
-            $subCharge->status       = 'cancelled';
+            $subCharge->status       = SubscriptionChargeStatus::Cancelled;
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
@@ -215,7 +216,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMembersLatestPaidCharge($userId)
     {
-        return $this->model->where('user_id', $userId)->where('status', 'paid')->orderBy('charge_date', 'desc')->first();
+        return $this->model->where('user_id', $userId)->where('status', SubscriptionChargeStatus::Paid)->orderBy('charge_date', 'desc')->first();
     }
 
     /**
@@ -258,7 +259,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         
-        $subCharge->status = 'due';
+        $subCharge->status = SubscriptionChargeStatus::Due;
         $subCharge->save();
     }
 
@@ -274,7 +275,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
 
-        $subCharge->status = 'cancelled';
+        $subCharge->status = SubscriptionChargeStatus::Cancelled;
         $subCharge->save();
     }
 
@@ -286,7 +287,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function cancelOutstandingCharges($userId)
     {
-        $this->model->where('user_id', $userId)->outstanding()->update(['status'=>'cancelled']);
+        $this->model->where('user_id', $userId)->outstanding()->update(['status' => SubscriptionChargeStatus::Cancelled]);
     }
 
     /**
