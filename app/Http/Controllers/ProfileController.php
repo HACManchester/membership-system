@@ -25,10 +25,10 @@ class ProfileController extends Controller
         $this->userImage = $userImage;
     }
 
-    public function edit($userId)
+    public function edit(string $userId)
     {
-        //Verify the user can access this user record
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('updateProfile', $user);
 
         $profileData = $user->profile()->firstOrFail();
         $skills = $this->profileSkillsRepository->getSelectArray();
