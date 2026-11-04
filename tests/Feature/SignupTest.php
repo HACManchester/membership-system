@@ -127,6 +127,31 @@ class SignupTest extends TestCase
         $this->assertModelMissing($gift);
     }
 
+    #[Test]
+    public function signup_ignores_fields_the_form_no_longer_sends()
+    {
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'                  => $this->faker->firstName(),
+            'family_name'                 => $this->faker->lastName(),
+            'email'                       => $email,
+            'display_name'                => $this->faker->userName(),
+            'online_only'                 => '0',
+            'suppress_real_name'          => '0',
+            'password'                    => $this->faker->password(10),
+            'phone'                       => '07700900123',
+            'address'                     => ['line_1' => $this->faker->streetAddress(), 'postcode' => 'M4 7HR'],
+            'emergency_contact'           => $this->faker->name(),
+            'monthly_subscription'        => config('membership.prices.minimum'),
+            'rules_agreed'                => '1',
+            'custom_monthly_subscription' => '99',
+            'visited_space'               => '1',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('users', ['email' => $email]);
+    }
+
     /**
      * Guards the controller's Request::only() list. UserMassAssignmentTest covers User::$fillable itself.
      */
