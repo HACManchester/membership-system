@@ -68,7 +68,6 @@ class EmailCrlfValidationTest extends TestCase
             'given_name'           => 'Mallory',
             'family_name'          => 'Example',
             'display_name'         => 'mallory',
-            'online_only'          => '0',
             'suppress_real_name'   => '0',
             'password'             => 'a-long-enough-password',
             'phone'                => '07700900123',

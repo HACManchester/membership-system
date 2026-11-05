@@ -34,7 +34,6 @@ class OnboardingTest extends TestCase
             'family_name'          => $this->faker->lastName(),
             'email'                => $email,
             'display_name'         => $this->faker->userName(),
-            'online_only'          => '0',
             'suppress_real_name'   => '0',
             'password'             => $this->faker->password(10),
             'phone'                => '07700900123',
