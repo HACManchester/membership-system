@@ -206,7 +206,7 @@
 
                             <input type="hidden" name="reason" value="balance">
                             <input type="hidden" name="source_id" value="user:{{ \Auth::id() }}">
-                            <input type="hidden" name="return_path" value="account/{{ $user->id }}">
+                            <input type="hidden" name="return_to" value="account">
                         </form>
                     </div>
 
@@ -244,7 +244,7 @@
                                 </ul>
                             </div>
 
-                            <input type="hidden" name="return_path" value="account/{{ $user->id }}">
+                            <input type="hidden" name="return_to" value="account">
                         </form>
 
                     </div>
