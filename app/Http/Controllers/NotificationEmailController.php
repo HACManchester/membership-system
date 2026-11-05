@@ -8,6 +8,8 @@ use BB\Mailer\UserMailer;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\CurrentUser;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class NotificationEmailController extends Controller
 {
@@ -35,15 +37,18 @@ class NotificationEmailController extends Controller
         $this->trainingRecordRepository        = $trainingRecordRepository;
     }
 
-    public function create()
+    public function create(): Response
     {
-        if ( ! CurrentUser::get()->isAdmin() && CurrentUser::get()->roles()->get()->count() <= 0) {
-            throw new AuthenticationException("You don't have permission to be here");
-        }
+        $this->authorize('email-members');
 
-        $recipients = ['all' => 'All Members', 'laser_induction_members' => 'Laser Induction Members'];
-        return \View::make('notification_email.create')
-            ->with('recipients', $recipients);
+        return Inertia::render('NotificationEmail/Create', [
+            'recipients' => [
+                ['value' => 'all', 'label' => 'All Members'],
+            ],
+            'urls' => [
+                'store' => route('notificationemail.store', [], false),
+            ],
+        ]);
     }
 
     public function tool($tool_id, $status)
@@ -187,7 +192,6 @@ class NotificationEmailController extends Controller
             return \Redirect::route('equipment.show', $equipment->slug);
         }
 
-        \FlashNotification::success('Email Queued to Send');
-        return \Redirect::route('home');
+        return redirect()->route('notificationemail.create')->with('success', 'Email Queued to Send');
     }
 } 

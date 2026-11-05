@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\Equipment;
+use BB\Entities\Role;
 use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
@@ -10,6 +11,7 @@ use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\NotificationEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -54,6 +56,46 @@ class NotificationEmailTest extends TestCase
     }
 
     #[Test]
+    public function a_guest_is_sent_to_log_in_from_the_mass_email_form()
+    {
+        $this->get(route('notificationemail.create'))->assertRedirect(route('login'));
+    }
+
+    #[Test]
+    public function a_member_without_a_role_is_refused_the_mass_email_form()
+    {
+        $member = User::factory()->create();
+
+        $this->actingAs($member)->get(route('notificationemail.create'))->assertForbidden();
+    }
+
+    #[Test]
+    public function a_role_holder_can_open_the_mass_email_form()
+    {
+        $member = User::factory()->create();
+        $member->assignRole(Role::factory()->create());
+
+        $this->actingAs($member)
+            ->get(route('notificationemail.create'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->component('NotificationEmail/Create'));
+    }
+
+    #[Test]
+    public function an_admin_can_open_the_mass_email_form()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('notificationemail.create'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('NotificationEmail/Create')
+                ->where('recipients', [['value' => 'all', 'label' => 'All Members']])
+                ->where('urls', ['store' => '/notification_email']));
+    }
+
+    #[Test]
     public function an_admin_can_send_a_notification_to_all_active_members()
     {
         $admin = User::factory()->admin()->create(['status' => 'active', 'active' => true]);
@@ -66,10 +108,33 @@ class NotificationEmailTest extends TestCase
             'send_to_all' => '1',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHas('success', 'Email Queued to Send');
         Mail::assertQueued(NotificationEmail::class, function ($mail) use ($member) {
             return $mail->hasTo($member->email);
         });
+    }
+
+    #[Test]
+    public function an_email_without_a_subject_or_message_is_rejected()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)
+            ->from(route('notificationemail.create'))
+            ->post(route('notificationemail.store'), [
+                'subject' => '',
+                'message' => '',
+                'recipient' => 'all',
+                'send_to_all' => true,
+            ]);
+
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHasErrors([
+            'subject' => 'The subject field is required.',
+            'message' => 'The message field is required.',
+        ]);
+        Mail::assertNotQueued(NotificationEmail::class);
     }
 
     #[Test]
@@ -178,7 +243,8 @@ class NotificationEmailTest extends TestCase
             'send_to_all' => '0',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHas('success', 'Email Queued to Send');
         Mail::assertQueued(NotificationEmail::class, function ($mail) use ($member) {
             return $mail->hasTo($member->email);
         });
