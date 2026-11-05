@@ -89,12 +89,6 @@ class MemberRegistrationController extends Controller
         ));
     }
 
-    public function createOnlineOnly()
-    {
-        \View::share('body_class', 'register_login');
-        return \View::make('account.create-online-only');
-    }
-
     public function store()
     {
         $input = \Request::only(
@@ -104,7 +98,6 @@ class MemberRegistrationController extends Controller
             'secondary_email',
             'display_name',
             'announce_name',
-            'online_only',
             'password',
             'phone',
             'address.line_1',
@@ -124,6 +117,10 @@ class MemberRegistrationController extends Controller
             'pronouns',
             'suppress_real_name'
         );
+
+        // Signup only creates full members. Set as 0, not false: UserValidator's required_if:online_only,0
+        // rules don't match a boolean, so false would silently drop the full-member requirements.
+        $input['online_only'] = 0;
 
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);

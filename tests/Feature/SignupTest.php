@@ -22,6 +22,12 @@ class SignupTest extends TestCase
     }
 
     #[Test]
+    public function the_online_only_signup_page_no_longer_exists()
+    {
+        $this->get('/online-only')->assertNotFound();
+    }
+
+    #[Test]
     public function a_new_full_member_can_register()
     {
         $given = $this->faker->firstName();
@@ -32,7 +38,6 @@ class SignupTest extends TestCase
             'family_name'          => $this->faker->lastName(),
             'email'                => $email,
             'display_name'         => $this->faker->userName(),
-            'online_only'          => '0',
             'suppress_real_name'   => '0',
             'password'             => $this->faker->password(10),
             'phone'                => '07700900123',
@@ -61,6 +66,52 @@ class SignupTest extends TestCase
     }
 
     #[Test]
+    public function a_signup_claiming_to_be_online_only_still_creates_a_full_member()
+    {
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'           => $this->faker->firstName(),
+            'family_name'          => $this->faker->lastName(),
+            'email'                => $email,
+            'display_name'         => $this->faker->userName(),
+            'online_only'          => '1',
+            'suppress_real_name'   => '0',
+            'password'             => $this->faker->password(10),
+            'phone'                => '07700900123',
+            'address'              => ['line_1' => '1 Test Street', 'postcode' => 'M4 7HR'],
+            'emergency_contact'    => $this->faker->name(),
+            'monthly_subscription' => config('membership.prices.minimum'),
+            'rules_agreed'         => '1',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('users', ['email' => $email, 'online_only' => 0]);
+    }
+
+    #[Test]
+    public function a_signup_claiming_to_be_online_only_must_still_give_full_member_details()
+    {
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->postJson(route('account.store'), [
+            'given_name'         => $this->faker->firstName(),
+            'family_name'        => $this->faker->lastName(),
+            'email'              => $email,
+            'display_name'       => $this->faker->userName(),
+            'online_only'        => '1',
+            'suppress_real_name' => '0',
+            'password'           => $this->faker->password(10),
+            'rules_agreed'       => '1',
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrorFor('phone', null)
+            ->assertJsonValidationErrorFor('address.line_1', null)
+            ->assertJsonValidationErrorFor('emergency_contact', null)
+            ->assertJsonValidationErrorFor('monthly_subscription', null);
+
+        $this->assertDatabaseMissing('users', ['email' => $email]);
+    }
+
+    #[Test]
     public function a_photo_given_at_signup_is_held_for_approval_with_its_privacy_choice()
     {
         Storage::fake('public');
@@ -71,7 +122,6 @@ class SignupTest extends TestCase
             'family_name'           => $this->faker->lastName(),
             'email'                 => $email,
             'display_name'          => $this->faker->userName(),
-            'online_only'           => '0',
             'suppress_real_name'    => '0',
             'password'              => $this->faker->password(10),
             'phone'                 => '07700900123',
@@ -103,7 +153,6 @@ class SignupTest extends TestCase
             'family_name'          => $this->faker->lastName(),
             'email'                => $email,
             'display_name'         => $this->faker->userName(),
-            'online_only'          => '0',
             'suppress_real_name'   => '0',
             'password'             => $this->faker->password(10),
             'phone'                => '07700900123',

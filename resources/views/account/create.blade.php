@@ -45,7 +45,6 @@ Join Hackspace Manchester
 
     <form action="{{ route('account.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="online_only" value="0">
 
         @if($gift)
             <input type="hidden" name="gift_code" value="{{ $gift_code }}">

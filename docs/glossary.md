@@ -10,7 +10,7 @@ prefer the precise terms below.
 | Term | Meaning |
 | --- | --- |
 | **Member** | Loosely used. Precisely: an account with `status='active'`. |
-| **Online-only member** | Account with `online_only=true` — forum/community access without physical access or billing. Cannot register fobs/codes. |
+| **Online-only member** | Account with `online_only=true` — forum/community access without physical access. Cannot register fobs/codes. Not exempt from billing if active. Legacy: signup no longer creates them, but existing ones remain. |
 | **Honorary member** | `status='honorary'` — active without billing; excluded from charge creation. |
 | **Setting-up** | `status='setting-up'` — registered but not yet activated (email confirmation / payment setup pending). The only status that is hard-deleted on account deletion. |
 | **Payment warning** | `status='payment-warning'` — a subscription payment failed; member keeps access during a grace period. |

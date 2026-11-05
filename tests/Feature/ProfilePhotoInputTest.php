@@ -64,7 +64,6 @@ class ProfilePhotoInputTest extends TestCase
             'family_name' => 'Hopper',
             'email' => 'grace@example.test',
             'display_name' => 'grace',
-            'online_only' => '0',
             'suppress_real_name' => '0',
             'password' => 'a-long-enough-password',
             'phone' => '07700900123',

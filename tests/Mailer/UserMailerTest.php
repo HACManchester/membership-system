@@ -11,7 +11,6 @@ use BB\Mail\NotificationEmail;
 use BB\Mail\PaymentWarning;
 use BB\Mail\SuspendedMessage;
 use BB\Mail\WelcomeMember;
-use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mailer\UserMailer;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Mail;
@@ -38,26 +37,6 @@ class UserMailerTest extends TestCase
             $mail->build();
             return $mail->hasTo($user->email, $user->display_name) &&
                 $mail->subject == 'Welcome to Hackspace Manchester!';
-        });
-    }
-
-    public function testSendWelcomeMessage_OnlineOnly()
-    {
-        Mail::fake();
-
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'display_name' => 'John Doe',
-            'online_only' => true,
-        ]);
-
-        $mailer = new UserMailer($user);
-        $mailer->sendWelcomeMessage();
-
-        \Mail::assertQueued(WelcomeMemberOnlineOnly::class, function ($mail) use ($user) {
-            $mail->build();
-            return $mail->hasTo($user->email, $user->display_name) &&
-                $mail->subject == 'Welcome to Hackspace Manchester (Online Only)!';
         });
     }
 
