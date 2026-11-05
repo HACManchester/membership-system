@@ -8,12 +8,16 @@
 | Language | PHP templates + jQuery | TypeScript (6.x) + TSX |
 | Styling | LESS (`resources/assets/less/application.less`), Bootstrap **3.3.4** | Material-UI (MUI) 9 |
 | Entry | per-page Blade layouts | `resources/views/app.blade.php` → `react-app.tsx` → `@inertia` |
-| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (two legacy `.jsx` component suites); all run in CI |
+| Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (`.tsx` component tests, plus two legacy `.jsx` suites); all run in CI |
 
 Pages migrated to Inertia/React so far: the home page, courses, course training, equipment,
 equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, and the admin
-index, access lockdown and settings pages. Everything else (account, profile, payments/finance
-screens, member admin, storage boxes, stats) is still Blade + jQuery + Bootstrap 3.
+index, access lockdown and settings pages. The rest (23 pages: account and profile, key fobs and
+the general induction, payments/finance screens, member admin, notification emails, gifts, the
+email preview, registration and the login/password/Discourse SSO pages) is still Blade + jQuery
++ Bootstrap 3.
+They all use `layouts/main.blade.php`, the only live Blade layout, which loads the whole legacy
+bundle.
 
 ## Build tooling
 
@@ -32,7 +36,10 @@ screens, member admin, storage boxes, stats) is still Blade + jQuery + Bootstrap
   `app.js` imports `jquery-global.js` before them. The Bootstrap/Material icon fonts and the CSS
   images are referenced relative to the Less, so Vite bundles them into `public/build/assets/`;
   don't use root-absolute `url(/...)` in the Less, which breaks under the dev server.
-- Jest still compiles with Babel (`.babelrc`, `babel-jest`); Vite doesn't use Babel.
+- Jest compiles with Babel (`.babelrc`: preset-env, preset-react and preset-typescript, all Babel
+  8); Vite doesn't use Babel. `jest.config.js` names the project's own `babel-jest`, because by
+  name Jest picks the copy inside `jest-config`, which runs Babel 7 and silently skips the
+  TypeScript preset.
 - PHP tests don't need a frontend build: `Tests\TestCase` calls `withoutVite()`.
 
 Note: yarn/node commands run directly on the host; PHP commands run inside the Docker container
@@ -51,6 +58,57 @@ component renders them — so over-fetching in a resource ships data to the clie
 Shape props with dedicated Resources and include only the fields the page actually renders; for
 anything involving member data, send the minimum (e.g. id + display name for pickers).
 
+### What a migrated page gets from the server
+
+- **Flash messages.** `HandleInertiaRequests` puts the message flashed with
+  `->with('success'|'error', ...)` or the legacy `FlashNotification` facade into Inertia's own
+  flash data as `notification: {message, severity}` (severity `success`, `info`, `warning` or
+  `error`; FlashNotification's `danger` becomes `error`), and `FlashSnackbar` (in `MainLayout`)
+  shows it from `usePage().flash`. Unlike a prop, Inertia's flash data isn't kept in the
+  browser's history or sent with partial reloads, so a dismissed message doesn't come back on
+  Back or `router.reload({ only })`. It's set for the current request only, so a Blade page
+  (which shows FlashNotification itself) doesn't leave it for the next Inertia page. A
+  controller that still calls `FlashNotification::success()` works for both stacks; new code
+  uses `->with()`. `types/inertia.d.ts` types the flash data.
+- **Validation errors.** FormRequest and `$request->validate()` failures, and the legacy
+  validators' `FormValidationException` (`UserValidator`, `ProfileValidator`), reach Inertia
+  forms in the session's errors bag (`errors` prop / `useForm().errors`). Blade forms still get
+  them as `FlashNotification` details. Inertia validation failures flash no summary message, so
+  the snackbar doesn't repeat the field errors.
+- **Redirects to other sites.** An Inertia visit is an XHR and can't follow a redirect to another
+  site, so `HandleInertiaRequests` turns a redirect to another host, or the same host on
+  another explicit port, into `Inertia::location()` (a 409 with `X-Inertia-Location`; the
+  browser then goes there itself). Prefetches keep the plain redirect, as Inertia does for
+  redirects with a fragment, and the scheme isn't compared, since the proxy terminates TLS. Controllers keep using
+  `redirect()->away()`; GoCardless's Direct Debit setup (`account.subscription.create`,
+  `migrate-direct-debit`) needs nothing more. The Discourse SSO confirmation submits a plain
+  GET form to Discourse; keep it a plain `<form>` (not an Inertia form) when it moves.
+- **Paginated lists.** Send a Laravel paginator as is, with
+  `->through(fn ($item) => (new SomeResource($item))->resolve())` so `data` holds only what the
+  page shows; `types/pagination.ts` types it.
+
+### Shared components
+
+In `resources/js/Components/`, each shown on `/component-zoo`:
+
+| Component | Replaces | Notes |
+| --- | --- | --- |
+| `StatusChip`, `SpaceAccessChip` | `status-label`, `space-access-label` partials | Same labels, colours and tooltips |
+| `Paginator` | `paginator-links`, `user-paginator-links` partials | Every page for `paginate()`, previous/next for `simplePaginate()`; keeps the other query parameters; hidden for one page |
+| `SortableHeader`, `SortLink` | `sort-by`, `sort-users-by` partials | `?sortBy=&direction=`; clicking the sorted column reverses it; keeps filters and goes back to page 1 (drops `?page=`, or the paginator's `pageParam`). `SortLink` is for a cell with two sort links |
+| `TabBar` | `#mainTabBar` (e.g. `payments/partials/tabs`) | Plain links styled as tabs in a `nav`, the current one marked with `aria-current` (the controller says which); not ARIA tabs, since each is another page. Goes in `PageTitle`'s children |
+| `RouterLink` | — | Inertia's `Link` for MUI's `component` prop, so MUI buttons, tabs and links navigate without a full page load |
+| `FlashSnackbar` | `partials/flash-message` + `Snackbar.js` | Already in `MainLayout`; shows Inertia's flash `notification` with its severity |
+
+### Frontend tests
+
+Component tests live next to the components in `__tests__/*.test.tsx` and run with `yarn test`
+(Jest, jsdom, React Testing Library and jest-dom). Import `describe`/`it`/`expect`/`jest` from
+`@jest/globals`: there's no `@types/jest`, and jest-dom's matchers are typed for those imports.
+`@inertiajs/react` ships only as an ES module, which Jest can't load, so `jest.config.js` maps it
+to a stand-in (`tests/js/inertia-react.jsx`): set the page with
+`jest.mocked(usePage).mockReturnValue(...)`, and `Link` renders a plain `<a>`.
+
 ## Migration plan
 
 ### Principles
@@ -62,27 +120,35 @@ anything involving member data, send the minimum (e.g. id + display name for pic
 3. **No new jQuery** — anything interactive added to a Blade page during transition should be a
    small mounted React island or wait for conversion.
 
-### Suggested order (value ÷ effort)
+### Phases
 
-1. **Member-facing, high-traffic, simple**: leaderboard — a small read-mostly page, a good warm-up
-   (the members directory is done).
-2. **Account/profile cluster**: registration, profile edit, account settings. Biggest UX win;
-   `AccountController` is already split into smaller controllers, which can convert one at a
-   time. Includes the photo-upload/approval flow.
-3. **Admin screens**: member admin list + detail (the 389-line
-   `member-admin-action-bar.blade.php` is the largest legacy template in the repo), payments/
-   finance screens, stats.
-4. **Long tail**: emails stay Blade (that's normal); auth pages (login/reset) can stay Blade
-   indefinitely or convert last.
+Each phase is a set of independently shippable page migrations, ordered so the legacy
+dependencies go one at a time.
+
+| Phase | Pages | Removes |
+| --- | --- | --- |
+| P0 groundwork ✅ | none: flash messages and legacy validation errors reach Inertia pages, external redirects, the shared components above, Jest on TSX | — |
+| P1 quick wins | gift, email preview, the two notification-email forms, the member balance page | the second jQuery the balance page loads from a CDN |
+| P2 finance + admin tables | the five payments screens and their tab bar, the member admin list (`account/index`) | select2 in payments; Bootstrap dropdown and tabs |
+| P3 account + profile | account edit, profile edit | select2 entirely |
+| P4 access | key fobs, general induction | — (door access: test carefully) |
+| P5 Your Membership | `account/show` and its partials, including the admin action bar; `PaymentModule` to TSX; `AdminForms` quick updates to Inertia | Bootstrap modal and collapse, `PaymentModule`, `AdminForms`, the legacy Jest suites |
+| P6 auth + registration | login, Discourse SSO, password reset ×2, registration ×2 | the last `layouts/main` users, and with them the legacy bundle |
+
+After P5, `app.js` can shrink to the snackbar and the menu, and jQuery and Bootstrap's JS can go
+before P6; Bootstrap's CSS stays until P6. Emails stay Blade (that's normal), as do the error
+pages and the Inertia root.
 
 ### Tooling milestones along the way
 
-- **Done**: Mix → Vite, Yarn 3 → 4. (Jest runs in CI again, covering the two legacy `.jsx`
-  suites; `resources/js` has no tests yet.)
+- **Done**: Mix → Vite, Yarn 3 → 4. Jest runs in CI, on `resources/js`'s `.tsx` tests as well as
+  the two legacy `.jsx` suites.
 - **Done**: type-checking with `tsc` (`yarn typecheck`), which CI runs; Inertia 3, upgrading
   `@inertiajs/react` and `inertiajs/inertia-laravel` together; MUI 9.
 - **When the last Blade page that uses them dies**: delete `resources/assets/` (LESS, jQuery,
-  Bootstrap 3, select2), removing several years of frontend dependencies in one commit.
+  Bootstrap 3, select2) and the legacy Jest suites, removing several years of frontend
+  dependencies in one commit. `FlashNotification` can then be retired, or kept only as the
+  bridge above.
 
 ### Definition of done
 

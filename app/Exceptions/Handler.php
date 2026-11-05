@@ -132,6 +132,10 @@ class Handler extends ExceptionHandler
             if ($request->wantsJson()) {
                 return \Response::json($e->getErrors(), 422);
             }
+            if ($request->header('X-Inertia')) {
+                // Inertia forms show field errors from the session's errors bag.
+                return $this->invalid($request, IlluminateValidationException::withMessages($e->getErrors()->getMessages()));
+            }
             \FlashNotification::error("Something wasn't right, please check the form for errors", $e->getErrors());
             return redirect()->back()->withInput();
         }
@@ -190,12 +194,14 @@ class Handler extends ExceptionHandler
 
     /**
      * Blade forms show each field's error from the flashed details, as they did with
-     * the legacy validators. Inertia pages read the session's errors bag instead.
+     * the legacy validators. Inertia pages show them from the session's errors bag
+     * alone: a flashed summary would also pop up in the page's snackbar.
      */
     protected function invalid($request, IlluminateValidationException $exception)
     {
-        $details = $request->header('X-Inertia') ? null : $exception->validator->errors();
-        \FlashNotification::error($exception->getMessage(), $details);
+        if (! $request->header('X-Inertia')) {
+            \FlashNotification::error($exception->getMessage(), $exception->validator->errors());
+        }
 
         return parent::invalid($request, $exception);
     }

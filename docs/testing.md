@@ -126,7 +126,7 @@ gap only bites for event shapes we've never received live traffic for).
 | Roles admin / RoleUsersController | ✅ Good | `RoleManagementTest`: assign/remove, admin-grants-admin (pinned), non-admin denied |
 | General induction | ✅ Good | `GeneralInductionTest`: correct/incorrect code, case-insensitivity, fob registration |
 | Gifts, stats, leaderboard | 🟡 Smoke only | Pages render without error; no behaviour assertions. Lower risk |
-| JS frontend | 🔴 Minimal | Jest runs in CI, but only two legacy component suites exist (`PaymentModule`, `Select` under `resources/assets/js`). `jest.config.js` only matches `.jsx`, so nothing in `resources/js` (TypeScript) is tested |
+| JS frontend | 🟡 Partial | Jest runs in CI on `.tsx` component tests in `resources/js` (the shared components and `FlashSnackbar`; see frontend.md) and the two legacy `.jsx` suites (`PaymentModule`, `Select` under `resources/assets/js`). Pages aren't tested yet |
 
 ## Improvement plan
 
