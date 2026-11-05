@@ -2,10 +2,8 @@
 
 namespace BB\Http\Controllers;
 
-use BB\Entities\User;
-use BB\Exceptions\ValidationException;
-use BB\Helpers\MembershipPayments;
-use BB\Support\CurrentUser;
+use BB\Http\Requests\Account\UpdateSubscriptionAmountRequest;
+use Illuminate\Http\RedirectResponse;
 
 class AccountSubscriptionController extends Controller
 {
@@ -14,32 +12,11 @@ class AccountSubscriptionController extends Controller
         $this->middleware('role:member');
     }
 
-    /**
-     * Update a member's monthly subscription amount.
-     */
-    public function update(string $id)
+    public function update(UpdateSubscriptionAmountRequest $request): RedirectResponse
     {
-        $amount = \Request::input('monthly_subscription');
+        $user = $request->targetUser();
+        $user->changeSubscriptionAmount($request->pence());
 
-        if (!is_numeric($amount) || $amount < 0) {
-            throw new ValidationException('Please enter a valid amount in pounds.');
-        }
-        $amount = (float) $amount;
-
-        $minAmountPence = MembershipPayments::getMinimumPrice();
-        $formattedMinAmount = MembershipPayments::formatPrice($minAmountPence);
-        $minAmountPounds = $minAmountPence / 100;
-
-        // TODO: Lift this into some sort of "contact" config?
-        $boardEmail = 'board@hacman.org.uk';
-
-        if ($amount < $minAmountPounds && !CurrentUser::get()->isAdmin()) {
-            throw new ValidationException(sprintf('The minimum subscription is %s, please contact the board for a lower amount. %s', $formattedMinAmount, $boardEmail));
-        }
-
-        $user = User::findOrFail($id);
-        $this->authorize('manage', $user);
-        $user->updateSubAmount((int) round($amount * 100));
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }

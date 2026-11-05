@@ -15,7 +15,7 @@
         <div class="input-group-addon">&pound;</div>
         <input type="number" name="monthly_subscription" value="{{ MembershipPayments::formatPounds((int) $user->monthly_subscription) }}" 
                class="form-control" placeholder="{{ MembershipPayments::getRecommendedPrice() / 100 }}" 
-               min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
+               @unless (\BB\Support\CurrentUser::get()->isAdmin()) min="{{ MembershipPayments::formatPounds(MembershipPayments::getMinimumPrice()) }}" @endunless step="0.01">
     </div>
     <button type="submit" class="btn btn-default">Update</button>
 </form>

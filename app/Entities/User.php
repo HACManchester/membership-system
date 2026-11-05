@@ -277,16 +277,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * @param int $amount in pence
-     * @deprecated
-     */
-    public function updateSubAmount($amount)
-    {
-        $this->attributes['monthly_subscription'] = $amount;
-        $this->save();
-    }
-
     public function emailConfirmed()
     {
         $this->email_verified = true;
