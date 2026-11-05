@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\User;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -26,9 +27,28 @@ class PreviewRoutesTest extends TestCase
         $this->artisan('migrate');
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->get('/email-preview')->assertOk();
+        $this->actingAs($admin)->get('/email-preview')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('EmailPreview/Index')
+                ->has('emails', 8)
+                ->where('emails.0', ['name' => 'Payment Warning', 'url' => '/email-preview/payment-warning'])
+                ->has('notifications', 8)
+                ->where('notifications.0', ['name' => 'Induction Completed', 'url' => '/notification-preview/induction-completed']));
         $this->actingAs($admin)->get('/email-preview/payment-warning')->assertOk();
         $this->actingAs($admin)->get('/notification-preview/induction-completed')->assertOk();
+    }
+
+    #[Test]
+    public function a_member_is_refused_the_previews()
+    {
+        $this->actingAs(User::factory()->create())->get('/email-preview')->assertForbidden();
+    }
+
+    #[Test]
+    public function a_guest_is_sent_to_log_in()
+    {
+        $this->get('/email-preview')->assertRedirect(route('login'));
     }
 
     #[Test]

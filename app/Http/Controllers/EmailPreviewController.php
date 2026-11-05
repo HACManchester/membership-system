@@ -12,35 +12,54 @@ use BB\Mail\NotificationEmail;
 use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\ConfirmationEmail;
 use BB\Support\MemberStatus;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class EmailPreviewController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $emails = [
-            'Payment Warning' => route('email-preview.payment-warning'),
-            'Suspended' => route('email-preview.suspended'),
-            'Leaving' => route('email-preview.leaving'),
-            'Left' => route('email-preview.left'),
-            'Welcome Member' => route('email-preview.welcome-member'),
-            'Notification Email' => route('email-preview.notification'),
-            'Equipment Notification' => route('email-preview.equipment-notification'),
-            'Confirmation Email' => route('email-preview.confirmation'),
+            'Payment Warning' => 'email-preview.payment-warning',
+            'Suspended' => 'email-preview.suspended',
+            'Leaving' => 'email-preview.leaving',
+            'Left' => 'email-preview.left',
+            'Welcome Member' => 'email-preview.welcome-member',
+            'Notification Email' => 'email-preview.notification',
+            'Equipment Notification' => 'email-preview.equipment-notification',
+            'Confirmation Email' => 'email-preview.confirmation',
         ];
 
         $notifications = [
-            'Induction Completed' => route('notification-preview.induction-completed'),
-            'Marked as Trainer' => route('notification-preview.induction-marked-as-trainer'),
-            'Induction Requested (Inductee)' => route('notification-preview.inductee-induction-requested'),
-            'Induction Requested (Trainer)' => route('notification-preview.trainer-induction-requested'),
-            'Course: Induction Completed' => route('notification-preview.course-induction-completed'),
-            'Course: Marked as Trainer' => route('notification-preview.course-induction-marked-as-trainer'),
-            'Course: Induction Requested (Inductee)' => route('notification-preview.course-inductee-induction-requested'),
-            'Course: Induction Requested (Trainer)' => route('notification-preview.course-trainer-induction-requested'),
+            'Induction Completed' => 'notification-preview.induction-completed',
+            'Marked as Trainer' => 'notification-preview.induction-marked-as-trainer',
+            'Induction Requested (Inductee)' => 'notification-preview.inductee-induction-requested',
+            'Induction Requested (Trainer)' => 'notification-preview.trainer-induction-requested',
+            'Course: Induction Completed' => 'notification-preview.course-induction-completed',
+            'Course: Marked as Trainer' => 'notification-preview.course-induction-marked-as-trainer',
+            'Course: Induction Requested (Inductee)' => 'notification-preview.course-inductee-induction-requested',
+            'Course: Induction Requested (Trainer)' => 'notification-preview.course-trainer-induction-requested',
         ];
 
-        return view('email-preview.index', compact('emails', 'notifications'));
+        return Inertia::render('EmailPreview/Index', [
+            'emails' => $this->previewLinks($emails),
+            'notifications' => $this->previewLinks($notifications),
+        ]);
     }
+
+    /**
+     * @param  array<string, string>  $routes  route names keyed by label
+     * @return list<array{name: string, url: string}>
+     */
+    private function previewLinks(array $routes): array
+    {
+        return array_map(
+            fn (string $name, string $route) => ['name' => $name, 'url' => route($route, [], false)],
+            array_keys($routes),
+            $routes,
+        );
+    }
+
     public function paymentWarning()
     {
         $user = $this->getDummyUser();
