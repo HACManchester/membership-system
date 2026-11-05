@@ -46,7 +46,6 @@ Route::put('account/{account}/profile', ['uses' => 'ProfileController@update', '
 
 //Short register url
 Route::get('register', ['as' => 'register', 'uses' => 'MemberRegistrationController@create', 'middleware' => 'throttle:10,1']);
-Route::get('online-only', ['as' => 'online-only', 'uses' => 'MemberRegistrationController@createOnlineOnly', 'middleware' => 'throttle:10,1']);
 
 //Special account editing routes
 Route::put('account/{account}/admin-update', ['as' => 'account.admin-update', 'uses' => 'MemberAdminController@update', 'middleware' => 'role:admin']);

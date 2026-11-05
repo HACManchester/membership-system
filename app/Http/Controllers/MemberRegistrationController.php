@@ -89,12 +89,6 @@ class MemberRegistrationController extends Controller
         ));
     }
 
-    public function createOnlineOnly()
-    {
-        \View::share('body_class', 'register_login');
-        return \View::make('account.create-online-only');
-    }
-
     public function store()
     {
         $input = \Request::only(

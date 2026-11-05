@@ -22,6 +22,12 @@ class SignupTest extends TestCase
     }
 
     #[Test]
+    public function the_online_only_signup_page_no_longer_exists()
+    {
+        $this->get('/online-only')->assertNotFound();
+    }
+
+    #[Test]
     public function a_new_full_member_can_register()
     {
         $given = $this->faker->firstName();
