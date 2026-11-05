@@ -6,7 +6,7 @@
 @elseif ($status == MemberStatus::PaymentWarning)
     <span class="label label-danger" data-toggle="tooltip" data-placement="top" title="There is something wrong with your subscription">Payment Warning</span>
 @elseif ($status == MemberStatus::Leaving)
-    <span class="label label-default" data-toggle="tooltip" data-placement="top" title="Your leaving and will loose access when your payment expires">Leaving</span>
+    <span class="label label-default" data-toggle="tooltip" data-placement="top" title="You're leaving and will lose access when your payment expires">Leaving</span>
 @elseif ($status == MemberStatus::OnHold)
     <span class="label label-default">On Hold</span>
 @elseif ($status == MemberStatus::Left)
