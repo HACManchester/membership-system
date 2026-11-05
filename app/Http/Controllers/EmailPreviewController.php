@@ -8,7 +8,6 @@ use BB\Mail\SuspendedMessage;
 use BB\Mail\LeavingMessage;
 use BB\Mail\LeftMessage;
 use BB\Mail\WelcomeMember;
-use BB\Mail\WelcomeMemberOnlineOnly;
 use BB\Mail\NotificationEmail;
 use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\ConfirmationEmail;
@@ -23,7 +22,6 @@ class EmailPreviewController extends Controller
             'Leaving' => route('email-preview.leaving'),
             'Left' => route('email-preview.left'),
             'Welcome Member' => route('email-preview.welcome-member'),
-            'Welcome Member (Online Only)' => route('email-preview.welcome-member-online-only'),
             'Notification Email' => route('email-preview.notification'),
             'Equipment Notification' => route('email-preview.equipment-notification'),
             'Confirmation Email' => route('email-preview.confirmation'),
@@ -87,12 +85,6 @@ class EmailPreviewController extends Controller
     {
         $user = $this->getDummyUser();
         return new WelcomeMember($user);
-    }
-
-    public function welcomeMemberOnlineOnly()
-    {
-        $user = $this->getDummyUser();
-        return new WelcomeMemberOnlineOnly($user);
     }
 
     public function notification()

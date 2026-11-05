@@ -11,7 +11,6 @@ use BB\Mail\NotificationEmail;
 use BB\Mail\PaymentWarning;
 use BB\Mail\SuspendedMessage;
 use BB\Mail\WelcomeMember;
-use BB\Mail\WelcomeMemberOnlineOnly;
 use Mail;
 
 class UserMailer
@@ -32,12 +31,7 @@ class UserMailer
     public function sendWelcomeMessage()
     {
         $user = $this->user;
-
-        if ($user->online_only) {
-            Mail::to($user)->send(new WelcomeMemberOnlineOnly($user));
-        } else {
-            Mail::to($user)->send(new WelcomeMember($user));
-        }
+        Mail::to($user)->send(new WelcomeMember($user));
     }
 
     public function sendConfirmationEmail()

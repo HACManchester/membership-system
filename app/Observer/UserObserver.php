@@ -9,16 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
-    /**
-     * Welcome online only users when they create their account
-     */
-    public function created($user){
-        
-        if($user->online_only) {
-            $this->newUser($user);
-        }
-    }
-
     public function updating($user){
         $original = $user->getOriginal();
         

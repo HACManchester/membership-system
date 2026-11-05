@@ -276,7 +276,6 @@ if (! app()->isProduction()) {
         Route::get('email-preview/leaving', ['uses' => 'EmailPreviewController@leaving', 'as' => 'email-preview.leaving']);
         Route::get('email-preview/left', ['uses' => 'EmailPreviewController@left', 'as' => 'email-preview.left']);
         Route::get('email-preview/welcome-member', ['uses' => 'EmailPreviewController@welcomeMember', 'as' => 'email-preview.welcome-member']);
-        Route::get('email-preview/welcome-member-online-only', ['uses' => 'EmailPreviewController@welcomeMemberOnlineOnly', 'as' => 'email-preview.welcome-member-online-only']);
         Route::get('email-preview/notification', ['uses' => 'EmailPreviewController@notification', 'as' => 'email-preview.notification']);
         Route::get('email-preview/equipment-notification', ['uses' => 'EmailPreviewController@equipmentNotification', 'as' => 'email-preview.equipment-notification']);
         Route::get('email-preview/confirmation', ['uses' => 'EmailPreviewController@confirmation', 'as' => 'email-preview.confirmation']);
