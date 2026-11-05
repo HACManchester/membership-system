@@ -11,11 +11,11 @@
 | Linting/tests | none | ESLint (flat config, `eslint.config.mts`), Prettier, `tsc` type check, Jest (`.tsx` component tests, plus two legacy `.jsx` suites); all run in CI |
 
 Pages migrated to Inertia/React so far: the home page, courses, course training, equipment,
-equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, and the admin
-index, access lockdown and settings pages. The rest (23 pages: account and profile, key fobs and
-the general induction, payments/finance screens, member admin, notification emails, gifts, the
-email preview, registration and the login/password/Discourse SSO pages) is still Blade + jQuery
-+ Bootstrap 3.
+equipment areas, rooms, maintainer groups, the members directory, roles, newsletter, the admin
+index, access lockdown and settings pages, the gift code page, the email preview index, both
+notification-email forms and the member balance page. The rest (18 pages: account and profile, key
+fobs and the general induction, payments/finance screens, member admin, registration and the
+login/password/Discourse SSO pages) is still Blade + jQuery + Bootstrap 3.
 They all use `layouts/main.blade.php`, the only live Blade layout, which loads the whole legacy
 bundle.
 
@@ -128,7 +128,7 @@ dependencies go one at a time.
 | Phase | Pages | Removes |
 | --- | --- | --- |
 | P0 groundwork ✅ | none: flash messages and legacy validation errors reach Inertia pages, external redirects, the shared components above, Jest on TSX | — |
-| P1 quick wins | gift, email preview, the two notification-email forms, the member balance page | the second jQuery the balance page loads from a CDN |
+| P1 quick wins ✅ | gift, email preview, the two notification-email forms, the member balance page | the second jQuery the balance page loaded from a CDN, for a confetti effect after a cash top up; the confetti was dropped rather than ported |
 | P2 finance + admin tables | the five payments screens and their tab bar, the member admin list (`account/index`) | select2 in payments; Bootstrap dropdown and tabs |
 | P3 account + profile | account edit, profile edit | select2 entirely |
 | P4 access | key fobs, general induction | — (door access: test carefully) |

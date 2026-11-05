@@ -26,12 +26,6 @@ parameters:
 
 
 		-
-			message: '#^Called ''count'' on Laravel collection, but could have been retrieved as a query\.$#'
-			identifier: larastan.noUnnecessaryCollectionCall
-			count: 1
-			path: app/Http/Controllers/NotificationEmailController.php
-
-		-
 			message: '#^Cannot call method setTime\(\) on Carbon\\Carbon\|null\.$#'
 			identifier: method.nonObject
 			count: 1

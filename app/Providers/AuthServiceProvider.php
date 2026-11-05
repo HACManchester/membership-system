@@ -21,6 +21,7 @@ use BB\Policies\RoomPolicy;
 use BB\Policies\TrainingRecordPolicy;
 use BB\Policies\KeyFobPolicy;
 use BB\Policies\MaintainerGroupPolicy;
+use BB\Policies\NotificationEmailPolicy;
 use BB\Policies\CoursePolicy;
 use BB\Policies\RolePolicy;
 use BB\Policies\SettingsPolicy;
@@ -64,5 +65,8 @@ class AuthServiceProvider extends ServiceProvider
                 || $user->equipmentAreas()->exists()
                 || $user->trainingRecords()->trainers()->exists();
         });
+
+        Gate::define('email-members', [NotificationEmailPolicy::class, 'create']);
+        Gate::define('email-equipment-members', [NotificationEmailPolicy::class, 'emailEquipmentMembers']);
     }
 }

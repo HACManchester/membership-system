@@ -16,9 +16,9 @@ retired in June 2026 — its coverage was ported to `tests/Feature/`):
 suspension → recovery → left), the GoCardless webhook endpoint, the equipment/induction/course
 system, and the admin authorization flows (roles, disciplinary, storage, cash).
 Every GET route is smoke-tested as guest, member, trusted member and admin, so no page can start
-500ing unnoticed. **Biggest remaining gaps:** pages that are only smoke-tested (gifts, stats, the balance
-page) and the entire JS frontend. The real GoCardless SDK is covered only by opt-in sandbox tests
-that don't run in CI (see below).
+500ing unnoticed. **Biggest remaining gap:** the JS frontend, which has only a handful of component
+tests. The real GoCardless SDK is covered only by opt-in sandbox tests that don't run in CI (see
+below).
 
 ## Infrastructure
 

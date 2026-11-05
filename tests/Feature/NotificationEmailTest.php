@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\Equipment;
+use BB\Entities\Role;
 use BB\Entities\TrainingRecord;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
@@ -10,6 +11,7 @@ use BB\Mail\EquipmentNotificationEmail;
 use BB\Mail\NotificationEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -54,6 +56,123 @@ class NotificationEmailTest extends TestCase
     }
 
     #[Test]
+    public function a_guest_is_sent_to_log_in_from_the_mass_email_form()
+    {
+        $this->get(route('notificationemail.create'))->assertRedirect(route('login'));
+    }
+
+    #[Test]
+    public function a_member_without_a_role_is_refused_the_mass_email_form()
+    {
+        $member = User::factory()->create();
+
+        $this->actingAs($member)->get(route('notificationemail.create'))->assertForbidden();
+    }
+
+    #[Test]
+    public function a_role_holder_can_open_the_mass_email_form()
+    {
+        $member = User::factory()->create();
+        $member->assignRole(Role::factory()->create());
+
+        $this->actingAs($member)
+            ->get(route('notificationemail.create'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->component('NotificationEmail/Create'));
+    }
+
+    #[Test]
+    public function an_admin_can_open_the_mass_email_form()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('notificationemail.create'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('NotificationEmail/Create')
+                ->where('recipients', [['value' => 'all', 'label' => 'All Members']])
+                ->where('urls', ['store' => '/notification_email']));
+    }
+
+    #[Test]
+    public function a_guest_is_sent_to_log_in_from_the_equipment_email_form()
+    {
+        [$equipment] = $this->equipmentWithTrainerAndTrainedUser();
+
+        $this->get(route('notificationemail.equipment', [$equipment->slug, 'trained']))
+            ->assertRedirect(route('login'));
+    }
+
+    #[Test]
+    public function a_trainer_can_open_the_email_form_for_their_tool()
+    {
+        [$equipment, $trainer] = $this->equipmentWithTrainerAndTrainedUser();
+
+        $this->actingAs($trainer)
+            ->get(route('notificationemail.equipment', [$equipment->slug, 'trained']))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('NotificationEmail/Equipment')
+                ->where('equipment', ['name' => $equipment->name])
+                ->where('trainingStatus', 'trained')
+                ->where('recipient', "tool/{$equipment->slug}/trained")
+                ->where('urls', [
+                    'equipment' => "/equipment/{$equipment->slug}",
+                    'store' => '/notification_email',
+                ]));
+    }
+
+    #[Test]
+    public function an_admin_can_open_the_email_form_for_any_tool()
+    {
+        [$equipment] = $this->equipmentWithTrainerAndTrainedUser();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('notificationemail.equipment', [$equipment->slug, 'trainer']))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('NotificationEmail/Equipment')
+                ->where('trainingStatus', 'trainer/maintainer'));
+    }
+
+    #[Test]
+    public function a_member_who_does_not_train_the_tool_is_sent_back_to_it()
+    {
+        [$equipment] = $this->equipmentWithTrainerAndTrainedUser();
+        $member = User::factory()->create();
+        $member->assignRole(Role::firstOrCreate(['name' => 'equipment'], ['title' => 'Equipment']));
+
+        $this->actingAs($member)
+            ->get(route('notificationemail.equipment', [$equipment->slug, 'trained']))
+            ->assertRedirect(route('equipment.show', $equipment->slug))
+            ->assertSessionHas('error', "You may not email members, as you aren't a trainer of this tool, or an admin");
+    }
+
+    #[Test]
+    public function the_equipment_email_form_is_not_found_for_an_unknown_training_status()
+    {
+        [$equipment] = $this->equipmentWithTrainerAndTrainedUser();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get("/notification_email/equipment/{$equipment->slug}/status/banned")
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function the_equipment_email_form_sends_back_to_a_tool_without_inductions()
+    {
+        $equipment = Equipment::factory()->create(['requires_induction' => false]);
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('notificationemail.equipment', [$equipment->slug, 'trained']))
+            ->assertRedirect(route('equipment.show', $equipment->slug));
+    }
+
+    #[Test]
     public function an_admin_can_send_a_notification_to_all_active_members()
     {
         $admin = User::factory()->admin()->create(['status' => 'active', 'active' => true]);
@@ -66,10 +185,33 @@ class NotificationEmailTest extends TestCase
             'send_to_all' => '1',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHas('success', 'Email Queued to Send');
         Mail::assertQueued(NotificationEmail::class, function ($mail) use ($member) {
             return $mail->hasTo($member->email);
         });
+    }
+
+    #[Test]
+    public function an_email_without_a_subject_or_message_is_rejected()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)
+            ->from(route('notificationemail.create'))
+            ->post(route('notificationemail.store'), [
+                'subject' => '',
+                'message' => '',
+                'recipient' => 'all',
+                'send_to_all' => true,
+            ]);
+
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHasErrors([
+            'subject' => 'The subject field is required.',
+            'message' => 'The message field is required.',
+        ]);
+        Mail::assertNotQueued(NotificationEmail::class);
     }
 
     #[Test]
@@ -178,7 +320,8 @@ class NotificationEmailTest extends TestCase
             'send_to_all' => '0',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('notificationemail.create'));
+        $response->assertSessionHas('success', 'Email Queued to Send');
         Mail::assertQueued(NotificationEmail::class, function ($mail) use ($member) {
             return $mail->hasTo($member->email);
         });

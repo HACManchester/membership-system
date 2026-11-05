@@ -2,9 +2,13 @@
 
 use BB\Entities\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CashPaymentController extends Controller
 {
+    /** Pages a cash payment form can ask to return to */
+    private const RETURN_PAGES = ['account', 'balance'];
+
 
 
     /**
@@ -36,32 +40,23 @@ class CashPaymentController extends Controller
             'amount' => 'required|numeric|min:0',
             'reason' => 'required',
             'source_id' => 'required',
-            'return_path' => 'required',
+            'return_to' => ['nullable', Rule::in(self::RETURN_PAGES)],
         ]);
 
         $amount     = $request->get('amount');
         $reason     = $request->get('reason');
         $sourceId   = $request->get('source_id');
-        $returnPath = $request->get('return_path');
 
         $sourceId = $sourceId . ':' . time();
         
         $this->paymentRepository->recordPayment($reason, $user->id, 'cash', $sourceId, $amount);
 
-        \FlashNotification::success("Top Up successful");
-
-        $returnPath_balance = '/balance?confetti=1';
-        $result = $returnPath . $returnPath_balance;
-
         if (\Request::wantsJson()) {
             return \Response::json(['message' => 'Topup Successful']);
         }
 
-        \FlashNotification::error("Success");
-        
-        return \Redirect::to($result);
-
-   
+        return redirect()->to($this->returnUrl($request->input('return_to'), $user))
+            ->with('success', 'Top Up successful');
     }
 
     /**
@@ -81,21 +76,29 @@ class CashPaymentController extends Controller
         $this->validateWithBag('withdrawal', $request, [
             'amount' => "required|numeric|min:0|max:{$maxWithdrawal}",
             'ref' => 'required',
-            'return_path' => 'required',
+            'return_to' => ['nullable', Rule::in(self::RETURN_PAGES)],
         ]);
 
         $amount     = $request->get('amount');
         $ref = $request->get('ref');
-        $returnPath = $request->get('return_path');
         
         $this->paymentRepository->recordPayment('withdrawal', $user->id, 'balance', '', $amount, \BB\Support\PaymentStatus::Paid, 0, $ref);
 
         $this->bbCredit->recalculate();
 
-        \FlashNotification::success("Payment recorded");
-        $returnPath_balance = '/balance';
-        $result = $returnPath . $returnPath_balance;
+        return redirect()->to($this->returnUrl($request->input('return_to'), $user))
+            ->with('success', 'Payment recorded');
+    }
 
-        return \Redirect::to($result);
+    /**
+     * The page the form came from, named by a token rather than a URL so it can't
+     * send anyone off-site; anything else goes to the member's balance page.
+     */
+    private function returnUrl(?string $returnTo, User $user): string
+    {
+        return match ($returnTo) {
+            'account' => route('account.show', $user->id),
+            default => route('account.balance.index', $user->id),
+        };
     }
 }
