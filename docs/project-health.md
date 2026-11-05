@@ -40,7 +40,7 @@ tests/                Feature/, Integration/, Unit/, Mailer/; shared helpers in 
 | --- | --- | --- |
 | Framework & dependencies | 4/5 | Laravel 13 on PHP 8.4, Inertia 3, MUI 9, Vite 8 on Node 22, Dependabot proposing updates weekly. Still behind: the legacy Bootstrap 3 / jQuery / select2 stack. |
 | Tests | 4/5 | 92 files, 649 tests. Excellent payment-lifecycle integration tests; every GET route smoke-tested; the GoCardless webhook endpoint and authorization middleware covered; any deprecation fails the suite. The JS frontend is barely tested. See testing.md. |
-| Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 31 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
+| Static analysis | 3/5 | PHPStan 2 at level 8, without level 6's missing-type checks. Baseline down from ~200 to 30 entries, all reviewed. Not yet ratcheted in CI. See architecture.md. |
 | Architecture consistency | 2/5 | Three generations of patterns coexist (Repo/Handlers/Validators vs Services/Events/Policies/FormRequests). New code is consistently modern; old code isn't being pulled forward. See architecture.md. |
 | Frontend | 3/5 | Healthy direction (Inertia + React + TS + MUI, ESLint flat config, Prettier) but the legacy Blade/jQuery/Bootstrap-3 stack still serves most pages. See frontend.md. |
 | Docs & dev experience | 4/5 | Strong README, complete `.env.example`, documented Docker setup, this docs folder. |

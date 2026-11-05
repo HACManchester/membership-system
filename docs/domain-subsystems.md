@@ -29,15 +29,15 @@ with an `approved` flag.
   (`UserObserver` `updating` hook).
 - **Photo approval:** uploads land as `new_profile_photo` pending admin approval; declines fire
   `MemberPhotoWasDeclined` and an email.
-- **Lifecycle:** `setting-up → active → payment-warning → suspended → leaving/left`.
-  `UserObserver@saved` watches transitions and fires events, emails, and Telegram notifications.
+- **Lifecycle:** `setting-up → active → payment-warning → suspended → leaving/left` (the
+  `MemberStatus` enum). `BB\Services\MembershipStatus` makes the transitions;
+  `UserObserver@saved` watches them and fires events, emails, and Telegram notifications.
 - **Deletion** (`AccountController@destroy`): hard-deletes only `setting-up` users; everyone else
   is set to `leaving`.
 
 **Good:** clear status lifecycle; observer-driven side effects keep controllers thin; explicit
 audit fields for sensitive flags (`User::$auditFields`).
-**Could improve:** boolean casting on `User` is incomplete (TODO at
-`User.php:141`); deletion doesn't cascade to related records.
+**Could improve:** deletion doesn't cascade to related records.
 
 ---
 
@@ -165,7 +165,7 @@ the `banned` flag).
 
 **Purpose:** team/role management and bulk email to member groups.
 
-**Key code:** `app/Entities/Role.php`, `app/Traits/UserRoleTrait.php`, `RolesController`,
+**Key code:** `app/Entities/Role.php`, `app/Entities/Concerns/HasRoles.php`, `RolesController`,
 `RoleUsersController`, `NotificationEmailController`, `NewsletterController`.
 
 **Roles** are rows in `roles` with a `role_user` pivot, seeded by migrations (admin, board,
