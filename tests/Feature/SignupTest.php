@@ -175,4 +175,82 @@ class SignupTest extends TestCase
         ]);
         $this->assertModelMissing($gift);
     }
+
+    #[Test]
+    public function signup_ignores_fields_the_form_no_longer_sends()
+    {
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'                  => $this->faker->firstName(),
+            'family_name'                 => $this->faker->lastName(),
+            'email'                       => $email,
+            'display_name'                => $this->faker->userName(),
+            'online_only'                 => '0',
+            'suppress_real_name'          => '0',
+            'password'                    => $this->faker->password(10),
+            'phone'                       => '07700900123',
+            'address'                     => ['line_1' => $this->faker->streetAddress(), 'postcode' => 'M4 7HR'],
+            'emergency_contact'           => $this->faker->name(),
+            'monthly_subscription'        => config('membership.prices.minimum'),
+            'rules_agreed'                => '1',
+            'custom_monthly_subscription' => '99',
+            'visited_space'               => '1',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('users', ['email' => $email]);
+    }
+
+    /**
+     * Guards the controller's Request::only() list. UserMassAssignmentTest covers User::$fillable itself.
+     */
+    #[Test]
+    public function a_new_member_cannot_set_admin_managed_fields_at_signup()
+    {
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), [
+            'given_name'             => $this->faker->firstName(),
+            'family_name'            => $this->faker->lastName(),
+            'email'                  => $email,
+            'display_name'           => $this->faker->userName(),
+            'online_only'            => '0',
+            'suppress_real_name'     => '0',
+            'password'               => $this->faker->password(10),
+            'phone'                  => '07700900123',
+            'address'                => ['line_1' => '1 Test Street', 'postcode' => 'M4 7HR'],
+            'emergency_contact'      => $this->faker->name(),
+            'monthly_subscription'   => config('membership.prices.minimum'),
+            'rules_agreed'           => '1',
+            'status'                 => 'active',
+            'active'                 => '1',
+            'banned'                 => '1',
+            'banned_reason'          => 'self-inflicted',
+            'banned_date'            => '2026-01-01 00:00:00',
+            'key_holder'             => '1',
+            'trusted'                => '1',
+            'induction_completed'    => '1',
+            'key_deposit_payment_id' => '1',
+            'payment_method'         => 'cash',
+            'gift'                   => 'FREEBIE',
+            'seen_at'                => '2026-01-01 00:00:00',
+            'hash'                   => 'chosen-hash',
+        ])->assertRedirect();
+
+        $member = User::where('email', $email)->firstOrFail();
+        $this->assertSame('setting-up', $member->status);
+        $this->assertFalse((bool) $member->active);
+        $this->assertFalse((bool) $member->banned);
+        $this->assertNull($member->banned_reason);
+        $this->assertNull($member->banned_date);
+        $this->assertFalse((bool) $member->key_holder);
+        $this->assertFalse((bool) $member->trusted);
+        $this->assertFalse((bool) $member->induction_completed);
+        $this->assertNull($member->key_deposit_payment_id);
+        $this->assertNull($member->payment_method);
+        $this->assertEmpty($member->gift);
+        $this->assertFalse((bool) $member->seen_at?->isSameDay('2026-01-01'));
+        $this->assertNotSame('chosen-hash', $member->hash);
+        $this->assertSame(30, strlen($member->hash));
+    }
 }

@@ -94,10 +94,10 @@ CSV;
     public function a_lockdown_never_widens_the_export()
     {
         $inactive = $this->memberWithFob('Inactive Admin', 'fob_inactive', 'admin');
-        $inactive->update(['active' => false]);
+        $inactive->forceFill(['active' => false])->save();
 
         $banned = $this->memberWithFob('Banned Admin', 'fob_banned', 'admin');
-        $banned->update(['banned' => true]);
+        $banned->forceFill(['banned' => true])->save();
 
         $this->memberWithFob('Active Admin', 'fob_active', 'admin');
 

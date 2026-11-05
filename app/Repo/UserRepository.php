@@ -183,15 +183,15 @@ class UserRepository extends DBRepository
             unset($memberData['password']);
         }
 
-        $memberData['hash'] = Str::random(30);
-
         $memberData['rules_agreed'] = $memberData['rules_agreed'] ? Carbon::now() : null;
 
         // Sign up to newsletter by default (legitimate interest comms to members)
         $memberData['newsletter'] = true;
 
         // The address, photo and gift fields aren't user columns: they're saved below and by the controller
-        $user = $this->model->create(Arr::except($memberData, ['address', 'profile_photo_private', 'new_profile_photo', 'gift_code']));
+        $user = $this->model->newInstance(Arr::except($memberData, ['address', 'profile_photo_private', 'new_profile_photo', 'gift_code']));
+        $user->hash = Str::random(30);
+        $user->save();
         $this->profileDataRepository->createProfile($user->id);
         $this->addressRepository->saveUserAddress($user->id, $memberData['address'], $isAdminCreating);
 
@@ -270,8 +270,8 @@ class UserRepository extends DBRepository
             unset($recordData['password']);
         }
 
-        //Update the main user record
-        $this->update($userId, $recordData);
+        //Update the main user record; the address has its own table
+        $this->update($userId, Arr::except($recordData, ['address']));
 
         //Update the user address
         if (isset($recordData['address']) && is_array($recordData['address'])) {

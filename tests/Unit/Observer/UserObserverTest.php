@@ -20,10 +20,10 @@ class UserObserverTest extends TestCase
             'status' => 'setting-up',
         ]);
 
-        $user->update([
+        $user->forceFill([
             'active' => true,
             'status' => 'active',
-        ]);
+        ])->save();
 
         Event::assertDispatched(MemberBecameActive::class, function ($event) use ($user) {
             return $event->user->id === $user->id;
@@ -39,10 +39,10 @@ class UserObserverTest extends TestCase
             'status' => 'active',
         ]);
 
-        $user->update([
+        $user->forceFill([
             'active' => false,
             'status' => 'left',
-        ]);
+        ])->save();
 
         Event::assertDispatched(MemberBecameInactive::class, function ($event) use ($user) {
             return $event->user->id === $user->id;
