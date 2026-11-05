@@ -40,7 +40,8 @@ class UserValidator extends FormValidator
         'email'                => 'required|email|unique:users,email,{id}',
         'secondary_email'      => 'email|unique:users,secondary_email,{id}',
         'password'             => 'min:8',
-        'display_name'          => 'unique:users,display_name,{id}',
+        // Only admins may change it; for anyone else the controller drops the field
+        'display_name'          => 'sometimes|required|string|unique:users,display_name,{id}',
         'monthly_subscription' => '',
         'rules_agreed'         => '',
     ];
