@@ -1,47 +1,35 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
 
 use BB\Entities\User;
-use BB\Exceptions\ValidationException;
-use Illuminate\Http\Request;
+use BB\Http\Resources\BalancePaymentResource;
+use BB\Services\Credit;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class BalanceController extends Controller
 {
-    /**
-     * @var \BB\Repo\UserRepository
-     */
-    private $userRepository;
-    /**
-     * @var \BB\Services\Credit
-     */
-    private $bbCredit;
-
-    public function __construct(\BB\Repo\UserRepository $userRepository, \BB\Services\Credit $bbCredit)
+    public function __construct(private Credit $bbCredit)
     {
-        $this->userRepository = $userRepository;
-        $this->bbCredit = $bbCredit;
     }
 
-    public function index(string $userId)
+    public function index(string $userId): Response
     {
-        //Verify the user can access this user record
         $user = User::findOrFail($userId);
         $this->authorize('manage', $user);
         $this->bbCredit->setUserId($user->id);
 
-        $userBalance = $this->bbCredit->getBalanceFormatted();
-        $userBalanceSign = $this->bbCredit->getBalanceSign();
+        // cash_balance is in pence
+        $balance = abs($user->cash_balance) / 100;
 
-        $payments = $this->bbCredit->getBalancePaymentsPaginated();
-
-        $memberList = $this->userRepository->getAllAsDropdown();
-
-        return \View::make('account.bbcredit.index')
-            ->with('user', $user)
-            ->with('confetti', \Request::get('confetti'))
-            ->with('payments', $payments)
-            ->with('userBalance', $userBalance)
-            ->with('userBalanceSign', $userBalanceSign)
-            ->with('rawBalance', number_format($user->cash_balance / 100, 2))
-            ->with('memberList', $memberList);
+        return Inertia::render('Balance/Index', [
+            'balance' => [
+                'formatted' => ($user->cash_balance < 0 ? '-' : '') . '£' . number_format($balance, 2),
+                'negative' => $user->cash_balance < 0,
+            ],
+            'payments' => $this->bbCredit->getBalancePaymentsPaginated()
+                ->through(fn ($payment) => (new BalancePaymentResource($payment))->resolve()),
+        ]);
     }
-} 
+}

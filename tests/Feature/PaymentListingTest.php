@@ -7,6 +7,7 @@ use BB\Entities\Role;
 use BB\Entities\User;
 use BB\Support\PaymentStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -66,19 +67,24 @@ class PaymentListingTest extends TestCase
 
         $this->actingAs($member)->get(route('account.balance.index', $member->id))
             ->assertOk()
-            ->assertSeeInOrder([
-                '<tr class="danger">',
-                '<td >Equipment Costs</td>',
-                '<td>BB Balance</td>',
-                '<td>Mar 6, 2024</td>',
-                '<td>-£3.5</td>',
-                '<td>Paid</td>',
-                '<tr class="success">',
-                '<td >Balance Top Up</td>',
-                '<td>Direct Debit</td>',
-                '<td>Mar 5, 2024</td>',
-                '<td>£10</td>',
-                '<td>Pending confirmation</td>',
-            ], false);
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Balance/Index')
+                ->has('payments.data', 2)
+                ->where('payments.data.0', fn ($row) => collect($row)->except('id')->all() === [
+                    'reason' => 'Equipment Costs',
+                    'method' => 'BB Balance',
+                    'date' => 'Mar 6, 2024',
+                    'direction' => 'debit',
+                    'amount' => '-£3.50',
+                    'status' => 'Paid',
+                ])
+                ->where('payments.data.1', fn ($row) => collect($row)->except('id')->all() === [
+                    'reason' => 'Balance Top Up',
+                    'method' => 'Direct Debit',
+                    'date' => 'Mar 5, 2024',
+                    'direction' => 'credit',
+                    'amount' => '£10.00',
+                    'status' => 'Pending confirmation',
+                ]));
     }
 }

@@ -50,7 +50,7 @@ class CashPaymentController extends Controller
 
         \FlashNotification::success("Top Up successful");
 
-        $returnPath_balance = '/balance?confetti=1';
+        $returnPath_balance = '/balance';
         $result = $returnPath . $returnPath_balance;
 
         if (\Request::wantsJson()) {

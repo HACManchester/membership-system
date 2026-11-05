@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * The Blade pages (payments, sub-charges, balance, member lists) style their
+ * The Blade pages (payments, sub-charges, member lists) style their
  * pagination with Bootstrap. Laravel 8 switched the default paginator markup to
  * Tailwind, which would leave those links unstyled while every page still
  * returns 200 — so the route smoke test can't see it. Pin the Bootstrap markup.
