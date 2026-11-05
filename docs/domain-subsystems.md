@@ -22,9 +22,11 @@ with an `approved` flag.
 
 **Flows:**
 
-- **Registration** (`MemberRegistrationController@store`): full members provide address +
-  photo; users start in `status='setting-up'` and must confirm email. **Online-only**
-  registration (`@createOnlineOnly`) skips physical details.
+- **Registration** (`MemberRegistrationController@store`): members provide address +
+  photo; users start in `status='setting-up'` and must confirm email. Signup always creates a
+  full member (`online_only` is pinned to 0, not read from the request); the separate online-only
+  signup page was removed in 2026. Existing online-only accounts are still supported (admin list
+  filter, labels, account-page upsell, no access methods).
 - **Email confirmation:** changing email clears verification and re-triggers confirmation
   (`UserObserver` `updating` hook).
 - **Photo approval:** uploads land as `new_profile_photo` pending admin approval; declines fire

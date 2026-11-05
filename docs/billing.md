@@ -164,10 +164,12 @@ backlog.
 **Rejoining.** A returning member redoes the mandate setup; `ensureMembershipActive()` reactivates
 and bills immediately. History (payments, charges) is retained.
 
-**Special cases.** `honorary` status members and `online_only` accounts are excluded from billing
-(`getBillableActive()` scope). Cash balance (`cash_balance`, managed by `app/Services/Credit.php`,
-topped up via `CashPaymentController` by staff) is a separate ledger derived entirely from Payment
-rows (`reason=balance` adds, `source=balance` subtracts).
+**Special cases.** `honorary` status members and members with an unexpired gift (`gift_expires`
+in the future) are excluded from billing (`getBillableActive()`, via the `notSpecialCase` scope).
+`online_only` accounts are *not* exempt: an active online-only account is charged like any other.
+Cash balance (`cash_balance`, managed by `app/Services/Credit.php`, topped up via
+`CashPaymentController` by staff) is a separate ledger derived entirely from Payment rows
+(`reason=balance` adds, `source=balance` subtracts).
 
 ---
 
