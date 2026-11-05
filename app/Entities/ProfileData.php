@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use BB\Entities\Concerns\Audited;
 use BB\Observer\UserAuditObserver;
 use Carbon\Carbon;
 use Database\Factories\ProfileDataFactory;
@@ -11,8 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Uncast boolean columns read back from the database as 0/1, hence bool|int.
- *
  * @property int $id
  * @property int $user_id
  * @property string|null $twitter
@@ -25,10 +24,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $description
  * @property string|null $skills_array JSON, read and written through $skills
  * @property array $skills
- * @property bool|int $profile_photo
- * @property bool|int $profile_photo_private
- * @property bool|int $new_profile_photo
- * @property bool|int $profile_photo_on_wall
+ * @property bool $profile_photo
+ * @property bool $profile_photo_private
+ * @property bool $new_profile_photo
+ * @property bool $profile_photo_on_wall
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -38,7 +37,7 @@ class ProfileData extends Model
 {
 
     /** @use HasFactory<ProfileDataFactory> */
-    use HasFactory;
+    use Audited, HasFactory;
 
     /**
      * profile_photo (the approval flag) and profile_photo_on_wall are admin-only,
@@ -50,7 +49,8 @@ class ProfileData extends Model
 
     protected $table = 'profile_data';
 
-    protected $auditFields = array('profile_photo', 'profile_photo_on_wall');
+    /** @var list<string> */
+    protected $auditFields = ['profile_photo', 'profile_photo_on_wall'];
 
     protected $attributes = [
         'profile_photo'         => 0,
@@ -58,6 +58,16 @@ class ProfileData extends Model
         'new_profile_photo'     => 0,
         'profile_photo_on_wall' => 0,
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'profile_photo' => 'boolean',
+            'profile_photo_private' => 'boolean',
+            'new_profile_photo' => 'boolean',
+            'profile_photo_on_wall' => 'boolean',
+        ];
+    }
 
     /**
      * Stored as JSON in the skills_array column.
@@ -78,13 +88,5 @@ class ProfileData extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAuditFields()
-    {
-        return $this->auditFields;
     }
 } 

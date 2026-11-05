@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\KeyFob;
 use BB\Entities\ProfileData;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,5 +62,21 @@ class MemberListSearchTest extends TestCase
 
         $this->assertSame([$member->id], $this->searchAsAdmin([]));
         $this->assertSame([$member->id, $onlineOnly->id], $this->searchAsAdmin(['include_online_only' => 1]));
+    }
+
+    #[Test]
+    public function the_list_shows_how_many_active_access_methods_each_member_has()
+    {
+        $withFobs = $this->member(['family_name' => 'Lovelace']);
+        KeyFob::factory()->count(2)->for($withFobs)->create();
+        KeyFob::factory()->for($withFobs)->create(['active' => false]);
+        $this->member(['family_name' => 'Lovelace']);
+        $admin = User::factory()->admin()->create(['family_name' => 'Admin']);
+
+        $this->actingAs($admin)
+            ->get(route('account.index', ['filter' => 'Lovelace']))
+            ->assertOk()
+            ->assertSee('🔑 (2)')
+            ->assertSee('Fob being collected');
     }
 }

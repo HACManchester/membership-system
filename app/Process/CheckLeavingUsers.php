@@ -1,23 +1,18 @@
 <?php namespace BB\Process;
 
 use BB\Entities\User;
-use BB\Repo\UserRepository;
 use BB\Helpers\TelegramHelper;
+use BB\Services\MembershipStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class CheckLeavingUsers
 {
 
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
     private $telegramHelper;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private MembershipStatus $membershipStatus)
     {
-        $this->userRepository = $userRepository;
         $this->telegramHelper = new TelegramHelper("CheckLeavingUsers");
     }
 
@@ -35,7 +30,7 @@ class CheckLeavingUsers
                     //User has passed their expiry date
                     
                     //set the status to left and active to false
-                    $this->userRepository->memberLeft($user->id);
+                    $this->membershipStatus->markLeft($user);
                     array_push($members, $user->name);
 
                     //an email will be sent by the user observer
@@ -45,7 +40,7 @@ class CheckLeavingUsers
                 // method to collect one with. Left here they stay active indefinitely and
                 // the nightly run keeps raising charges nothing can collect
                 Log::warning($user->name . ' was leaving with no expiry date - marking as left');
-                $this->userRepository->memberLeft($user->id);
+                $this->membershipStatus->markLeft($user);
                 array_push($members, $user->name);
             }
 

@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Services\MembershipStatus;
 use BB\Support\CurrentUser;
 
 class AccountController extends Controller
@@ -12,10 +13,6 @@ class AccountController extends Controller
 
     protected $userForm;
 
-    /**
-     * @var \BB\Repo\EquipmentRepository
-     */
-    private $equipmentRepository;
     /**
      * @var \BB\Repo\UserRepository
      */
@@ -34,14 +31,12 @@ class AccountController extends Controller
 
     function __construct(
         \BB\Validators\UserValidator $userForm,
-        \BB\Repo\EquipmentRepository $equipmentRepository,
         \BB\Repo\UserRepository $userRepository,
         \BB\Repo\AddressRepository $addressRepository,
         \BB\Repo\SubscriptionChargeRepository $subscriptionChargeRepository,
         \BB\Services\Credit $bbCredit
     ) {
         $this->userForm = $userForm;
-        $this->equipmentRepository = $equipmentRepository;
         $this->userRepository = $userRepository;
         $this->addressRepository = $addressRepository;
         $this->subscriptionChargeRepository = $subscriptionChargeRepository;
@@ -55,14 +50,13 @@ class AccountController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
-        $equipmentRequiringInduction = $this->equipmentRepository->getRequiresInduction();
+        $equipmentRequiringInduction = \BB\Entities\Equipment::where('requires_induction', true)->get();
         $equipmentRequiringInduction->load('courses');
 
         // Attach the member's training record (if any) for each piece of equipment.
@@ -71,17 +65,17 @@ class AccountController extends Controller
         $userTrainingRecords = $user->trainingRecords()->get();
         foreach ($equipmentRequiringInduction as $equipment) {
             $courseIds = $equipment->courses->pluck('id');
-            $equipment->userTrainingRecord = $userTrainingRecords->first(function ($record) use ($equipment, $courseIds) {
+            $equipment->setAttribute('userTrainingRecord', $userTrainingRecords->first(function ($record) use ($equipment, $courseIds) {
                 return ($record->course_id !== null && $courseIds->contains($record->course_id))
                     || (! empty($equipment->induction_category) && $record->key === $equipment->induction_category);
-            }) ?? false;
+            }) ?? false);
         }
 
         //get pending address if any
-        $newAddress = $this->addressRepository->getNewUserAddress($id);
+        $newAddress = $this->addressRepository->getNewUserAddress($user->id);
 
         //Get the member subscription payments
-        $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($id);
+        $subscriptionCharges = $this->subscriptionChargeRepository->getMemberChargesPaginated($user->id);
 
         //Get the members balance
         $this->bbCredit->setUserId($user->id);
@@ -101,12 +95,11 @@ class AccountController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
      */
-    public function edit($id)
+    public function edit(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         // Make the address available in the view
         $user->load('address');
@@ -117,13 +110,12 @@ class AccountController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($id)
+    public function update(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
         $input = \Request::only(
             'given_name',
             'family_name',
@@ -153,7 +145,7 @@ class AccountController extends Controller
 
         $this->userForm->validate($input, $user->id);
 
-        $this->userRepository->updateMember($id, $input, CurrentUser::get()->hasRole('admin'));
+        $this->userRepository->updateMember($user->id, $input, CurrentUser::get()->hasRole('admin'));
 
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
@@ -161,12 +153,13 @@ class AccountController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy(string $id, MembershipStatus $membershipStatus)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         // If they never became a member just delete the record
-        if ($user->status == 'setting-up') {
+        if ($user->status == \BB\Support\MemberStatus::SettingUp) {
             $user->delete();
 
             \FlashNotification::success('Member deleted');
@@ -174,7 +167,7 @@ class AccountController extends Controller
         }
 
         //No one will ever leaves the system but we can at least update their status to left.
-        $user->setLeaving();
+        $membershipStatus->markLeaving($user);
 
         \FlashNotification::success('Updated status to leaving');
 
@@ -189,7 +182,7 @@ class AccountController extends Controller
 
         $outstandingPayments = $user->payments()
             ->subscription()
-            ->whereIn('status', ['pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [\BB\Support\PaymentStatus::Pending, \BB\Support\PaymentStatus::PendingSubmission, \BB\Support\PaymentStatus::Processing])
             ->orderBy('created_at', 'desc')
             ->get();
 

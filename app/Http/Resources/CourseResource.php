@@ -25,12 +25,12 @@ class CourseResource extends JsonResource
             'description' => $this->description,
             'format' => [
                 'label' => $this->format_label,
-                'value' => $this->format,
+                'value' => $this->format->value,
             ],
             'format_description' => $this->format_description,
             'frequency' => [
                 'label' => $this->frequency_label,
-                'value' => $this->frequency,
+                'value' => $this->frequency->value,
             ],
             'frequency_description' => $this->frequency_description,
             'wait_time' => $this->wait_time,
@@ -38,7 +38,7 @@ class CourseResource extends JsonResource
             'schedule_url' => $this->schedule_url,
             'quiz_url' => $this->quiz_url,
             'request_induction_url' => $this->request_induction_url,
-            'paused_at' => $this->paused_at,
+            'paused_at' => $this->paused_at?->toDateTimeString(),
             'is_paused' => $this->isPaused(),
             'live' => $this->live,
             'equipment' => $this->whenLoaded('equipment', function () {

@@ -1,9 +1,10 @@
+@use('BB\Support\MemberStatus')
 <?php
 $conditions = [
     $user->email_verified,
     $user->payment_method,
     $user->induction_completed,
-    $user->keyFob() !== null,
+    $user->keyFobs()->exists(),
     $user->visited_forum,
     $user->trainingRecords()->trained()->count() > 0,
 ];
@@ -14,7 +15,7 @@ $countOfCompletedConditions = count(array_filter($conditions));
 $pctComplete = 100 / $countOfConditions * $countOfCompletedConditions;
 $fmtMonthlySubscription = number_format((float) $user->monthly_subscription, 2);
 ?>
-@if(!$user->online_only && !in_array($user->status, ['leaving', 'left', 'suspended']) && $countOfConditions !== $countOfCompletedConditions)
+@if(!$user->online_only && !in_array($user->status, [MemberStatus::Leaving, MemberStatus::Left, MemberStatus::Suspended]) && $countOfConditions !== $countOfCompletedConditions)
     <div class="row">
         <div class="col-xs-12 col-md-8 col-md-offset-2 pull-left">
             <div class="panel panel-default">
@@ -67,7 +68,7 @@ DESC
                         @include('account.partials.get-started-checklist-item', [
                             'number' => '4',
                             'block_condition' => !$user->payment_method,
-                            'pass_condition' => $user->keyFob() !== null,
+                            'pass_condition' => $user->keyFobs()->exists(),
                             'title' => 'Get an access method set up',
                             'link' => route('keyfobs.index', $user->id),
                             'description' => 'Set up your fob or access code for 24/7 access to the Hackspace.',

@@ -116,11 +116,6 @@ class Equipment extends Model
             'accepting_inductions' => 'boolean',
             'obtained_at' => 'datetime',
             'removed_at' => 'datetime',
-
-            // Swap these over later
-            // 'photos' => 'array',
-            // 'ppe' => 'array',
-            // 'docs' => 'array',
         ];
     }
 

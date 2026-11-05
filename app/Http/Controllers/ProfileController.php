@@ -9,10 +9,6 @@ class ProfileController extends Controller
 {
 
     /**
-     * @var \BB\Repo\ProfileDataRepository
-     */
-    private $profileRepo;
-    /**
      * @var \BB\Repo\ProfileSkillsRepository
      */
     private $profileSkillsRepository;
@@ -22,21 +18,19 @@ class ProfileController extends Controller
     private $userImage;
 
     function __construct(
-        \BB\Repo\ProfileDataRepository $profileRepo,
         \BB\Repo\ProfileSkillsRepository $profileSkillsRepository,
         \BB\Helpers\UserImage $userImage)
     {
-        $this->profileRepo = $profileRepo;
         $this->profileSkillsRepository = $profileSkillsRepository;
         $this->userImage = $userImage;
     }
 
-    public function edit($userId)
+    public function edit(string $userId)
     {
-        //Verify the user can access this user record
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('updateProfile', $user);
 
-        $profileData = $this->profileRepo->getUserProfile($userId);
+        $profileData = $user->profile()->firstOrFail();
         $skills = $this->profileSkillsRepository->getSelectArray();
         return \View::make('account.profile.edit')
             ->with('profileData', $profileData)
@@ -52,7 +46,8 @@ class ProfileController extends Controller
         $input = $request->validated();
         $input['profile_photo_private'] = ! empty($input['profile_photo_private']);
 
-        $this->profileRepo->update($userId, $input);
+        $profile = $user->profile()->firstOrFail();
+        $profile->update($input);
 
         // A single file only: new_profile_photo[] arrives as an array
         $photo = $request->file('new_profile_photo');
@@ -60,7 +55,7 @@ class ProfileController extends Controller
             try {
                 $this->userImage->uploadPhoto($user->hash, $photo->getRealPath(), true);
 
-                $this->profileRepo->update($userId, ['new_profile_photo'=>1]);
+                $profile->update(['new_profile_photo' => 1]);
 
                 \FlashNotification::success("Photo uploaded, it will be checked and appear shortly");
             } catch (\Exception $e) {

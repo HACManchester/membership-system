@@ -6,7 +6,6 @@ use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
 use BB\Entities\Room;
-use BB\Entities\TrainingRecord;
 use BB\Exceptions\ImageFailedException;
 use BB\Http\Requests\Equipment\BulkStoreEquipmentRequest;
 use BB\Http\Requests\Equipment\StoreEquipmentRequest;
@@ -16,7 +15,6 @@ use BB\Http\Resources\EquipmentFormResource;
 use BB\Http\Resources\EquipmentListResource;
 use BB\Http\Resources\EquipmentShowResource;
 use BB\Http\Resources\TrainingRecordResource;
-use BB\Repo\EquipmentRepository;
 use BB\Repo\TrainingRecordRepository;
 use BB\Support\CurrentUser;
 use BB\Support\PpeOptions;
@@ -37,21 +35,14 @@ class EquipmentController extends Controller
      */
     private $trainingRecordRepository;
 
-    /**
-     * @var EquipmentRepository
-     */
-    private $equipmentRepository;
-
     /** @var \Illuminate\Filesystem\FilesystemAdapter */
     protected $disk;
 
 
     function __construct(
-        TrainingRecordRepository $trainingRecordRepository,
-        EquipmentRepository $equipmentRepository
+        TrainingRecordRepository $trainingRecordRepository
     ) {
         $this->trainingRecordRepository    = $trainingRecordRepository;
-        $this->equipmentRepository    = $equipmentRepository;
         $this->disk = Storage::disk('public');
 
         //Only members of the equipment group can create/update records
@@ -60,14 +51,14 @@ class EquipmentController extends Controller
     public function index()
     {
         $user = CurrentUser::get();
-        $equipment = $this->equipmentRepository->getAll();
+        $equipment = Equipment::all();
         $equipment->load(['courses', 'roomModel']);
 
         // Resolve the viewer's training status for the whole catalogue up front,
         // rather than one query per item, honouring both the course and legacy-key
         // linkage.
-        $trained = TrainingRecord::where('user_id', $user->id)
-            ->whereNotNull('trained')
+        $trained = $user->trainingRecords()
+            ->trained()
             ->get(['course_id', 'key']);
         $trainedCourseIds = $trained->pluck('course_id')->filter()->unique();
         $trainedKeys = $trained->pluck('key')->filter()->unique();

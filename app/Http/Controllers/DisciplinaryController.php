@@ -3,6 +3,7 @@
 namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Support\MemberStatus;
 use Illuminate\Http\Request;
 
 class DisciplinaryController extends Controller
@@ -17,7 +18,7 @@ class DisciplinaryController extends Controller
         ]);
 
         $user->active = false;
-        $user->status = 'left';
+        $user->status = MemberStatus::Left;
         $user->banned = true;
         $user->banned_reason = $request->get('reason');
         $user->banned_date = \Carbon\Carbon::now();

@@ -58,7 +58,7 @@ class TrainingRecordRepository extends DBRepository
     {
         $trainers = $this->recordsForEquipmentQuery($equipment)
             ->with('user', 'user.profile')
-            ->where('is_trainer', true)
+            ->trainers()
             ->get();
         return $trainers->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
@@ -75,7 +75,7 @@ class TrainingRecordRepository extends DBRepository
     public function getTrainersForKey($key)
     {
         $trainers = $this->model->with('user', 'user.profile')
-            ->where('is_trainer', true)
+            ->trainers()
             ->where('key', $key)
             ->get();
         return $trainers->filter(function ($trainer) {
@@ -86,8 +86,8 @@ class TrainingRecordRepository extends DBRepository
     public function isTrainerForEquipment(User $user, Equipment $equipment): bool
     {
         return $this->recordsForEquipmentQuery($equipment)
-            ->where('user_id', $user->id)
-            ->where('is_trainer', true)
+            ->whereBelongsTo($user)
+            ->trainers()
             ->exists();
     }
 
@@ -96,9 +96,9 @@ class TrainingRecordRepository extends DBRepository
      */
     public function isTrainerForKey(User $user, $key): bool
     {
-        return $this->model->where('user_id', $user->id)
+        return $this->model->whereBelongsTo($user)
             ->where('key', $key)
-            ->where('is_trainer', true)
+            ->trainers()
             ->exists();
     }
 
@@ -121,7 +121,7 @@ class TrainingRecordRepository extends DBRepository
     {
         $users = $this->recordsForEquipmentQuery($equipment)
             ->with('user', 'user.profile')
-            ->whereNotNull('trained')
+            ->trained()
             ->get();
         return $users->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
@@ -132,7 +132,7 @@ class TrainingRecordRepository extends DBRepository
     {
         $users = $this->recordsForEquipmentQuery($equipment)
             ->with('user', 'user.profile')
-            ->whereNull('trained')
+            ->untrained()
             ->get();
         return $users->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
@@ -142,7 +142,7 @@ class TrainingRecordRepository extends DBRepository
     public function isUserTrained(Equipment $equipment, int $userId): bool
     {
         return $this->recordsForEquipmentQuery($equipment)
-            ->whereNotNull('trained')
+            ->trained()
             ->where('user_id', $userId)
             ->exists();
     }
@@ -169,25 +169,20 @@ class TrainingRecordRepository extends DBRepository
     public function getTrainersForCourse($courseId)
     {
         $trainers = $this->model->with('user', 'user.profile', 'trainerUser')
-            ->where('is_trainer', true)
-            ->where('course_id', $courseId)
+            ->trainers()
+            ->forCourse($courseId)
             ->get();
         return $trainers->filter(function ($trainer) {
             return $trainer->user && $trainer->user->active;
         });
     }
     
-    /**
-     * @param $user
-     * @param int $courseId
-     * @return bool
-     */
-    public function isTrainerForCourse($user, $courseId)
+    public function isTrainerForCourse(User $user, int $courseId): bool
     {
-        return $this->model->where('user_id', $user->id)
-            ->where('course_id', $courseId)
-            ->where('is_trainer', true)
-            ->count() > 0;
+        return $this->model->whereBelongsTo($user)
+            ->forCourse($courseId)
+            ->trainers()
+            ->exists();
     }
     
     /**
@@ -197,8 +192,8 @@ class TrainingRecordRepository extends DBRepository
     public function getTrainedUsersForCourse($courseId)
     {
         $users = $this->model->with('user', 'user.profile', 'trainerUser')
-            ->whereNotNull('trained')
-            ->where('course_id', $courseId)
+            ->trained()
+            ->forCourse($courseId)
             ->orderBy('trained', 'desc')
             ->get();
         return $users->filter(function ($trainer) {
@@ -219,8 +214,8 @@ class TrainingRecordRepository extends DBRepository
     public function getWaitlistForCourse($courseId)
     {
         $users = $this->model->with('user', 'user.profile')
-            ->where('course_id', $courseId)
-            ->whereNull('trained')
+            ->forCourse($courseId)
+            ->untrained()
             ->where('is_trainer', false)
             ->where(function ($query) {
                 $query->whereNull('sign_off_requested_at')
@@ -241,9 +236,9 @@ class TrainingRecordRepository extends DBRepository
     public function isUserTrainedForCourse($userId, $courseId)
     {
         $record = $this->model->with('user', 'user.profile')
-            ->whereNotNull('trained')
+            ->trained()
             ->where('user_id', $userId)
-            ->where('course_id', $courseId)
+            ->forCourse($courseId)
             ->first();
         return (bool)$record;
     }
@@ -257,7 +252,7 @@ class TrainingRecordRepository extends DBRepository
     {
         $record = $this->model->with('user', 'user.profile')
             ->where('user_id', $userId)
-            ->where('course_id', $courseId)
+            ->forCourse($courseId)
             ->first();
         if ($record) {
             return $record;
@@ -276,10 +271,10 @@ class TrainingRecordRepository extends DBRepository
         $expirationHours = TrainingRecord::SIGN_OFF_EXPIRATION_HOURS;
         
         $users = $this->model->with('user', 'user.profile')
-            ->where('course_id', $courseId)
+            ->forCourse($courseId)
             ->whereNotNull('sign_off_requested_at')
             ->where('sign_off_requested_at', '>=', Carbon::now()->subHours($expirationHours))
-            ->whereNull('trained')
+            ->untrained()
             ->orderBy('sign_off_requested_at', 'asc')
             ->get();
         return $users->filter(function ($trainingRecord) {

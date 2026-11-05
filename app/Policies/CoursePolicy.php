@@ -6,6 +6,7 @@ use BB\Entities\User;
 use BB\Entities\Course;
 use BB\Entities\Equipment;
 use BB\Entities\MaintainerGroup;
+use BB\Support\CourseFrequency;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CoursePolicy
@@ -44,6 +45,15 @@ class CoursePolicy
     public function view(User $user, Course $course)
     {
         return true;
+    }
+
+    /**
+     * Courses that aren't live yet are visible to the area coordinators and
+     * maintainers who prepare them (and to admins, via before()).
+     */
+    public function viewNonLive(User $user): bool
+    {
+        return $user->equipmentAreas()->exists() || $user->maintainerGroups()->exists();
     }
 
     /**
@@ -129,7 +139,7 @@ class CoursePolicy
         // A waitlist is meaningless for self-serve courses. Deliberately
         // allowed while paused, unlike requestSignOff — the waitlist is most
         // useful precisely when training isn't currently running.
-        return $course->frequency !== 'self-serve';
+        return $course->frequency !== CourseFrequency::SelfServe;
     }
 
     public function withdrawInterest(User $user, Course $course)

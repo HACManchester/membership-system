@@ -19,10 +19,6 @@ class MemberRegistrationController extends Controller
      */
     private $userImage;
     /**
-     * @var \BB\Repo\ProfileDataRepository
-     */
-    private $profileRepo;
-    /**
      * @var \BB\Repo\UserRepository
      */
     private $userRepository;
@@ -34,13 +30,11 @@ class MemberRegistrationController extends Controller
     public function __construct(
         \BB\Validators\UserValidator $userForm,
         \BB\Helpers\UserImage $userImage,
-        \BB\Repo\ProfileDataRepository $profileRepo,
         \BB\Repo\UserRepository $userRepository,
         \BB\Validators\ProfileValidator $profileValidator
     ) {
         $this->userForm = $userForm;
         $this->userImage = $userImage;
-        $this->profileRepo = $profileRepo;
         $this->userRepository = $userRepository;
         $this->profileValidator = $profileValidator;
 
@@ -131,7 +125,7 @@ class MemberRegistrationController extends Controller
             try {
                 $this->userImage->uploadPhoto($user->hash, $photo->getRealPath(), true);
 
-                $this->profileRepo->update($user->id, ['new_profile_photo' => 1, 'profile_photo_private' => $input['profile_photo_private']]);
+                $user->profile()->firstOrFail()->update(['new_profile_photo' => 1, 'profile_photo_private' => $input['profile_photo_private']]);
             } catch (\Exception $e) {
                 Log::error($e);
             }

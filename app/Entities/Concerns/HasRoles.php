@@ -1,9 +1,11 @@
-<?php namespace BB\Traits;
+<?php
+
+namespace BB\Entities\Concerns;
 
 use BB\Entities\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-trait UserRoleTrait
+trait HasRoles
 {
 
     /**
@@ -38,4 +40,12 @@ trait UserRoleTrait
     {
         $this->roles()->attach($role);
     }
-} 
+
+    /**
+     * Is the user part of the admin group
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+}

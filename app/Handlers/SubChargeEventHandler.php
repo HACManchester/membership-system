@@ -4,6 +4,9 @@ namespace BB\Handlers;
 
 use BB\Helpers\MembershipPayments;
 use BB\Repo\UserRepository;
+use BB\Services\MembershipStatus;
+use BB\Support\MemberStatus;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 
 class SubChargeEventHandler
@@ -17,7 +20,7 @@ class SubChargeEventHandler
     /**
      * @param UserRepository               $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, private MembershipStatus $membershipStatus)
     {
         $this->userRepository = $userRepository;
     }
@@ -35,7 +38,7 @@ class SubChargeEventHandler
     {
         $user = $this->userRepository->getById($userId);
         
-        $user->extendMembership(null, $paymentDate->addMonth());
+        $this->membershipStatus->extend($user, null, $paymentDate->addMonth());
     }
 
     /**
@@ -50,7 +53,7 @@ class SubChargeEventHandler
     {
         $user = $this->userRepository->getById($userId);
 
-        $user->extendMembership(null, $paymentDate->addMonth());
+        $this->membershipStatus->extend($user, null, $paymentDate->addMonth());
     }
 
     /**
@@ -70,8 +73,8 @@ class SubChargeEventHandler
             return; // Don't set payment warning if other payments exist for this charge
         }
 
-        if ($user->status === "active") {
-            $user->setPaymentWarning();
+        if ($user->status === MemberStatus::Active) {
+            $this->membershipStatus->setPaymentWarning($user);
         }
     }
 
@@ -81,7 +84,7 @@ class SubChargeEventHandler
         
         // Check for any other payments linked to this subscription charge
         $otherPayments = $paymentRepository->getPaymentsByReference($chargeId)
-            ->whereIn('status', ['paid', 'pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::PendingSubmission, PaymentStatus::Processing])
             ->count();
             
         return $otherPayments > 0;

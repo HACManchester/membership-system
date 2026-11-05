@@ -4,6 +4,7 @@ namespace Tests\Unit\Console\Commands;
 
 use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -29,7 +30,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
         $this->assertNotNull($user->suspended_at);
     }
@@ -46,7 +47,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
     }
 
@@ -62,7 +63,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -78,7 +79,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -94,7 +95,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -118,7 +119,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('active', $user->status);
+        $this->assertSame(MemberStatus::Active, $user->status);
         $this->assertTrue($user->active);
     }
 
@@ -145,13 +146,13 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $warningUser->refresh();
-        $this->assertEquals('suspended', $warningUser->status);
+        $this->assertSame(MemberStatus::Suspended, $warningUser->status);
 
         $suspendedUser->refresh();
-        $this->assertEquals('left', $suspendedUser->status);
+        $this->assertSame(MemberStatus::Left, $suspendedUser->status);
 
         $activeUser->refresh();
-        $this->assertEquals('active', $activeUser->status);
+        $this->assertSame(MemberStatus::Active, $activeUser->status);
     }
 
     public function testHonoraryMembersNotAffected()
@@ -165,7 +166,7 @@ class CheckMembershipStatusTest extends TestCase
         $this->artisan('bb:check-memberships')->assertExitCode(0);
 
         $user->refresh();
-        $this->assertEquals('honorary', $user->status);
+        $this->assertSame(MemberStatus::Honorary, $user->status);
         $this->assertTrue($user->active);
     }
 }

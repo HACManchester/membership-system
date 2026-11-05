@@ -2,6 +2,7 @@
 
 use BB\Entities\User;
 use BB\Helpers\TelegramHelper;
+use BB\Services\MembershipStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +14,7 @@ class CheckPaymentWarnings
      */
     private $telegramHelper;
 
-    public function __construct()
+    public function __construct(private MembershipStatus $membershipStatus)
     {
         $this->telegramHelper = new TelegramHelper("CheckPaymentWarnings");
     }
@@ -32,7 +33,7 @@ class CheckPaymentWarnings
             // Check if grace period has expired (subscription_expires is set to failure date + grace period)
             if ($user->subscription_expires === null || $user->subscription_expires->lt($today)) {
                 // Suspend the member
-                $user->setSuspended();
+                $this->membershipStatus->suspend($user);
                 Log::info($user->name . ' suspended - payment warning grace period expired');
                 array_push($suspendedMembers, $user->name);
             } else {

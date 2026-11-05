@@ -2,22 +2,17 @@
 
 use BB\Entities\User;
 use BB\Helpers\TelegramHelper;
-use BB\Repo\UserRepository;
+use BB\Services\MembershipStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class CheckSuspendedUsers
 {
 
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
     private $telegramHelper;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private MembershipStatus $membershipStatus)
     {
-        $this->userRepository = $userRepository;
         $this->telegramHelper = new TelegramHelper("CheckSuspendedUsers");
     }
 
@@ -46,7 +41,7 @@ class CheckSuspendedUsers
                 //User has been suspended for 30+ days, mark as left
                 Log::info($user->name . ' has been suspended for 30+ days, marking as left');
                 array_push($members, $user->name);
-                $this->userRepository->memberLeft($user->id);
+                $this->membershipStatus->markLeft($user);
                 //an email will be sent by the user observer
             } else {
                 Log::info($user->name . ' is suspended but within 30-day period');

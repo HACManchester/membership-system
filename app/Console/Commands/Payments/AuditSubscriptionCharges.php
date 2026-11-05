@@ -4,6 +4,7 @@ use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Services\MemberSubscriptionCharges;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,7 @@ class AuditSubscriptionCharges extends Command
     private function reportUncollectableCharges()
     {
         $charges = SubscriptionCharge::with('user')
-            ->whereIn('status', ['pending', 'due'])
+            ->outstanding()
             ->orderBy('user_id')
             ->orderBy('charge_date')
             ->get()
@@ -106,10 +107,10 @@ class AuditSubscriptionCharges extends Command
                 return [
                     $charge->id,
                     $this->memberName($charge),
-                    $charge->user ? $charge->user->status : '-',
+                    $charge->user ? $charge->user->status->value : '-',
                     $charge->user && $charge->user->payment_method ? $charge->user->payment_method : 'none',
                     $charge->charge_date->format('Y-m-d'),
-                    $charge->status,
+                    $charge->status->value,
                     $charge->amount,
                 ];
             })->all()
@@ -134,7 +135,7 @@ class AuditSubscriptionCharges extends Command
         Payment::where('reason', 'subscription')
             ->whereNotNull('reference')
             ->where('reference', '!=', '')
-            ->whereIn('status', ['paid', 'pending', 'pending_submission', 'processing'])
+            ->whereIn('status', [PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::PendingSubmission, PaymentStatus::Processing])
             ->orderBy('id')
             ->chunk(500, function ($payments) use (&$collections, $days) {
                 $charges = SubscriptionCharge::with('user')

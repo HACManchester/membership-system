@@ -4,6 +4,7 @@ namespace Tests\Unit\Console\Commands;
 
 use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -44,7 +45,7 @@ class CreateTodaysSubChargesTest extends TestCase
 
         $this->assertNotNull($charge1);
         $this->assertEquals(22, $charge1->amount);
-        $this->assertEquals('pending', $charge1->status);
+        $this->assertSame(SubscriptionChargeStatus::Pending, $charge1->status);
 
         $charge2 = SubscriptionCharge::where('user_id', $user2->id)
             ->whereDate('charge_date', $expectedDate)
@@ -52,7 +53,7 @@ class CreateTodaysSubChargesTest extends TestCase
 
         $this->assertNotNull($charge2);
         $this->assertEquals(17, $charge2->amount);
-        $this->assertEquals('pending', $charge2->status);
+        $this->assertSame(SubscriptionChargeStatus::Pending, $charge2->status);
 
         Carbon::setTestNow(); // Reset
     }

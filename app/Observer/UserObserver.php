@@ -5,6 +5,7 @@ use BB\Events\MemberBecameInactive;
 use BB\Events\MemberDiscourseParamsChanged;
 use BB\Mailer\UserMailer;
 use BB\Helpers\TelegramHelper;
+use BB\Support\MemberStatus;
 use Illuminate\Support\Facades\Log;
 
 class UserObserver
@@ -28,27 +29,27 @@ class UserObserver
         $original = $user->getOriginal();
 
         //Use status changed from setting-up to something else
-        if (($original['status'] == 'setting-up') && ($user->status != 'setting-up')) {
+        if (($original['status'] == MemberStatus::SettingUp) && ($user->status != MemberStatus::SettingUp)) {
             $this->newUser($user);
         }
 
         //User status changed to payment warning
-        if (($original['status'] != 'payment-warning') && ($user->status == 'payment-warning')) {
+        if (($original['status'] != MemberStatus::PaymentWarning) && ($user->status == MemberStatus::PaymentWarning)) {
             $this->paymentWarning($user);
         }
 
         //User status changed to suspended
-        if (($original['status'] != 'suspended') && ($user->status == 'suspended')) {
+        if (($original['status'] != MemberStatus::Suspended) && ($user->status == MemberStatus::Suspended)) {
             $this->suspended($user);
         }
 
         //User status changed to leaving
-        if (($original['status'] != 'leaving') && ($user->status == 'leaving')) {
+        if (($original['status'] != MemberStatus::Leaving) && ($user->status == MemberStatus::Leaving)) {
             $this->userLeaving($user);
         }
 
         //User left
-        if (($original['status'] != 'left') && ($user->status == 'left') && $user->isBanned() == false) {
+        if (($original['status'] != MemberStatus::Left) && ($user->status == MemberStatus::Left) && $user->isBanned() == false) {
             $this->userLeft($user);
         }
 

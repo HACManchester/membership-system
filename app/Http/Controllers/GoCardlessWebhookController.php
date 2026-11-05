@@ -8,6 +8,7 @@ use BB\Helpers\GoCardlessHelper;
 use BB\Helpers\TelegramHelper;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Services\MembershipStatus;
 use \Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +33,7 @@ class GoCardlessWebhookController extends Controller
 
     private $telegramHelper;
 
-    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, \BB\Repo\UserRepository $userRepository)
+    public function __construct(GoCardlessHelper $goCardless, PaymentRepository $paymentRepository, \BB\Repo\UserRepository $userRepository, private MembershipStatus $membershipStatus)
     {
         $this->goCardless = $goCardless;
         $this->paymentRepository = $paymentRepository;
@@ -237,7 +238,7 @@ class GoCardlessWebhookController extends Controller
         /** @var User|null $user */
         $user = User::where('mandate_id', $preAuth['links']['mandate'])->first();
         if ($user) {
-            $this->userRepository->subscriptionCancelled($user->id);
+            $this->membershipStatus->cancelSubscription($user);
         }
     }
 
@@ -249,7 +250,7 @@ class GoCardlessWebhookController extends Controller
         $user = User::where('subscription_id', $subscription['links']['subscription'])->first();
         if ($user) {
             if ($user->payment_method == 'gocardless') {
-                $this->userRepository->subscriptionCancelled($user->id);
+                $this->membershipStatus->cancelSubscription($user);
             } else {
                 // The user probably has a new subscription alongside an existing mandate,
                 // we don't want to touch that so just remove the subscription details

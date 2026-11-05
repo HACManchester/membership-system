@@ -62,7 +62,7 @@ class AuthServiceProvider extends ServiceProvider
                 || $user->hasRole('equipment')
                 || $user->maintainerGroups()->exists()
                 || $user->equipmentAreas()->exists()
-                || TrainingRecord::where('user_id', $user->id)->where('is_trainer', true)->exists();
+                || $user->trainingRecords()->trainers()->exists();
         });
     }
 }

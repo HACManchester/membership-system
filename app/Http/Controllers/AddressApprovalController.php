@@ -19,17 +19,16 @@ class AddressApprovalController extends Controller
 
     /**
      * Approve or decline a member's pending address change.
-     *
-     * @param  int  $id
      */
-    public function update($id)
+    public function update(string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         if (\Request::input('approve_new_address') == 'Approve') {
-            $this->addressRepository->approvePendingMemberAddress($id);
+            $this->addressRepository->approvePendingMemberAddress($user->id);
         } elseif (\Request::input('approve_new_address') == 'Decline') {
-            $this->addressRepository->declinePendingMemberAddress($id);
+            $this->addressRepository->declinePendingMemberAddress($user->id);
         }
 
         \FlashNotification::success('Details Updated');

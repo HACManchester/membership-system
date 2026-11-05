@@ -5,6 +5,7 @@ namespace Tests\Unit\Console\Commands;
 use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class AuditSubscriptionChargesTest extends TestCase
             ->expectsOutput('Uncollectable outstanding charges: 1')
             ->assertExitCode(0);
 
-        $this->assertEquals('due', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->fresh()->status);
     }
 
     public function testFixCancelsUncollectableCharges()
@@ -35,7 +36,7 @@ class AuditSubscriptionChargesTest extends TestCase
 
         $this->artisan('bb:audit-sub-charges', ['--fix' => true])->assertExitCode(0);
 
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
     }
 
     public function testLeavesChargesForBillableMembersAlone()
@@ -57,7 +58,7 @@ class AuditSubscriptionChargesTest extends TestCase
             ->expectsOutput('Uncollectable outstanding charges: 0')
             ->assertExitCode(0);
 
-        $this->assertEquals('due', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->fresh()->status);
     }
 
     public function testReportsChargesCollectedLongAfterTheirChargeDate()
@@ -115,7 +116,7 @@ class AuditSubscriptionChargesTest extends TestCase
             ->expectsOutput('Uncollectable outstanding charges: 1')
             ->assertExitCode(0);
 
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
     }
 
     public function testIgnoresCollectionsFromBeforeTheCutoff()

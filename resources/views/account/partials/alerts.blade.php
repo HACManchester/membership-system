@@ -1,7 +1,9 @@
-@if (($user->status != 'setting-up' || $user->online_only) && count($user->getAlerts()) > 0)
+@use('BB\Support\MemberAlerts')
+@use('BB\Support\MemberStatus')
+@if (($user->status != MemberStatus::SettingUp || $user->online_only) && count(MemberAlerts::for($user)) > 0)
     <div class="alert alert-warning" role="alert">
         <ul>
-            @foreach ($user->getAlerts() as $alert)
+            @foreach (MemberAlerts::for($user) as $alert)
                 @if ($alert == 'email-not-verified')
                     <li><strong>Your email isn't verified</strong>, please check your inbox for the welcome email and click the link. You won't be able to sign into online services with this login until you do this. <br/>Didn't get the email? <a href="{{ route('account.send-confirmation-email') }}">Click here to re-send it.</a></li>
                 @endif

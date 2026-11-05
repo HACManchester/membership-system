@@ -1,3 +1,4 @@
+@use('BB\Support\MemberStatus')
 <style>
     .login-container {
         border-radius: 1em;
@@ -104,7 +105,7 @@
         <div class="sidenav-section">
             <span class="label label-warning">Online Only</span>
         </div>
-    @elseif (Auth::user()->status != 'active')
+    @elseif (Auth::user()->status != MemberStatus::Active)
         <div class="sidenav-section">
             @include('partials.components.status-label', ['status' => Auth::user()->status])
         </div>

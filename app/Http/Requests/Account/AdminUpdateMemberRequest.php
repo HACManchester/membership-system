@@ -3,6 +3,8 @@
 namespace BB\Http\Requests\Account;
 
 use BB\Support\CurrentUser;
+use BB\Support\MemberStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminUpdateMemberRequest extends FormRequest
@@ -24,7 +26,7 @@ class AdminUpdateMemberRequest extends FormRequest
             'induction_completed' => ['nullable'],
             'profile_photo_on_wall' => ['nullable'],
             'active' => ['nullable'],
-            'status' => ['nullable', 'string'],
+            'status' => ['sometimes', 'required', Rule::enum(MemberStatus::class)],
             'subscription_expires' => ['nullable', 'date'],
         ];
     }

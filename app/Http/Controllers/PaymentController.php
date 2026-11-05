@@ -5,6 +5,7 @@ namespace BB\Http\Controllers;
 use BB\Entities\Payment;
 use BB\Entities\User;
 use BB\Exceptions\NotImplementedException;
+use BB\Services\MembershipStatus;
 use BB\Support\CurrentUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -35,7 +36,8 @@ class PaymentController extends Controller
     function __construct(
         \BB\Helpers\GoCardlessHelper $goCardless,
         \BB\Repo\PaymentRepository $paymentRepository,
-        \BB\Repo\UserRepository $userRepository
+        \BB\Repo\UserRepository $userRepository,
+        private MembershipStatus $membershipStatus
     ) {
         $this->goCardless        = $goCardless;
         $this->paymentRepository = $paymentRepository;
@@ -91,14 +93,13 @@ class PaymentController extends Controller
     /**
      * Store a manual payment
      *
-     * @param $userId
-     * @return \Illuminate\Http\RedirectResponse
      * @deprecated
      */
-    public function store($userId, Request $request)
+    public function store(string $userId, Request $request)
     {
         // TODO: Review this method. Should have no active use?
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         if (!CurrentUser::get()->hasRole('admin') &&  !CurrentUser::get()->hasRole('finance')) {
             throw new \BB\Exceptions\AuthenticationException;
@@ -115,11 +116,11 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => $user->monthly_subscription,
                 'amount_minus_fee' => $user->monthly_subscription,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 
-            $user->extendMembership(\Request::input('source'), \Carbon\Carbon::now()->addMonth());
+            $this->membershipStatus->extend($user, \Request::input('source'), \Carbon\Carbon::now()->addMonth());
         } elseif ($reason == 'door-key') {
             $payment = new Payment([
                 'reason'           => $reason,
@@ -127,7 +128,7 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => 10,
                 'amount_minus_fee' => 10,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 
@@ -140,7 +141,7 @@ class PaymentController extends Controller
                 'source_id'        => '',
                 'amount'           => 5,
                 'amount_minus_fee' => 5,
-                'status'           => 'paid'
+                'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
 

@@ -4,7 +4,7 @@ namespace Tests\Unit\Process;
 
 use BB\Entities\User;
 use BB\Process\CheckSuspendedUsers;
-use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -15,7 +15,7 @@ class CheckSuspendedUsersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->process = new CheckSuspendedUsers(app(UserRepository::class));
+        $this->process = app(CheckSuspendedUsers::class);
     }
 
     public function testMarksUserAsLeftAfterThirtyDaysSuspended()
@@ -29,7 +29,7 @@ class CheckSuspendedUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('left', $user->status);
+        $this->assertSame(MemberStatus::Left, $user->status);
     }
 
     public function testLeavesRecentlySuspendedUserAlone()
@@ -43,7 +43,7 @@ class CheckSuspendedUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
     }
 
     public function testBackfillsMissingSuspensionDateSoTheClockStarts()
@@ -57,7 +57,7 @@ class CheckSuspendedUsersTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertNotNull($user->suspended_at);
         $this->assertTrue($user->suspended_at->isToday());
     }

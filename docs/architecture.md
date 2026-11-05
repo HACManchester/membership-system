@@ -32,6 +32,13 @@ belongs to tells you how much to trust it and how to extend it.
 - **Queued jobs** (`DiscourseSync`)
 - **Service objects** (`app/Services/MemberSubscriptionCharges`, `Credit`)
 - **Inertia + React + TypeScript** pages (see frontend.md)
+- **Backed enums** in `app/Support/` for closed sets of stored values, cast on the model so code
+  compares and writes cases: `MemberStatus` (`User::$status`), `SubscriptionChargeStatus`,
+  `PaymentStatus` (which also has every GoCardless payment status; a status from GoCardless goes
+  through `PaymentStatus::fromGoCardless()`, which records an unknown one as a fallback and reports
+  it rather than throwing), `CourseFormat` and `CourseFrequency` (with an `Unknown` case some older
+  courses hold, which forms can't choose), alongside `SettingKey`. Raw values only where a string
+  is needed: `$attributes` defaults, log and console output, the Inertia resources.
 - **Current Eloquent idioms** in `app/Entities/` (all models converted, November 2026): casts in
   a `casts()` method, local scopes as `#[Scope] protected function active(Builder $query): void`,
   accessors and mutators as `Attribute` methods, observers via `#[ObservedBy]` and global scopes
@@ -121,10 +128,20 @@ In order of value:
 
 ### Step 3 — shrink the god classes
 
-- `app/Entities/User.php` (~585 lines): extract concerns into traits/services along its natural
-  seams — payment/subscription methods, role methods (already partly in `UserRoleTrait`), and the
-  lifecycle transitions (`setPaymentWarning`, `setSuspended`, …) into a guarded `MembershipStatus`
-  service or small state machine.
+- `app/Entities/User.php` ✅ largely done (November 2026), now ~350 lines:
+  - the status transitions (activate, extend, payment warning, suspend, leaving, left, subscription
+    cancelled) are `BB\Services\MembershipStatus`, taking the member rather than an id. It writes
+    the same values as before, so `UserObserver` still sends the same emails, Telegram notices and
+    events. Banning is still in `DisciplinaryController`;
+  - the rest are concerns in `app/Entities/Concerns/`: `HasRoles` (was `app/Traits/UserRoleTrait`),
+    `HasMembershipStatus` (the read side: status predicates and scopes), `HasSubscription` (the
+    payment-day clamp, `canMemberChangeSubAmount()`) and `Audited` (`getAuditFields()`, shared with
+    `ProfileData`). Relations stay on `User`;
+  - the account alerts are `BB\Support\MemberAlerts`, and `findWithPermission()` gave way to
+    `UserPolicy::manage()` (the member themselves or an admin) in each controller.
+
+  Not yet guarded: `MembershipStatus` doesn't refuse a transition the state machine in billing.md
+  doesn't allow.
 - `AccountController` ✅ done: registration, email confirmation, subscription changes and admin
   updates now have their own controllers (`MemberRegistrationController`,
   `EmailConfirmationController`, `AccountSubscriptionController`, `MemberAdminController` and
@@ -137,7 +154,7 @@ In order of value:
   Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
   needs to know their models. Casts live in `casts()` methods, so `phpstan.neon` sets
   Larastan's `parseModelCastsMethod` (without it Larastan sees only the method's `array` return
-  type and loses every cast). `phpstan-baseline.neon` holds 31 entries. Most are guarantees
+  type and loses every cast). `phpstan-baseline.neon` holds 30 entries. Most are guarantees
   PHPStan can't see, such as a member always having a profile row, or a charge's member having
   been checked before billing. One came with Carbon 3, which types `Carbon::create()` as possibly
   null: `PaymentController::index()` builds its date range from a fixed

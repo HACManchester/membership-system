@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use BB\Entities\Course;
 use BB\Entities\Equipment;
+use BB\Entities\EquipmentArea;
+use BB\Entities\MaintainerGroup;
 use BB\Entities\Settings;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,6 +29,49 @@ class CourseTest extends TestCase
             $page->component('Courses/Index')
                 ->has('courses', 1);
         });
+    }
+
+    public function test_courses_index_hides_courses_that_are_not_live_from_members()
+    {
+        $user = User::factory()->create();
+        Course::factory()->create(['live' => true]);
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 1)
+                    ->where('canSeeNonLiveCourses', false);
+            });
+    }
+
+    public function test_maintainers_see_courses_that_are_not_live()
+    {
+        $user = User::factory()->create();
+        $user->maintainerGroups()->attach(MaintainerGroup::factory()->create());
+        Course::factory()->create(['live' => true]);
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 2)
+                    ->where('canSeeNonLiveCourses', true);
+            });
+    }
+
+    public function test_area_coordinators_see_courses_that_are_not_live()
+    {
+        $user = User::factory()->create();
+        $user->equipmentAreas()->attach(EquipmentArea::factory()->create());
+        Course::factory()->create(['live' => false]);
+
+        $this->actingAs($user)
+            ->get(route('courses.index'))
+            ->assertInertia(function ($page) {
+                $page->has('courses', 1)
+                    ->where('canSeeNonLiveCourses', true);
+            });
     }
 
     public function test_admin_can_create_course()
@@ -55,6 +100,38 @@ class CourseTest extends TestCase
         $this->assertNotNull($course);
         $this->assertEquals('Test Course', $course->name);
         $this->assertEquals(3, $course->equipment()->count());
+    }
+
+    public function test_create_page_offers_the_course_formats_and_frequencies()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('courses.create'))
+            ->assertInertia(function ($page) {
+                $page->where('formatOptions', ['group' => 'Group class', 'quiz' => 'Online Quiz', 'one-on-one' => 'One-on-one'])
+                    ->where('frequencyOptions', ['self-serve' => 'Self-serve', 'regular' => 'Regular', 'ad-hoc' => 'On-demand']);
+            });
+    }
+
+    public function test_creating_a_course_rejects_a_format_or_frequency_that_isnt_offered()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->post(route('courses.store'), [
+                'name' => 'Test Course',
+                'slug' => 'test-course',
+                'description' => 'Test description',
+                'format' => 'workshop',
+                'format_description' => '',
+                'frequency' => 'monthly',
+                'frequency_description' => '',
+                'wait_time' => '1-2 weeks',
+            ])
+            ->assertSessionHasErrors(['format', 'frequency']);
+
+        $this->assertDatabaseMissing('courses', ['slug' => 'test-course']);
     }
 
     public function test_non_admin_cannot_create_course()
@@ -121,9 +198,9 @@ class CourseTest extends TestCase
                 'name' => $course->name,
                 'slug' => 'new-slug',
                 'description' => $course->description,
-                'format' => $course->format,
+                'format' => $course->format->value,
                 'format_description' => $course->format_description,
-                'frequency' => $course->frequency,
+                'frequency' => $course->frequency->value,
                 'frequency_description' => $course->frequency_description,
                 'wait_time' => $course->wait_time,
                 'equipment' => $equipment->pluck('id')->toArray(),
@@ -211,17 +288,50 @@ class CourseTest extends TestCase
             });
     }
 
-    public function test_course_show_page_shows_an_unrecognised_format_and_frequency_as_stored()
+    public function test_course_show_page_sends_when_the_course_was_paused()
     {
         $user = User::factory()->create();
-        $course = Course::factory()->create(['format' => 'workshop', 'frequency' => 'monthly']);
+        $course = Course::factory()->create(['paused_at' => '2026-07-01 10:30:00']);
 
         $this->actingAs($user)
             ->get(route('courses.show', $course))
             ->assertInertia(function ($page) {
-                $page->where('course.format.label', 'workshop')
-                    ->where('course.frequency.label', 'monthly');
+                $page->where('course.paused_at', '2026-07-01 10:30:00')
+                    ->where('course.is_paused', true);
             });
+    }
+
+    public function test_course_show_page_labels_an_unknown_format_and_frequency()
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->create(['format' => 'unknown', 'frequency' => 'unknown']);
+
+        $this->actingAs($user)
+            ->get(route('courses.show', $course))
+            ->assertInertia(function ($page) {
+                $page->where('course.format', ['label' => 'Unknown', 'value' => 'unknown'])
+                    ->where('course.frequency', ['label' => 'Unknown', 'value' => 'unknown']);
+            });
+    }
+
+    public function test_a_course_cannot_be_given_an_unknown_format_or_frequency()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->post(route('courses.store'), [
+                'name' => 'Test Course',
+                'slug' => 'test-course',
+                'description' => 'Test description',
+                'format' => 'unknown',
+                'format_description' => '',
+                'frequency' => 'unknown',
+                'frequency_description' => '',
+                'wait_time' => '1-2 weeks',
+            ])
+            ->assertSessionHasErrors(['format', 'frequency']);
+
+        $this->assertDatabaseMissing('courses', ['slug' => 'test-course']);
     }
 
     public function test_course_show_page_loads_when_equipment_has_no_maintainer_group()
@@ -282,8 +392,8 @@ class CourseTest extends TestCase
                 'name' => 'Updated Name',
                 'slug' => $course->slug,
                 'description' => $course->description,
-                'format' => $course->format,
-                'frequency' => $course->frequency,
+                'format' => $course->format->value,
+                'frequency' => $course->frequency->value,
             ]);
 
         $response->assertForbidden();

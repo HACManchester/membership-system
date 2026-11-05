@@ -2,6 +2,8 @@
 
 namespace BB\Entities;
 
+use BB\Support\CourseFormat;
+use BB\Support\CourseFrequency;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -14,6 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
+ * @property \Carbon\Carbon|null $paused_at
+ * @property CourseFormat $format
+ * @property CourseFrequency $frequency
  * @property-read string $format_label
  * @property-read string $frequency_label
  */
@@ -46,6 +51,9 @@ class Course extends Model
     {
         return [
             'live' => 'boolean',
+            'paused_at' => 'datetime',
+            'format' => CourseFormat::class,
+            'frequency' => CourseFrequency::class,
         ];
     }
 
@@ -71,37 +79,12 @@ class Course extends Model
         return $this->hasMany(TrainingRecord::class);
     }
 
-    public static function formatOptions()
-    {
-        return collect([
-            'group' => 'Group class',
-            'quiz' => 'Online Quiz',
-            'one-on-one' => 'One-on-one',
-        ]);
-    }
-
-    public static function frequencyOptions()
-    {
-        return collect([
-            'self-serve' => 'Self-serve',
-            'regular' => 'Regular',
-            'ad-hoc' => 'On-demand',
-        ]);
-    }
-
-
     /**
      * @return Attribute<string, never>
      */
     protected function formatLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->format) {
-            'group' => 'Group class',
-            'quiz' => 'Online Quiz',
-            'one-on-one' => 'One-on-one',
-            'unknown' => 'Unknown',
-            default => $this->format,
-        });
+        return Attribute::get(fn () => $this->format->label());
     }
 
     /**
@@ -109,13 +92,7 @@ class Course extends Model
      */
     protected function frequencyLabel(): Attribute
     {
-        return Attribute::get(fn () => match ($this->frequency) {
-            'self-serve' => 'Self-serve',
-            'regular' => 'Regular',
-            'ad-hoc' => 'On-demand',
-            'unknown' => 'Unknown',
-            default => $this->frequency,
-        });
+        return Attribute::get(fn () => $this->frequency->label());
     }
 
     /**

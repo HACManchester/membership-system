@@ -31,6 +31,14 @@ class UserPolicy
         return $authedUser->isAdmin();
     }
 
+    /**
+     * Members look after their own account; admins can act on anyone's.
+     */
+    public function manage(User $authedUser, User $user): bool
+    {
+        return $authedUser->id === $user->id || $authedUser->isAdmin();
+    }
+
     public function makePayment(User $authedUser, User $user)
     {
         // Members pay against their own account; admins can act for anyone

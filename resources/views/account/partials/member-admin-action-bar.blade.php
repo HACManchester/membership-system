@@ -1,3 +1,4 @@
+@use('BB\Support\MemberStatus')
 @if (Auth::user()->isAdmin())
 
 <div class="row">
@@ -64,13 +65,13 @@
                                 <label for="status" class="col-sm-4 control-label">Member Status:</label>
                                 <div class="col-sm-8">
                                     <select name="status" id="status" class="form-control">
-                                        <option value="setting-up" {{ $user->status == 'setting-up' ? 'selected' : '' }}>Setting Up</option>
-                                        <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="payment-warning" {{ $user->status == 'payment-warning' ? 'selected' : '' }}>Payment Warning</option>
-                                        <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
-                                        <option value="leaving" {{ $user->status == 'leaving' ? 'selected' : '' }}>Leaving</option>
-                                        <option value="left" {{ $user->status == 'left' ? 'selected' : '' }}>Left</option>
-                                        <option value="honorary" {{ $user->status == 'honorary' ? 'selected' : '' }}>Honorary</option>
+                                        <option value="setting-up" {{ $user->status == MemberStatus::SettingUp ? 'selected' : '' }}>Setting Up</option>
+                                        <option value="active" {{ $user->status == MemberStatus::Active ? 'selected' : '' }}>Active</option>
+                                        <option value="payment-warning" {{ $user->status == MemberStatus::PaymentWarning ? 'selected' : '' }}>Payment Warning</option>
+                                        <option value="suspended" {{ $user->status == MemberStatus::Suspended ? 'selected' : '' }}>Suspended</option>
+                                        <option value="leaving" {{ $user->status == MemberStatus::Leaving ? 'selected' : '' }}>Leaving</option>
+                                        <option value="left" {{ $user->status == MemberStatus::Left ? 'selected' : '' }}>Left</option>
+                                        <option value="honorary" {{ $user->status == MemberStatus::Honorary ? 'selected' : '' }}>Honorary</option>
                                     </select>
                                 </div>
                             </div>
@@ -286,7 +287,7 @@
                         </div>
                     @endif
 
-                    @if ($user->status == 'setting-up' || $user->online_only)
+                    @if ($user->status == MemberStatus::SettingUp || $user->online_only)
                         <div class="infobox__grid-item infobox__grid-item--main alert-danger">
                             <h4>Delete</h4>
                             <p>Is this an old record? No sign of {{ $user->name }}?</p>

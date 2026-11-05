@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\User;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\MemberStatus;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use GoCardlessPro\Core\Exception\InvalidStateException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,12 +55,12 @@ class SubscriptionCancellationTest extends TestCase
             ->assertStatus(302);
 
         $member->refresh();
-        $this->assertEquals('leaving', $member->status);
+        $this->assertSame(MemberStatus::Leaving, $member->status);
         $this->assertEmpty($member->mandate_id);
         $this->assertEmpty($member->payment_method);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
     }
 
     #[Test]
@@ -79,7 +81,7 @@ class SubscriptionCancellationTest extends TestCase
 
         // GoCardless would keep collecting, so nothing may change locally
         $member->refresh();
-        $this->assertEquals('active', $member->status);
+        $this->assertSame(MemberStatus::Active, $member->status);
         $this->assertEquals('gocardless', $member->payment_method);
         $this->assertEquals('SB123', $member->subscription_id);
     }
@@ -106,10 +108,10 @@ class SubscriptionCancellationTest extends TestCase
             ->assertStatus(302);
 
         $member->refresh();
-        $this->assertEquals('leaving', $member->status);
+        $this->assertSame(MemberStatus::Leaving, $member->status);
         $this->assertEmpty($member->subscription_id);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
     }
 }

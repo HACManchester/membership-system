@@ -3,6 +3,8 @@
 namespace BB\Http\Requests;
 
 use BB\Entities\Course;
+use BB\Support\CourseFormat;
+use BB\Support\CourseFrequency;
 use BB\Support\CurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -30,9 +32,9 @@ class StoreCourseRequest extends FormRequest
             'name' => ['required', 'unique:courses'],
             'slug' => ['required', 'unique:courses'],
             'description' => ['required'],
-            'format' => ['required', Rule::in(Course::formatOptions()->keys())],
+            'format' => ['required', Rule::enum(CourseFormat::class)->only(CourseFormat::choosable())],
             'format_description' => ['present'],
-            'frequency' => ['required', Rule::in(Course::frequencyOptions()->keys())],
+            'frequency' => ['required', Rule::enum(CourseFrequency::class)->only(CourseFrequency::choosable())],
             'frequency_description' => ['present'],
             'wait_time' => ['required'],
             'training_organisation_description' => ['nullable', 'string'],

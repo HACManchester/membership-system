@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use BB\Entities\Gift;
 use BB\Entities\User;
+use BB\Support\MemberStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -238,7 +239,7 @@ class SignupTest extends TestCase
         ])->assertRedirect();
 
         $member = User::where('email', $email)->firstOrFail();
-        $this->assertSame('setting-up', $member->status);
+        $this->assertSame(MemberStatus::SettingUp, $member->status);
         $this->assertFalse((bool) $member->active);
         $this->assertFalse((bool) $member->banned);
         $this->assertNull($member->banned_reason);

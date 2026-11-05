@@ -3,6 +3,8 @@
 use BB\Entities\SubscriptionCharge;
 use BB\Events\SubscriptionChargePaid;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\PaymentStatus;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Exception;
 use GoCardlessPro\Core\Exception\InvalidStateException;
@@ -36,10 +38,10 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
-     * @param string    $status
+     * @param SubscriptionChargeStatus|string $status
      * @return SubscriptionCharge
      */
-    public function createCharge($userId, \DateTime $date, $amount = 0, $status = 'pending')
+    public function createCharge($userId, \DateTime $date, $amount = 0, $status = SubscriptionChargeStatus::Pending)
     {
         return $this->model->create(['charge_date' => $date, 'user_id' => $userId, 'amount' => $amount, 'status'=>$status]);
     }
@@ -50,7 +52,7 @@ class SubscriptionChargeRepository extends DBRepository
      * @param integer   $userId
      * @param \DateTime $date
      * @param integer   $amount
-     * @param string    $status
+     * @param SubscriptionChargeStatus|string $status
      * @param string|null $DDAuthId
      * @return SubscriptionCharge
      */
@@ -65,15 +67,15 @@ class SubscriptionChargeRepository extends DBRepository
                 $this->goCardless->getNameFromReason('subscription'),
                 idempotencyKey: $charge->goCardlessIdempotencyKey($DDAuthId)
             );
-            $status = $bill->status;
-            if ($status == 'pending_submission') {
-                $status = 'pending';
+            $status = PaymentStatus::fromGoCardless($bill->status, PaymentStatus::Pending);
+            if ($status === PaymentStatus::PendingSubmission) {
+                $status = PaymentStatus::Pending;
             }
         }
         catch (InvalidStateException | ValidationFailedException $e) {
-            $status = 'failed';
+            $status = PaymentStatus::Failed;
         } catch (Exception $e) {
-            $status = 'error';
+            $status = PaymentStatus::Error;
         }
 
         $paymentId = $this->paymentRepository->recordSubscriptionPayment(
@@ -86,11 +88,11 @@ class SubscriptionChargeRepository extends DBRepository
             (string) $charge->id
         );
 
-        if ($status == 'failed') {
+        if ($status === PaymentStatus::Failed) {
             // GoCardless rejected the payment outright, so no failure webhook will
             // ever arrive; run the same path one would trigger (cancel the charge
             // and put the member into payment-warning)
-            $this->paymentRepository->recordPaymentFailure($paymentId, 'failed');
+            $this->paymentRepository->recordPaymentFailure($paymentId, PaymentStatus::Failed);
         }
 
         return $charge;
@@ -123,7 +125,7 @@ class SubscriptionChargeRepository extends DBRepository
         //find any existing payment that hasn't been paid
         //Subscription payments will always be used to pay of bills
 
-        return $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->orderBy('charge_date', 'asc')->first();
+        return $this->model->where('user_id', $userId)->outstanding()->orderBy('charge_date', 'asc')->first();
     }
 
     /**
@@ -139,7 +141,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         $subCharge->payment_date = $paymentDate;
-        $subCharge->status = 'paid';
+        $subCharge->status = SubscriptionChargeStatus::Paid;
         if ($amount) {
             $subCharge->amount = $amount;
         }
@@ -156,7 +158,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         
-        $subCharge->status = 'processing';
+        $subCharge->status = SubscriptionChargeStatus::Processing;
         $subCharge->save();
 
         \Event::dispatch('sub-charge.processing', array($chargeId, $subCharge->user_id, $subCharge->charge_date, $subCharge->amount));
@@ -173,9 +175,9 @@ class SubscriptionChargeRepository extends DBRepository
         $subCharge = $this->getById($chargeId);
         
         //If the charge has already been cancelled dont touch it
-        if ($subCharge->status != 'cancelled') {
+        if ($subCharge->status !== SubscriptionChargeStatus::Cancelled) {
             $subCharge->payment_date = null;
-            $subCharge->status       = 'cancelled';
+            $subCharge->status       = SubscriptionChargeStatus::Cancelled;
             $subCharge->amount       = 0;
             $subCharge->save();
         } else {
@@ -215,7 +217,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getMembersLatestPaidCharge($userId)
     {
-        return $this->model->where('user_id', $userId)->where('status', 'paid')->orderBy('charge_date', 'desc')->first();
+        return $this->model->where('user_id', $userId)->where('status', SubscriptionChargeStatus::Paid)->orderBy('charge_date', 'desc')->first();
     }
 
     /**
@@ -235,7 +237,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getDue()
     {
-        return $this->model->where('status', 'due')->get();
+        return $this->model->due()->get();
     }
 
     /**
@@ -245,7 +247,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function getPending()
     {
-        return $this->model->where('status', 'pending')->get();
+        return $this->model->pending()->get();
     }
 
     /**
@@ -258,7 +260,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
         
-        $subCharge->status = 'due';
+        $subCharge->status = SubscriptionChargeStatus::Due;
         $subCharge->save();
     }
 
@@ -274,7 +276,7 @@ class SubscriptionChargeRepository extends DBRepository
         /** @var SubscriptionCharge */
         $subCharge = $this->getById($chargeId);
 
-        $subCharge->status = 'cancelled';
+        $subCharge->status = SubscriptionChargeStatus::Cancelled;
         $subCharge->save();
     }
 
@@ -286,7 +288,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function cancelOutstandingCharges($userId)
     {
-        $this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due'])->update(['status'=>'cancelled']);
+        $this->model->where('user_id', $userId)->outstanding()->update(['status' => SubscriptionChargeStatus::Cancelled]);
     }
 
     /**
@@ -297,7 +299,7 @@ class SubscriptionChargeRepository extends DBRepository
      */
     public function hasOutstandingCharges($userId)
     {
-        return ($this->model->where('user_id', $userId)->whereIn('status', ['pending', 'due', 'processing'])->count() > 0);
+        return $this->model->where('user_id', $userId)->inFlight()->exists();
     }
 
     /**

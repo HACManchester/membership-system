@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use BB\Entities\Payment;
+use BB\Support\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,11 +33,11 @@ class PaymentFactory extends Factory
             'fee' => $this->faker->randomFloat(2, 0, 100),
             'amount_minus_fee' => fn (array $payment) => $payment['amount'] - $payment['fee'],
             'status' => $this->faker->randomElement([
-                Payment::STATUS_PENDING,
-                Payment::STATUS_PENDING_SUBMISSION,
-                Payment::STATUS_CANCELLED,
-                Payment::STATUS_PAID,
-                Payment::STATUS_WITHDRAWN,
+                PaymentStatus::Pending,
+                PaymentStatus::PendingSubmission,
+                PaymentStatus::Cancelled,
+                PaymentStatus::Paid,
+                PaymentStatus::Withdrawn,
             ]),
             'reason' => $this->faker->randomElement(array_keys(Payment::getPaymentReasons())),
             'created_at' => $this->faker->dateTime(),
@@ -47,22 +48,22 @@ class PaymentFactory extends Factory
 
     public function pending(): static
     {
-        return $this->state(['status' => Payment::STATUS_PENDING]);
+        return $this->state(['status' => PaymentStatus::Pending]);
     }
 
     public function pendingSubmission(): static
     {
-        return $this->state(['status' => Payment::STATUS_PENDING_SUBMISSION]);
+        return $this->state(['status' => PaymentStatus::PendingSubmission]);
     }
 
     public function cancelled(): static
     {
-        return $this->state(['status' => Payment::STATUS_CANCELLED]);
+        return $this->state(['status' => PaymentStatus::Cancelled]);
     }
 
     public function paid(): static
     {
-        return $this->state(['status' => Payment::STATUS_PAID]);
+        return $this->state(['status' => PaymentStatus::Paid]);
     }
 
     public function fromCash(): static

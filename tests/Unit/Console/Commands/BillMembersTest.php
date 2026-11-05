@@ -6,6 +6,7 @@ use BB\Entities\User;
 use BB\Entities\SubscriptionCharge;
 use BB\Entities\Payment;
 use BB\Helpers\GoCardlessHelper;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Tests\TestCase;
@@ -70,7 +71,7 @@ class BillMembersTest extends TestCase
 
         $this->assertNotNull($payment);
         $this->assertEquals(22, $payment->amount);
-        $this->assertEquals('pending', $payment->status);
+        $this->assertSame(PaymentStatus::Pending, $payment->status);
         $this->assertEquals('PM123456789', $payment->source_id);
     }
 
@@ -240,7 +241,7 @@ class BillMembersTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('failed', $payment->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->status);
         $this->assertNull($payment->source_id); // No GoCardless payment ID
     }
 

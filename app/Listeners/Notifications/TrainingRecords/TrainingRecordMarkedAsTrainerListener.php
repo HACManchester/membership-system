@@ -4,25 +4,12 @@ namespace BB\Listeners\Notifications\TrainingRecords;
 
 use BB\Events\TrainingRecords\TrainingRecordMarkedAsTrainerEvent;
 use BB\Notifications\TrainingRecords\Inductees\TrainingRecordMarkedAsTrainerNotification;
-use BB\Repo\EquipmentRepository;
+use BB\Entities\Equipment;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class TrainingRecordMarkedAsTrainerListener
 {
-    /** @var EquipmentRepository */
-    protected $equipmentRepository;
-
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct(EquipmentRepository $equipmentRepository)
-    {
-        $this->equipmentRepository = $equipmentRepository;
-    }
-
     /**
      * Handle the event.
      *
@@ -35,7 +22,7 @@ class TrainingRecordMarkedAsTrainerListener
         $event->trainingRecord->load('course');
         
         $key = $event->trainingRecord->key;
-        $equipment = $this->equipmentRepository->findByInductionCategory($key);
+        $equipment = Equipment::where('induction_category', $key)->get();
 
         $user = $event->trainingRecord->user;
         $user->notify(new TrainingRecordMarkedAsTrainerNotification($event->trainingRecord, $equipment));

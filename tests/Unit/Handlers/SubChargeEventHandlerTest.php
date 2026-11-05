@@ -7,6 +7,7 @@ use BB\Entities\Payment;
 use BB\Handlers\SubChargeEventHandler;
 use BB\Repo\UserRepository;
 use BB\Repo\SubscriptionChargeRepository;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -21,7 +22,7 @@ class SubChargeEventHandlerTest extends TestCase
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
         $this->subscriptionChargeRepository = app(SubscriptionChargeRepository::class);
-        $this->handler = new SubChargeEventHandler($this->userRepository);
+        $this->handler = app(SubChargeEventHandler::class);
     }
 
     public function testOnPaymentFailureSetsPaymentWarning()
@@ -47,7 +48,7 @@ class SubChargeEventHandlerTest extends TestCase
         );
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
         
         // Should set 10-day grace period
@@ -136,6 +137,6 @@ class SubChargeEventHandlerTest extends TestCase
         $user->refresh();
         
         // Should set warning since no active payments exist
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
     }
 }

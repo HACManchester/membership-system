@@ -7,6 +7,7 @@ use BB\Entities\SubscriptionCharge;
 use BB\Entities\Payment;
 use BB\Process\CheckPaymentWarnings;
 use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -19,7 +20,7 @@ class CheckPaymentWarningsTest extends TestCase
     {
         parent::setUp();
         $this->userRepository = app(UserRepository::class);
-        $this->process = new CheckPaymentWarnings($this->userRepository);
+        $this->process = app(CheckPaymentWarnings::class);
     }
 
     public function testRunSuspendsUserWhenGracePeriodExpired()
@@ -34,7 +35,7 @@ class CheckPaymentWarningsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
         $this->assertNotNull($user->suspended_at);
         $this->assertTrue($user->suspended_at->isToday());
@@ -52,7 +53,7 @@ class CheckPaymentWarningsTest extends TestCase
         $this->process->run();
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
         $this->assertNull($user->suspended_at);
     }
@@ -77,8 +78,8 @@ class CheckPaymentWarningsTest extends TestCase
         $suspendedUser->refresh();
 
         // Should not change status of users not in payment-warning
-        $this->assertEquals('active', $activeUser->status);
-        $this->assertEquals('suspended', $suspendedUser->status);
+        $this->assertSame(MemberStatus::Active, $activeUser->status);
+        $this->assertSame(MemberStatus::Suspended, $suspendedUser->status);
     }
 
     public function testRunHandlesUserWithNoSubscriptionExpires()
@@ -94,7 +95,7 @@ class CheckPaymentWarningsTest extends TestCase
         $user->refresh();
         
         // Should suspend user with no expiry date
-        $this->assertEquals('suspended', $user->status);
+        $this->assertSame(MemberStatus::Suspended, $user->status);
         $this->assertFalse($user->active);
     }
 
@@ -120,7 +121,7 @@ class CheckPaymentWarningsTest extends TestCase
         $user->refresh();
         
         // Should not recover since payment is older than current expiry
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
     }
 }

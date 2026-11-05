@@ -10,6 +10,9 @@ use BB\Services\MemberSubscriptionCharges;
 use BB\Repo\PaymentRepository;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Repo\UserRepository;
+use BB\Support\MemberStatus;
+use BB\Support\PaymentStatus;
+use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Tests\TestCase;
@@ -92,7 +95,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->first();
         $this->assertNotNull($charge1);
         $this->assertEquals(22, $charge1->amount);
-        $this->assertEquals('pending', $charge1->status);
+        $this->assertSame(SubscriptionChargeStatus::Pending, $charge1->status);
 
         $charge2 = SubscriptionCharge::where('user_id', $user2->id)
             ->whereDate('charge_date', $targetDate)
@@ -254,13 +257,13 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->service->makeChargesDue();
 
         $todayCharge->refresh();
-        $this->assertEquals('due', $todayCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $todayCharge->status);
 
         $pastCharge->refresh();
-        $this->assertEquals('due', $pastCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $pastCharge->status);
 
         $futureCharge->refresh();
-        $this->assertEquals('pending', $futureCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Pending, $futureCharge->status);
     }
 
     public function testBillMembersCreatesGoCardlessPaymentsForCorrectAmounts()
@@ -326,7 +329,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->first();
         $this->assertNotNull($payment1);
         $this->assertEquals(22, $payment1->amount);
-        $this->assertEquals('pending', $payment1->status);
+        $this->assertSame(PaymentStatus::Pending, $payment1->status);
         $this->assertEquals('PM123456789', $payment1->source_id);
 
         $payment2 = Payment::where('user_id', $user2->id)
@@ -334,7 +337,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->first();
         $this->assertNotNull($payment2);
         $this->assertEquals(17, $payment2->amount);
-        $this->assertEquals('pending', $payment2->status);
+        $this->assertSame(PaymentStatus::Pending, $payment2->status);
         $this->assertEquals('PM987654321', $payment2->source_id);
     }
 
@@ -443,7 +446,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->service->billMembers();
 
         foreach ($charges as $charge) {
-            $this->assertEquals('cancelled', $charge->fresh()->status);
+            $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         }
         $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
     }
@@ -468,7 +471,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->service->billMembers();
 
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
     }
 
@@ -492,7 +495,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->service->billMembers();
 
-        $this->assertEquals('cancelled', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->fresh()->status);
         $this->assertEquals(0, Payment::where('user_id', $user->id)->count());
     }
 
@@ -517,7 +520,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $this->service->billMembers();
 
-        $this->assertEquals('due', $charge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $charge->fresh()->status);
     }
 
     public function testBillMembersWillNotCollectABackdatedCharge()
@@ -556,7 +559,7 @@ class MemberSubscriptionChargesTest extends TestCase
 
         // Left alone rather than cancelled - the money may still be owed, but a human
         // decides that, and only the current charge is collected
-        $this->assertEquals('due', $staleCharge->fresh()->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $staleCharge->fresh()->status);
         $this->assertEquals(1, Payment::where('user_id', $user->id)->count());
         $this->assertEquals(
             (string) $currentCharge->id,
@@ -593,17 +596,17 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('failed', $payment->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->status);
         $this->assertNull($payment->source_id);
         $this->assertEquals(22, $payment->amount);
 
         // No GoCardless payment exists so no failure webhook will ever arrive - the
         // run itself must put the member through the failure flow
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
         $this->assertTrue($user->active);
     }
 
@@ -657,14 +660,14 @@ class MemberSubscriptionChargesTest extends TestCase
         // The failed payment must not pick up the previous member's GoCardless payment ID
         $failedPayment = Payment::where('user_id', $failingUser->id)->first();
         $this->assertNotNull($failedPayment);
-        $this->assertEquals('failed', $failedPayment->status);
+        $this->assertSame(PaymentStatus::Failed, $failedPayment->status);
         $this->assertNull($failedPayment->source_id);
 
         // Members after the failure still get billed
         $payment2 = Payment::where('user_id', $goodUser2->id)->first();
         $this->assertNotNull($payment2);
         $this->assertEquals('PM333', $payment2->source_id);
-        $this->assertEquals('pending', $payment2->status);
+        $this->assertSame(PaymentStatus::Pending, $payment2->status);
     }
 
     public function testBillMembersSurvivesFailureForMemberWithOlderOutstandingCharge()
@@ -731,9 +734,9 @@ class MemberSubscriptionChargesTest extends TestCase
 
         // The new charge went through the failure flow; the old one is untouched
         $newCharge->refresh();
-        $this->assertEquals('cancelled', $newCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $newCharge->status);
         $oldCharge->refresh();
-        $this->assertEquals('due', $oldCharge->status);
+        $this->assertSame(SubscriptionChargeStatus::Due, $oldCharge->status);
 
         // The member processed after the failure was still billed
         $laterCharge->refresh();
@@ -807,13 +810,13 @@ class MemberSubscriptionChargesTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals('failed', $payment->status);
+        $this->assertSame(PaymentStatus::Failed, $payment->status);
 
         $charge->refresh();
-        $this->assertEquals('cancelled', $charge->status);
+        $this->assertSame(SubscriptionChargeStatus::Cancelled, $charge->status);
 
         $user->refresh();
-        $this->assertEquals('payment-warning', $user->status);
+        $this->assertSame(MemberStatus::PaymentWarning, $user->status);
     }
 
     /**

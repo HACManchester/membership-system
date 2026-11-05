@@ -1,7 +1,6 @@
 <?php namespace BB\Repo;
 
 use BB\Entities\ProfileData;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProfileDataRepository extends DBRepository
 {
@@ -28,23 +27,4 @@ class ProfileDataRepository extends DBRepository
         $new->save();
         return $new->id;
     }
-
-    /**
-     * Fetch a users profile data
-     * @param $userId
-     * @return mixed
-     */
-    public function getUserProfile($userId)
-    {
-        $record = $this->model->where('user_id', $userId)->first();
-        if ( ! $record) {
-            throw new ModelNotFoundException;
-        }
-        return $record;
-    }
-
-    public function update($userId, $profileDate)
-    {
-        return $this->getUserProfile($userId)->update($profileDate);
-    }
-} 
+}

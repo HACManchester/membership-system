@@ -26,12 +26,11 @@ class CashPaymentController extends Controller
     /**
      * Start the creation of a new gocardless payment
      *   Details get posted into this method and the redirected to gocardless
-     *
-     * @param $userId
      */
-    public function store($userId, Request $request)
+    public function store(string $userId, Request $request)
     {
-        User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
 
         $this->validateWithBag('credit', $request, [
             'amount' => 'required|numeric|min:0',
@@ -47,7 +46,7 @@ class CashPaymentController extends Controller
 
         $sourceId = $sourceId . ':' . time();
         
-        $this->paymentRepository->recordPayment($reason, $userId, 'cash', $sourceId, $amount);
+        $this->paymentRepository->recordPayment($reason, $user->id, 'cash', $sourceId, $amount);
 
         \FlashNotification::success("Top Up successful");
 
@@ -68,15 +67,13 @@ class CashPaymentController extends Controller
     /**
      * Remove cash from the users balance
      *
-     * @param $userId
-     * @return mixed
-     * @throws \BB\Exceptions\AuthenticationException
      * @throws \BB\Exceptions\InvalidDataException
      */
-    public function destroy($userId, Request $request)
+    public function destroy(string $userId, Request $request)
     {
-        $user = User::findWithPermission($userId);
-        $this->bbCredit->setUserId($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
+        $this->bbCredit->setUserId($user->id);
 
         $minimumBalance = $this->bbCredit->acceptableNegativeBalance('withdrawal');
         $maxWithdrawal = ($user->cash_balance / 100) + $minimumBalance;
@@ -91,7 +88,7 @@ class CashPaymentController extends Controller
         $ref = $request->get('ref');
         $returnPath = $request->get('return_path');
         
-        $this->paymentRepository->recordPayment('withdrawal', $userId, 'balance', '', $amount, 'paid', 0, $ref);
+        $this->paymentRepository->recordPayment('withdrawal', $user->id, 'balance', '', $amount, \BB\Support\PaymentStatus::Paid, 0, $ref);
 
         $this->bbCredit->recalculate();
 

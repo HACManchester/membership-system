@@ -15,7 +15,7 @@ or `GoCardlessWebhookController`.
 | Field | Meaning |
 | --- | --- |
 | `payment_method` | `gocardless-variable` (current), `gocardless` (legacy fixed subscription), `standing-order`, `cash`, … |
-| `payment_day` | Day of month to bill (values > 28 are clamped to 1 — the `User::paymentDay()` mutator) |
+| `payment_day` | Day of month to bill (values > 28 are clamped to 1 — the `paymentDay()` mutator in `HasSubscription`) |
 | `monthly_subscription` | Chosen amount **in pounds** (e.g. 22) — multiplied by 100 at the GoCardless boundary |
 | `mandate_id` | GoCardless mandate (variable DD — the current system) |
 | `subscription_id` | GoCardless subscription (legacy fixed DD only) |
@@ -33,14 +33,20 @@ SubscriptionCharge ID** when the payment pays a subscription charge — this is 
 two tables), `reason` (`subscription`, `balance`, `induction`, …), `amount`/`fee`/`amount_minus_fee`
 (in pounds — see the money-units note in project-health.md), `status`, `paid_at`.
 
-Statuses: `pending`, `pending_submission` (normalised to `pending` on creation), `paid`,
-`cancelled`, `withdrawn` (+ `failed` written by the webhook failure path).
+Statuses (`BB\Support\PaymentStatus`, cast on the model): `pending`, `pending_submission`
+(normalised to `pending` on creation), `paid`, `cancelled`, `withdrawn`, `failed` (written by the
+failure paths) and `error`. A GoCardless payment's own status can also be recorded as it stands
+(e.g. `pending_customer_approval`, `charged_back`), so every GoCardless payment status is a case.
+Statuses from GoCardless go through `PaymentStatus::fromGoCardless()`: one GoCardless adds later is
+reported and recorded as `pending` (or `failed` on the failure path) rather than stopping the
+billing run. `payments.status` was widened to 40 characters in November 2026; before that,
+`pending_customer_approval` was stored cut short as `pending_customer_app`.
 
 ### SubscriptionCharge (`app/Entities/SubscriptionCharge.php`)
 
 One row per member per billing month — "this member owes this month's subscription". Fields:
 `user_id`, `charge_date`, `payment_date`, `amount`, `status`
-(`pending` → `due` → `processing` → `paid`, or `cancelled`).
+(`pending` → `due` → `processing` → `paid`, or `cancelled`; the `SubscriptionChargeStatus` enum).
 
 **Mental model:** a `SubscriptionCharge` is the *invoice*; a `Payment` is the *money movement*
 attempting to settle it; `Payment.reference = SubscriptionCharge.id` links them.
@@ -98,7 +104,7 @@ rejected.
 | `payments.confirmed` | Payment → `paid`, `paid_at=now()`; fires `payment.paid` |
 | `payments.paid_out` | Ignored |
 | `payments.failed` / `payments.cancelled` | Re-fetch from GC API; Payment → `failed`/`cancelled`; fires `payment.cancelled` |
-| `mandates.cancelled` | Find user by `mandate_id` → `cancelSubscription()` (clears mandate/method, status → `leaving`) |
+| `mandates.cancelled` | Find user by `mandate_id` → `MembershipStatus::cancelSubscription()` (clears mandate/method, status → `leaving`, cancels outstanding charges) |
 | `subscriptions.cancelled` | Legacy fixed-DD cleanup; clears `subscription_id` |
 | `subscriptions.payment_created` | Legacy fixed-DD: records the payment |
 
@@ -107,13 +113,13 @@ rejected.
 **Success:** `payment.paid` → `PaymentEventHandler::onPaid()` → if `reason=subscription`,
 `SubscriptionChargeRepository::markChargeAsPaid(reference)` → charge `paid` → fires
 `SubscriptionChargePaid` → `ExtendMembership` listener →
-`user->extendMembership(payment_date + 1 month)` → status `active`, `subscription_expires` pushed
+`MembershipStatus::extend(user, payment_date + 1 month)` → status `active`, `subscription_expires` pushed
 out, `suspended_at` cleared.
 
 **Failure:** `payment.cancelled` → `PaymentEventHandler::onCancel()` →
 `SubscriptionChargeRepository::paymentFailed(reference)` → charge `cancelled` → fires
 `sub-charge.payment-failed` → `SubChargeEventHandler::onPaymentFailure()` → *only if no other live
-payment exists for that charge* → `user->setPaymentWarning()` → status `payment-warning` (access
+payment exists for that charge* → `MembershipStatus::setPaymentWarning()` → status `payment-warning` (access
 kept), `subscription_expires = now + grace period`.
 
 ---
@@ -124,7 +130,7 @@ kept), `subscription_expires = now + grace period`.
 flow (`SubscriptionController@create` → `GoCardlessHelper::newPreAuthUrl`; `gocardless_setup_id`
 stored). On return (`@store`), the mandate is confirmed and stored, `payment_method` becomes
 `gocardless-variable`, `payment_day` set to today's day, and
-`UserRepository::ensureMembershipActive()` activates the account — if membership is expired and no
+`MembershipStatus::activate()` activates the account — if membership is expired and no
 charge is outstanding, it creates a charge **and bills it immediately**
 (`SubscriptionChargeRepository::createChargeAndBillDD`).
 
@@ -145,7 +151,7 @@ daily `RecoverMemberships` re-activates them. If the warning expires: `suspended
 — the keyfob export only includes active users). After 30 days suspended: `left`.
 
 **Leaving.** Member cancels (`SubscriptionController@destroy`): mandate cancelled at GoCardless,
-then `UserRepository::subscriptionCancelled()` clears the payment fields, sets status `leaving`
+then `MembershipStatus::cancelSubscription()` clears the payment fields, sets status `leaving`
 and **cancels the outstanding charges**. The daily check flips `leaving` → `left` once
 `subscription_expires` passes, or immediately if there is no expiry date to wait for. A mandate
 cancelled *at the bank* arrives as a `mandates.cancelled` webhook and goes through the same
@@ -161,7 +167,7 @@ cancels-and-reports charges it can't collect instead of dropping them, and it re
 anything older than the configured age. `bb:audit-sub-charges` finds and clears any historic
 backlog.
 
-**Rejoining.** A returning member redoes the mandate setup; `ensureMembershipActive()` reactivates
+**Rejoining.** A returning member redoes the mandate setup; `MembershipStatus::activate()` reactivates
 and bills immediately. History (payments, charges) is retained.
 
 **Special cases.** `honorary` status members and members with an unexpired gift (`gift_expires`
@@ -204,7 +210,7 @@ Engineering work this subsystem would benefit from (see architecture.md for sequ
    each event type and signature verification, but they use hand-crafted payloads; capturing a few
    real payloads as fixtures would close the format-fidelity gap (see testing.md).
 4. **Configurable grace period.** The payment-warning grace period is hardcoded in
-   `User::setPaymentWarning()`; it should come from config.
-5. **A guarded state machine.** The `User.status` transitions are implemented as independent
-   setters; folding them into a single `MembershipStatus` service would make the diagram above
-   enforceable code.
+   `MembershipStatus::setPaymentWarning()`; it should come from config.
+5. **A guarded state machine.** The `User.status` transitions live in the `MembershipStatus`
+   service, but each still sets its status unconditionally; refusing transitions the diagram above
+   doesn't allow would make it enforceable code.

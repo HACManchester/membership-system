@@ -67,6 +67,18 @@ class MoneyHandlingTest extends TestCase
     }
 
     #[Test]
+    public function the_balance_read_straight_after_recalculating_is_exact_pence()
+    {
+        $user = User::factory()->create(['cash_balance' => 0]);
+        $this->balancePayment($user, 19.99);
+        $credit = $this->creditFor($user);
+
+        $credit->recalculate();
+
+        $this->assertSame('£19.99', $credit->getBalanceFormatted());
+    }
+
+    #[Test]
     public function spends_are_subtracted_from_the_balance()
     {
         $user = User::factory()->create(['cash_balance' => 0]);

@@ -10,13 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Uncast boolean columns read back from the database as 0/1, hence bool|int.
- *
  * @property int $id
  * @property int $user_id
  * @property string $key_id
- * @property bool|int $active
- * @property bool|int $lost
+ * @property bool $active
+ * @property bool $lost
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $user
@@ -36,6 +34,14 @@ class KeyFob extends Model
         'active' => 1,
         'lost'   => 0,
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+            'lost' => 'boolean',
+        ];
+    }
 
     /**
      * @return BelongsTo<User, $this>

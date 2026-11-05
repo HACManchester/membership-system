@@ -37,12 +37,11 @@ class MemberAdminController extends Controller
     /**
      * Update the admin-managed flags on a member. The action-bar submits these
      * from several small forms, so each field is applied only when present.
-     *
-     * @param  int  $id
      */
-    public function update(AdminUpdateMemberRequest $request, $id)
+    public function update(AdminUpdateMemberRequest $request, string $id)
     {
-        $user = User::findWithPermission($id);
+        $user = User::findOrFail($id);
+        $this->authorize('manage', $user);
 
         $madeTrusted = false;
 

@@ -6,6 +6,7 @@ use BB\Entities\Payment;
 use BB\Events\PaymentCancelled;
 use BB\Exceptions\NotImplementedException;
 use BB\Exceptions\PaymentException;
+use BB\Support\PaymentStatus;
 use Carbon\Carbon;
 
 class PaymentRepository extends DBRepository
@@ -91,7 +92,7 @@ class PaymentRepository extends DBRepository
      * @param string|null   $source gocardless
      * @param string|null   $sourceId A reference for the source
      * @param double        $amount Amount received before a fee in pounds
-     * @param string        $status paid, pending, cancelled, refunded
+     * @param PaymentStatus|string $status a string is a status GoCardless reported
      * @param double        $fee The fee charged by the payment provider
      * @param string|null   $ref
      * @param Carbon        $paidDate
@@ -99,8 +100,11 @@ class PaymentRepository extends DBRepository
      * @return int The ID of the payment record
      * @throws PaymentException if the source ID is already recorded against another user
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
     {
+        if (! $status instanceof PaymentStatus) {
+            $status = PaymentStatus::fromGoCardless($status, PaymentStatus::Pending);
+        }
         if ($paidDate == null) {
             $paidDate = new Carbon();
         }
@@ -127,7 +131,7 @@ class PaymentRepository extends DBRepository
             $record->fee              = $fee;
             $record->status           = $status;
             $record->reference        = $ref;
-            if ($status == 'paid') {
+            if ($status === PaymentStatus::Paid) {
                 $record->paid_at = $paidDate;
             }
             $record->save();
@@ -148,13 +152,13 @@ class PaymentRepository extends DBRepository
      * @param string $source gocardless
      * @param string $sourceId A reference for the source
      * @param double $amount Amount received before a fee in pounds
-     * @param string $status paid, pending, cancelled, refunded
+     * @param PaymentStatus|string $status a string is a status GoCardless reported
      * @param double $fee The fee charged by the payment provider
      * @param string|null   $ref
      * @param Carbon $paidDate
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = 'paid', $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
     {
         return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref, $paidDate);
     }
@@ -170,7 +174,7 @@ class PaymentRepository extends DBRepository
         /** @var Payment */
         $payment = $this->getById($paymentId);
 
-        $payment->status = 'paid';
+        $payment->status = PaymentStatus::Paid;
         $payment->paid_at = $paidDate;
         $payment->save();
 
@@ -187,7 +191,7 @@ class PaymentRepository extends DBRepository
         /** @var Payment */
         $payment = $this->getById($paymentId);
 
-        $payment->status = 'pending';
+        $payment->status = PaymentStatus::Pending;
         $payment->save();
     }
 
@@ -195,10 +199,13 @@ class PaymentRepository extends DBRepository
      * Record a payment failure or cancellation
      *
      * @param int    $paymentId
-     * @param string $status
+     * @param PaymentStatus|string $status a string is a status GoCardless reported
      */
-    public function recordPaymentFailure($paymentId, $status = 'failed')
+    public function recordPaymentFailure($paymentId, $status = PaymentStatus::Failed)
     {
+        if (! $status instanceof PaymentStatus) {
+            $status = PaymentStatus::fromGoCardless($status, PaymentStatus::Failed);
+        }
         $this->update($paymentId, ['status' => $status]);
 
         /** @var Payment */
@@ -237,7 +244,7 @@ class PaymentRepository extends DBRepository
     public function latestUserPayment($userId, $reason = 'subscription')
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, 'paid', 'pending', 'withdrawn'])
+            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::Withdrawn])
             ->orderBy('created_at', 'desc')
             ->first();
     }
@@ -252,7 +259,7 @@ class PaymentRepository extends DBRepository
     public function getUserPaymentsByReason($userId, $reason)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, 'paid', 'pending', 'withdrawn'])
+            ->whereRaw('reason = ? and (status = ? or status = ? or status = ?)', [$reason, PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::Withdrawn])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -264,7 +271,7 @@ class PaymentRepository extends DBRepository
     public function getUserPaymentsBySource($userId, $source)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('source = ? and (status = ? or status = ? or status = ?)', [$source, 'paid', 'pending', 'withdrawn'])
+            ->whereRaw('source = ? and (status = ? or status = ? or status = ?)', [$source, PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::Withdrawn])
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -287,7 +294,7 @@ class PaymentRepository extends DBRepository
     public function getBalancePaymentsPaginated($userId)
     {
         return $this->model->where('user_id', $userId)
-            ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ? or status = ?)', ['balance', 'balance', 'paid', 'pending', 'withdrawn'])
+            ->whereRaw('(source = ? or reason = ?) and (status = ? or status = ? or status = ?)', ['balance', 'balance', PaymentStatus::Paid, PaymentStatus::Pending, PaymentStatus::Withdrawn])
             ->orderBy('created_at', 'desc')
             ->simplePaginate($this->perPage);
     }
@@ -383,7 +390,7 @@ class PaymentRepository extends DBRepository
     {
         return $this->model
             ->select('user_id', 'reason', 'amount', \DB::raw('count(*) as count'))
-            ->where('status', Payment::STATUS_PENDING)
+            ->where('status', PaymentStatus::Pending)
             ->groupBy('user_id', 'reason', 'amount')
             ->havingRaw('count(*) > 1')
             ->get();

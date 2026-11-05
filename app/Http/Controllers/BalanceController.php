@@ -1,7 +1,6 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
-use BB\Exceptions\AuthenticationException;
 use BB\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 
@@ -22,10 +21,11 @@ class BalanceController extends Controller
         $this->bbCredit = $bbCredit;
     }
 
-    public function index($userId)
+    public function index(string $userId)
     {
         //Verify the user can access this user record
-        $user = User::findWithPermission($userId);
+        $user = User::findOrFail($userId);
+        $this->authorize('manage', $user);
         $this->bbCredit->setUserId($user->id);
 
         $userBalance = $this->bbCredit->getBalanceFormatted();

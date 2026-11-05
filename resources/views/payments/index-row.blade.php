@@ -38,7 +38,7 @@
                         </form>
                     </li>
                 @endif
-                @if ($payment->source == 'gocardless-variable' && $payment->status == \BB\Entities\Payment::STATUS_PENDING)
+                @if ($payment->source == 'gocardless-variable' && $payment->status === \BB\Support\PaymentStatus::Pending)
                     <li>
                         <form method="POST" action="{{ route('payment.gocardless.cancel', $payment) }}" class="navbar-form navbar-left">
                             @csrf

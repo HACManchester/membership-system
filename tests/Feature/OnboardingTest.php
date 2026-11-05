@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use BB\Entities\Settings;
 use BB\Entities\User;
+use BB\Support\MemberStatus;
 use BB\Support\SettingKey;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -44,7 +45,7 @@ class OnboardingTest extends TestCase
         ])->assertRedirect();
 
         $user = User::where('email', $email)->firstOrFail();
-        $this->assertEquals('setting-up', $user->status);
+        $this->assertSame(MemberStatus::SettingUp, $user->status);
         $this->assertFalse((bool) $user->email_verified);
 
         // 2. Confirm email (the link emailed to them — unauthenticated, keyed on the user hash)
