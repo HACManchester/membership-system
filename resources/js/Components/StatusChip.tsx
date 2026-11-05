@@ -28,7 +28,7 @@ const statuses: Record<
   leaving: {
     label: 'Leaving',
     color: 'default',
-    description: 'Your leaving and will loose access when your payment expires',
+    description: "You're leaving and will lose access when your payment expires",
   },
   'on-hold': { label: 'On Hold', color: 'default' },
   left: { label: 'Left', color: 'default' },
