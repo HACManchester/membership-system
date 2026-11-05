@@ -82,6 +82,10 @@ class BillMembersTest extends TestCase
      */
     public function testEachChargeIsBilledWithAnIdempotencyKeyIdentifyingTheCharge()
     {
+        // The key includes the charge date, so the date is fixed; billing it must happen
+        // while the charge is still young enough to collect
+        $this->travelTo(Carbon::parse('2026-10-02'));
+
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
