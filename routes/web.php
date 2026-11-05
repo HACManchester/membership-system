@@ -214,7 +214,8 @@ Route::group(array('middleware' => 'role:member'), function () {
 # Notification Emails
 ##########################
 
-Route::get('notification_email/equipment/{tool_id}/status/{status}', ['as' => 'notificationemail.equipment', 'uses' => 'NotificationEmailController@tool', 'middleware' => 'role:member']);
+Route::get('notification_email/equipment/{tool_id}/status/{status}', ['as' => 'notificationemail.equipment', 'uses' => 'NotificationEmailController@tool', 'middleware' => 'role:member'])
+    ->where('status', 'awaiting_training|trained|trainer');
 Route::get('notification_email/create', ['as' => 'notificationemail.create', 'uses' => 'NotificationEmailController@create', 'middleware' => 'role:member']);
 Route::post('notification_email', ['as' => 'notificationemail.store', 'uses' => 'NotificationEmailController@store', 'middleware' => 'role:member']);
 

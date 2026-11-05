@@ -67,5 +67,6 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('email-members', [NotificationEmailPolicy::class, 'create']);
+        Gate::define('email-equipment-members', [NotificationEmailPolicy::class, 'emailEquipmentMembers']);
     }
 }

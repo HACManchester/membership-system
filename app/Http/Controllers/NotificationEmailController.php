@@ -8,11 +8,22 @@ use BB\Mailer\UserMailer;
 use BB\Repo\TrainingRecordRepository;
 use BB\Repo\UserRepository;
 use BB\Support\CurrentUser;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class NotificationEmailController extends Controller
 {
+    /**
+     * The training statuses a tool's members can be emailed by, with their labels.
+     * The route only accepts these.
+     */
+    private const TRAINING_STATUSES = [
+        'awaiting_training' => 'awaiting training',
+        'trained' => 'trained',
+        'trainer' => 'trainer/maintainer',
+    ];
+
     /**
      * @var UserRepository
      */
@@ -51,48 +62,31 @@ class NotificationEmailController extends Controller
         ]);
     }
 
-    public function tool($tool_id, $status)
+    public function tool(string $tool_id, string $status): Response|RedirectResponse
     {
         $equipment = Equipment::where('slug', $tool_id)->firstOrFail();
 
-        if(!$equipment->requiresInduction()){
-            \FlashNotification::error("This tool doesn't require an induction.");
-            return \Redirect::route('equipment.show', $equipment->slug);
+        if (! $equipment->requiresInduction()) {
+            return redirect()->route('equipment.show', $equipment->slug)
+                ->with('error', "This tool doesn't require an induction.");
         }
 
-        $statuses = [
-            "awaiting_training" => "awaiting training",
-            "trained" => "trained",
-            "trainer" => "trainer/maintainer"
-        ];
-
-        if(!array_key_exists($status, $statuses)){
-            throw new NotImplementedException("Recipient not supported");
+        if (CurrentUser::get()->cannot('email-equipment-members', $equipment)) {
+            return redirect()->route('equipment.show', $equipment->slug)
+                ->with('error', "You may not email members, as you aren't a trainer of this tool, or an admin");
         }
 
-        // Check the user is an admin or a trainer of the tool they specified
-        $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
-        $allowed = false;
-
-        if(CurrentUser::get()->isAdmin()){
-            $allowed = true;
-        }
-
-        foreach($trainers as $t){
-            if(CurrentUser::get()->id == $t->user->id){
-                $allowed = true;
-            }
-        }
-
-        if(!$allowed){
-            \FlashNotification::error("You may not email members, as you aren't a trainer of this tool, or an admin");
-            return \Redirect::route('equipment.show', $equipment->slug);
-        }
-
-        return \View::make('notification_email.tool')
-            ->with("equipment", $equipment)
-            ->with("statuses", $statuses)
-            ->with("status", $status);
+        return Inertia::render('NotificationEmail/Equipment', [
+            'equipment' => [
+                'name' => $equipment->name,
+            ],
+            'trainingStatus' => self::TRAINING_STATUSES[$status],
+            'recipient' => "tool/{$equipment->slug}/{$status}",
+            'urls' => [
+                'equipment' => route('equipment.show', $equipment->slug, false),
+                'store' => route('notificationemail.store', [], false),
+            ],
+        ]);
     }
 
     public function store(StoreNotificationEmailRequest $request)
@@ -126,21 +120,7 @@ class NotificationEmailController extends Controller
                     throw new NotImplementedException("Recipient not supported");
                 }
 
-                //TODO: look at how to tidy this up, as it's duplicated above
-                $trainers  = $this->trainingRecordRepository->getTrainersForEquipment($equipment);
-                $allowed = false;
-
-                if(CurrentUser::get()->isAdmin()){
-                    $allowed = true;
-                }
-
-                foreach($trainers as $t){
-                    if(CurrentUser::get()->id == $t->user->id){
-                        $allowed = true;
-                    }
-                }
-
-                if( ! $allowed){
+                if (CurrentUser::get()->cannot('email-equipment-members', $equipment)) {
                     throw new AuthenticationException("You don't have permission to send to this group");
                 }
 

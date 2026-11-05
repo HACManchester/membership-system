@@ -21,6 +21,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import { router } from '@inertiajs/react';
 import { useMemberSearch } from '../../hooks/useMemberSearch';
 import { Member } from '../../types/resources';
+import RouterLink from '../RouterLink';
 
 type TrainingUser = {
   id: number;
@@ -89,7 +90,13 @@ const MemberLine = ({ user }: { user: TrainingUser }) => (
 );
 
 const EmailButton = ({ href }: { href: string }) => (
-  <Button size="small" color="secondary" startIcon={<EmailIcon />} href={href}>
+  <Button
+    size="small"
+    color="secondary"
+    startIcon={<EmailIcon />}
+    component={RouterLink}
+    href={href}
+  >
     Email these members
   </Button>
 );
