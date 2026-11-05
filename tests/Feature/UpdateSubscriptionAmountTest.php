@@ -6,38 +6,53 @@ use BB\Entities\Role;
 use BB\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
 class UpdateSubscriptionAmountTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[Test]
-    public function a_member_can_update_their_subscription_amount()
+    protected function setUp(): void
     {
-        $member = User::factory()->create(['monthly_subscription' => 22]);
+        parent::setUp();
 
-        $this->actingAs($member)
-            ->post(route('account.update-sub-payment', $member->id), [
-                'monthly_subscription' => '27',
-            ])
-            ->assertStatus(302);
-
-        $this->assertEquals(27, $member->fresh()->monthly_subscription);
+        // The minimum is configured in pence; amounts are posted in pounds
+        config(['membership.prices.minimum' => 1700]);
     }
 
     #[Test]
-    public function a_non_numeric_amount_is_rejected()
+    #[TestWith(['27'])]
+    #[TestWith(['17'])] // exactly the minimum
+    public function a_member_can_update_their_subscription_amount(string $amount)
     {
         $member = User::factory()->create(['monthly_subscription' => 22]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
-                'monthly_subscription' => 'twenty',
+                'monthly_subscription' => $amount,
             ])
-            ->assertStatus(302); // Redirect back with flash error
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('account.show', $member->id));
 
-        $this->assertEquals(22, $member->fresh()->monthly_subscription);
+        $this->assertSame((int) $amount, $member->fresh()->monthly_subscription);
+    }
+
+    #[Test]
+    #[TestWith(['22.50', 'Please enter a whole number of pounds.'])]
+    #[TestWith(['twenty', 'Please enter a whole number of pounds.'])]
+    #[TestWith(['', 'Please enter a valid amount in pounds.'])]
+    public function an_amount_that_is_not_whole_pounds_is_rejected(string $amount, string $message)
+    {
+        $member = User::factory()->create(['monthly_subscription' => 22]);
+
+        $this->actingAs($member)
+            ->post(route('account.update-sub-payment', $member->id), [
+                'monthly_subscription' => $amount,
+            ])
+            ->assertSessionHasErrors(['monthly_subscription' => $message]);
+
+        $this->assertSame(22, $member->fresh()->monthly_subscription);
     }
 
     #[Test]
@@ -47,11 +62,13 @@ class UpdateSubscriptionAmountTest extends TestCase
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
-                'monthly_subscription' => '1',
+                'monthly_subscription' => '16',
             ])
-            ->assertStatus(302);
+            ->assertSessionHasErrors([
+                'monthly_subscription' => 'The minimum subscription is £17.00, please contact the board for a lower amount. board@hacman.org.uk',
+            ]);
 
-        $this->assertEquals(22, $member->fresh()->monthly_subscription);
+        $this->assertSame(22, $member->fresh()->monthly_subscription);
     }
 
     #[Test]
@@ -65,8 +82,24 @@ class UpdateSubscriptionAmountTest extends TestCase
             ->post(route('account.update-sub-payment', $member->id), [
                 'monthly_subscription' => '1',
             ])
-            ->assertStatus(302);
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('account.show', $member->id));
 
-        $this->assertEquals(1, $member->fresh()->monthly_subscription);
+        $this->assertSame(1, $member->fresh()->monthly_subscription);
+    }
+
+    #[Test]
+    public function a_member_cannot_change_another_members_amount()
+    {
+        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $otherMember = User::factory()->create();
+
+        $this->actingAs($otherMember)
+            ->post(route('account.update-sub-payment', $member->id), [
+                'monthly_subscription' => '27',
+            ])
+            ->assertForbidden();
+
+        $this->assertSame(22, $member->fresh()->monthly_subscription);
     }
 }

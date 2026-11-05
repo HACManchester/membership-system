@@ -16,7 +16,7 @@ or `GoCardlessWebhookController`.
 | --- | --- |
 | `payment_method` | `gocardless-variable` (current), `gocardless` (legacy fixed subscription), `standing-order`, `cash`, … |
 | `payment_day` | Day of month to bill (values > 28 are clamped to 1 — the `paymentDay()` mutator in `HasSubscription`) |
-| `monthly_subscription` | Chosen amount **in pounds** (e.g. 22) — multiplied by 100 at the GoCardless boundary |
+| `monthly_subscription` | Chosen amount **in whole pounds** (e.g. 22; signup and the change-amount form both require an integer) — multiplied by 100 at the GoCardless boundary |
 | `mandate_id` | GoCardless mandate (variable DD — the current system) |
 | `subscription_id` | GoCardless subscription (legacy fixed DD only) |
 | `gocardless_setup_id` | Temporary redirect-flow ID during mandate setup |
