@@ -1,15 +1,18 @@
-<?php namespace BB\Http\Controllers;
+<?php
+
+namespace BB\Http\Controllers;
+
+use Inertia\Inertia;
+use Inertia\Response;
 
 class GiftController extends Controller
 {
-
-
-    public function index()
+    public function index(): Response
     {
-        \View::share('body_class', 'home');
-        return \View::make('gift');
+        return Inertia::render('Gift', [
+            'urls' => [
+                'register' => route('register', [], false),
+            ],
+        ]);
     }
-
-
-
 }
