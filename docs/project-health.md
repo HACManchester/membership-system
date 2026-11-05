@@ -137,9 +137,8 @@ None outstanding.
 
 1. Turn on PHPStan's missing-type checks (level 6) a file at a time.
 2. Split the god class `app/Entities/User.php` (~585 lines). (`AccountController` has been split.)
-3. Normalise money units (`payments.amount` and `monthly_subscription` are pounds —
-   the former as floats — while `cash_balance` and `config/membership.php` are pence; migrate to
-   integer pence throughout).
+3. Finish normalising money units: billing amounts are all integer pence, but `gifts.credit` is
+   still a float of pounds, converted when a gift is redeemed.
 
 ### Strategic (the next quarter)
 

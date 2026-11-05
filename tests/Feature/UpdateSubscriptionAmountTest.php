@@ -15,7 +15,7 @@ class UpdateSubscriptionAmountTest extends TestCase
     #[Test]
     public function a_member_can_update_their_subscription_amount()
     {
-        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 2200]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -23,13 +23,13 @@ class UpdateSubscriptionAmountTest extends TestCase
             ])
             ->assertStatus(302);
 
-        $this->assertEquals(27, $member->fresh()->monthly_subscription);
+        $this->assertSame(2700, $member->fresh()->monthly_subscription);
     }
 
     #[Test]
     public function a_non_numeric_amount_is_rejected()
     {
-        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 2200]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -37,13 +37,13 @@ class UpdateSubscriptionAmountTest extends TestCase
             ])
             ->assertStatus(302); // Redirect back with flash error
 
-        $this->assertEquals(22, $member->fresh()->monthly_subscription);
+        $this->assertSame(2200, $member->fresh()->monthly_subscription);
     }
 
     #[Test]
     public function a_member_cannot_go_below_the_minimum_price()
     {
-        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 2200]);
 
         $this->actingAs($member)
             ->post(route('account.update-sub-payment', $member->id), [
@@ -51,13 +51,13 @@ class UpdateSubscriptionAmountTest extends TestCase
             ])
             ->assertStatus(302);
 
-        $this->assertEquals(22, $member->fresh()->monthly_subscription);
+        $this->assertSame(2200, $member->fresh()->monthly_subscription);
     }
 
     #[Test]
     public function an_admin_can_set_an_amount_below_the_minimum()
     {
-        $member = User::factory()->create(['monthly_subscription' => 22]);
+        $member = User::factory()->create(['monthly_subscription' => 2200]);
         $admin = User::factory()->create();
         $admin->assignRole(Role::findByName('admin'));
 
@@ -67,6 +67,6 @@ class UpdateSubscriptionAmountTest extends TestCase
             ])
             ->assertStatus(302);
 
-        $this->assertEquals(1, $member->fresh()->monthly_subscription);
+        $this->assertSame(100, $member->fresh()->monthly_subscription);
     }
 }

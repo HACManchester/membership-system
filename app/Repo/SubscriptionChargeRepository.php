@@ -37,7 +37,7 @@ class SubscriptionChargeRepository extends DBRepository
     /**
      * @param integer   $userId
      * @param \DateTime $date
-     * @param integer   $amount
+     * @param integer   $amount in pence
      * @param SubscriptionChargeStatus|string $status
      * @return SubscriptionCharge
      */
@@ -51,7 +51,7 @@ class SubscriptionChargeRepository extends DBRepository
      *
      * @param integer   $userId
      * @param \DateTime $date
-     * @param integer   $amount
+     * @param integer   $amount in pence
      * @param SubscriptionChargeStatus|string $status
      * @param string|null $DDAuthId
      * @return SubscriptionCharge
@@ -63,7 +63,7 @@ class SubscriptionChargeRepository extends DBRepository
         try {
             $bill = $this->goCardless->newBill(
                 $DDAuthId,
-                $amount * 100,
+                $amount,
                 $this->goCardless->getNameFromReason('subscription'),
                 idempotencyKey: $charge->goCardlessIdempotencyKey($DDAuthId)
             );
@@ -304,7 +304,7 @@ class SubscriptionChargeRepository extends DBRepository
 
     /**
      * @param integer $chargeId
-     * @param integer $newAmount
+     * @param integer $newAmount in pence
      */
     public function updateAmount($chargeId, $newAmount)
     {

@@ -60,7 +60,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $payment_method
  * @property string|null $secondary_payment_method
  * @property int $payment_day
- * @property int|null $monthly_subscription in pounds
+ * @property int|null $monthly_subscription in pence
  * @property string|null $subscription_id
  * @property string|null $mandate_id
  * @property string|null $gocardless_setup_id
@@ -155,6 +155,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'suspended_at' => 'datetime',
             'gift_expires' => 'date',
             'cash_balance' => 'integer',
+            'monthly_subscription' => 'integer',
             'suppress_real_name' => 'boolean',
             'newsletter' => 'boolean',
             'online_only' => 'boolean',
@@ -277,7 +278,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     */
 
     /**
-     * @param $amount
+     * @param int $amount in pence
      * @deprecated
      */
     public function updateSubAmount($amount)

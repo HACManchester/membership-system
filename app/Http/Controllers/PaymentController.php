@@ -126,8 +126,8 @@ class PaymentController extends Controller
                 'reason'           => $reason,
                 'source'           => \Request::input('source'),
                 'source_id'        => '',
-                'amount'           => 10,
-                'amount_minus_fee' => 10,
+                'amount'           => 1000,
+                'amount_minus_fee' => 1000,
                 'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);
@@ -139,8 +139,8 @@ class PaymentController extends Controller
                 'reason'           => $reason,
                 'source'           => \Request::input('source'),
                 'source_id'        => '',
-                'amount'           => 5,
-                'amount_minus_fee' => 5,
+                'amount'           => 500,
+                'amount_minus_fee' => 500,
                 'status'           => \BB\Support\PaymentStatus::Paid
             ]);
             $user->payments()->save($payment);

@@ -160,8 +160,8 @@ class PaymentEventHandler
         }
 
         //The amount isn't stored on the sub charge record until its paid or processing
-        if ($payment->amount != $subCharge->amount) {
-            $this->subscriptionChargeRepository->updateAmount($subCharge->id, intval($payment->amount));
+        if ($payment->amount !== $subCharge->amount) {
+            $this->subscriptionChargeRepository->updateAmount($subCharge->id, $payment->amount);
         }
     }
 } 

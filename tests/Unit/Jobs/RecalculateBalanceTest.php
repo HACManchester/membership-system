@@ -25,13 +25,13 @@ class RecalculateBalanceTest extends TestCase
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
         Payment::factory()->count(4)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
-            'amount' => 10,
+            'amount' => 1000,
         ]);
 
         RecalculateBalance::dispatchSync($user);
@@ -46,13 +46,13 @@ class RecalculateBalanceTest extends TestCase
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
         Payment::factory()->count(3)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
-            'amount' => 10,
+            'amount' => 1000,
         ]);
         RecalculateBalance::dispatchSync($user);
 
@@ -66,13 +66,13 @@ class RecalculateBalanceTest extends TestCase
         Payment::factory()->count(2)->fromCash()->paid()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
         Payment::factory()->count(6)->fromBalance()->paid()->create([
 
             'reason' => 'not-balance',
             'user_id' => $user->id,
-            'amount' => 10,
+            'amount' => 1000,
         ]);
         RecalculateBalance::dispatchSync($user);
 
@@ -86,13 +86,13 @@ class RecalculateBalanceTest extends TestCase
         Payment::factory()->fromCash()->pending()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
 
         Payment::factory()->fromBalance()->paid()->create([
             'reason' => 'not-balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
 
         RecalculateBalance::dispatchSync($user);
@@ -107,13 +107,13 @@ class RecalculateBalanceTest extends TestCase
         Payment::factory()->fromCash()->cancelled()->create([
             'reason' => 'balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
 
         Payment::factory()->fromBalance()->paid()->create([
             'reason' => 'not-balance',
             'user_id' => $user->id,
-            'amount' => 20,
+            'amount' => 2000,
         ]);
 
         RecalculateBalance::dispatchSync($user);

@@ -125,4 +125,12 @@ class MembershipPayments
     {
         return "£" . number_format($pence / 100, 2);
     }
+
+    /**
+     * An amount in pence as plain pounds for a form input, e.g. "22.50".
+     */
+    public static function formatPounds(int $pence): string
+    {
+        return number_format($pence / 100, 2, '.', '');
+    }
 }

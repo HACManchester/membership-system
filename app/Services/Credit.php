@@ -51,30 +51,29 @@ class Credit
         $negativePayments = $this->paymentRepository->getUserPaymentsBySource($this->userId, 'balance');
 
         foreach ($positivePayments as $payment) {
-            $runningTotal = $runningTotal + ($payment->amount * 100);
+            $runningTotal = $runningTotal + $payment->amount;
         }
         foreach ($negativePayments as $payment) {
-            $runningTotal = $runningTotal - ($payment->amount * 100);
+            $runningTotal = $runningTotal - $payment->amount;
         }
-        // The pounds amounts are floats, so their pence can land a hair under the whole number
-        $this->user->cash_balance = (int) round($runningTotal);
+        $this->user->cash_balance = $runningTotal;
         $this->user->save();
     }
 
     /**
      * Can the user spend money they don't have and if so how much?
      * @param $reason
-     * @return int
+     * @return int in pence
      */
     public function acceptableNegativeBalance($reason)
     {
         switch ($reason) {
             case 'storage-box':
-                return 20;
+                return 2000;
             case 'equipment-fee':
-                return 20;
+                return 2000;
             default:
-                return 20;
+                return 2000;
         }
     }
 

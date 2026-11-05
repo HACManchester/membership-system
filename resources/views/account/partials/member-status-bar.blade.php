@@ -17,7 +17,7 @@
     @if (!$user->online_only)
         @if($user->payment_method)
             <div>
-                💳 Subscription: {{ $user->status == MemberStatus::SettingUp ? '' : '£' . number_format(round((float) $user->monthly_subscription), 2) . '/mo by ' . $user->payment_method_label
+                💳 Subscription: {{ $user->status == MemberStatus::SettingUp ? '' : MembershipPayments::formatPrice((int) $user->monthly_subscription) . '/mo by ' . $user->payment_method_label
                     . ($user->payment_day ? ' on the ' . now()->day($user->payment_day)->format('jS') : '') }}
                 @if ($user->canMemberChangeSubAmount())
                     <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#changeSubscriptionModel">

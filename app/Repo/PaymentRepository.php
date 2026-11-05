@@ -91,16 +91,16 @@ class PaymentRepository extends DBRepository
      * @param int           $userId The users ID
      * @param string|null   $source gocardless
      * @param string|null   $sourceId A reference for the source
-     * @param double        $amount Amount received before a fee in pounds
+     * @param int           $amount Amount received before a fee, in pence
      * @param PaymentStatus|string $status a string is a status GoCardless reported
-     * @param double        $fee The fee charged by the payment provider
+     * @param int           $fee The fee charged by the payment provider, in pence
      * @param string|null   $ref
      * @param Carbon        $paidDate
      *
      * @return int The ID of the payment record
      * @throws PaymentException if the source ID is already recorded against another user
      */
-    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
+    public function recordPayment($reason, $userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0, $ref = '', ?Carbon $paidDate = null)
     {
         if (! $status instanceof PaymentStatus) {
             $status = PaymentStatus::fromGoCardless($status, PaymentStatus::Pending);
@@ -151,14 +151,14 @@ class PaymentRepository extends DBRepository
      * @param int    $userId The users ID
      * @param string $source gocardless
      * @param string $sourceId A reference for the source
-     * @param double $amount Amount received before a fee in pounds
+     * @param int    $amount Amount received before a fee, in pence
      * @param PaymentStatus|string $status a string is a status GoCardless reported
-     * @param double $fee The fee charged by the payment provider
+     * @param int    $fee The fee charged by the payment provider, in pence
      * @param string|null   $ref
      * @param Carbon $paidDate
      * @return int  The ID of the payment record
      */
-    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0.0, $ref = '', ?Carbon $paidDate = null)
+    public function recordSubscriptionPayment($userId, $source, $sourceId, $amount, $status = PaymentStatus::Paid, $fee = 0, $ref = '', ?Carbon $paidDate = null)
     {
         return $this->recordPayment('subscription', $userId, $source, $sourceId, $amount, $status, $fee, $ref, $paidDate);
     }

@@ -169,8 +169,7 @@ class GoCardlessWebhookController extends Controller
                 return;
             }
 
-            $amount = ($payment->amount * 1) / 100;
-            $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['links']['payment'], $amount, $payment->status);
+            $this->paymentRepository->recordSubscriptionPayment($user->id, 'gocardless', $bill['links']['payment'], $payment->amount, $payment->status);
         } catch (\Exception $e) {
             Log::error($e);
         }

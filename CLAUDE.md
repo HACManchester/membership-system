@@ -71,9 +71,11 @@ Tests use SQLite in-memory (`phpunit.xml`) — no DB setup needed to run them.
 
 ## Gotchas
 
-- **Money units are mixed**: `payments.amount` and `User.monthly_subscription` are **pounds**
-  (payments as floats); `cash_balance` and `config/membership.php` are **pence**. Check units on
-  every amount you handle.
+- **All billing money is integer pence**: `cash_balance`, `monthly_subscription`,
+  `subscription_charge.amount`, `payments.amount`/`fee`/`amount_minus_fee` and
+  `config/membership.php`. The exceptions are `gifts.credit` (float pounds) and equipment
+  `access_fee` (whole pounds). Forms take pounds and convert once; check units on every amount
+  you handle.
 - **Inertia props are sent to the browser in full**, rendered or not — shape props with dedicated
   Resources and include only what the page needs, especially for member data.
 - The GoCardless webhook (`GoCardlessWebhookController`) is the only CSRF-exempt route and is

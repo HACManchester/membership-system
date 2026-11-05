@@ -29,8 +29,8 @@ class PaymentFactory extends Factory
             ]),
             'source_id' => $this->faker->randomNumber(),
             'user_id' => $this->faker->randomNumber(),
-            'amount' => $this->faker->randomFloat(2, 1, 1000),
-            'fee' => $this->faker->randomFloat(2, 0, 100),
+            'amount' => $this->faker->numberBetween(100, 100000), // pence
+            'fee' => fn (array $payment) => $this->faker->numberBetween(0, min(10000, $payment['amount'])),
             'amount_minus_fee' => fn (array $payment) => $payment['amount'] - $payment['fee'],
             'status' => $this->faker->randomElement([
                 PaymentStatus::Pending,

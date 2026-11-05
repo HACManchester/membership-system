@@ -44,14 +44,15 @@ class SignupTest extends TestCase
             'phone'                => '07700900123',
             'address'              => ['line_1' => '1 Test Street', 'postcode' => 'm4 7hr'],
             'emergency_contact'    => $this->faker->name(),
-            'monthly_subscription' => config('membership.prices.minimum'),
+            'monthly_subscription' => config('membership.prices.minimum') / 100, // the form takes pounds
             'rules_agreed'         => '1',
         ])->assertRedirect();
 
         $this->assertDatabaseHas('users', [
-            'email'      => $email,
-            'given_name' => $given,
-            'status'     => 'setting-up',
+            'email'                => $email,
+            'given_name'           => $given,
+            'status'               => 'setting-up',
+            'monthly_subscription' => config('membership.prices.minimum'),
         ]);
         $member = User::where('email', $email)->firstOrFail();
         $this->assertDatabaseHas('user_address', [
@@ -170,7 +171,7 @@ class SignupTest extends TestCase
             'user_id'   => $member->id,
             'reason'    => 'balance',
             'source'    => 'Gift Certificate',
-            'amount'    => 12.50,
+            'amount'    => 1250,
             'status'    => 'paid',
             'reference' => 'GIFT1250',
         ]);

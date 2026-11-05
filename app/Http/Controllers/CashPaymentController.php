@@ -1,6 +1,7 @@
 <?php namespace BB\Http\Controllers;
 
 use BB\Entities\User;
+use BB\Helpers\MembershipPayments;
 use Illuminate\Http\Request;
 
 class CashPaymentController extends Controller
@@ -33,13 +34,16 @@ class CashPaymentController extends Controller
         $this->authorize('manage', $user);
 
         $this->validateWithBag('credit', $request, [
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|decimal:0,2|min:0|max:1000',
             'reason' => 'required',
             'source_id' => 'required',
             'return_path' => 'required',
+        ], [
+            'amount.max' => 'The most we can credit at once is £1,000.',
         ]);
 
-        $amount     = $request->get('amount');
+        // The form takes pounds; payments are in pence
+        $amount     = (int) round($request->get('amount') * 100);
         $reason     = $request->get('reason');
         $sourceId   = $request->get('source_id');
         $returnPath = $request->get('return_path');
@@ -75,16 +79,16 @@ class CashPaymentController extends Controller
         $this->authorize('manage', $user);
         $this->bbCredit->setUserId($user->id);
 
-        $minimumBalance = $this->bbCredit->acceptableNegativeBalance('withdrawal');
-        $maxWithdrawal = ($user->cash_balance / 100) + $minimumBalance;
-        
+        // The form takes pounds; balances and payments are in pence
+        $maxWithdrawal = MembershipPayments::formatPounds($user->cash_balance + $this->bbCredit->acceptableNegativeBalance('withdrawal'));
+
         $this->validateWithBag('withdrawal', $request, [
-            'amount' => "required|numeric|min:0|max:{$maxWithdrawal}",
+            'amount' => "required|numeric|decimal:0,2|min:0|max:{$maxWithdrawal}",
             'ref' => 'required',
             'return_path' => 'required',
         ]);
 
-        $amount     = $request->get('amount');
+        $amount     = (int) round($request->get('amount') * 100);
         $ref = $request->get('ref');
         $returnPath = $request->get('return_path');
         

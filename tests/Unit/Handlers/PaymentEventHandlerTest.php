@@ -46,7 +46,7 @@ class PaymentEventHandlerTest extends TestCase
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
-            'amount' => 10,
+            'amount' => 1000,
             'status' => 'paid',
         ]);
 
@@ -54,7 +54,7 @@ class PaymentEventHandlerTest extends TestCase
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
-            'amount' => 5,
+            'amount' => 500,
             'status' => 'paid',
         ]);
 
@@ -440,7 +440,7 @@ class PaymentEventHandlerTest extends TestCase
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
-            'amount' => 10,
+            'amount' => 1000,
             'status' => 'paid',
         ]);
 
@@ -448,7 +448,7 @@ class PaymentEventHandlerTest extends TestCase
             'source' => 'gocardless-variable',
             'user_id' => $user->id,
             'reason' => 'balance',
-            'amount' => 5,
+            'amount' => 500,
             'status' => 'cancelled',
         ]);
 

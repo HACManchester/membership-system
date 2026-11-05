@@ -63,7 +63,7 @@ Payments
     <tfoot>
         <tr>
             <td colspan="4" align="right">Total</td>
-            <td><strong>&pound;{{ number_format($paymentTotal, 2) }}</strong></td>
+            <td><strong>{{ MembershipPayments::formatPrice((int) $paymentTotal) }}</strong></td>
             <td colspan="3"></td>
         </tr>
     </tfoot>

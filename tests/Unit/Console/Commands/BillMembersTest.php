@@ -37,7 +37,7 @@ class BillMembersTest extends TestCase
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
             'display_name' => 'Test User',
         ]);
@@ -70,7 +70,7 @@ class BillMembersTest extends TestCase
             ->first();
 
         $this->assertNotNull($payment);
-        $this->assertEquals(22, $payment->amount);
+        $this->assertEquals(2200, $payment->amount);
         $this->assertSame(PaymentStatus::Pending, $payment->status);
         $this->assertEquals('PM123456789', $payment->source_id);
     }
@@ -90,7 +90,7 @@ class BillMembersTest extends TestCase
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -121,14 +121,14 @@ class BillMembersTest extends TestCase
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
         SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
-            'amount' => 27,
+            'amount' => 2700,
             'status' => 'due',
         ]);
 
@@ -151,14 +151,14 @@ class BillMembersTest extends TestCase
 
         $payment = Payment::where('user_id', $user->id)->first();
         $this->assertNotNull($payment);
-        $this->assertEquals(27, $payment->amount);
+        $this->assertEquals(2700, $payment->amount);
     }
 
     public function testMultipleDifferentAmountsBilled()
     {
         $users = [];
         $charges = [];
-        $expectedAmounts = [17, 22, 27];
+        $expectedAmounts = [1700, 2200, 2700];
 
         foreach ($expectedAmounts as $index => $amount) {
             $user = User::factory()->create([
@@ -218,7 +218,7 @@ class BillMembersTest extends TestCase
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -250,14 +250,14 @@ class BillMembersTest extends TestCase
         $goCardlessUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
         $balanceUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'balance',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         SubscriptionCharge::factory()->create([
@@ -294,7 +294,7 @@ class BillMembersTest extends TestCase
         $user = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -309,9 +309,9 @@ class BillMembersTest extends TestCase
             'reference' => $charge->id,
             'source' => 'gocardless-variable',
             'status' => 'failed',
-            'amount' => 22,
+            'amount' => 2200,
             'fee' => 0,
-            'amount_minus_fee' => 22,
+            'amount_minus_fee' => 2200,
             'reason' => 'subscription',
         ]);
 

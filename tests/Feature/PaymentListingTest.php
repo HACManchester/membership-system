@@ -26,7 +26,7 @@ class PaymentListingTest extends TestCase
             'source_id' => 'till-2',
             'reason' => 'consumables',
             'reference' => 'laser-ply',
-            'amount' => 12.5,
+            'amount' => 1250,
             'status' => PaymentStatus::Withdrawn,
             'created_at' => '2024-03-05 10:00:00',
         ]);
@@ -51,7 +51,7 @@ class PaymentListingTest extends TestCase
             'user_id' => $member->id,
             'source' => 'balance',
             'reason' => 'equipment-fee',
-            'amount' => 3.5,
+            'amount' => 350,
             'status' => PaymentStatus::Paid,
             'created_at' => '2024-03-06 10:00:00',
         ]);
@@ -59,7 +59,7 @@ class PaymentListingTest extends TestCase
             'user_id' => $member->id,
             'source' => 'gocardless-variable',
             'reason' => 'balance',
-            'amount' => 10,
+            'amount' => 1000,
             'status' => PaymentStatus::Pending,
             'created_at' => '2024-03-05 10:00:00',
         ]);
@@ -71,13 +71,13 @@ class PaymentListingTest extends TestCase
                 '<td >Equipment Costs</td>',
                 '<td>BB Balance</td>',
                 '<td>Mar 6, 2024</td>',
-                '<td>-£3.5</td>',
+                '<td>-£3.50</td>',
                 '<td>Paid</td>',
                 '<tr class="success">',
                 '<td >Balance Top Up</td>',
                 '<td>Direct Debit</td>',
                 '<td>Mar 5, 2024</td>',
-                '<td>£10</td>',
+                '<td>£10.00</td>',
                 '<td>Pending confirmation</td>',
             ], false);
     }

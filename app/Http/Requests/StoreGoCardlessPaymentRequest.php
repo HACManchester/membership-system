@@ -41,7 +41,7 @@ class StoreGoCardlessPaymentRequest extends FormRequest
         $validator->after(function ($validator) {
             // A subscription payment settles the outstanding charge in full whatever
             // its size, so anything under the member's chosen amount is an underpayment
-            $minimum = $this->targetUser()->monthly_subscription * 100;
+            $minimum = $this->targetUser()->monthly_subscription;
             if (is_numeric($this->input('amount')) && $this->input('amount') < $minimum) {
                 $validator->errors()->add('amount', 'Subscription payments must cover your monthly amount.');
             }

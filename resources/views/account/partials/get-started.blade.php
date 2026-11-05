@@ -13,7 +13,7 @@ $countOfConditions = count($conditions);
 $countOfCompletedConditions = count(array_filter($conditions));
 
 $pctComplete = 100 / $countOfConditions * $countOfCompletedConditions;
-$fmtMonthlySubscription = number_format((float) $user->monthly_subscription, 2);
+$fmtMonthlySubscription = MembershipPayments::formatPrice((int) $user->monthly_subscription);
 ?>
 @if(!$user->online_only && !in_array($user->status, [MemberStatus::Leaving, MemberStatus::Left, MemberStatus::Suspended]) && $countOfConditions !== $countOfCompletedConditions)
     <div class="row">
@@ -54,7 +54,7 @@ $fmtMonthlySubscription = number_format((float) $user->monthly_subscription, 2);
                             'block_reason' => 'General Induction',
                             'rawDescription' => <<<DESC
                                 <p>
-                                    Visit our payment provider to set up your monthly membership payment of &pound;{$fmtMonthlySubscription}
+                                    Visit our payment provider to set up your monthly membership payment of {$fmtMonthlySubscription}
                                     (<button class="btn btn-link" data-toggle="modal" data-target="#changeSubscriptionModel">Change amount</button>).
                                 </p>
                                 <p>Payments will be taken monthly from the date you complete this step.</p>

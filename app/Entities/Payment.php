@@ -20,9 +20,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $reference
  * @property string $source
  * @property string|null $source_id
- * @property float $amount in pounds
- * @property float $fee in pounds
- * @property float $amount_minus_fee in pounds
+ * @property int $amount in pence
+ * @property int $fee in pence
+ * @property int $amount_minus_fee in pence
  * @property PaymentStatus $status
  * @property Carbon|null $paid_at
  * @property Carbon|null $created_at
@@ -62,6 +62,9 @@ class Payment extends Model
         return [
             'paid_at' => 'datetime',
             'status' => PaymentStatus::class,
+            'amount' => 'integer',
+            'fee' => 'integer',
+            'amount_minus_fee' => 'integer',
         ];
     }
 

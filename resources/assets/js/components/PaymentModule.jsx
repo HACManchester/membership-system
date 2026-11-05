@@ -100,7 +100,7 @@ class PaymentModule extends React.Component {
    */
   prepareRequestData() {
     return JSON.stringify({
-      amount: this.state.amount * 100 + "",
+      amount: Math.round(this.state.amount * 100) + "",
       reason: this.props.reason,
       ref: this.props.reference,
       _token: this.state.csrfToken,

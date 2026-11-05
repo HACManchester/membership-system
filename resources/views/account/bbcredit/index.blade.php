@@ -68,7 +68,7 @@ Hackspace Manchester Balance
                     <td >{{ $payment->reason_label }}</td>
                     <td>{{ $payment->method_label }}</td>
                     <td>{{ $payment->created_at->toFormattedDateString() }}</td>
-                    <td>@if ($payment->source == 'balance')-£{{ $payment->amount }}@elseif ($payment->reason == 'balance')£{{ $payment->amount }}@endif</td>
+                    <td>@if ($payment->source == 'balance')-{{ MembershipPayments::formatPrice($payment->amount) }}@elseif ($payment->reason == 'balance'){{ MembershipPayments::formatPrice($payment->amount) }}@endif</td>
                     <td>{{ $payment->status_label }}</td>
                 </tr>
                 @endforeach

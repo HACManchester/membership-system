@@ -117,6 +117,9 @@ class MemberRegistrationController extends Controller
         $this->userForm->validate($input);
         $this->profileValidator->validate($input);
 
+        // The form takes pounds; the column holds pence
+        $input['monthly_subscription'] = (int) round($input['monthly_subscription'] * 100);
+
         $user = $this->userRepository->registerMember($input, (bool) CurrentUser::find()?->hasRole('admin'));
 
         // A single file only: new_profile_photo[] arrives as an array

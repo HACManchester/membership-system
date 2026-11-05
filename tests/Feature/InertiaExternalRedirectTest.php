@@ -125,7 +125,7 @@ class InertiaExternalRedirectTest extends TestCase
         return User::factory()->create(array_merge([
             'status' => 'active',
             'active' => true,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ], $attributes));
     }
 }

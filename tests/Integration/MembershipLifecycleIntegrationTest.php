@@ -232,7 +232,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_ORIGINAL',
             'payment_day' => 1,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'subscription_expires' => Carbon::now()->subMonths(13),
         ]);
 
@@ -269,7 +269,7 @@ class MembershipLifecycleIntegrationTest extends TestCase
 
         $bills = \BB\Entities\Payment::where('user_id', $user->id)->where('reason', 'subscription')->get();
         $this->assertCount(1, $bills, 'The member should be billed once, not once per month they were away');
-        $this->assertEquals(22, $bills->first()->amount);
+        $this->assertEquals(2200, $bills->first()->amount);
     }
 
     public function testMemberReactivationAfterSuspension()

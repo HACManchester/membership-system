@@ -19,7 +19,7 @@
             <td>{{ $payment->reason_label }}</td>
             <td>{{ $payment->method_label }}</td>
             <td>{{ $payment->created_at->toFormattedDateString() }}</td>
-            <td>£{{ number_format($payment->amount, 2) }}</td>
+            <td>{{ MembershipPayments::formatPrice($payment->amount) }}</td>
             <td>{{ $payment->status_label }}</td>
         </tr>
         @endforeach

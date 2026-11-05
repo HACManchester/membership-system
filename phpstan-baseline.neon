@@ -158,12 +158,6 @@ parameters:
 			path: app/Services/MemberSubscriptionCharges.php
 
 		-
-			message: '#^Parameter \#4 \$amount of method BB\\Repo\\PaymentRepository\:\:recordSubscriptionPayment\(\) expects float, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/MemberSubscriptionCharges.php
-
-		-
 			message: '#^Parameter \#7 \$ref of method BB\\Repo\\PaymentRepository\:\:recordSubscriptionPayment\(\) expects string\|null, int given\.$#'
 			identifier: argument.type
 			count: 1

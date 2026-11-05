@@ -2,6 +2,7 @@
 
 use BB\Entities\Payment;
 use BB\Entities\SubscriptionCharge;
+use BB\Helpers\MembershipPayments;
 use BB\Repo\SubscriptionChargeRepository;
 use BB\Services\MemberSubscriptionCharges;
 use BB\Support\PaymentStatus;
@@ -111,7 +112,7 @@ class AuditSubscriptionCharges extends Command
                     $charge->user && $charge->user->payment_method ? $charge->user->payment_method : 'none',
                     $charge->charge_date->format('Y-m-d'),
                     $charge->status->value,
-                    $charge->amount,
+                    MembershipPayments::formatPrice($charge->amount),
                 ];
             })->all()
         );
@@ -184,7 +185,7 @@ class AuditSubscriptionCharges extends Command
                     $row['charge']->charge_date->format('Y-m-d'),
                     $row['collectedAt']->format('Y-m-d'),
                     (int) $row['charge']->charge_date->diffInDays($row['collectedAt']),
-                    $row['payment']->amount,
+                    MembershipPayments::formatPrice($row['payment']->amount),
                     $row['payment']->source_id ?: '-',
                 ];
             })->all()
@@ -240,7 +241,7 @@ class AuditSubscriptionCharges extends Command
     /**
      * @param \Illuminate\Support\Collection $groups Rows keyed by user id
      * @param string $label
-     * @param callable|null $amount How to read the amount from a row
+     * @param callable|null $amount How to read the amount, in pence, from a row
      */
     private function summariseByMember($groups, $label, ?callable $amount = null)
     {
@@ -251,7 +252,7 @@ class AuditSubscriptionCharges extends Command
             $total = $amount ? $rows->sum($amount) : $rows->sum('amount');
             $name = $amount ? $this->memberName($rows->first()['charge']) : $this->memberName($rows->first());
 
-            $this->line('  ' . $name . ' (user ' . $userId . '): ' . $rows->count() . ' x charge, total ' . $total);
+            $this->line('  ' . $name . ' (user ' . $userId . '): ' . $rows->count() . ' x charge, total ' . MembershipPayments::formatPrice((int) $total));
         }
     }
 

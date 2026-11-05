@@ -20,7 +20,7 @@ Payment Stats
             <h3 class="text-center">Storage Box Liability</h3>
 
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $storageBoxLiability }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $storageBoxLiability) }}</span>
             </p>
         </div>
     </div>
@@ -29,7 +29,7 @@ Payment Stats
             <h3 class="text-center">Door Key Liability</h3>
 
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $doorKeyLiability }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $doorKeyLiability) }}</span>
             </p>
         </div>
     </div>
@@ -39,12 +39,12 @@ Payment Stats
 
             <h4 class="text-center">Current</h4>
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $balanceLiability }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $balanceLiability) }}</span>
             </p>
 
             <h4 class="text-center">Paid In / Spent</h4>
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $balancePaidIn }} / &pound;{{ $balancePaidOut }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $balancePaidIn) }} / {{ MembershipPayments::formatPrice((int) $balancePaidOut) }}</span>
             </p>
         </div>
     </div>
@@ -54,12 +54,12 @@ Payment Stats
 
             <h4 class="text-center">Initial Investment</h4>
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $laserCutterInvestment }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $laserCutterInvestment) }}</span>
             </p>
 
             <h4 class="text-center">Fees Collected</h4>
             <p class="text-center">
-                <span class="key-figure">&pound;{{ $laserCutterMoneySpent }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $laserCutterMoneySpent) }}</span>
             </p>
         </div>
     </div>

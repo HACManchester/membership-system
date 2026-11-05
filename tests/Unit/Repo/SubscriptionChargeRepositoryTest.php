@@ -40,7 +40,7 @@ class SubscriptionChargeRepositoryTest extends TestCase
         $this->app->instance(GoCardlessHelper::class, $goCardless);
 
         $charge = app(SubscriptionChargeRepository::class)
-            ->createChargeAndBillDD($user->id, Carbon::parse('2026-10-01'), 22, 'due', 'MD123456789');
+            ->createChargeAndBillDD($user->id, Carbon::parse('2026-10-01'), 2200, 'due', 'MD123456789');
 
         $this->assertSame("subscription-charge-{$charge->id}-user-{$user->id}-2026-10-01-MD123456789", $sentKey);
     }
@@ -102,7 +102,7 @@ class SubscriptionChargeRepositoryTest extends TestCase
         $this->app->instance(GoCardlessHelper::class, $goCardless);
 
         $charge = app(SubscriptionChargeRepository::class)
-            ->createChargeAndBillDD($user->id, Carbon::parse('2026-10-01'), 22, 'due', 'MD123456789');
+            ->createChargeAndBillDD($user->id, Carbon::parse('2026-10-01'), 2200, 'due', 'MD123456789');
 
         $this->assertDatabaseHas('payments', ['source_id' => 'PM123456789', 'reference' => (string) $charge->id, 'status' => 'pending']);
         Exceptions::assertReported(RuntimeException::class);

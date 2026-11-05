@@ -39,7 +39,7 @@ class AccountSubscriptionController extends Controller
 
         $user = User::findOrFail($id);
         $this->authorize('manage', $user);
-        $user->updateSubAmount($amount);
+        $user->updateSubAmount((int) round($amount * 100));
         \FlashNotification::success('Details Updated');
         return \Redirect::route('account.show', [$user->id]);
     }
