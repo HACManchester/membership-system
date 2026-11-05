@@ -147,7 +147,7 @@ Join Hackspace Manchester
                                 <label for="monthly_subscription">Custom Amount</label>
                                 <input type="number" name="monthly_subscription" id="monthly_subscription" 
                                        class="form-control" placeholder="Enter amount" 
-                                       min="{{ $minAmount / 100 }}" step="1" 
+                                       @unless (\BB\Support\CurrentUser::find()?->isAdmin()) min="{{ MembershipPayments::formatPounds($minAmount) }}" @endunless step="0.01" 
                                        value="{{ old('monthly_subscription', $recommendedAmount / 100) }}">
                                 {!! FlashNotification::getErrorDetail('monthly_subscription') !!}
                             </div>

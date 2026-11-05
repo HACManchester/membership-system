@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use BB\Entities\Gift;
+use BB\Entities\Role;
 use BB\Entities\User;
 use BB\Support\MemberStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
 class SignupTest extends TestCase
@@ -254,5 +256,105 @@ class SignupTest extends TestCase
         $this->assertFalse((bool) $member->seen_at?->isSameDay('2026-01-01'));
         $this->assertNotSame('chosen-hash', $member->hash);
         $this->assertSame(30, strlen($member->hash));
+    }
+
+    #[Test]
+    public function a_new_member_can_choose_an_amount_with_pence()
+    {
+        config(['membership.prices.minimum' => 1700]);
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->post(route('account.store'), $this->signupWithAmount($email, '22.50'))
+            ->assertSessionMissing('flash_notification.details')
+            ->assertRedirect();
+
+        $this->assertSame(2250, User::where('email', $email)->firstOrFail()->monthly_subscription);
+    }
+
+    #[Test]
+    #[TestWith(['22.505'])] // more than two decimal places
+    #[TestWith(['twenty'])]
+    #[TestWith(['16.99'])] // under the minimum
+    public function a_new_member_cannot_choose_an_amount_that_is_not_pounds_and_pence_at_or_above_the_minimum(string $amount)
+    {
+        config(['membership.prices.minimum' => 1700]);
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->postJson(route('account.store'), $this->signupWithAmount($email, $amount))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('monthly_subscription', null);
+
+        $this->assertDatabaseMissing('users', ['email' => $email]);
+    }
+
+    #[Test]
+    public function an_admin_can_create_a_member_below_the_minimum()
+    {
+        config(['membership.prices.minimum' => 1700]);
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findByName('admin'));
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->actingAs($admin)
+            ->post(route('account.store'), $this->signupWithAmount($email, '5.50'))
+            ->assertSessionMissing('flash_notification.details')
+            ->assertRedirect();
+
+        $this->assertSame(550, User::where('email', $email)->firstOrFail()->monthly_subscription);
+    }
+
+    #[Test]
+    #[TestWith(['5000.01'])]
+    #[TestWith(['30000000'])] // more pence than the column holds
+    public function not_even_an_admin_can_create_a_member_paying_over_five_thousand_pounds(string $amount)
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findByName('admin'));
+        $email = $this->faker->unique()->safeEmail();
+
+        $this->actingAs($admin)
+            ->postJson(route('account.store'), $this->signupWithAmount($email, $amount))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('monthly_subscription', null);
+
+        $this->assertDatabaseMissing('users', ['email' => $email]);
+    }
+
+    #[Test]
+    public function only_a_guest_gets_the_minimum_on_the_signup_amount_input()
+    {
+        config(['membership.prices.minimum' => 1700]);
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findByName('admin'));
+
+        $this->get(route('account.create'))
+            ->assertOk()
+            ->assertSee('min="17.00"', false)
+            ->assertSee('step="0.01"', false);
+
+        $this->actingAs($admin)->get(route('account.create'))
+            ->assertOk()
+            ->assertDontSee('min="17.00"', false)
+            ->assertSee('step="0.01"', false);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function signupWithAmount(string $email, string $amount): array
+    {
+        return [
+            'given_name'           => $this->faker->firstName(),
+            'family_name'          => $this->faker->lastName(),
+            'email'                => $email,
+            'display_name'         => $this->faker->userName(),
+            'suppress_real_name'   => '0',
+            'password'             => $this->faker->password(10),
+            'phone'                => '07700900123',
+            'address'              => ['line_1' => '1 Test Street', 'postcode' => 'm4 7hr'],
+            'emergency_contact'    => $this->faker->name(),
+            'monthly_subscription' => $amount,
+            'rules_agreed'         => '1',
+        ];
     }
 }

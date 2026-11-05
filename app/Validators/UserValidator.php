@@ -28,7 +28,7 @@ class UserValidator extends FormValidator
         'address.line_3'        => '',
         'address.line_4'        => '',
         'address.postcode'      => 'required_if:online_only,0|postcode|nullable',
-        'monthly_subscription'  => 'required_if:online_only,0|integer|nullable', // Min will be added in getValidationRules
+        'monthly_subscription'  => 'required_if:online_only,0|numeric|decimal:0,2|min:0|max:5000|nullable', // Pounds, up to the pence migrations' limit; the minimum is added in getValidationRules
         'emergency_contact'     => 'required_if:online_only,0',
         'rules_agreed'          => 'accepted',
     
@@ -58,15 +58,11 @@ class UserValidator extends FormValidator
         $rules = parent::getValidationRules($replacements);
 
 
-        // Allow admins to bypass the minimum
-        if (CurrentUser::find()?->isAdmin()) {
-            $minPrice = 0;
-        }
-
-        // Set minimum monthly subscription, being careful not to apply to updates
-        if (!empty($rules['monthly_subscription'])) {
-            $minPrice = intval(MembershipPayments::getMinimumPrice() / 100);
-            $rules['monthly_subscription'] .= '|min:' . $minPrice;
+        // Set the minimum monthly subscription (in pounds, as the form takes, from the pence in
+        // config), being careful not to apply it to updates. Admins creating a member may go
+        // below it, as they can when changing a member's amount.
+        if (!empty($rules['monthly_subscription']) && ! CurrentUser::find()?->isAdmin()) {
+            $rules['monthly_subscription'] .= '|min:' . MembershipPayments::formatPounds(MembershipPayments::getMinimumPrice());
         }
 
         return $rules;
