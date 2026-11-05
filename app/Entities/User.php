@@ -32,10 +32,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
- * @property string|null $hash
+ * @property string $hash
  * @property string $given_name
  * @property string $family_name
- * @property string|null $display_name
+ * @property string $display_name
  * @property string|null $announce_name
  * @property string|null $pronouns
  * @property bool $suppress_real_name
@@ -84,7 +84,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read string|null $name the display name
+ * @property-read string $name the display name
  */
 #[ObservedBy([UserObserver::class, UserAuditObserver::class])]
 #[UseFactory(UserFactory::class)]
@@ -248,7 +248,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     */
 
     /**
-     * @return Attribute<string|null, never>
+     * @return Attribute<string, never>
      */
     protected function name(): Attribute
     {
@@ -275,16 +275,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     | Methods
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * @param $amount
-     * @deprecated
-     */
-    public function updateSubAmount($amount)
-    {
-        $this->attributes['monthly_subscription'] = $amount;
-        $this->save();
-    }
 
     public function emailConfirmed()
     {

@@ -7,7 +7,7 @@ describe('StatusChip', () => {
   it.each([
     ['setting-up', 'Setting Up', 'We are waiting for a subscription to be setup'],
     ['payment-warning', 'Payment Warning', 'There is something wrong with your subscription'],
-    ['leaving', 'Leaving', 'Your leaving and will loose access when your payment expires'],
+    ['leaving', 'Leaving', "You're leaving and will lose access when your payment expires"],
     [
       'suspended',
       'Suspended',
