@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\Equipment> $equipment
  * @property \Illuminate\Database\Eloquent\Collection<int, \BB\Entities\TrainingRecord> $trainingRecords
  * @property \Carbon\Carbon|null $paused_at
+ * @property CourseFormat $format
+ * @property CourseFrequency $frequency
  * @property-read string $format_label
  * @property-read string $frequency_label
  */
@@ -50,6 +52,8 @@ class Course extends Model
         return [
             'live' => 'boolean',
             'paused_at' => 'datetime',
+            'format' => CourseFormat::class,
+            'frequency' => CourseFrequency::class,
         ];
     }
 
@@ -80,8 +84,7 @@ class Course extends Model
      */
     protected function formatLabel(): Attribute
     {
-        return Attribute::get(fn () => CourseFormat::tryFrom((string) $this->format)?->label()
-            ?? ($this->format === 'unknown' ? 'Unknown' : $this->format));
+        return Attribute::get(fn () => $this->format->label());
     }
 
     /**
@@ -89,8 +92,7 @@ class Course extends Model
      */
     protected function frequencyLabel(): Attribute
     {
-        return Attribute::get(fn () => CourseFrequency::tryFrom((string) $this->frequency)?->label()
-            ?? ($this->frequency === 'unknown' ? 'Unknown' : $this->frequency));
+        return Attribute::get(fn () => $this->frequency->label());
     }
 
     /**

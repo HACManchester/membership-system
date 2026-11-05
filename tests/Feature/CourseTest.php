@@ -198,9 +198,9 @@ class CourseTest extends TestCase
                 'name' => $course->name,
                 'slug' => 'new-slug',
                 'description' => $course->description,
-                'format' => $course->format,
+                'format' => $course->format->value,
                 'format_description' => $course->format_description,
-                'frequency' => $course->frequency,
+                'frequency' => $course->frequency->value,
                 'frequency_description' => $course->frequency_description,
                 'wait_time' => $course->wait_time,
                 'equipment' => $equipment->pluck('id')->toArray(),
@@ -301,17 +301,37 @@ class CourseTest extends TestCase
             });
     }
 
-    public function test_course_show_page_shows_an_unrecognised_format_and_frequency_as_stored()
+    public function test_course_show_page_labels_an_unknown_format_and_frequency()
     {
         $user = User::factory()->create();
-        $course = Course::factory()->create(['format' => 'workshop', 'frequency' => 'monthly']);
+        $course = Course::factory()->create(['format' => 'unknown', 'frequency' => 'unknown']);
 
         $this->actingAs($user)
             ->get(route('courses.show', $course))
             ->assertInertia(function ($page) {
-                $page->where('course.format.label', 'workshop')
-                    ->where('course.frequency.label', 'monthly');
+                $page->where('course.format', ['label' => 'Unknown', 'value' => 'unknown'])
+                    ->where('course.frequency', ['label' => 'Unknown', 'value' => 'unknown']);
             });
+    }
+
+    public function test_a_course_cannot_be_given_an_unknown_format_or_frequency()
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->post(route('courses.store'), [
+                'name' => 'Test Course',
+                'slug' => 'test-course',
+                'description' => 'Test description',
+                'format' => 'unknown',
+                'format_description' => '',
+                'frequency' => 'unknown',
+                'frequency_description' => '',
+                'wait_time' => '1-2 weeks',
+            ])
+            ->assertSessionHasErrors(['format', 'frequency']);
+
+        $this->assertDatabaseMissing('courses', ['slug' => 'test-course']);
     }
 
     public function test_course_show_page_loads_when_equipment_has_no_maintainer_group()
@@ -372,8 +392,8 @@ class CourseTest extends TestCase
                 'name' => 'Updated Name',
                 'slug' => $course->slug,
                 'description' => $course->description,
-                'format' => $course->format,
-                'frequency' => $course->frequency,
+                'format' => $course->format->value,
+                'frequency' => $course->frequency->value,
             ]);
 
         $response->assertForbidden();
