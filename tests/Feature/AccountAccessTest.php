@@ -91,8 +91,9 @@ class AccountAccessTest extends TestCase
     #[Test]
     public function private_profiles_are_hidden_from_the_members_directory()
     {
-        $user = $this->memberWithProfile();
-        $private = $this->memberWithProfile(['profile_private' => true]);
+        // Fixed, distinct names: random ones can collide and make assertDontSee fail
+        $user = $this->memberWithProfile(['display_name' => 'Visible Ada']);
+        $private = $this->memberWithProfile(['display_name' => 'Hidden Grace', 'profile_private' => true]);
 
         $this->actingAs($user)
             ->get('/members')
