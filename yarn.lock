@@ -1923,7 +1923,7 @@ __metadata:
     "@emotion/styled": "npm:^11.14.1"
     "@eslint/js": "npm:^9.39.5"
     "@fontsource/roboto": "npm:^5.3.0"
-    "@inertiajs/react": "npm:^3.9.1"
+    "@inertiajs/react": "npm:^3.10.0"
     "@jest/globals": "npm:^30.5.2"
     "@mui/icons-material": "npm:^9.5.0"
     "@mui/material": "npm:^9.5.0"
@@ -2002,33 +2002,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inertiajs/core@npm:3.9.1":
-  version: 3.9.1
-  resolution: "@inertiajs/core@npm:3.9.1"
+"@inertiajs/core@npm:3.10.0":
+  version: 3.10.0
+  resolution: "@inertiajs/core@npm:3.10.0"
   dependencies:
     "@jridgewell/trace-mapping": "npm:^0.3.31"
     es-toolkit: "npm:^1.33.0"
-    laravel-precognition: "npm:^2.1.0"
+    laravel-precognition: "npm:^2.1.1"
   peerDependencies:
     axios: ^1.15.2
   peerDependenciesMeta:
     axios:
       optional: true
-  checksum: 10c0/00320e0ed0f521bfd509146656901f3a73ad26600d62504d46c69e2b767411ceb7f0cebb8949a4ab5ce0a8da1301848038f4e8d039a01fe0139aa2682455a50c
+  checksum: 10c0/812145c584efa2e1bd2846b29329c9f4c4a3d511cfc3e43c42211cb27e8ae1a0b56326d350d92311e9cb255fe3aa3caaf1a13f53320797954ba675efd83961ed
   languageName: node
   linkType: hard
 
-"@inertiajs/react@npm:^3.9.1":
-  version: 3.9.1
-  resolution: "@inertiajs/react@npm:3.9.1"
+"@inertiajs/react@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "@inertiajs/react@npm:3.10.0"
   dependencies:
-    "@inertiajs/core": "npm:3.9.1"
+    "@inertiajs/core": "npm:3.10.0"
     es-toolkit: "npm:^1.33.0"
-    laravel-precognition: "npm:^2.1.0"
+    laravel-precognition: "npm:^2.1.1"
   peerDependencies:
+    "@types/react": ^19.0.0
+    "@types/react-dom": ^19.0.0
     react: ^19.0.0
     react-dom: ^19.0.0
-  checksum: 10c0/0aa7bd4d8038792ca967ea2972c0876cabb65c7e16a776b8a9b81de7c085f92506248eabd20ad1b0eeb3786e1886d9f6525f8b2cc804f7101e8c2b8e0a2b9412
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/5478af041fe44321b96e3aa8396c2fd977a63ea46aa38bf683536b65fe2b38efdb6cf63b5a93e7d15290627d20cffa0ac7335154be142e51225befc0e01b9c4c
   languageName: node
   linkType: hard
 
@@ -6610,7 +6617,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"laravel-precognition@npm:^2.1.0":
+"laravel-precognition@npm:^2.1.1":
   version: 2.1.1
   resolution: "laravel-precognition@npm:2.1.1"
   dependencies:
