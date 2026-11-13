@@ -107,6 +107,18 @@ class MoneyHandlingTest extends TestCase
     }
 
     #[Test]
+    #[TestWith([-250, '-£2.50'])]
+    #[TestWith([-5, '-£0.05'])]
+    #[TestWith([0, '£0.00'])]
+    #[TestWith([123456, '£1,234.56'])]
+    public function a_balance_is_formatted_with_the_minus_before_the_pound_sign(int $balance, string $formatted)
+    {
+        $user = User::factory()->create(['cash_balance' => $balance]);
+
+        $this->assertSame($formatted, $this->creditFor($user)->getBalanceFormatted());
+    }
+
+    #[Test]
     public function a_balance_is_reported_in_pounds()
     {
         $user = User::factory()->create(['cash_balance' => 1999]);

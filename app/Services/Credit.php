@@ -3,6 +3,7 @@
 use BB\Entities\User;
 use BB\Exceptions\InvalidDataException;
 use BB\Exceptions\NotImplementedException;
+use BB\Helpers\MembershipPayments;
 use BB\Repo\PaymentRepository;
 use BB\Repo\UserRepository;
 
@@ -82,9 +83,9 @@ class Credit
         return $this->user->cash_balance >= 0 ? 'positive' : 'negative';
     }
 
-    public function getBalanceFormatted()
+    public function getBalanceFormatted(): string
     {
-        return '£' . number_format(($this->user->cash_balance / 100), 2);
+        return MembershipPayments::formatSignedPrice($this->user->cash_balance);
     }
 
     public function getBalancePaymentsPaginated()

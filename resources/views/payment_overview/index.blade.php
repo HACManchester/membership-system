@@ -39,7 +39,7 @@ Payment Stats
 
             <h4 class="text-center">Current</h4>
             <p class="text-center">
-                <span class="key-figure">{{ MembershipPayments::formatPrice((int) $balanceLiability) }}</span>
+                <span class="key-figure">{{ MembershipPayments::formatSignedPrice((int) $balanceLiability) }}</span>
             </p>
 
             <h4 class="text-center">Paid In / Spent</h4>

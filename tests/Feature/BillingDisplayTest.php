@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\Payment;
 use BB\Entities\ProfileData;
 use BB\Entities\Role;
 use BB\Entities\SubscriptionCharge;
@@ -108,7 +109,19 @@ class BillingDisplayTest extends TestCase
 
         $this->actingAs($this->financeMember())->get(route('payments.balances'))
             ->assertOk()
-            ->assertSeeInOrder([e($inCredit->name), '<td>£12.00</td>', e($inDebt->name), '<td>£-3.50</td>'], false);
+            ->assertSeeInOrder([e($inCredit->name), '<td>£12.00</td>', e($inDebt->name), '<td>-£3.50</td>'], false);
+    }
+
+    #[Test]
+    public function the_payments_overview_shows_a_negative_balance_liability_with_the_minus_first()
+    {
+        $member = $this->member();
+        Payment::factory()->create(['user_id' => $member->id, 'reason' => 'balance', 'source' => 'cash', 'amount' => 500]);
+        Payment::factory()->create(['user_id' => $member->id, 'reason' => 'storage-box', 'source' => 'balance', 'amount' => 750]);
+
+        $this->actingAs($this->financeMember())->get(route('payments.overview'))
+            ->assertOk()
+            ->assertSee('<span class="key-figure">-£2.50</span>', false);
     }
 
     #[Test]

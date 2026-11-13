@@ -127,6 +127,15 @@ class MembershipPayments
     }
 
     /**
+     * An amount in pence that may be negative, such as a balance, with the minus
+     * before the pound sign: "-£2.50" rather than formatPrice()'s "£-2.50".
+     */
+    public static function formatSignedPrice(int $pence): string
+    {
+        return ($pence < 0 ? '-' : '') . self::formatPrice(abs($pence));
+    }
+
+    /**
      * An amount in pence as plain pounds for a form input, e.g. "22.50".
      */
     public static function formatPounds(int $pence): string
