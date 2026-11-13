@@ -9,6 +9,7 @@ use BB\Services\Credit;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
 /**
@@ -109,28 +110,20 @@ class MoneyHandlingTest extends TestCase
     public function a_balance_is_reported_in_pounds()
     {
         $user = User::factory()->create(['cash_balance' => 1999]);
-        $credit = $this->creditFor($user);
 
-        $this->assertSame(19.99, $credit->getBalance());
-        $this->assertSame('£19.99', $credit->getBalanceFormatted());
+        $this->assertSame('£19.99', $this->creditFor($user)->getBalanceFormatted());
     }
 
-    /**
-     * Pinning a known wart rather than endorsing it: getBalanceSign() casts the
-     * *pounds* value to int before comparing, so anything owing less than a
-     * whole pound truncates to 0 and reports as positive. BalanceController is
-     * the only consumer. Left as-is deliberately — changing it changes what
-     * members see, which is a call for the board, not a side effect of an
-     * upgrade. Flagged so the upgrade doesn't silently alter it either way.
-     */
     #[Test]
-    public function a_sub_one_pound_debt_currently_reports_as_positive()
+    #[TestWith([-50, 'negative'])] // under a pound overdrawn
+    #[TestWith([-1, 'negative'])]
+    #[TestWith([0, 'positive'])]
+    #[TestWith([50, 'positive'])]
+    public function a_balance_is_negative_from_a_penny_overdrawn(int $balance, string $sign)
     {
-        $inDebtByFiftyPence = User::factory()->create(['cash_balance' => -50]);
-        $inDebtByAPound = User::factory()->create(['cash_balance' => -100]);
+        $user = User::factory()->create(['cash_balance' => $balance]);
 
-        $this->assertSame('positive', $this->creditFor($inDebtByFiftyPence)->getBalanceSign());
-        $this->assertSame('negative', $this->creditFor($inDebtByAPound)->getBalanceSign());
+        $this->assertSame($sign, $this->creditFor($user)->getBalanceSign());
     }
 
     private function balancePayment(User $user, int $pence)

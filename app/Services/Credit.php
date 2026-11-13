@@ -77,22 +77,9 @@ class Credit
         }
     }
 
-    /**
-     * Get the users balance
-     * @return float
-     */
-    public function getBalance()
+    public function getBalanceSign(): string
     {
-        return $this->user->cash_balance / 100;
-    }
-
-    /**
-     * Get the users balance sign (positive/negative)
-     * @return string
-     */
-    public function getBalanceSign()
-    {
-        return ( (int) $this->getBalance() >= 0 ? 'positive' : 'negative' );
+        return $this->user->cash_balance >= 0 ? 'positive' : 'negative';
     }
 
     public function getBalanceFormatted()

@@ -41,7 +41,6 @@ class BalanceController extends Controller
             ->with('payments', $payments)
             ->with('userBalance', $userBalance)
             ->with('userBalanceSign', $userBalanceSign)
-            ->with('rawBalance', number_format($user->cash_balance / 100, 2))
             ->with('memberList', $memberList);
     }
 } 
