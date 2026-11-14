@@ -1,5 +1,6 @@
 <?php namespace BB\Entities;
 
+use BB\Helpers\MembershipPayments;
 use BB\Support\SubscriptionChargeStatus;
 use Carbon\Carbon;
 use Database\Factories\SubscriptionChargeFactory;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $user_id
  * @property Carbon  $charge_date
  * @property Carbon|null  $payment_date
- * @property integer $amount
+ * @property integer $amount in pence
  * @property SubscriptionChargeStatus $status
  * @property-read User|null $user
  * @property-read string $status_label
@@ -46,6 +47,7 @@ class SubscriptionCharge extends Model
             'charge_date' => 'datetime',
             'payment_date' => 'datetime',
             'status' => SubscriptionChargeStatus::class,
+            'amount' => 'integer',
         ];
     }
 
@@ -127,6 +129,6 @@ class SubscriptionCharge extends Model
      */
     protected function amountLabel(): Attribute
     {
-        return Attribute::get(fn () => in_array($this->status, [SubscriptionChargeStatus::Processing, SubscriptionChargeStatus::Paid], true) ? '£' . number_format($this->amount, 2) : '');
+        return Attribute::get(fn () => in_array($this->status, [SubscriptionChargeStatus::Processing, SubscriptionChargeStatus::Paid], true) ? MembershipPayments::formatPrice($this->amount) : '');
     }
 }

@@ -16,7 +16,7 @@ or `GoCardlessWebhookController`.
 | --- | --- |
 | `payment_method` | `gocardless-variable` (current), `gocardless` (legacy fixed subscription), `standing-order`, `cash`, … |
 | `payment_day` | Day of month to bill (values > 28 are clamped to 1 — the `paymentDay()` mutator in `HasSubscription`) |
-| `monthly_subscription` | Chosen amount **in pounds** (e.g. 22) — multiplied by 100 at the GoCardless boundary |
+| `monthly_subscription` | Chosen amount **in pence** (integer, e.g. 2250 for £22.50), passed to GoCardless as it is. Signup and the change-amount form take pounds with up to two decimal places and convert once |
 | `mandate_id` | GoCardless mandate (variable DD — the current system) |
 | `subscription_id` | GoCardless subscription (legacy fixed DD only) |
 | `gocardless_setup_id` | Temporary redirect-flow ID during mandate setup |
@@ -31,7 +31,7 @@ One row per money movement. Key fields: `source` (`gocardless-variable`, `cash`,
 `source_id` (the GoCardless payment ID — how webhooks find us), `reference` (**the
 SubscriptionCharge ID** when the payment pays a subscription charge — this is the join between the
 two tables), `reason` (`subscription`, `balance`, `induction`, …), `amount`/`fee`/`amount_minus_fee`
-(in pounds — see the money-units note in project-health.md), `status`, `paid_at`.
+(**in pence**, integers), `status`, `paid_at`.
 
 Statuses (`BB\Support\PaymentStatus`, cast on the model): `pending`, `pending_submission`
 (normalised to `pending` on creation), `paid`, `cancelled`, `withdrawn`, `failed` (written by the
@@ -45,7 +45,7 @@ billing run. `payments.status` was widened to 40 characters in November 2026; be
 ### SubscriptionCharge (`app/Entities/SubscriptionCharge.php`)
 
 One row per member per billing month — "this member owes this month's subscription". Fields:
-`user_id`, `charge_date`, `payment_date`, `amount`, `status`
+`user_id`, `charge_date`, `payment_date`, `amount` (**in pence**, like `monthly_subscription`), `status`
 (`pending` → `due` → `processing` → `paid`, or `cancelled`; the `SubscriptionChargeStatus` enum).
 
 **Mental model:** a `SubscriptionCharge` is the *invoice*; a `Payment` is the *money movement*
@@ -65,9 +65,47 @@ attempting to settle it; `Payment.reference = SubscriptionCharge.id` links them.
 
 ### Pricing (`config/membership.php`)
 
-Tiered amounts (low income / standard / supporter), stored in pence in config while
-`monthly_subscription` is in pounds — one of the unit inconsistencies tracked in
-project-health.md.
+Tiered amounts (low income / standard / supporter), stored in pence in config, as
+`monthly_subscription` is. `MembershipPayments::formatPrice()` formats pence for display.
+
+> **Pence since November 2026.** Every amount the billing code handles is integer pence:
+> `monthly_subscription`, `subscription_charge.amount`, `payments.amount`/`fee`/`amount_minus_fee`,
+> `cash_balance` and the config. Forms take pounds and convert once, and amounts go to and come
+> from GoCardless (which uses pence) unconverted. The two migrations that did this ship in one
+> deploy:
+>
+> - `store_subscription_amounts_in_pence` multiplies `monthly_subscription` and
+>   `subscription_charge.amount` by 100 in place (the columns were already integers). It first
+>   checks every value is from 0 to 5000 pounds.
+> - `store_payment_amounts_in_pence` converts the three `payments` columns from doubles of pounds
+>   to integer pence, rounding away float noise (19.99 is stored as 1998.9999…). It first checks
+>   every value is from 0 to 1000 pounds.
+>
+> Each stops without changing anything if its check fails. That also stops a second run: the
+> largest subscription in production is £1000 and the largest payment £100, which the first run
+> turns into 100000 and 10000, far above the limits. Back up the database first and deploy
+> outside the nightly billing window (roughly 01:00–06:30), so nothing is charged or recorded
+> mid-change. Reports that read these columns directly, such as Redash dashboards, need
+> dividing by 100.
+>
+> The migrations run one after another, and the new code expects pence as soon as it's deployed.
+> If one stops partway, the site would bill unconverted amounts as pence: a £22 member would be
+> charged 22p. So before deploying, run these read-only checks on production; each must return 0:
+>
+> ```sql
+> SELECT COUNT(*) FROM users WHERE hash IS NULL OR display_name IS NULL;
+> SELECT COUNT(*) FROM users WHERE monthly_subscription < 0 OR monthly_subscription > 5000;
+> SELECT COUNT(*) FROM subscription_charge WHERE amount < 0 OR amount > 5000;
+> SELECT COUNT(*) FROM payments
+>  WHERE amount < 0 OR amount > 1000 OR fee < 0 OR fee > 1000
+>     OR amount_minus_fee < 0 OR amount_minus_fee > 1000;
+> ```
+>
+> If any migration fails, don't bring the site back up: roll the code back first.
+>
+> Still in pounds: `gifts.credit` (a float, converted to pence when a gift is redeemed) and
+> equipment `access_fee` (whole pounds, shown but not charged by the billing code). Equipment
+> `usage_cost` is stored in pence, though its accessor reads and writes pounds.
 
 ---
 
@@ -201,8 +239,8 @@ User.status:         setting-up ──► active ──► payment-warning ─�
 
 Engineering work this subsystem would benefit from (see architecture.md for sequencing):
 
-1. **Integer pence everywhere.** Amounts currently mix pounds and pence across tables and config
-   (see project-health.md) — migrate to integer pence with a `Money`-style accessor.
+1. **Integer pence everywhere.** Billing is all pence now; `gifts.credit` is the last amount
+   in pounds the money path reads.
 2. **Typed events.** Convert the string-event handler chain (`PaymentEventHandler`,
    `SubChargeEventHandler`) to event classes with listeners — the money path deserves static
    analysis visibility.

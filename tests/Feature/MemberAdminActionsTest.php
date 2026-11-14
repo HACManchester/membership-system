@@ -178,7 +178,7 @@ class MemberAdminActionsTest extends TestCase
 
         $member = User::factory()->create([
             'mandate_id' => 'MANDATE1',
-            'monthly_subscription' => 5,
+            'monthly_subscription' => 500,
             'payment_day' => 1,
             'subscription_id' => null,
         ]);

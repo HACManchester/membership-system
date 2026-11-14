@@ -84,6 +84,60 @@ class AccountUpdateTest extends TestCase
         $this->assertTrue($after->seen_at->isToday());
     }
 
+    #[Test]
+    public function an_admin_can_change_a_members_username()
+    {
+        $member = User::factory()->create(['display_name' => 'ada']);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->put(route('account.update', $member->id), $this->detailsFor($member, ['display_name' => 'augusta']))
+            ->assertRedirect(route('account.show', $member->id));
+
+        $this->assertSame('augusta', $member->fresh()->display_name);
+    }
+
+    #[Test]
+    public function an_admin_cannot_blank_a_members_username()
+    {
+        $member = User::factory()->create(['display_name' => 'ada']);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->from(route('account.edit', $member->id))
+            ->put(route('account.update', $member->id), $this->detailsFor($member, ['display_name' => '']))
+            ->assertRedirect(route('account.edit', $member->id))
+            ->assertSessionHas('flash_notification.details', fn ($details) => $details->has('display_name'));
+
+        $this->assertSame('ada', $member->fresh()->display_name);
+    }
+
+    #[Test]
+    public function an_admin_leaving_out_a_members_username_keeps_it()
+    {
+        $member = User::factory()->create(['display_name' => 'ada', 'given_name' => 'Ada']);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->put(route('account.update', $member->id), Arr::except($this->detailsFor($member, ['given_name' => 'Augusta']), 'display_name'))
+            ->assertRedirect(route('account.show', $member->id));
+
+        $member->refresh();
+        $this->assertSame('ada', $member->display_name);
+        $this->assertSame('Augusta', $member->given_name);
+    }
+
+    #[Test]
+    public function a_member_can_update_their_details_without_sending_a_username()
+    {
+        $member = User::factory()->create(['display_name' => 'ada', 'given_name' => 'Ada']);
+
+        $this->actingAs($member)
+            ->put(route('account.update', $member->id), Arr::except($this->detailsFor($member, ['given_name' => 'Augusta']), 'display_name'))
+            ->assertRedirect(route('account.show', $member->id));
+
+        $member->refresh();
+        $this->assertSame('ada', $member->display_name);
+        $this->assertSame('Augusta', $member->given_name);
+    }
+
     /**
      * A valid account form submission for the member, plus any extra fields.
      *

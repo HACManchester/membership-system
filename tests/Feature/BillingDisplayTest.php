@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use BB\Entities\Payment;
 use BB\Entities\ProfileData;
 use BB\Entities\Role;
 use BB\Entities\SubscriptionCharge;
@@ -21,7 +22,7 @@ class BillingDisplayTest extends TestCase
     #[Test]
     public function the_account_page_summarises_a_direct_debit_subscription()
     {
-        $member = $this->member(['payment_method' => 'gocardless', 'monthly_subscription' => 15, 'payment_day' => 5]);
+        $member = $this->member(['payment_method' => 'gocardless', 'monthly_subscription' => 1500, 'payment_day' => 5]);
 
         $this->actingAs($member)->get(route('account.show', $member->id))
             ->assertOk()
@@ -31,17 +32,17 @@ class BillingDisplayTest extends TestCase
     #[Test]
     public function the_account_page_leaves_out_the_payment_day_when_there_is_none()
     {
-        $member = $this->member(['payment_method' => 'standing-order', 'monthly_subscription' => 20.4, 'payment_day' => 0]);
+        $member = $this->member(['payment_method' => 'standing-order', 'monthly_subscription' => 2040, 'payment_day' => 0]);
 
         $this->actingAs($member)->get(route('account.show', $member->id))
             ->assertOk()
-            ->assertSee("💳 Subscription: £20.00/mo by Standing Order\n", false);
+            ->assertSee("💳 Subscription: £20.40/mo by Standing Order\n", false);
     }
 
     #[Test]
     public function the_account_page_has_no_subscription_summary_while_setting_up()
     {
-        $member = $this->member(['status' => 'setting-up', 'payment_method' => 'gocardless', 'monthly_subscription' => 15, 'payment_day' => 5]);
+        $member = $this->member(['status' => 'setting-up', 'payment_method' => 'gocardless', 'monthly_subscription' => 1500, 'payment_day' => 5]);
 
         $this->actingAs($member)->get(route('account.show', $member->id))
             ->assertOk()
@@ -51,10 +52,10 @@ class BillingDisplayTest extends TestCase
     #[Test]
     public function the_account_page_lists_the_member_subscription_charges()
     {
-        $member = $this->member(['payment_method' => 'gocardless', 'monthly_subscription' => 15]);
-        $this->charge($member, ['status' => 'paid', 'charge_date' => '2024-03-01', 'payment_date' => '2024-03-04', 'amount' => 15]);
-        $this->charge($member, ['status' => 'pending', 'charge_date' => '2024-04-01', 'amount' => 15]);
-        $this->charge($member, ['status' => 'processing', 'charge_date' => '2024-05-01', 'amount' => 15]);
+        $member = $this->member(['payment_method' => 'gocardless', 'monthly_subscription' => 1500]);
+        $this->charge($member, ['status' => 'paid', 'charge_date' => '2024-03-01', 'payment_date' => '2024-03-04', 'amount' => 1500]);
+        $this->charge($member, ['status' => 'pending', 'charge_date' => '2024-04-01', 'amount' => 1500]);
+        $this->charge($member, ['status' => 'processing', 'charge_date' => '2024-05-01', 'amount' => 1500]);
 
         $this->actingAs($member)->get(route('account.show', $member->id))
             ->assertOk()
@@ -108,14 +109,26 @@ class BillingDisplayTest extends TestCase
 
         $this->actingAs($this->financeMember())->get(route('payments.balances'))
             ->assertOk()
-            ->assertSeeInOrder([e($inCredit->name), '<td>£12.00</td>', e($inDebt->name), '<td>£-3.50</td>'], false);
+            ->assertSeeInOrder([e($inCredit->name), '<td>£12.00</td>', e($inDebt->name), '<td>-£3.50</td>'], false);
+    }
+
+    #[Test]
+    public function the_payments_overview_shows_a_negative_balance_liability_with_the_minus_first()
+    {
+        $member = $this->member();
+        Payment::factory()->create(['user_id' => $member->id, 'reason' => 'balance', 'source' => 'cash', 'amount' => 500]);
+        Payment::factory()->create(['user_id' => $member->id, 'reason' => 'storage-box', 'source' => 'balance', 'amount' => 750]);
+
+        $this->actingAs($this->financeMember())->get(route('payments.overview'))
+            ->assertOk()
+            ->assertSee('<span class="key-figure">-£2.50</span>', false);
     }
 
     #[Test]
     public function the_subscription_charges_page_describes_each_charge()
     {
         $member = $this->member(['payment_method' => 'standing-order']);
-        $this->charge($member, ['status' => 'paid', 'charge_date' => '2024-03-01', 'payment_date' => '2024-03-04', 'amount' => 15]);
+        $this->charge($member, ['status' => 'paid', 'charge_date' => '2024-03-01', 'payment_date' => '2024-03-04', 'amount' => 1500]);
 
         $this->actingAs($this->financeMember())->get(route('payments.sub-charges'))
             ->assertOk()

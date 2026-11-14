@@ -160,7 +160,7 @@ class SubscriptionController extends Controller
         $user = User::findOrFail($userId);
         $this->authorize('manage', $user);
 
-        $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription * 100, $user->payment_day, 'NEW-BBSUB' . $user->id);
+        $subscription = $this->goCardless->createSubscription($user->mandate_id, $user->monthly_subscription, $user->payment_day, 'NEW-BBSUB' . $user->id);
 
         $this->userRepository->recordGoCardlessSubscription($user->id, $subscription->id);
 

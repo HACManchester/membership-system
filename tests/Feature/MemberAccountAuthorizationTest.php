@@ -27,7 +27,7 @@ class MemberAccountAuthorizationTest extends TestCase
             'account edit form' => ['get', 'account.edit', [], 200, 403, 200],
             'account update' => ['put', 'account.update', [], 302, 403, 302],
             'account deletion' => ['delete', 'account.destroy', [], 302, 403, 302],
-            'subscription amount' => ['post', 'account.update-sub-payment', ['monthly_subscription' => 30], 302, 403, 302],
+            'subscription amount' => ['post', 'account.update-sub-payment', ['monthly_subscription' => 3000], 302, 403, 302],
             'direct debit setup' => ['get', 'account.subscription.create', [], 302, 403, 302],
             'direct debit confirmation' => ['get', 'account.subscription.store', [], 302, 403, 302],
             'direct debit cancellation' => ['delete', 'account.subscription.destroy', [], 302, 403, 302],

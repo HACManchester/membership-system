@@ -32,7 +32,7 @@ class SubChargeEventHandler
      * @param integer $chargeId
      * @param integer $userId
      * @param Carbon  $paymentDate
-     * @param double  $amount
+     * @param integer $amount in pence
      */
     public function onPaid($chargeId, $userId, Carbon $paymentDate, $amount)
     {
@@ -47,7 +47,7 @@ class SubChargeEventHandler
      * @param integer $chargeId
      * @param integer $userId
      * @param Carbon  $paymentDate
-     * @param double  $amount
+     * @param integer $amount in pence
      */
     public function onProcessing($chargeId, $userId, Carbon $paymentDate, $amount)
     {
@@ -62,7 +62,7 @@ class SubChargeEventHandler
      * @param integer $chargeId
      * @param integer $userId
      * @param Carbon  $paymentDate
-     * @param double  $amount
+     * @param integer $amount in pence
      */
     public function onPaymentFailure($chargeId, $userId, Carbon $paymentDate, $amount)
     {

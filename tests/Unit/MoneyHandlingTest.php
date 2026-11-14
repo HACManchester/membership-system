@@ -9,6 +9,7 @@ use BB\Services\Credit;
 use Carbon\Carbon;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
 /**
@@ -16,13 +17,8 @@ use Tests\TestCase;
  *
  * Two things make this worth pinning before the engine moves:
  *
- *  - Units are mixed. `payments.amount` is a DOUBLE holding pounds, while
- *    `users.cash_balance` is integer pence, so every balance recalculation runs
- *    a float through a *100 and lands it in an integer column. Several of the
- *    amounts members actually pay are not exactly representable as floats
- *    (19.99 * 100 is 1998.9999999999998), so this asserts the round-trip still
- *    produces the right pence. PHP 8.1 also began deprecating implicit
- *    float-to-int conversions that lose precision.
+ *  - Balances are summed from payments, both in integer pence, so this pins
+ *    what's added and what's taken away.
  *
  *  - The grace-period logic compares with `==`. PHP 8 changed string-to-number
  *    comparison, so the mapping is pinned for every payment method including
@@ -31,12 +27,12 @@ use Tests\TestCase;
 class MoneyHandlingTest extends TestCase
 {
     /**
-     * @param float[] $amounts pounds, as stored in payments.amount
-     * @param int     $expectedPence
+     * @param int[] $amounts pence, as stored in payments.amount
+     * @param int   $expectedPence
      */
-    #[DataProvider('awkwardAmounts')]
+    #[DataProvider('topUps')]
     #[Test]
-    public function a_balance_recalculation_lands_on_exact_pence(array $amounts, $expectedPence)
+    public function a_balance_recalculation_adds_up_the_top_ups(array $amounts, $expectedPence)
     {
         $user = User::factory()->create(['cash_balance' => 0]);
 
@@ -50,32 +46,14 @@ class MoneyHandlingTest extends TestCase
     }
 
     /**
-     * Each case is a sum whose float representation is not exact.
-     *
-     * @return array<string,array{0:float[],1:int}>
+     * @return array<string,array{0:int[],1:int}>
      */
-    public static function awkwardAmounts()
+    public static function topUps()
     {
         return [
-            'a single exact amount'          => [[17.70], 1770],
-            'the classic 0.1 + 0.2'          => [[0.10, 0.20], 30],
-            'two amounts summing past .999'  => [[5.30, 12.40], 1770],
-            'a price just under the pound'   => [[19.99], 1999],
-            'a few pence'                    => [[0.07], 7],
-            'the recommended subscription'   => [[22.00], 2200],
+            'one top-up'      => [[1999], 1999],
+            'several top-ups' => [[530, 1240, 7], 1777],
         ];
-    }
-
-    #[Test]
-    public function the_balance_read_straight_after_recalculating_is_exact_pence()
-    {
-        $user = User::factory()->create(['cash_balance' => 0]);
-        $this->balancePayment($user, 19.99);
-        $credit = $this->creditFor($user);
-
-        $credit->recalculate();
-
-        $this->assertSame('£19.99', $credit->getBalanceFormatted());
     }
 
     #[Test]
@@ -83,8 +61,8 @@ class MoneyHandlingTest extends TestCase
     {
         $user = User::factory()->create(['cash_balance' => 0]);
 
-        $this->balancePayment($user, 20.00);
-        $this->balanceSpend($user, 5.55);
+        $this->balancePayment($user, 2000);
+        $this->balanceSpend($user, 555);
 
         $this->recalculate($user);
 
@@ -129,52 +107,56 @@ class MoneyHandlingTest extends TestCase
     }
 
     #[Test]
+    #[TestWith([-250, '-£2.50'])]
+    #[TestWith([-5, '-£0.05'])]
+    #[TestWith([0, '£0.00'])]
+    #[TestWith([123456, '£1,234.56'])]
+    public function a_balance_is_formatted_with_the_minus_before_the_pound_sign(int $balance, string $formatted)
+    {
+        $user = User::factory()->create(['cash_balance' => $balance]);
+
+        $this->assertSame($formatted, $this->creditFor($user)->getBalanceFormatted());
+    }
+
+    #[Test]
     public function a_balance_is_reported_in_pounds()
     {
         $user = User::factory()->create(['cash_balance' => 1999]);
-        $credit = $this->creditFor($user);
 
-        $this->assertSame(19.99, $credit->getBalance());
-        $this->assertSame('£19.99', $credit->getBalanceFormatted());
+        $this->assertSame('£19.99', $this->creditFor($user)->getBalanceFormatted());
     }
 
-    /**
-     * Pinning a known wart rather than endorsing it: getBalanceSign() casts the
-     * *pounds* value to int before comparing, so anything owing less than a
-     * whole pound truncates to 0 and reports as positive. BalanceController is
-     * the only consumer. Left as-is deliberately — changing it changes what
-     * members see, which is a call for the board, not a side effect of an
-     * upgrade. Flagged so the upgrade doesn't silently alter it either way.
-     */
     #[Test]
-    public function a_sub_one_pound_debt_currently_reports_as_positive()
+    #[TestWith([-50, 'negative'])] // under a pound overdrawn
+    #[TestWith([-1, 'negative'])]
+    #[TestWith([0, 'positive'])]
+    #[TestWith([50, 'positive'])]
+    public function a_balance_is_negative_from_a_penny_overdrawn(int $balance, string $sign)
     {
-        $inDebtByFiftyPence = User::factory()->create(['cash_balance' => -50]);
-        $inDebtByAPound = User::factory()->create(['cash_balance' => -100]);
+        $user = User::factory()->create(['cash_balance' => $balance]);
 
-        $this->assertSame('positive', $this->creditFor($inDebtByFiftyPence)->getBalanceSign());
-        $this->assertSame('negative', $this->creditFor($inDebtByAPound)->getBalanceSign());
+        $this->assertSame($sign, $this->creditFor($user)->getBalanceSign());
     }
 
-    private function balancePayment(User $user, $pounds)
+    private function balancePayment(User $user, int $pence)
     {
         return Payment::factory()->create([
             'user_id' => $user->id,
             'reason'  => 'balance',
             'source'  => 'gocardless',
             'status'  => 'paid',
-            'amount'  => $pounds,
+            'amount'  => $pence,
         ]);
     }
 
-    private function balanceSpend(User $user, $pounds)
+    private function balanceSpend(User $user, int $pence)
     {
         return Payment::factory()->create([
             'user_id' => $user->id,
             'reason'  => 'equipment-fee',
             'source'  => 'balance',
             'status'  => 'paid',
-            'amount'  => $pounds,
+            'amount'  => $pence,
         ]);
     }
 

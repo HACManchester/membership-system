@@ -64,7 +64,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $user2 = User::factory()->create([
@@ -72,7 +72,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 17,
+            'monthly_subscription' => 1700,
         ]);
 
         // Create user with different payment day (should be ignored)
@@ -81,7 +81,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $otherDay,
-            'monthly_subscription' => 27,
+            'monthly_subscription' => 2700,
         ]);
 
         // Set target date to match the payment day
@@ -94,14 +94,14 @@ class MemberSubscriptionChargesTest extends TestCase
             ->whereDate('charge_date', $targetDate)
             ->first();
         $this->assertNotNull($charge1);
-        $this->assertEquals(22, $charge1->amount);
+        $this->assertEquals(2200, $charge1->amount);
         $this->assertSame(SubscriptionChargeStatus::Pending, $charge1->status);
 
         $charge2 = SubscriptionCharge::where('user_id', $user2->id)
             ->whereDate('charge_date', $targetDate)
             ->first();
         $this->assertNotNull($charge2);
-        $this->assertEquals(17, $charge2->amount);
+        $this->assertEquals(1700, $charge2->amount);
 
         // Verify no charge created for non-matching payment day
         $charge3 = SubscriptionCharge::where('user_id', $user3->id)
@@ -122,7 +122,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => '',
             'mandate_id' => '',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $targetDate = Carbon::now()->setDay($paymentDay);
@@ -141,14 +141,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'suspended',
             'active' => false,
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $leftUser = User::factory()->create([
             'status' => 'left',
             'active' => false,
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $this->service->createSubscriptionCharges($targetDate);
@@ -174,14 +174,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
         User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 17,
+            'monthly_subscription' => 1700,
         ]);
 
         $mockChargeRepo = $this->createMock(SubscriptionChargeRepository::class);
@@ -216,7 +216,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
             'payment_day' => $paymentDay,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $this->service->createSubscriptionCharges($targetDate);
@@ -272,7 +272,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -280,7 +280,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 17,
+            'monthly_subscription' => 1700,
             'mandate_id' => 'MD987654321',
         ]);
 
@@ -328,7 +328,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->where('reference', $charge1->id)
             ->first();
         $this->assertNotNull($payment1);
-        $this->assertEquals(22, $payment1->amount);
+        $this->assertEquals(2200, $payment1->amount);
         $this->assertSame(PaymentStatus::Pending, $payment1->status);
         $this->assertEquals('PM123456789', $payment1->source_id);
 
@@ -336,7 +336,7 @@ class MemberSubscriptionChargesTest extends TestCase
             ->where('reference', $charge2->id)
             ->first();
         $this->assertNotNull($payment2);
-        $this->assertEquals(17, $payment2->amount);
+        $this->assertEquals(1700, $payment2->amount);
         $this->assertSame(PaymentStatus::Pending, $payment2->status);
         $this->assertEquals('PM987654321', $payment2->source_id);
     }
@@ -347,14 +347,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
         SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
-            'amount' => 27,
+            'amount' => 2700,
             'status' => 'due',
         ]);
 
@@ -372,7 +372,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->service->billMembers();
 
         $payment = Payment::where('user_id', $user->id)->first();
-        $this->assertEquals(27, $payment->amount);
+        $this->assertEquals(2700, $payment->amount);
     }
 
     public function testBillMembersOnlyProcessesGoCardlessUsers()
@@ -381,14 +381,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
         $balanceUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'balance',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         SubscriptionCharge::factory()->create([
@@ -430,7 +430,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'active' => true,
             'payment_method' => '',
             'mandate_id' => '',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $charges = collect([3, 2, 1])->map(function ($monthsAgo) use ($user) {
@@ -458,7 +458,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'active' => true,
             'payment_method' => 'gocardless-variable',
             'mandate_id' => '',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $charge = SubscriptionCharge::factory()->create([
@@ -482,7 +482,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'active' => false,
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD123456789',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $charge = SubscriptionCharge::factory()->create([
@@ -507,7 +507,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'active' => true,
             'payment_method' => 'standing-order',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $charge = SubscriptionCharge::factory()->create([
@@ -530,7 +530,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'active' => true,
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD123456789',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
 
         $maxAge = config('membership.billing.max_charge_age_days');
@@ -573,7 +573,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -598,7 +598,7 @@ class MemberSubscriptionChargesTest extends TestCase
         $this->assertNotNull($payment);
         $this->assertSame(PaymentStatus::Failed, $payment->status);
         $this->assertNull($payment->source_id);
-        $this->assertEquals(22, $payment->amount);
+        $this->assertEquals(2200, $payment->amount);
 
         // No GoCardless payment exists so no failure webhook will ever arrive - the
         // run itself must put the member through the failure flow
@@ -616,21 +616,21 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD111',
         ]);
         $failingUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD222',
         ]);
         $goodUser2 = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD333',
         ]);
 
@@ -678,14 +678,14 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD222',
         ]);
         $laterUser = User::factory()->create([
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 17,
+            'monthly_subscription' => 1700,
             'mandate_id' => 'MD333',
         ]);
 
@@ -753,7 +753,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 
@@ -788,7 +788,7 @@ class MemberSubscriptionChargesTest extends TestCase
             'status' => 'active',
             'payment_method' => 'gocardless-variable',
             'mandate_id' => 'MD_TEST',
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
             'mandate_id' => 'MD123456789',
         ]);
 

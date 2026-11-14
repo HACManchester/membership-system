@@ -132,14 +132,14 @@ class MemberSubscriptionCharges
         $members = [];
         $membersWeCouldntBill = [];
         foreach ($goCardlessUsers as $charge) {
-            $amount = $charge->amount > 0 ? $charge->amount : $charge->user->monthly_subscription;
+            $amount = $charge->amount > 0 ? $charge->amount : (int) $charge->user->monthly_subscription;
             $bill = null;
             try {
                 try {
                     $mandateId = $charge->user->mandate_id;
                     $bill = $this->goCardless->newBill(
                         $mandateId,
-                        ($amount * 100),
+                        $amount,
                         $this->goCardless->getNameFromReason('subscription'),
                         idempotencyKey: $charge->goCardlessIdempotencyKey($mandateId)
                     );

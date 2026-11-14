@@ -29,7 +29,7 @@ Payments - Sub Charges
             <tr>
                 <td><a href="{{ route('account.show', $possibleDuplicate->user->id) }}">{{ $possibleDuplicate->user->name }}</a></td>
                 <td>{{ $possibleDuplicate->reason }}</td>
-                <td>&pound;{{ number_format($possibleDuplicate->amount, 2) }}</td>
+                <td>{{ MembershipPayments::formatPrice((int) $possibleDuplicate->amount) }}</td>
                 <td>{{ $possibleDuplicate->count }}</td>
                 <td>
                     <a href="{{ route('payments.index', ['member_filter' => $possibleDuplicate->user->id]) }}" class="btn btn-primary">View this member's payments</a>

@@ -154,18 +154,16 @@ In order of value:
   Relations carry generic `@return` types (`HasMany<TrainingRecord, $this>`), which Larastan 3
   needs to know their models. Casts live in `casts()` methods, so `phpstan.neon` sets
   Larastan's `parseModelCastsMethod` (without it Larastan sees only the method's `array` return
-  type and loses every cast). `phpstan-baseline.neon` holds 30 entries. Most are guarantees
+  type and loses every cast). `phpstan-baseline.neon` holds 27 entries. Most are guarantees
   PHPStan can't see, such as a member always having a profile row, or a charge's member having
   been checked before billing. One came with Carbon 3, which types `Carbon::create()` as possibly
   null: `PaymentController::index()` builds its date range from a fixed
-  `Carbon::create(2009, 7, 1)`, a valid date that never returns null. Five came in November 2026
-  when the model `@property` blocks were rewritten to match the migrations, which made some
-  `users` columns nullable that had been typed as always set: `monthly_subscription` (passed to
-  `SubscriptionChargeRepository::createCharge()`/`createChargeAndBillDD()` and
-  `PaymentRepository::recordSubscriptionPayment()`), `hash` (`MemberPhoto::url()`) and
-  `display_name`, behind `User::$name` (`AuditSubscriptionCharges::memberName()`). Members being
-  billed or shown do have these set, but the columns allow null; each is worth a guard or a
-  NOT NULL migration rather than staying baselined. New errors must be baselined
+  `Carbon::create(2009, 7, 1)`, a valid date that never returns null. Two came in November 2026
+  when the model `@property` blocks were rewritten to match the migrations, which made
+  `users.monthly_subscription` nullable where it had been typed as always set (it's passed to
+  `SubscriptionChargeRepository::createCharge()`/`createChargeAndBillDD()`). Members being billed
+  do have it set, but the column allows null; it's worth a guard or a NOT NULL migration rather
+  than staying baselined, as `hash` and `display_name` got. New errors must be baselined
   *deliberately* (CI's `phpstan analyse` fails on un-baselined errors, so silencing one is a
   visible, reviewable change to the baseline file) — the aim is for the baseline to trend down over time, not a hard CI gate against growth.
 - Add `declare(strict_types=1)` + native parameter/return types to files as they're touched.

@@ -49,7 +49,7 @@ class AccountPageWithoutSubscriptionTest extends TestCase
         $this->actingAs($admin)
             ->get(route('account.show', $member->id))
             ->assertOk()
-            ->assertSee('Record A &pound;0 Cash Subscription Payment', false);
+            ->assertSee('Record A £0.00 Cash Subscription Payment', false);
     }
 
     private function memberWithoutSubscription(array $attributes): User

@@ -109,7 +109,7 @@ class DirectDebitSetupTest extends TestCase
             'email' => 'ada@example.test',
             'status' => 'left',
             'active' => false,
-            'monthly_subscription' => 22,
+            'monthly_subscription' => 2200,
         ]);
     }
 

@@ -199,15 +199,16 @@ class UserRepository extends DBRepository
                 $giftExpiry = Carbon::now()->addMonths((int) $gift_record->months)->startOfDay();
                 $user->subscription_expires = $giftExpiry;
                 $user->gift_expires = $giftExpiry;
-                // credit is stored in pounds (as a float); cash_balance is integer pence
-                $user->cash_balance = (int) round($gift_record->credit * 100);
+                // gifts.credit is still in pounds (as a float); balances and payments are pence
+                $creditPence = (int) round($gift_record->credit * 100);
+                $user->cash_balance = $creditPence;
                 $user->status = MemberStatus::Active;
                 $user->active = true;
                 $user->gift = $memberData['gift_code'];
                 $user->save();
 
-                // log cash payment (payments.amount is pounds, like the gift's credit)
-                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, (float) $gift_record->credit, PaymentStatus::Paid, 0, $memberData['gift_code']);
+                // log cash payment
+                $this->paymentRepository->recordPayment("balance", $user->id, 'Gift Certificate', null, $creditPence, PaymentStatus::Paid, 0, $memberData['gift_code']);
 
                 $gift_record->delete();
             }

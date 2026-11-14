@@ -18,7 +18,7 @@
                                         <div class="panel-heading">
                                             <input type="radio" name="membership_tier" value="{{ $option->value_in_pence / 100 }}" 
                                                   id="subscription_{{ $option->value_in_pence }}" class="form-check-input"
-                                                  {{ $option->value_in_pence == $user->monthly_subscription * 100 ? 'checked' : '' }}>
+                                                  {{ $option->value_in_pence == $user->monthly_subscription ? 'checked' : '' }}>
                                             <label for="subscription_{{ $option->value_in_pence }}" class="form-check-label">
                                                 {{ $option->title }}: £{{ number_format($option->value_in_pence / 100, 2) }}
                                             </label>
@@ -37,9 +37,9 @@
                                     <div class="panel-body">
                                         <p>For those that want to go above and beyond to support the makerspace, enter a custom amount here:</p>
                                         <label for="custom_subscription_amount" class="form-check-label">Custom Amount</label>
-                                        <input type="number" name="monthly_subscription" value="{{ $user->monthly_subscription }}" 
+                                        <input type="number" name="monthly_subscription" value="{{ MembershipPayments::formatPounds((int) $user->monthly_subscription) }}" 
                                               class="form-control" placeholder="Enter amount" 
-                                              min="{{ MembershipPayments::getMinimumPrice() / 100 }}" step="1">
+                                              @unless (\BB\Support\CurrentUser::get()->isAdmin()) min="{{ MembershipPayments::formatPounds(MembershipPayments::getMinimumPrice()) }}" @endunless step="0.01">
                                     </div>
                                 </div>
                             </div>

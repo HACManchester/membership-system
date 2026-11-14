@@ -293,7 +293,7 @@ class GoCardlessWebhookTest extends TestCase
      * skips them; their charge is settled when GoCardless's own subscription takes a
      * payment and tells us via `subscriptions.payment_created`.
      */
-    private function legacyMemberWithCharge(float $chargeAmount = 22.0)
+    private function legacyMemberWithCharge(int $chargeAmount = 2200)
     {
         $user = User::factory()->create([
             'status' => 'active',
@@ -304,7 +304,6 @@ class GoCardlessWebhookTest extends TestCase
             'subscription_expires' => Carbon::now(),
         ]);
 
-        // subscription_charges.amount is in pounds, like payments.amount
         $charge = SubscriptionCharge::factory()->create([
             'user_id' => $user->id,
             'charge_date' => Carbon::now(),
@@ -320,7 +319,7 @@ class GoCardlessWebhookTest extends TestCase
     // Legacy fixed-amount subscriptions (payment_method = 'gocardless')
     // ---------------------------------------------------------------------
     #[Test]
-    public function a_legacy_subscription_payment_is_recorded_in_pounds_and_linked_to_the_members_charge()
+    public function a_legacy_subscription_payment_is_recorded_and_linked_to_the_members_charge()
     {
         [$user, $charge] = $this->legacyMemberWithCharge();
 
@@ -336,7 +335,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->assertEquals($user->id, $payment->user_id);
         $this->assertEquals('subscription', $payment->reason);
         $this->assertEquals('gocardless', $payment->source);
-        $this->assertEquals(22.0, (float) $payment->amount, 'the API reports pence; payments.amount is pounds');
+        $this->assertSame(2200, $payment->amount, 'the API reports pence, as payments.amount is');
         $this->assertSame(PaymentStatus::PendingSubmission, $payment->status);
         $this->assertEquals((string) $charge->id, $payment->reference);
 
@@ -348,7 +347,7 @@ class GoCardlessWebhookTest extends TestCase
     #[Test]
     public function a_legacy_charge_takes_the_amount_actually_collected()
     {
-        [, $charge] = $this->legacyMemberWithCharge(17.0);
+        [, $charge] = $this->legacyMemberWithCharge(1700);
 
         $this->goCardless->method('getPayment')
             ->willReturn($this->gocardlessPayment('PM_SUB_1', 2200, 'pending_submission'));
@@ -356,7 +355,7 @@ class GoCardlessWebhookTest extends TestCase
         $this->postWebhook([$this->subscriptionEvent('payment_created', 'SB_LEGACY_1', 'PM_SUB_1')])
             ->assertStatus(200);
 
-        $this->assertEquals(22.0, (float) $charge->fresh()->amount);
+        $this->assertSame(2200, $charge->fresh()->amount);
     }
 
     #[Test]

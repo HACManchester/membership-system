@@ -32,10 +32,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
- * @property string|null $hash
+ * @property string $hash
  * @property string $given_name
  * @property string $family_name
- * @property string|null $display_name
+ * @property string $display_name
  * @property string|null $announce_name
  * @property string|null $pronouns
  * @property bool $suppress_real_name
@@ -60,7 +60,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $payment_method
  * @property string|null $secondary_payment_method
  * @property int $payment_day
- * @property int|null $monthly_subscription in pounds
+ * @property int|null $monthly_subscription in pence
  * @property string|null $subscription_id
  * @property string|null $mandate_id
  * @property string|null $gocardless_setup_id
@@ -84,7 +84,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read string|null $name the display name
+ * @property-read string $name the display name
  */
 #[ObservedBy([UserObserver::class, UserAuditObserver::class])]
 #[UseFactory(UserFactory::class)]
@@ -155,6 +155,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'suspended_at' => 'datetime',
             'gift_expires' => 'date',
             'cash_balance' => 'integer',
+            'monthly_subscription' => 'integer',
             'suppress_real_name' => 'boolean',
             'newsletter' => 'boolean',
             'online_only' => 'boolean',
@@ -248,7 +249,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     */
 
     /**
-     * @return Attribute<string|null, never>
+     * @return Attribute<string, never>
      */
     protected function name(): Attribute
     {
@@ -275,16 +276,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     | Methods
     |--------------------------------------------------------------------------
     */
-
-    /**
-     * @param $amount
-     * @deprecated
-     */
-    public function updateSubAmount($amount)
-    {
-        $this->attributes['monthly_subscription'] = $amount;
-        $this->save();
-    }
 
     public function emailConfirmed()
     {

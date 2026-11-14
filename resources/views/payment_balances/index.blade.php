@@ -76,7 +76,7 @@
                                     <span class="label label-info">In credit</span>
                                 @endif
                             </td>
-                            <td>£{{ number_format($user->cash_balance / 100, 2) }}</td>
+                            <td>{{ MembershipPayments::formatSignedPrice($user->cash_balance) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -106,7 +106,7 @@
                                     <span class="label label-info">In credit</span>
                                 @endif
                             </td>
-                            <td>£{{ number_format($user->cash_balance / 100, 2) }}</td>
+                            <td>{{ MembershipPayments::formatSignedPrice($user->cash_balance) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

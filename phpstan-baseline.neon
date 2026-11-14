@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Method BB\\Console\\Commands\\Payments\\AuditSubscriptionCharges\:\:memberName\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Console/Commands/Payments/AuditSubscriptionCharges.php
-
-		-
 			message: '#^Unable to resolve the template type TGroupKey in call to method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:groupBy\(\)$#'
 			identifier: argument.templateType
 			count: 1
@@ -42,12 +36,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/PaymentController.php
-
-		-
-			message: '#^Parameter \#3 \$hash of static method BB\\Support\\MemberPhoto\:\:url\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Resources/MemberProfileResource.php
 
 		-
 			message: '#^Cannot access property \$hash on BB\\Entities\\User\|null\.$#'
@@ -165,12 +153,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$reference of method BB\\Repo\\PaymentRepository\:\:getPaymentsByReference\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/MemberSubscriptionCharges.php
-
-		-
-			message: '#^Parameter \#4 \$amount of method BB\\Repo\\PaymentRepository\:\:recordSubscriptionPayment\(\) expects float, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Services/MemberSubscriptionCharges.php

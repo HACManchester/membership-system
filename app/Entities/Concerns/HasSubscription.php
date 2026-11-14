@@ -20,6 +20,15 @@ trait HasSubscription
     }
 
     /**
+     * Set how much the member pays each month, in pence.
+     */
+    public function changeSubscriptionAmount(int $pence): void
+    {
+        $this->monthly_subscription = $pence;
+        $this->save();
+    }
+
+    /**
      * Is the user on a payment method that allows their subscription amount to be changed
      */
     public function canMemberChangeSubAmount(): bool

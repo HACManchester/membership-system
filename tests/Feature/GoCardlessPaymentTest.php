@@ -34,7 +34,7 @@ class GoCardlessPaymentTest extends TestCase
         $this->app->instance(GoCardlessHelper::class, $this->goCardless);
     }
 
-    private function memberWithDueCharge($monthlySubscription = 22)
+    private function memberWithDueCharge($monthlySubscription = 2200)
     {
         $member = User::factory()->create([
             'status' => 'active',
@@ -82,7 +82,7 @@ class GoCardlessPaymentTest extends TestCase
     #[Test]
     public function a_subscription_payment_below_the_monthly_amount_is_rejected()
     {
-        [$member, $charge] = $this->memberWithDueCharge(22);
+        [$member, $charge] = $this->memberWithDueCharge(2200);
 
         $this->goCardless->expects($this->never())->method('newBill');
 

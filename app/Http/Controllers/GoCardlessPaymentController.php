@@ -42,7 +42,7 @@ class GoCardlessPaymentController extends Controller
         $data = $request->validated();
 
         $reason = $data['reason'];
-        $amount = $data['amount'] / 100;
+        $amount = (int) $data['amount'];
 
         if (($user->payment_method == 'gocardless-variable') || ($user->secondary_payment_method == 'gocardless-variable')) {
 
@@ -64,7 +64,7 @@ class GoCardlessPaymentController extends Controller
     /**
      * Process a direct debit payment when we have a preauth
      *
-     * @param $amount
+     * @param int $amount in pence
      * @param $reason
      * @param User $user
      * @return mixed
@@ -74,11 +74,11 @@ class GoCardlessPaymentController extends Controller
         $ref = '';
 
         try {
-            $bill = $this->goCardless->newBill($user->mandate_id, $amount * 100, $this->goCardless->getNameFromReason($reason));
+            $bill = $this->goCardless->newBill($user->mandate_id, $amount, $this->goCardless->getNameFromReason($reason));
             //Store the payment
             $fee = 0;
             $paymentSourceId = $bill->id;
-            $amount = $bill->amount / 100;
+            $amount = $bill->amount;
             $status = PaymentStatus::fromGoCardless($bill->status, PaymentStatus::Pending);
             if ($status === PaymentStatus::PendingSubmission) {
                 $status = PaymentStatus::Pending;
